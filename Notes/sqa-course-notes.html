@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Software Quality Assurance Course Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 30px 0;
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .user-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #3498db;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .nav-menu {
+        /* position: sticky; */
+        top: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .nav-menu ul {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 0;
+      }
+
+      .nav-menu a {
+        color: #e74c3c;
+        text-decoration: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        background: #ecf0f1;
+        transition: all 0.3s ease;
+        font-weight: 500;
+      }
+
+      .nav-menu a:hover {
+        background: #e74c3c;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .section {
+        background: white;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .section:hover {
+        transform: translateY(-5px);
+      }
+
+      .section-header {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 20px;
+        position: relative;
+      }
+
+      .section-header::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #3498db, #f39c12, #2ecc71, #9b59b6);
+      }
+
+      .section-header h2 {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+      }
+
+      .section-content {
+        padding: 25px;
+      }
+
+      .subsection {
+        margin-bottom: 25px;
+      }
+
+      .subsection-title {
+        color: #2c3e50;
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #ecf0f1;
+        position: relative;
+      }
+
+      .subsection-title::before {
+        content: "🔍";
+        margin-right: 10px;
+        font-size: 0.8em;
+      }
+
+      .example-box {
+        background: linear-gradient(135deg, #fff5cd, #fff2a8);
+        padding: 20px;
+        border-radius: 10px;
+        margin: 15px 0;
+        border-left: 5px solid #f39c12;
+        position: relative;
+      }
+
+      .example-box::before {
+        content: "💡";
+        position: absolute;
+        top: 15px;
+        left: -12px;
+        background: #f39c12;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+      }
+
+      .bug-example {
+        background: linear-gradient(135deg, #ffebee, #ffcdd2);
+        padding: 20px;
+        border-radius: 10px;
+        margin: 15px 0;
+        border-left: 5px solid #e74c3c;
+      }
+
+      .bug-example h4 {
+        color: #c62828;
+        margin-bottom: 10px;
+      }
+
+      .code-block {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        margin: 10px 0;
+        overflow-x: auto;
+      }
+
+      .cost-highlight {
+        background: linear-gradient(135deg, #ffcdd2, #f8bbd9);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #e91e63;
+        margin: 15px 0;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .benefit-card {
+        background: linear-gradient(135deg, #e8f5e8, #d4f4d4);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        border-top: 4px solid #2ecc71;
+        transition: transform 0.3s ease;
+      }
+
+      .benefit-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .benefit-card h4 {
+        color: #27ae60;
+        margin-bottom: 10px;
+      }
+
+      .lifecycle-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin: 20px 0;
+        gap: 10px;
+      }
+
+      .lifecycle-state {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        min-width: 120px;
+        transition: transform 0.3s ease;
+      }
+
+      .lifecycle-state:hover {
+        transform: scale(1.05);
+      }
+
+      .priority-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .priority-card {
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: bold;
+        color: white;
+      }
+
+      .p1 {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+      }
+      .p2 {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+      }
+      .p3 {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+      }
+
+      .severity-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .severity-card {
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: bold;
+        color: white;
+      }
+
+      .s1 {
+        background: linear-gradient(135deg, #8e44ad, #9b59b6);
+      }
+      .s2 {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+      }
+      .s3 {
+        background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+      }
+
+      .quadrant-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .quadrant-card {
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        color: white;
+        transition: transform 0.3s ease;
+      }
+
+      .quadrant-card:hover {
+        transform: scale(1.05);
+      }
+
+      .urgent-severe {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+      }
+      .urgent-not-severe {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+      }
+      .not-urgent-severe {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      }
+      .not-urgent-not-severe {
+        background: linear-gradient(135def, #2ecc71, #27ae60);
+      }
+
+      .roles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .role-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border-top: 4px solid #3498db;
+      }
+
+      .role-card h4 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .definition-box {
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #2196f3;
+        margin: 15px 0;
+      }
+
+      .definition-box h4 {
+        color: #1976d2;
+        margin-bottom: 10px;
+      }
+
+      .testing-types {
+        background: #f5f5f5;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 15px 0;
+      }
+
+      .testing-types h4 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+
+      .testing-types ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .testing-types li {
+        background: white;
+        margin: 8px 0;
+        padding: 10px 15px;
+        border-radius: 5px;
+        border-left: 4px solid #3498db;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        background: #2c3e50;
+        color: white;
+        border-radius: 10px;
+        margin-top: 30px;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          margin: 10px;
+          padding: 15px;
+        }
+
+        .header h1 {
+          font-size: 2em;
+        }
+
+        .nav-menu ul {
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .quadrant-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .lifecycle-container {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .user-info {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Software Quality Assurance</h1>
+        <p>Writing Quality Code & Bug Management</p>
+      </div>
+
+      <div class="user-info">
+        <div>👤 <strong>User:</strong> abdelghany-77</div>
+        <div>📅 <strong>Date:</strong> 2025-07-23 13:17:56 UTC</div>
+      </div>
+
+      <nav class="nav-menu">
+        <ul>
+          <li><a href="#introduction">Introduction</a></li>
+          <li><a href="#code-quality">Code Quality</a></li>
+          <li><a href="#unit-testing">Unit Testing</a></li>
+          <li><a href="#tester-roles">Tester Roles</a></li>
+          <li><a href="#bug-lifecycle">Bug Lifecycle</a></li>
+          <li><a href="#bug-priority">Priority & Severity</a></li>
+          <li><a href="#bug-tracking">Bug Tracking</a></li>
+        </ul>
+      </nav>
+
+      <section id="introduction" class="section">
+        <div class="section-header">
+          <h2>1. Why... The Idea</h2>
+        </div>
+        <div class="section-content">
+          <div class="definition-box">
+            <h4>🌍 The Modern Development Reality</h4>
+            <p><strong>Multinationals are driven by diversity.</strong></p>
+            <p>
+              This involves distributed teams and collaborative teams working
+              across different locations, time zones, and cultures.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="code-quality" class="section">
+        <div class="section-header">
+          <h2>2. Code Quality</h2>
+        </div>
+        <div class="section-content">
+          <div class="subsection">
+            <h3 class="subsection-title">
+              Why Care About Writing Quality Code?
+            </h3>
+
+            <div class="example-box">
+              <h4>Example 1: Square Function</h4>
+              <p><strong>Expected:</strong> square(n) = n*n, Square(2) = 4</p>
+              <div class="code-block">int square (int x) { return x*2; }</div>
+              <p><strong>Developer perspective:</strong></p>
+              <ul>
+                <li>"Works on my machine"</li>
+                <li>
+                  "My code never has bugs, it just develops random unexpected
+                  features"
+                </li>
+                <li>"My code is guaranteed 100% mistake free"</li>
+              </ul>
+              <p>
+                <strong>Testing phase:</strong> Square(3) = 6 (expected 9) ❌
+              </p>
+            </div>
+
+            <div class="example-box">
+              <h4>Example 2: Counting Zeros in an Array</h4>
+              <p><strong>Expected:</strong> numZero([0,5,0]) = 2</p>
+              <div class="code-block">for (int i=1 ; i &lt; x.length; i++)</div>
+              <p>
+                <strong>Bug:</strong> Loop starts from index 1, missing x[0]
+              </p>
+              <p><strong>Result:</strong> numZero([4,5,0]) = 1 ❌</p>
+            </div>
+
+            <div class="cost-highlight">
+              🚨 Bugs are caught when Actual Result ≠ Expected Result
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">Real Business Examples</h3>
+
+            <div class="bug-example">
+              <h4>💰 Pepsi - $42 Billion Error (May 1992, Philippines)</h4>
+              <ul>
+                <li>
+                  Promotion: Win million pesos (~$40,000) by finding "349" under
+                  bottle caps
+                </li>
+                <li>
+                  <strong>Software error:</strong> 800,000 bottle caps had "349"
+                  instead of one
+                </li>
+                <li>
+                  <strong>Cost:</strong> $42 billion in potential prize money
+                </li>
+                <li>
+                  <strong>Result:</strong> Pepsi paid millions in compensation
+                </li>
+              </ul>
+            </div>
+
+            <div class="bug-example">
+              <h4>🦁 The Lion King Animated Storybook (Disney)</h4>
+              <ul>
+                <li>Disney's first multimedia CD-ROM game for kids</li>
+                <li>
+                  Released for Christmas → "Customer Support's Nightmare" on
+                  December 26th
+                </li>
+                <li>
+                  <strong>Issue:</strong> Tested only for specific PC platform
+                </li>
+                <li>
+                  <strong>Result:</strong> Failed on many popular PC operating
+                  systems
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">Error → Bug → Failure Relationship</h3>
+            <div class="lifecycle-container">
+              <div class="lifecycle-state">Developer makes an ERROR</div>
+              <div class="lifecycle-state">Creates a BUG in software</div>
+              <div class="lifecycle-state">Causes FAILURE in operation</div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">Causes of Software Errors</h3>
+            <div class="testing-types">
+              <ul>
+                <li>Faulty requirements definition</li>
+                <li>Client-developer communication failures</li>
+                <li>Deviations from software requirements</li>
+                <li>Logical design errors</li>
+                <li>Coding errors</li>
+                <li>
+                  Non-compliance with documentation and coding instructions
+                </li>
+                <li>Shortcomings of the testing process</li>
+                <li>Documentation errors</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">Benefits of Quality Code</h3>
+            <div class="benefits-grid">
+              <div class="benefit-card">
+                <h4>🐛 Reducing Bugs</h4>
+                <p>Fewer defects in production</p>
+              </div>
+              <div class="benefit-card">
+                <h4>🔧 Lower Maintenance</h4>
+                <p>Less effort to maintain code</p>
+              </div>
+              <div class="benefit-card">
+                <h4>🍝 No Spaghetti Code</h4>
+                <p>Clean, organized structure</p>
+              </div>
+              <div class="benefit-card">
+                <h4>📈 Easier to Extend</h4>
+                <p>Simple to add new features</p>
+              </div>
+              <div class="benefit-card">
+                <h4>🤝 Builds Trust</h4>
+                <p>Quality Code = Client Trust</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">Components of Code Quality</h3>
+            <div class="definition-box">
+              <h4>📝 Coding Standards Include:</h4>
+              <ul>
+                <li>Pleasant to read and easy to grasp</li>
+                <li>Abide by standards</li>
+                <li>Modular</li>
+                <li>Almost bug-free</li>
+                <li>Finished</li>
+                <li>Clean</li>
+                <li>Documented</li>
+                <li>Working</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="unit-testing" class="section">
+        <div class="section-header">
+          <h2>3. Unit Testing</h2>
+        </div>
+        <div class="section-content">
+          <div class="definition-box">
+            <h4>🔬 What is Unit Testing?</h4>
+            <ul>
+              <li>Test individual units of code</li>
+              <li>Isolate each part</li>
+              <li>Show that individual parts are correct</li>
+              <li>Document your code</li>
+              <li>Executed within a framework (IDE)</li>
+            </ul>
+          </div>
+
+          <div class="cost-highlight">
+            "Testing always Gives Confidence In The Developed Software"
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">Two Perspectives on Code Quality</h3>
+            <div class="benefits-grid">
+              <div class="benefit-card">
+                <h4>👤 External (User's)</h4>
+                <ul>
+                  <li>Does software implement requirements correctly?</li>
+                  <li>Is it easy to use?</li>
+                  <li>Does it crash?</li>
+                </ul>
+              </div>
+              <div class="benefit-card">
+                <h4>💻 Internal (Programmer's)</h4>
+                <ul>
+                  <li>How is the code organized?</li>
+                  <li>Where is specific functionality implemented?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">Is Unit Testing Enough?</h3>
+            <div class="definition-box">
+              <h4>📚 IEEE Definition of "Software Quality"</h4>
+              <ol>
+                <li>
+                  The degree to which a system, component, or process meets
+                  <strong>specified requirements</strong>
+                </li>
+                <li>
+                  The degree to which a system, component, or process meets
+                  <strong>customer or user needs or expectations</strong>
+                </li>
+              </ol>
+              <p>
+                <strong>Answer:</strong> We need another detailed-oriented eye;
+                we need a testing team.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tester-roles" class="section">
+        <div class="section-header">
+          <h2>4. Tester Roles</h2>
+        </div>
+        <div class="section-content">
+          <div class="subsection">
+            <h3 class="subsection-title">What Testers Do</h3>
+            <div class="testing-types">
+              <h4>🎯 Primary Responsibilities:</h4>
+              <ul>
+                <li>Find Bugs after unit testing</li>
+                <li>Complete testing at different levels</li>
+                <li>Integration testing</li>
+                <li>System Testing</li>
+                <li>Acceptance testing (Business needs)</li>
+              </ul>
+            </div>
+
+            <div class="testing-types">
+              <h4>🔍 Testing Types:</h4>
+              <ul>
+                <li>
+                  <strong>Functional Testing:</strong> Requirements validation
+                </li>
+                <li>
+                  <strong>Non-Functional Testing:</strong> Performance,
+                  Security, etc.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">Team Roles & Responsibilities</h3>
+            <div class="roles-grid">
+              <div class="role-card">
+                <h4>👤 Customer</h4>
+                <p>
+                  Needs qualitative, correct, complete, and secure software
+                  product
+                </p>
+              </div>
+              <div class="role-card">
+                <h4>📊 Project Manager</h4>
+                <p>Manages everything</p>
+              </div>
+              <div class="role-card">
+                <h4>💻 Developers</h4>
+                <p>Develop the software product</p>
+              </div>
+              <div class="role-card">
+                <h4>🔍 Testers</h4>
+                <p>Test the software product</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="cost-highlight">
+            🐛 Testing is all about finding bugs. The earlier bugs are found,
+            the lower the cost to fix them and the higher the quality of the
+            software.
+          </div>
+        </div>
+      </section>
+
+      <section id="bug-lifecycle" class="section">
+        <div class="section-header">
+          <h2>5. Bug Life Cycle</h2>
+        </div>
+        <div class="section-content">
+          <div class="subsection">
+            <h3 class="subsection-title">States of a Bug</h3>
+            <div class="lifecycle-container">
+              <div class="lifecycle-state">NEW</div>
+              <div class="lifecycle-state">OPEN</div>
+              <div class="lifecycle-state">ASSIGN</div>
+              <div class="lifecycle-state">REJECTED</div>
+              <div class="lifecycle-state">DEFERRED</div>
+              <div class="lifecycle-state">TEST</div>
+              <div class="lifecycle-state">REOPENED</div>
+              <div class="lifecycle-state">VERIFIED</div>
+              <div class="lifecycle-state">CLOSED</div>
+            </div>
+
+            <div class="testing-types">
+              <h4>🔄 State Descriptions:</h4>
+              <ul>
+                <li><strong>NEW:</strong> Newly reported bug</li>
+                <li>
+                  <strong>OPEN:</strong> Bug is open for review/assignment
+                </li>
+                <li><strong>ASSIGN:</strong> Bug is assigned to a developer</li>
+                <li>
+                  <strong>REJECTED:</strong> Bug is rejected (not a bug,
+                  duplicate)
+                </li>
+                <li>
+                  <strong>DEFERRED:</strong> Bug is deferred for later fix
+                </li>
+                <li>
+                  <strong>TEST:</strong> Bug is fixed and ready for testing
+                </li>
+                <li>
+                  <strong>REOPENED:</strong> Bug is reopened if fix is not
+                  satisfactory
+                </li>
+                <li>
+                  <strong>VERIFIED:</strong> Bug fix is verified by tester
+                </li>
+                <li>
+                  <strong>CLOSED:</strong> Bug is closed after verification
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">6. Raising Bugs</h3>
+            <div class="benefits-grid">
+              <div class="benefit-card">
+                <h4>👀 SPOT</h4>
+                <p>Identify the issue</p>
+              </div>
+              <div class="benefit-card">
+                <h4>🎯 APPROACH</h4>
+                <p>Plan your approach</p>
+              </div>
+              <div class="benefit-card">
+                <h4>📝 RAISE</h4>
+                <p>Report the bug</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="bug-priority" class="section">
+        <div class="section-header">
+          <h2>7. Bug Priority & Severity</h2>
+        </div>
+        <div class="section-content">
+          <div class="subsection">
+            <h3 class="subsection-title">Bug Priority</h3>
+            <div class="definition-box">
+              <h4>❓ Definition: How important is it?</h4>
+              <p>Urgent vs Not Urgent</p>
+            </div>
+
+            <div class="priority-grid">
+              <div class="priority-card p1">
+                <h4>P1</h4>
+                <p>Fix it now</p>
+              </div>
+              <div class="priority-card p2">
+                <h4>P2</h4>
+                <p>Fix it later</p>
+              </div>
+              <div class="priority-card p3">
+                <h4>P3</h4>
+                <p>Don't fix it</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">Bug Severity</h3>
+            <div class="definition-box">
+              <h4>💥 Definition: How much damage it causes</h4>
+              <p>Severe vs Not Severe</p>
+            </div>
+
+            <div class="severity-grid">
+              <div class="severity-card s1">
+                <h4>S1</h4>
+                <p>Unusable, no workaround (Show Stopper)</p>
+              </div>
+              <div class="severity-card s2">
+                <h4>S2</h4>
+                <p>Workaround possible</p>
+              </div>
+              <div class="severity-card s3">
+                <h4>S3</h4>
+                <p>Cosmetic</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">9. Bug Quadrants</h3>
+            <div class="definition-box">
+              <h4>📊 Bugs are not inherently Good or Bad</h4>
+              <p>Categorization based on Priority and Severity:</p>
+            </div>
+
+            <div class="quadrant-grid">
+              <div class="quadrant-card urgent-severe">
+                <h4>🚨 Urgent & Severe</h4>
+                <p>Critical Issues</p>
+              </div>
+              <div class="quadrant-card urgent-not-severe">
+                <h4>⚡ Urgent & Not Severe</h4>
+                <p>Quick Fixes</p>
+              </div>
+              <div class="quadrant-card not-urgent-severe">
+                <h4>💣 Not Urgent & Severe</h4>
+                <p>Plan Carefully</p>
+              </div>
+              <div class="quadrant-card not-urgent-not-severe">
+                <h4>🌱 Not Urgent & Not Severe</h4>
+                <p>Low Priority</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <h3 class="subsection-title">10. When are you finished?</h3>
+            <div class="cost-highlight">
+              ✅ You are finished when the only bugs left are those that are
+              acceptable (based on objective SQA input). Or, at least for now.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="bug-tracking" class="section">
+        <div class="section-header">
+          <h2>11. Bug Tracking Tool</h2>
+        </div>
+        <div class="section-content">
+          <div class="definition-box">
+            <h4>🛠️ Mantis Bug Tracking System Example</h4>
+            <p>Bug tracking tools provide workflows for:</p>
+            <ul>
+              <li>Viewing issues</li>
+              <li>Issue details management</li>
+              <li>Assigning issues to team members</li>
+              <li>Selecting new status (resolved, etc.)</li>
+              <li>Entering resolution notes</li>
+              <li>Updated views after resolving issues</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        <p>🐛 Software Quality Assurance Course Notes</p>
+        <p>Focus on Quality Code, Testing, and Bug Management</p>
+        <p>Created for: abdelghany-77 | Last updated: 2025-07-23</p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complete Linux Commands & System Administration Guide</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.7;
+        color: #333;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 50%,
+          #f093fb 100%
+        );
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 20px auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Header Styles */
+      header {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+      }
+
+      header * {
+        position: relative;
+        z-index: 1;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        margin-bottom: 1rem;
+        font-weight: 800;
+      }
+
+      .subtitle {
+        font-size: 1.3rem;
+        opacity: 0.95;
+        font-weight: 300;
+        margin-bottom: 1rem;
+      }
+
+      .date-info {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+      }
+
+      /* Navigation */
+      .nav-container {
+        margin-bottom: 2rem;
+      }
+
+      .toc {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .toc h2 {
+        color: #3498db;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .toc-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 0.5rem;
+      }
+
+      .toc a {
+        color: #2c3e50;
+        text-decoration: none;
+        padding: 0.75rem 1rem;
+        display: block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+      }
+
+      .toc a:hover {
+        background: #f8f9fa;
+        transform: translateX(5px);
+        border-left-color: #3498db;
+        color: #3498db;
+      }
+
+      /* Section Styles */
+      .section {
+        background: white;
+        margin: 2rem 0;
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .section:hover {
+        transform: translateY(-2px);
+      }
+
+      .section h2 {
+        color: #3498db;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 0.75rem;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .section h3 {
+        color: #2c3e50;
+        margin: 2rem 0 1.5rem 0;
+        font-size: 1.4rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .section h4 {
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      /* Command and Code Styles */
+      .command-box {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: #ecf0f1;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        font-family: "Fira Code", "Courier New", monospace;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow-x: auto;
+      }
+
+      .command-box::before {
+        content: "$ ";
+        color: #4ecdc4;
+        font-weight: bold;
+      }
+
+      .command-box.multi-line::before {
+        content: "";
+      }
+
+      /* Alert Boxes */
+      .example {
+        background: #e8f5e8;
+        border-left: 5px solid #2ecc71;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .warning {
+        background: #fff3cd;
+        border-left: 5px solid #f39c12;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .danger {
+        background: #f8d7da;
+        border-left: 5px solid #e74c3c;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .info {
+        background: #d1ecf1;
+        border-left: 5px solid #3498db;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Grid and Card Layouts */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .grid-2 {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      .card {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid #e9ecef;
+        transition: transform 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        border-color: #3498db;
+      }
+
+      .card h4 {
+        color: #3498db;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Tables */
+      .table-container {
+        overflow-x: auto;
+        margin: 1.5rem 0;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+      }
+
+      th,
+      td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      th {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        font-weight: 600;
+      }
+
+      tbody tr:hover {
+        background: #f8f9fa;
+      }
+
+      /* Code elements */
+      code {
+        background: #f1f3f4;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        font-family: "Fira Code", "Courier New", monospace;
+        font-size: 0.9em;
+        color: #2c3e50;
+        border: 1px solid #e1e5e9;
+      }
+
+      /* Progress indicators */
+      .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: #e9ecef;
+        border-radius: 2px;
+        overflow: hidden;
+        margin: 1rem 0;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #3498db, #667eea);
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      /* Scroll to top button */
+      .scroll-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+
+      .scroll-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .scroll-to-top:hover {
+        transform: translateY(-3px);
+      }
+
+      /* User type badges */
+      .user-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .user-root {
+        background: #e74c3c;
+        color: white;
+      }
+
+      .user-normal {
+        background: #2ecc71;
+        color: white;
+      }
+
+      .user-service {
+        background: #f39c12;
+        color: white;
+      }
+
+      /* Permission matrix */
+      .permission-matrix {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 0.5rem;
+        margin: 1rem 0;
+        font-family: monospace;
+      }
+
+      .permission-header {
+        background: #3498db;
+        color: white;
+        padding: 0.5rem;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .permission-cell {
+        background: #f8f9fa;
+        padding: 0.5rem;
+        text-align: center;
+        border: 1px solid #dee2e6;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          margin: 10px;
+          padding: 15px;
+        }
+
+        .section {
+          padding: 1.5rem;
+        }
+
+        .toc {
+          padding: 1.5rem;
+        }
+
+        .toc-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .command-box {
+          font-size: 0.85rem;
+          padding: 1rem;
+        }
+      }
+
+      /* Animation classes */
+      .fade-in {
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        background: #2c3e50;
+        color: white;
+        border-radius: 10px;
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <header class="fade-in">
+        <h1>🐧 Linux Commands & System Administration Guide</h1>
+      </header>
+      <div class="nav-container">
+        <nav class="toc fade-in">
+          <h2>📚 Table of Contents</h2>
+          <div class="toc-grid">
+            <a href="#linux-basics">1. 🏗️ Linux Architecture & Open Source</a>
+            <a href="#getting-help">2. 📖 Getting Help & Information</a>
+            <a href="#navigation">3. 🧭 Navigation & File System</a>
+            <a href="#file-operations">4. 📁 File & Directory Operations</a>
+            <a href="#viewing-files">5. 👁️ Viewing File Contents</a>
+            <a href="#user-management">6. 👥 User & Group Management</a>
+            <a href="#permissions">7. 🔐 File Permissions & Ownership</a>
+            <a href="#shell-environment">8. 🐚 Shell Environment & Variables</a>
+            <a href="#wildcards">9. 🎯 Wildcards & Pattern Matching</a>
+            <a href="#cli-basics">10. 💻 Command Line Interface Basics</a>
+            <a href="#advanced-topics">11. 🚀 Advanced Topics</a>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+        </nav>
+      </div>
+
+      <!-- All previous sections remain the same until user-management -->
+
+      <section id="user-management" class="section fade-in">
+        <h2>👥 6. User & Group Management</h2>
+
+        <h3>🏷️ User Types in Linux</h3>
+        <div class="grid grid-3">
+          <div class="card">
+            <h4>👑 Root User</h4>
+            <div class="user-badge user-root">UID: 0</div>
+            <p>
+              System administrator with unlimited privileges. Can perform any
+              operation on the system.
+            </p>
+            <div class="command-box">
+              # Switch to root<br />
+              sudo -i<br />
+              sudo -s<br />
+              su -<br />
+              su root
+            </div>
+          </div>
+          <div class="card">
+            <h4>👤 Normal Users</h4>
+            <div class="user-badge user-normal">UID: 1000+</div>
+            <p>
+              Regular users with limited privileges. Each user has their own
+              home directory and settings.
+            </p>
+            <div class="command-box">
+              # Regular user operations<br />
+              whoami<br />
+              id username<br />
+              groups username
+            </div>
+          </div>
+          <div class="card">
+            <h4>⚙️ Service Users</h4>
+            <div class="user-badge user-service">UID: 1-999</div>
+            <p>
+              System accounts for running services and daemons. Usually don't
+              have login shells.
+            </p>
+            <div class="command-box">
+              # Examples<br />
+              # www-data (web server)<br />
+              # mysql (database)<br />
+              # mail (mail service)
+            </div>
+          </div>
+        </div>
+
+        <h3>📋 User Information Files</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>👥 /etc/passwd - User Database</h4>
+            <div class="command-box multi-line">
+              # View all users<br />
+              cat /etc/passwd<br />
+              <br />
+              # Format: user:x:uid:gid:comment:home:shell<br />
+              # Example:<br />
+              root:x:0:0:root:/root:/bin/bash<br />
+              mina:x:1000:1000:Mina User:/home/mina:/bin/bash
+            </div>
+            <p>
+              <strong>Fields:</strong> Username, Password (x=encrypted), UID,
+              GID, Comment, Home Directory, Shell
+            </p>
+          </div>
+          <div class="card">
+            <h4>👥 /etc/group - Group Database</h4>
+            <div class="command-box multi-line">
+              # View all groups<br />
+              cat /etc/group<br />
+              <br />
+              # Format: group:x:gid:members<br />
+              # Example:<br />
+              sudo:x:27:mina,alice<br />
+              developers:x:1001:john,jane,bob
+            </div>
+            <p>
+              <strong>Fields:</strong> Group name, Password, GID, Group members
+            </p>
+          </div>
+        </div>
+
+        <h3>🔐 Password and Security Files</h3>
+        <div class="info">
+          <h4>🛡️ Shadow Files (Root Access Required):</h4>
+          <div class="command-box multi-line">
+            # User passwords (encrypted)<br />
+            sudo cat /etc/shadow<br />
+            # Format:
+            user:encrypted_password:last_change:min:max:warn:inactive:expire<br />
+            <br />
+            # Group passwords<br />
+            sudo cat /etc/gshadow<br />
+            # Format: group:encrypted_password:admins:members
+          </div>
+        </div>
+
+        <h3>➕ Creating Users</h3>
+        <div class="example">
+          <h4>🔧 useradd Default Settings:</h4>
+          <div class="command-box multi-line">
+            # View default settings<br />
+            useradd -D<br />
+            <br />
+            # Output:<br />
+            GROUP=100<br />
+            HOME=/home<br />
+            INACTIVE=-1<br />
+            EXPIRE=<br />
+            SHELL=/bin/sh<br />
+            SKEL=/etc/skel<br />
+            CREATE_MAIL_SPOOL=no
+          </div>
+        </div>
+
+        <div class="command-box multi-line">
+          # Basic user creation<br />
+          sudo useradd username<br />
+          <br />
+          # Create user with specific options<br />
+          sudo useradd fatma -s /usr/bin/bash -m -d /home/fatma -c "Python
+          Developer"<br />
+          <br />
+          # Breakdown of options:<br />
+          # -s /usr/bin/bash → Set shell<br />
+          # -m → Create home directory<br />
+          # -d /home/fatma → Specify home directory<br />
+          # -c "Python Developer" → Add comment<br />
+          # -u 1004 → Set specific UID<br />
+          # -g groupname → Set primary group<br />
+          <br />
+          # Set user password<br />
+          sudo passwd fatma<br />
+          <br />
+          # Verify user creation<br />
+          id fatma<br />
+          tail -1 /etc/passwd
+        </div>
+
+        <h3>🏠 User Home Directory Templates</h3>
+        <div class="info">
+          <h4>📁 /etc/skel - Skeleton Directory:</h4>
+          <p>
+            Files and directories in /etc/skel are automatically copied to new
+            user home directories.
+          </p>
+          <div class="command-box multi-line">
+            # Customize new user defaults<br />
+            sudo mkdir /etc/skel/{Documents,Music,Pictures}<br />
+            sudo touch /etc/skel/.bashrc_custom<br />
+            <br />
+            # Now all new users will get these directories
+          </div>
+        </div>
+
+        <h3>✏️ Modifying Users</h3>
+        <div class="table-container">
+          <table>
+            <tr>
+              <th>Command</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td><code>usermod -G group</code></td>
+              <td>Set secondary groups (replaces)</td>
+              <td><code>sudo usermod fatma -G sudo,developers</code></td>
+            </tr>
+            <tr>
+              <td><code>usermod -aG group</code></td>
+              <td>Add to secondary groups</td>
+              <td><code>sudo usermod fatma -aG docker</code></td>
+            </tr>
+            <tr>
+              <td><code>usermod -s shell</code></td>
+              <td>Change user shell</td>
+              <td><code>sudo usermod fatma -s /bin/zsh</code></td>
+            </tr>
+            <tr>
+              <td><code>usermod -d directory</code></td>
+              <td>Change home directory</td>
+              <td><code>sudo usermod fatma -d /opt/fatma</code></td>
+            </tr>
+            <tr>
+              <td><code>usermod -l newname</code></td>
+              <td>Change username</td>
+              <td><code>sudo usermod fatma -l fatima</code></td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="example">
+          <h4>👤 User Modification Examples:</h4>
+          <div class="command-box multi-line">
+            # Add user to sudo group<br />
+            sudo usermod fatma -aG sudo<br />
+            <br />
+            # Check user groups<br />
+            id fatma<br />
+            # Output: uid=1004(fatma) gid=1004(fatma)
+            groups=1004(fatma),27(sudo)<br />
+            <br />
+            # Add to multiple groups<br />
+            sudo usermod fatma -aG sudo,docker,developers<br />
+            <br />
+            # Verify changes<br />
+            groups fatma
+          </div>
+        </div>
+
+        <h3>🗑️ Removing Users</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>🗂️ Remove User (Keep Home)</h4>
+            <div class="command-box">sudo userdel username</div>
+            <p>Removes user account but keeps home directory and files</p>
+          </div>
+          <div class="card">
+            <h4>🗑️ Remove User (Delete All)</h4>
+            <div class="command-box">sudo userdel -r username</div>
+            <p>Removes user account, home directory, and all files</p>
+          </div>
+        </div>
+
+        <h3>👥 Group Management</h3>
+        <div class="command-box multi-line">
+          # Create group<br />
+          sudo groupadd groupname<br />
+          sudo groupadd developers -g 1500 # with specific GID<br />
+          <br />
+          # Create system group (GID < 1000)<br />
+          sudo groupadd -r system_group<br />
+          <br />
+          # Modify group<br />
+          sudo groupmod oldname -n newname # rename group<br />
+          sudo groupmod groupname -g 1600 # change GID<br />
+          <br />
+          # Delete group<br />
+          sudo groupdel groupname<br />
+          <br />
+          # Add user to group<br />
+          sudo usermod -aG groupname username<br />
+          <br />
+          # Remove user from group<br />
+          sudo gpasswd -d username groupname
+        </div>
+
+        <h3>🔑 Password Policies</h3>
+        <div class="info">
+          <h4>⏰ Password Aging with chage:</h4>
+          <div class="command-box multi-line">
+            # Set password policies<br />
+            sudo chage username -E -1 # Never expire<br />
+            sudo chage username -M 90 # Max 90 days<br />
+            sudo chage username -m 7 # Min 7 days between changes<br />
+            sudo chage username -W 7 # Warn 7 days before expiry<br />
+            sudo chage username -I 30 # Account inactive after 30 days<br />
+            <br />
+            # Set all at once<br />
+            sudo chage username -E -1 -M 99999 -m 0 -W 7<br />
+            <br />
+            # View password info<br />
+            sudo chage username -l
+          </div>
+        </div>
+
+        <div class="example">
+          <h4>📊 chage Output Example:</h4>
+          <div class="command-box multi-line">
+            Last password change : Jul 21, 2025<br />
+            Password expires : never<br />
+            Password inactive : never<br />
+            Account expires : never<br />
+            Minimum number of days between password change : 0<br />
+            Maximum number of days between password change : 99999<br />
+            Number of days of warning before password expires : 7
+          </div>
+        </div>
+
+        <h3>🔄 User Switching</h3>
+        <div class="table-container">
+          <table>
+            <tr>
+              <th>Command</th>
+              <th>Environment</th>
+              <th>Working Directory</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td><code>su username</code></td>
+              <td>Current user's</td>
+              <td>Current</td>
+              <td>Switch user, keep environment</td>
+            </tr>
+            <tr>
+              <td><code>su - username</code></td>
+              <td>Target user's</td>
+              <td>Target user's home</td>
+              <td>Switch user with login shell</td>
+            </tr>
+            <tr>
+              <td><code>sudo -u user command</code></td>
+              <td>Current</td>
+              <td>Current</td>
+              <td>Run single command as user</td>
+            </tr>
+            <tr>
+              <td><code>sudo -su user</code></td>
+              <td>Target user's</td>
+              <td>Target user's home</td>
+              <td>Become user via sudo</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="example">
+          <h4>🔄 Switching Examples:</h4>
+          <div class="command-box multi-line">
+            # Current context<br />
+            pwd # /home/mina/projects<br />
+            <br />
+            # Switch without login shell<br />
+            su fatma<br />
+            pwd # /home/mina/projects (stays same)<br />
+            <br />
+            # Switch with login shell<br />
+            su - fatma<br />
+            pwd # /home/fatma (user's home)<br />
+            <br />
+            # Exit back to previous user<br />
+            exit
+          </div>
+        </div>
+      </section>
+
+      <section id="permissions" class="section fade-in">
+        <h2>🔐 7. File Permissions & Ownership</h2>
+
+        <h3>👑 Understanding Ownership</h3>
+        <div class="info">
+          <h4>🏠 Every file and directory has two owners:</h4>
+          <ul>
+            <li><strong>User Owner:</strong> The user who owns the file</li>
+            <li><strong>Group Owner:</strong> The group that owns the file</li>
+          </ul>
+        </div>
+
+        <div class="command-box multi-line">
+          # Check file ownership<br />
+          ls -l filename<br />
+          # -rw-r--r-- 1 mina developers 1024 Jul 23 10:30 document.txt<br />
+          # │ │<br />
+          # │ └── Group owner<br />
+          # └────── User owner<br />
+          <br />
+          # Check directory ownership<br />
+          ls -ld directory/<br />
+          # drwxr-xr-x 2 mina developers 4096 Jul 23 10:30 projects/
+        </div>
+
+        <h3>🔄 Changing Ownership</h3>
+        <div class="grid grid-3">
+          <div class="card">
+            <h4>👤 Change User Owner</h4>
+            <div class="command-box">sudo chown newuser file</div>
+            <p>Changes the user owner of the file</p>
+          </div>
+          <div class="card">
+            <h4>👥 Change Group Owner</h4>
+            <div class="command-box">
+              sudo chown :newgroup file<br />
+              sudo chgrp newgroup file
+            </div>
+            <p>Changes the group owner of the file</p>
+          </div>
+          <div class="card">
+            <h4>👤👥 Change Both</h4>
+            <div class="command-box">sudo chown user:group file</div>
+            <p>Changes both user and group owners</p>
+          </div>
+        </div>
+
+        <div class="example">
+          <h4>🔧 Ownership Examples:</h4>
+          <div class="command-box multi-line">
+            # Change ownership of a single file<br />
+            sudo chown alice document.txt<br />
+            sudo chown alice:developers document.txt<br />
+            <br />
+            # Change ownership recursively<br />
+            sudo chown -R alice:developers /home/alice/projects/<br />
+            <br />
+            # Copy ownership from another file<br />
+            sudo chown --reference=template.txt document.txt<br />
+            <br />
+            # Change only if current owner matches<br />
+            sudo chown --from=olduser newuser file.txt
+          </div>
+        </div>
+
+        <h3>🛡️ File Permission System</h3>
+        <div class="info">
+          <h4>📊 Permission Structure:</h4>
+          <div class="permission-matrix">
+            <div class="permission-header">Permission</div>
+            <div class="permission-header">Symbol</div>
+            <div class="permission-header">Number</div>
+            <div class="permission-header">Description</div>
+
+            <div class="permission-cell">Read</div>
+            <div class="permission-cell">r</div>
+            <div class="permission-cell">4</div>
+            <div class="permission-cell">View contents</div>
+
+            <div class="permission-cell">Write</div>
+            <div class="permission-cell">w</div>
+            <div class="permission-cell">2</div>
+            <div class="permission-cell">Modify contents</div>
+
+            <div class="permission-cell">Execute</div>
+            <div class="permission-cell">x</div>
+            <div class="permission-cell">1</div>
+            <div class="permission-cell">Run/Access</div>
+          </div>
+        </div>
+
+        <h3>📋 Permission Breakdown</h3>
+        <div class="example">
+          <h4>🔍 Reading Permission Strings:</h4>
+          <div class="command-box multi-line">
+            # Example: -rwxr-xr--<br />
+            # │││││││││<br />
+            # │││├┼┼┼┼── Others: r-- (read only)<br />
+            # │││└┼┼┼─── Group: r-x (read, execute)<br />
+            # ││└─┼┼┼──── Owner: rwx (read, write, execute)<br />
+            # │└──┼┼┼───── File type: - (regular file)<br />
+            # └───┴┴┴────── [d=directory, l=link, etc.]<br />
+            <br />
+            # Permission calculations:<br />
+            # rwx = 4+2+1 = 7<br />
+            # r-x = 4+0+1 = 5<br />
+            # r-- = 4+0+0 = 4<br />
+            # Result: 754
+          </div>
+        </div>
+
+        <h3>📁 File vs Directory Permissions</h3>
+        <div class="table-container">
+          <table>
+            <tr>
+              <th>Permission</th>
+              <th>Files</th>
+              <th>Directories</th>
+            </tr>
+            <tr>
+              <td><strong>Read (r)</strong></td>
+              <td>View file contents</td>
+              <td>List directory contents (ls)</td>
+            </tr>
+            <tr>
+              <td><strong>Write (w)</strong></td>
+              <td>Modify file contents</td>
+              <td>Create/delete files in directory</td>
+            </tr>
+            <tr>
+              <td><strong>Execute (x)</strong></td>
+              <td>Run file as program</td>
+              <td>Access directory (cd into it)</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="warning">
+          <strong>⚠️ Directory Permission Notes:</strong>
+          <ul>
+            <li>
+              Need <code>x</code> permission to <code>cd</code> into a directory
+            </li>
+            <li>Need <code>r</code> permission to list directory contents</li>
+            <li>
+              Need <code>w</code> permission to create/delete files (even if you
+              own the files)
+            </li>
+            <li>Directory permissions override file permissions for access</li>
+          </ul>
+        </div>
+
+        <h3>🔧 Changing Permissions</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>🔢 Numeric Method</h4>
+            <div class="command-box multi-line">
+              # Common permission combinations<br />
+              chmod 755 file # rwxr-xr-x<br />
+              chmod 644 file # rw-r--r--<br />
+              chmod 600 file # rw-------<br />
+              chmod 777 file # rwxrwxrwx (dangerous!)<br />
+              <br />
+              # Recursive changes<br />
+              chmod -R 755 directory/
+            </div>
+          </div>
+          <div class="card">
+            <h4>🔤 Symbolic Method</h4>
+            <div class="command-box multi-line">
+              # Add permissions<br />
+              chmod u+x file # Add execute for user<br />
+              chmod g+w file # Add write for group<br />
+              chmod o+r file # Add read for others<br />
+              chmod a+x file # Add execute for all<br />
+              <br />
+              # Remove permissions<br />
+              chmod u-w file # Remove write for user<br />
+              chmod g-x file # Remove execute for group<br />
+              <br />
+              # Set exact permissions<br />
+              chmod u=rwx,g=rx,o=r file
+            </div>
+          </div>
+        </div>
+
+        <h3>📊 Common Permission Patterns</h3>
+        <div class="table-container">
+          <table>
+            <tr>
+              <th>Permissions</th>
+              <th>Numeric</th>
+              <th>Use Case</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td>-rw-------</td>
+              <td>600</td>
+              <td>Private files</td>
+              <td>SSH keys, passwords</td>
+            </tr>
+            <tr>
+              <td>-rw-r--r--</td>
+              <td>644</td>
+              <td>Public readable files</td>
+              <td>Documents, config files</td>
+            </tr>
+            <tr>
+              <td>-rw-rw-r--</td>
+              <td>664</td>
+              <td>Group writable files</td>
+              <td>Shared project files</td>
+            </tr>
+            <tr>
+              <td>-rwxr-xr-x</td>
+              <td>755</td>
+              <td>Executable files</td>
+              <td>Scripts, programs</td>
+            </tr>
+            <tr>
+              <td>drwxr-xr-x</td>
+              <td>755</td>
+              <td>Public directories</td>
+              <td>Home directories</td>
+            </tr>
+            <tr>
+              <td>drwxrwx---</td>
+              <td>770</td>
+              <td>Group shared directories</td>
+              <td>Project folders</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>🎭 Real-World Permission Examples</h3>
+        <div class="example">
+          <h4>🏢 Organizational Permission Structure:</h4>
+          <div class="command-box multi-line">
+            # Library organization example:<br />
+            # Staff: rwx (full access)<br />
+            # Students: r-x (read and access)<br />
+            # Guests: --x (access only)<br />
+            <br />
+            # Set up project directory<br />
+            sudo mkdir /projects/webapp<br />
+            sudo chown :developers /projects/webapp<br />
+            sudo chmod 775 /projects/webapp<br />
+            <br />
+            # Staff can read/write/execute<br />
+            # Students can read/execute<br />
+            # Others can only execute (access)<br />
+            chmod 754 /projects/webapp/script.sh
+          </div>
+        </div>
+
+        <h3>🔐 Special Permissions</h3>
+        <div class="grid grid-3">
+          <div class="card">
+            <h4>🎯 Setuid (SUID)</h4>
+            <div class="command-box">
+              chmod u+s file<br />
+              chmod 4755 file
+            </div>
+            <p>File executes with owner's privileges</p>
+          </div>
+          <div class="card">
+            <h4>👥 Setgid (SGID)</h4>
+            <div class="command-box">
+              chmod g+s directory<br />
+              chmod 2755 directory
+            </div>
+            <p>Files inherit directory's group</p>
+          </div>
+          <div class="card">
+            <h4>🔒 Sticky Bit</h4>
+            <div class="command-box">
+              chmod +t directory<br />
+              chmod 1755 directory
+            </div>
+            <p>Only owner can delete files</p>
+          </div>
+        </div>
+
+        <div class="info">
+          <h4>🌟 Special Permission Examples:</h4>
+          <ul>
+            <li>
+              <strong>SUID:</strong> <code>/usr/bin/passwd</code> - Users can
+              change passwords
+            </li>
+            <li>
+              <strong>SGID:</strong> <code>/var/mail</code> - Mail files get
+              correct group
+            </li>
+            <li>
+              <strong>Sticky:</strong> <code>/tmp</code> - Users can't delete
+              others' files
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="shell-environment" class="section fade-in">
+        <h2>🐚 8. Shell Environment & Variables</h2>
+
+        <h3>🐚 Understanding Shells</h3>
+        <div class="command-box multi-line">
+          # List all available shells<br />
+          cat /etc/shells<br />
+          <br />
+          # Output example:<br />
+          /bin/sh<br />
+          /bin/bash<br />
+          /usr/bin/bash<br />
+          /bin/rbash<br />
+          /usr/bin/rbash<br />
+          /usr/bin/sh<br />
+          /bin/dash<br />
+          /usr/bin/dash<br />
+          /usr/bin/zsh<br />
+          /usr/bin/fish
+        </div>
+
+        <h3>🔍 Current Shell Information</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>🐚 Shell Detection</h4>
+            <div class="command-box multi-line">
+              # Current shell path<br />
+              echo $SHELL<br />
+              # /usr/bin/bash<br />
+              <br />
+              # Current shell name<br />
+              echo $0<br />
+              # bash<br />
+              <br />
+              # Shell process info<br />
+              ps $$
+            </div>
+          </div>
+          <div class="card">
+            <h4>📊 Variable Types</h4>
+            <ul>
+              <li><strong>$SHELL:</strong> Environment variable</li>
+              <li><strong>$0:</strong> Predefined variable</li>
+              <li><strong>$$:</strong> Current process ID</li>
+              <li><strong>$?:</strong> Last command exit status</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>📝 Variable Types and Usage</h3>
+        <div class="grid grid-3">
+          <div class="card">
+            <h4>🏠 Local Variables</h4>
+            <div class="command-box multi-line">
+              # Set local variable<br />
+              x=5<br />
+              name="John Doe"<br />
+              <br />
+              # Access variables<br />
+              echo $x # 5<br />
+              echo $name # John Doe<br />
+              echo ${name}Ahmed # John DoeAhmed
+            </div>
+          </div>
+          <div class="card">
+            <h4>🌍 Environment Variables</h4>
+            <div class="command-box multi-line">
+              # Common environment variables<br />
+              echo $HOME # /home/username<br />
+              echo $USER # username<br />
+              echo $PWD # current directory<br />
+              echo $PATH # executable paths<br />
+              echo $HOSTNAME # computer name
+            </div>
+          </div>
+          <div class="card">
+            <h4>📋 Predefined Variables</h4>
+            <div class="command-box multi-line">
+              # Special shell variables<br />
+              echo $0 # Shell name/script name<br />
+              echo $? # Exit status (0=success)<br />
+              echo $$ # Current process ID<br />
+              echo $1 $2 # Script arguments
+            </div>
+          </div>
+        </div>
+
+        <h3>🔍 Viewing Environment Variables</h3>
+        <div class="command-box multi-line">
+          # View all environment variables<br />
+          env<br />
+          printenv<br />
+          <br />
+          # Filter specific variables<br />
+          env | grep HOME<br />
+          env | grep USER<br />
+          <br />
+          # Search for patterns<br />
+          env | grep -i path # Case-insensitive search<br />
+          <br />
+          # Show specific variable<br />
+          printenv HOME<br />
+          printenv PATH
+        </div>
+
+        <h3>🎨 Customizing the Prompt</h3>
+        <div class="info">
+          <h4>🎭 PS1 - Primary Prompt:</h4>
+          <div class="table-container">
+            <table>
+              <tr>
+                <th>Code</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+              <tr>
+                <td>\u</td>
+                <td>Username</td>
+                <td>mina</td>
+              </tr>
+              <tr>
+                <td>\h</td>
+                <td>Hostname</td>
+                <td>server01</td>
+              </tr>
+              <tr>
+                <td>\w</td>
+                <td>Current directory</td>
+                <td>~/Documents</td>
+              </tr>
+              <tr>
+                <td>\W</td>
+                <td>Current directory (basename)</td>
+                <td>Documents</td>
+              </tr>
+              <tr>
+                <td>\t</td>
+                <td>Time (HH:MM:SS)</td>
+                <td>14:30:25</td>
+              </tr>
+              <tr>
+                <td>\d</td>
+                <td>Date</td>
+                <td>Tue Jul 23</td>
+              </tr>
+              <tr>
+                <td>\$</td>
+                <td>$ for user, # for root</td>
+                <td>$</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="example">
+          <h4>🎨 Custom Prompt Examples:</h4>
+          <div class="command-box multi-line">
+            # Default format<br />
+            PS1="\u@\h:\w\$ "<br />
+            # Output: mina@server:~/Documents$ <br />
+            <br />
+            # With time<br />
+            PS1="\u:\t@\h:\w\$ "<br />
+            # Output: mina:16:15:11@server:~/Documents$ <br />
+            <br />
+            # Colorful prompt<br />
+            PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$
+            "<br />
+            <br />
+            # Simple prompt<br />
+            PS1="[\u@\h \W]\$ "<br />
+            # Output: [mina@server Documents]$
+          </div>
+        </div>
+
+        <h3>🔄 PS2 - Secondary Prompt</h3>
+        <div class="info">
+          <h4>➡️ PS2 appears when commands span multiple lines:</h4>
+          <div class="command-box multi-line">
+            # Default PS2 is "> "<br />
+            echo "Hello world \<br />
+            > this is a long line"<br />
+            <br />
+            # Customize PS2<br />
+            PS2=">>> "<br />
+            <br />
+            echo "Hello \<br />
+            >>> world"<br />
+            <br />
+            # Multi-line string<br />
+            echo "Line 1<br />
+            >>> Line 2<br />
+            >>> Line 3"
+          </div>
+        </div>
+
+        <h3>🛤️ PATH Variable</h3>
+        <div class="example">
+          <h4>🔍 Understanding PATH:</h4>
+          <div class="command-box multi-line">
+            # View current PATH<br />
+            echo $PATH<br />
+            # /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games<br />
+            <br />
+            # PATH determines where shell looks for commands<br />
+            which ls # /usr/bin/ls<br />
+            which cat # /usr/bin/cat<br />
+            which python3 # /usr/bin/python3
+          </div>
+        </div>
+
+        <div class="command-box multi-line">
+          # Add directory to PATH temporarily<br />
+          export PATH=$PATH:~/bin<br />
+          export PATH=$PATH:~/Music/scripts<br />
+          <br />
+          # Add to beginning of PATH (higher priority)<br />
+          export PATH=~/bin:$PATH<br />
+          <br />
+          # Create custom script<br />
+          mkdir ~/bin<br />
+          echo '#!/bin/bash' > ~/bin/myscript<br />
+          echo 'echo "Hello from custom script!"' >> ~/bin/myscript<br />
+          chmod +x ~/bin/myscript<br />
+          <br />
+          # Add to PATH and test<br />
+          export PATH=$PATH:~/bin<br />
+          myscript # Hello from custom script!
+        </div>
+
+        <h3>⚙️ Shell Configuration Files</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>🚪 Login Shells</h4>
+            <div class="command-box multi-line">
+              # System-wide configuration<br />
+              /etc/profile<br />
+              <br />
+              # User-specific configuration<br />
+              ~/.profile<br />
+              ~/.bash_profile<br />
+              ~/.bash_login<br />
+              <br />
+              # Common configuration<br />
+              /etc/bash.bashrc<br />
+              ~/.bashrc
+            </div>
+            <p>Loaded when you log in (<code>su - user</code>)</p>
+          </div>
+          <div class="card">
+            <h4>🖥️ Non-Login Shells</h4>
+            <div class="command-box multi-line">
+              # System-wide configuration<br />
+              /etc/bash.bashrc<br />
+              <br />
+              # User-specific configuration<br />
+              ~/.bashrc<br />
+              <br />
+              # Not loaded:<br />
+              ~/.profile<br />
+              ~/.bash_profile
+            </div>
+            <p>Loaded for terminal sessions (<code>su user</code>)</p>
+          </div>
+        </div>
+
+        <h3>📁 Configuration File Examples</h3>
+        <div class="example">
+          <h4>📝 ~/.bashrc Customization:</h4>
+          <div class="command-box multi-line">
+            # Add to ~/.bashrc<br />
+            <br />
+            # Custom aliases<br />
+            alias ll='ls -la'<br />
+            alias la='ls -A'<br />
+            alias l='ls -CF'<br />
+            alias c='clear'<br />
+            alias ..='cd ..'<br />
+            alias ...='cd ../..'<br />
+            <br />
+            # Custom PATH<br />
+            export PATH=$PATH:~/bin:~/scripts<br />
+            <br />
+            # Custom variables<br />
+            export EDITOR=vim<br />
+            export BROWSER=firefox<br />
+            <br />
+            # Custom prompt<br />
+            PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$
+            '<br />
+            <br />
+            # Custom functions<br />
+            mkcd() {<br />
+            mkdir -p "$1" && cd "$1"<br />
+            }
+          </div>
+        </div>
+
+        <h3>🔄 Login vs Non-Login Shell Examples</h3>
+        <div class="info">
+          <h4>🚪 Shell Loading Behavior:</h4>
+          <div class="command-box multi-line">
+            # Login shell (su - username)<br />
+            su - ali<br />
+            # Loads: /etc/profile → ~/.profile → /etc/bash.bashrc → ~/.bashrc<br />
+            pwd # /home/ali (user's home)<br />
+            <br />
+            # Non-login shell (su username)<br />
+            su ali<br />
+            # Loads: /etc/bash.bashrc → ~/.bashrc<br />
+            pwd # /current/directory (stays same)<br />
+            <br />
+            # Exit back to previous user<br />
+            exit
+          </div>
+        </div>
+
+        <h3>🔧 Variable Best Practices</h3>
+        <div class="warning">
+          <strong>⚠️ Variable Guidelines:</strong>
+          <ul>
+            <li>
+              Use <code>export</code> to make variables available to child
+              processes
+            </li>
+            <li>Quote variables with spaces: <code>name="John Doe"</code></li>
+            <li>Use <code>${variable}</code> syntax to avoid ambiguity</li>
+            <li>
+              Make permanent changes in <code>~/.bashrc</code> or
+              <code>~/.profile</code>
+            </li>
+            <li>Reload configuration with <code>source ~/.bashrc</code></li>
+          </ul>
+        </div>
+
+        <div class="example">
+          <h4>🔄 Reloading Configuration:</h4>
+          <div class="command-box multi-line">
+            # After editing ~/.bashrc, reload it:<br />
+            source ~/.bashrc<br />
+            # or<br />
+            . ~/.bashrc<br />
+            <br />
+            # Check if changes took effect<br />
+            echo $CUSTOM_VARIABLE<br />
+            alias # List all aliases
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        <p>Created By abdelghany</p>
+      </div>
+
+      <!-- Scroll to top button -->
+      <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">
+        ↑
+      </button>
+    </div>
+
+    <script>
+      // Enhanced scroll functionality
+      window.onscroll = function () {
+        const scrollBtn = document.getElementById("scrollToTop");
+        if (
+          document.body.scrollTop > 300 ||
+          document.documentElement.scrollTop > 300
+        ) {
+          scrollBtn.classList.add("visible");
+        } else {
+          scrollBtn.classList.remove("visible");
+        }
+
+        // Update progress bar
+        const winScroll =
+          document.body.scrollTop || document.documentElement.scrollTop;
+        const height =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.querySelector(".progress-fill").style.width = scrolled + "%";
+      };
+
+      function scrollToTop() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }
+
+      // Enhanced intersection observer for animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("fade-in");
+          }
+        });
+      }, observerOptions);
+
+      // Observe all sections
+      document.querySelectorAll(".section").forEach((section) => {
+        observer.observe(section);
+      });
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Add click effects to cards
+      document.querySelectorAll(".card").forEach((card) => {
+        card.addEventListener("click", function () {
+          this.style.transform = "scale(0.98)";
+          setTimeout(() => {
+            this.style.transform = "";
+          }, 150);
+        });
+      });
+    </script>
+  </body>
+</html>
