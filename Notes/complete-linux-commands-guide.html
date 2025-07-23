@@ -438,6 +438,42 @@
           font-size: 0.85rem;
           padding: 1rem;
         }
+
+        .back-to-main {
+          position: relative;
+          margin-bottom: 1rem;
+        }
+      }
+
+      .back-to-main {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-to-main:hover {
+        background: linear-gradient(135deg, #764ba2, #667eea);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        color: white;
+      }
+
+      .back-to-main::before {
+        content: "🏠";
+        font-size: 1.1em;
       }
 
       /* Animation classes */
@@ -469,6 +505,8 @@
   </head>
 
   <body>
+    <a href="../index.html" class="back-to-main">Back to Main</a>
+
     <div class="container">
       <header class="fade-in">
         <h1>🐧 Linux Commands & System Administration Guide</h1>
@@ -497,6 +535,1140 @@
 
       <!-- All previous sections remain the same until user-management -->
 
+      <!-- Add these sections after the navigation and before user-management -->
+
+      <section id="linux-basics" class="section fade-in">
+        <h2>🏗️ 1. Linux Architecture & Open Source</h2>
+
+        <h3>🔓 Open Source Principles</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>🆓 Free Software</h4>
+            <p><strong>Free ≠ No Money</strong></p>
+            <ul>
+              <li>No cost to use, download, or distribute</li>
+              <li>Freedom from licensing fees</li>
+              <li>No vendor lock-in</li>
+              <li>Community-driven development</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>🔍 Freedom</h4>
+            <p><strong>Four Essential Freedoms:</strong></p>
+            <ul>
+              <li><strong>View:</strong> Access to source code</li>
+              <li><strong>Modify:</strong> Change the software</li>
+              <li><strong>Distribute:</strong> Share with others</li>
+              <li><strong>Improve:</strong> Contribute back to community</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>🧠 Understanding Linux Architecture</h3>
+        <div class="info">
+          <h4>🔑 Key Concept:</h4>
+          <p><strong>Kernel ≠ Operating System</strong></p>
+          <ul>
+            <li><strong>Kernel:</strong> Heart of the OS - manages hardware</li>
+            <li>
+              <strong>Distribution:</strong> Complete OS = Kernel + GUI +
+              Package Manager + Libraries
+            </li>
+          </ul>
+        </div>
+
+        <div class="command-box multi-line">
+          # Check your kernel version<br />
+          uname -r<br />
+          # 5.15.0-72-generic<br />
+          <br />
+          # View system information<br />
+          uname -a<br />
+          # Linux ubuntu 5.15.0-72-generic #79-Ubuntu SMP x86_64 GNU/Linux<br />
+          <br />
+          # Check distribution info<br />
+          lsb_release -a<br />
+          cat /etc/os-release
+        </div>
+
+        <h3>🌍 Linux Distribution Families</h3>
+        <div class="table-container">
+          <table>
+            <tr>
+              <th>Family</th>
+              <th>Package Manager</th>
+              <th>File Format</th>
+              <th>Examples</th>
+              <th>Use Cases</th>
+            </tr>
+            <tr>
+              <td><strong>Debian</strong></td>
+              <td>apt, apt-get</td>
+              <td>.deb</td>
+              <td>Ubuntu, Kali, Mint</td>
+              <td>General purpose, development</td>
+            </tr>
+            <tr>
+              <td><strong>Red Hat</strong></td>
+              <td>yum, rpm, dnf</td>
+              <td>.rpm</td>
+              <td>RHEL, CentOS, Fedora</td>
+              <td>Enterprise servers</td>
+            </tr>
+            <tr>
+              <td><strong>openSUSE</strong></td>
+              <td>zypper</td>
+              <td>.rpm</td>
+              <td>openSUSE Leap/Tumbleweed</td>
+              <td>Workstations</td>
+            </tr>
+            <tr>
+              <td><strong>Arch</strong></td>
+              <td>pacman</td>
+              <td>.pkg.tar.xz</td>
+              <td>Arch Linux, Manjaro</td>
+              <td>Advanced users</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>🎯 Why Different Distributions?</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>🖥️ Different Desktop Environments</h4>
+            <ul>
+              <li><strong>GNOME:</strong> Modern, clean interface</li>
+              <li><strong>KDE:</strong> Feature-rich, customizable</li>
+              <li><strong>XFCE:</strong> Lightweight, fast</li>
+              <li><strong>LXDE:</strong> Minimal resource usage</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>🎪 Specialized Use Cases</h4>
+            <ul>
+              <li>
+                <strong>Kali Linux:</strong> Penetration testing & hacking
+              </li>
+              <li><strong>Ubuntu:</strong> General purpose & development</li>
+              <li><strong>Red Hat:</strong> Enterprise servers</li>
+              <li><strong>Raspbian:</strong> Raspberry Pi projects</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>📦 Package Managers</h3>
+        <div class="example">
+          <h4>🛠️ Programming Language Package Managers:</h4>
+          <div class="command-box multi-line">
+            # Node.js packages<br />
+            npm install package-name<br />
+            <br />
+            # Python packages<br />
+            pip install package-name<br />
+            <br />
+            # Ruby gems<br />
+            gem install gem-name<br />
+            <br />
+            # PHP packages<br />
+            composer install package-name
+          </div>
+        </div>
+
+        <h3>🏗️ Custom Linux Distributions</h3>
+        <div class="info">
+          <h4>🔧 Embedded Linux & IoT:</h4>
+          <ul>
+            <li>
+              <strong>Yocto Project:</strong> Create custom Linux distributions
+              for embedded devices
+            </li>
+            <li>
+              <strong>Raspbian:</strong> Debian-based OS for Raspberry Pi (uses
+              apt package manager)
+            </li>
+            <li>
+              <strong>OpenWrt:</strong> Linux distribution for networking
+              hardware
+            </li>
+          </ul>
+        </div>
+
+        <h3>🌐 Web Server Example</h3>
+        <div class="example">
+          <h4>🖥️ Ubuntu + Web Server Setup:</h4>
+          <div class="command-box multi-line">
+            # Install Apache web server<br />
+            sudo apt update<br />
+            sudo apt install apache2<br />
+            <br />
+            # Or install Nginx<br />
+            sudo apt install nginx<br />
+            <br />
+            # Start the service<br />
+            sudo systemctl start apache2<br />
+            sudo systemctl enable apache2<br />
+            <br />
+            # Check status<br />
+            sudo systemctl status apache2
+          </div>
+          <p>
+            <strong>Result:</strong> Hardware + Software = Web Server capable of
+            handling HTTP requests
+          </p>
+        </div>
+
+        <h3>🖱️ Methods of Interacting with OS</h3>
+        <div class="grid grid-3">
+          <div class="card">
+            <h4>🖱️ GUI (Graphical User Interface)</h4>
+            <p><strong>For:</strong> General users, beginners</p>
+            <ul>
+              <li>Point and click interface</li>
+              <li>Visual feedback</li>
+              <li>User-friendly</li>
+              <li>Resource intensive</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>⌨️ CLI (Command Line Interface)</h4>
+            <p><strong>For:</strong> Developers, system administrators</p>
+            <ul>
+              <li>Text-based commands</li>
+              <li>Fast and efficient</li>
+              <li>Scriptable and automatable</li>
+              <li>Low resource usage</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>🔌 API (Application Programming Interface)</h4>
+            <p><strong>For:</strong> Applications, services</p>
+            <ul>
+              <li>Programmatic access</li>
+              <li>Service integration</li>
+              <li>Automated workflows</li>
+              <li>System communication</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="getting-help" class="section fade-in">
+        <h2>📖 2. Getting Help & Information</h2>
+
+        <h3>🆘 Information Commands</h3>
+        <div class="grid grid-3">
+          <div class="card">
+            <h4>📋 Manual Pages</h4>
+            <div class="command-box">man command</div>
+            <p>Comprehensive documentation for commands</p>
+          </div>
+          <div class="card">
+            <h4>ℹ️ Info System</h4>
+            <div class="command-box">info command</div>
+            <p>GNU info documentation (hypertext format)</p>
+          </div>
+          <div class="card">
+            <h4>❓ Quick Help</h4>
+            <div class="command-box">
+              command --help<br />
+              help command
+            </div>
+            <p>Brief usage information</p>
+          </div>
+        </div>
+
+        <h3>🔍 Manual Page Navigation</h3>
+        <div class="table-container">
+          <table>
+            <tr>
+              <th>Command</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td><code>whatis command</code></td>
+              <td>Shows brief description</td>
+              <td><code>whatis passwd</code></td>
+            </tr>
+            <tr>
+              <td><code>man -f command</code></td>
+              <td>Same as whatis</td>
+              <td><code>man -f passwd</code></td>
+            </tr>
+            <tr>
+              <td><code>man -k "keyword"</code></td>
+              <td>Search by keyword</td>
+              <td><code>man -k "directory"</code></td>
+            </tr>
+            <tr>
+              <td><code>man -s5 passwd</code></td>
+              <td>Show specific section</td>
+              <td>Shows file format</td>
+            </tr>
+            <tr>
+              <td><code>man -a passwd</code></td>
+              <td>Browse all sections</td>
+              <td>All passwd manual pages</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="example">
+          <h4>📚 Manual Section Numbers:</h4>
+          <div class="command-box multi-line">
+            # Manual page sections:<br />
+            # 1 - User commands (ls, cat, cp)<br />
+            # 2 - System calls (open, read, write)<br />
+            # 3 - Library functions (printf, malloc)<br />
+            # 4 - Device files (/dev/null, /dev/tty)<br />
+            # 5 - File formats (/etc/passwd, /etc/hosts)<br />
+            # 6 - Games and demos<br />
+            # 7 - Miscellaneous (man pages, conventions)<br />
+            # 8 - System administration (mount, fsck)<br />
+            # 9 - Kernel routines (non-standard)
+          </div>
+        </div>
+
+        <h3>🔧 Manual Page Examples</h3>
+        <div class="command-box multi-line">
+          # passwd command has multiple sections<br />
+          whatis passwd<br />
+          # passwd (1) - change user password<br />
+          # passwd (5) - the password file<br />
+          # passwd (1ssl) - OpenSSL application commands<br />
+          <br />
+          # View specific section<br />
+          man -s1 passwd # passwd command<br />
+          man -s5 passwd # passwd file format<br />
+          <br />
+          # Browse all sections interactively<br />
+          man -a passwd<br />
+          # --Man-- next: passwd(1ssl) [ view (return) | skip (Ctrl-D) | quit
+          (Ctrl-C) ]
+        </div>
+
+        <div class="warning">
+          <strong>⚠️ Important Notes:</strong>
+          <ul>
+            <li>
+              <code>man /etc/passwd</code> is NOT valid - man can't take file
+              paths
+            </li>
+            <li>
+              Use <code>man -s5 passwd</code> to view file format documentation
+            </li>
+            <li>
+              If <code>man -k</code> doesn't work, run
+              <code>sudo mandb</code> to rebuild the database
+            </li>
+          </ul>
+        </div>
+
+        <h3>🔍 Search and Discovery</h3>
+        <div class="example">
+          <h4>🕵️ Finding Commands:</h4>
+          <div class="command-box multi-line">
+            # Search for directory-related commands<br />
+            man -k "directory"<br />
+            # mkdir (1) - make directories<br />
+            # rmdir (1) - remove empty directories<br />
+            # opendir (3) - open a directory<br />
+            <br />
+            # Alternative search method<br />
+            apropos "create directory"<br />
+            # mkdir (2) - create a directory<br />
+            # mkdirat (2) - create a directory<br />
+            <br />
+            # Search for password-related commands<br />
+            man -k pass<br />
+            # passwd (1) - change user password<br />
+            # chpasswd (8) - update passwords in batch mode
+          </div>
+        </div>
+
+        <h3>💡 Help Command Examples</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>✅ Commands with --help</h4>
+            <div class="command-box multi-line">
+              # Most external commands support --help<br />
+              cat --help<br />
+              ls --help<br />
+              cp --help<br />
+              grep --help
+            </div>
+          </div>
+          <div class="card">
+            <h4>🐚 Shell Built-in Commands</h4>
+            <div class="command-box multi-line">
+              # Built-in commands use 'help'<br />
+              help echo<br />
+              help cd<br />
+              help export<br />
+              help alias
+            </div>
+          </div>
+        </div>
+
+        <div class="info">
+          <h4>🔧 Troubleshooting Help System:</h4>
+          <div class="command-box">
+            # If man -k or man -f don't work:<br />
+            sudo mandb
+          </div>
+          <p>This command rebuilds the manual page database index.</p>
+        </div>
+      </section>
+
+      <section id="navigation" class="section fade-in">
+        <h2>🧭 3. Navigation & File System</h2>
+
+        <h3>📍 Basic Navigation Commands</h3>
+        <div class="grid grid-3">
+          <div class="card">
+            <h4>📌 Where Am I?</h4>
+            <div class="command-box">pwd</div>
+            <p>
+              <strong>Present Working Directory</strong> - Shows current
+              location
+            </p>
+          </div>
+          <div class="card">
+            <h4>👤 Who Am I?</h4>
+            <div class="command-box">
+              whoami<br />
+              who am i
+            </div>
+            <p>Shows current user identity</p>
+          </div>
+          <div class="card">
+            <h4>🚀 Change Location</h4>
+            <div class="command-box">cd directory</div>
+            <p>Navigate to different directory</p>
+          </div>
+        </div>
+
+        <h3>🛣️ Understanding Paths</h3>
+        <div class="info">
+          <h4>📐 Path Types:</h4>
+          <div class="grid grid-2">
+            <div>
+              <strong>Relative Path:</strong>
+              <ul>
+                <li>Depends on current working directory</li>
+                <li>
+                  Starts with <code>./</code>, <code>../</code>, or filename
+                </li>
+                <li>
+                  Examples: <code>./file.txt</code>, <code>../parent/</code>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <strong>Absolute Path:</strong>
+              <ul>
+                <li>Depends on root directory <code>/</code></li>
+                <li>Starts with <code>/</code> or <code>~</code></li>
+                <li>
+                  Examples: <code>/home/user</code>, <code>~/Documents</code>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <h3>🗺️ File System Structure Example</h3>
+        <div class="example">
+          <h4>🌳 Directory Tree:</h4>
+          <div class="command-box multi-line">
+            /<br />
+            ├── home/<br />
+            │ ├── ali/<br />
+            │ │ └── test/<br />
+            │ │ └── f.txt<br />
+            │ └── mina/<br />
+            │ └── test2/<br />
+            │ └── f2.txt<br />
+            └── etc/<br />
+            └── passwd
+          </div>
+        </div>
+
+        <h3>🧭 Path Navigation Examples</h3>
+        <div class="command-box multi-line">
+          # Current location: /home/ali/test<br />
+          pwd<br />
+          # /home/ali/test<br />
+          <br />
+          # Relative path examples:<br />
+          cat f.txt # Current directory file<br />
+          cat ./f.txt # Explicit current directory<br />
+          cat ../../mina/test2/f2.txt # Navigate to other user's file<br />
+          cat ../../../etc/passwd # System file via relative path<br />
+          <br />
+          # Absolute path examples:<br />
+          cat /home/ali/test/f.txt # Direct path to current file<br />
+          cat /home/mina/test2/f2.txt # Direct path to other file<br />
+          cat /etc/passwd # Direct path to system file
+        </div>
+
+        <h3>🏠 Home Directory Navigation</h3>
+        <div class="table-container">
+          <table>
+            <tr>
+              <th>Command</th>
+              <th>Description</th>
+              <th>Destination</th>
+            </tr>
+            <tr>
+              <td><code>cd</code></td>
+              <td>Go to home directory</td>
+              <td>/home/username</td>
+            </tr>
+            <tr>
+              <td><code>cd ~</code></td>
+              <td>Go to home directory</td>
+              <td>/home/username</td>
+            </tr>
+            <tr>
+              <td><code>cd $HOME</code></td>
+              <td>Use HOME variable</td>
+              <td>/home/username</td>
+            </tr>
+            <tr>
+              <td><code>cd /home/username</code></td>
+              <td>Direct path to home</td>
+              <td>/home/username</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>⚡ Quick Navigation</h3>
+        <div class="command-box multi-line">
+          # Go back one directory<br />
+          cd ..<br />
+          cd ../<br />
+          <br />
+          # Go back two directories<br />
+          cd ../..<br />
+          cd ../../<br />
+          <br />
+          # Go to previous working directory<br />
+          cd -<br />
+          <br />
+          # Example of cd - usage:<br />
+          pwd # /etc<br />
+          cd /home/mina/git<br />
+          cd - # Returns to /etc<br />
+          cd - # Returns to /home/mina/git
+        </div>
+
+        <h3>👑 Root Directory Concepts</h3>
+        <div class="warning">
+          <strong>🔑 Understanding Root:</strong>
+          <ul>
+            <li><code>/</code> - Root directory (file system start point)</li>
+            <li><code>root</code> - Root user (administrator account)</li>
+            <li><code>/root</code> - Root user's home directory</li>
+          </ul>
+        </div>
+
+        <div class="example">
+          <h4>🏠 Accessing Root Directories:</h4>
+          <div class="command-box multi-line">
+            # Go to root directory (file system root)<br />
+            cd /<br />
+            <br />
+            # Go to root user's home directory<br />
+            # Method 1: Login as root first<br />
+            sudo -i<br />
+            cd /root<br />
+            <br />
+            # Method 2: Direct access (if permissions allow)<br />
+            cd /root
+          </div>
+        </div>
+
+        <h3>✅ Valid vs Invalid Path Operations</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>✅ Valid Operations</h4>
+            <div class="command-box multi-line">
+              # Directory navigation<br />
+              cd /etc/<br />
+              cd /etc<br />
+              <br />
+              # File access<br />
+              cat /etc/passwd<br />
+              cat ./passwd # if in /etc
+            </div>
+          </div>
+          <div class="card">
+            <h4>❌ Invalid Operations</h4>
+            <div class="command-box multi-line">
+              # Can't add trailing slash to files<br />
+              cat /etc/passwd/ # ERROR<br />
+              <br />
+              # Man can't take file paths<br />
+              man /etc/passwd # ERROR
+            </div>
+          </div>
+        </div>
+
+        <h3>🔧 Navigation Tips</h3>
+        <div class="info">
+          <h4>💡 Pro Navigation Tips:</h4>
+          <ul>
+            <li>Use <strong>Tab completion</strong> to auto-complete paths</li>
+            <li>
+              Use <strong>Up/Down arrows</strong> to navigate command history
+            </li>
+            <li><code>cd -</code> toggles between two recent directories</li>
+            <li>
+              <code>pushd</code> and <code>popd</code> for directory stack
+              management
+            </li>
+            <li>Bookmark frequently used directories with shell aliases</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="file-operations" class="section fade-in">
+        <h2>📁 4. File & Directory Operations</h2>
+
+        <h3>✨ Creating Files and Directories</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>📄 Creating Files</h4>
+            <div class="command-box multi-line">
+              # Single file<br />
+              touch filename.txt<br />
+              <br />
+              # Multiple files<br />
+              touch file1 file2 file3<br />
+              <br />
+              # Using brace expansion<br />
+              touch ~/Music/{ahmed,mina}<br />
+              <br />
+              # Sequential numbering<br />
+              touch ~/Music/file{1..100}.txt<br />
+              touch ~/Music/file{a..z}.txt<br />
+              <br />
+              # Multiple locations<br />
+              touch ~/{Music,Videos}/file
+            </div>
+          </div>
+          <div class="card">
+            <h4>📁 Creating Directories</h4>
+            <div class="command-box multi-line">
+              # Single directory<br />
+              mkdir dirname<br />
+              <br />
+              # Multiple directories<br />
+              mkdir dir1 dir2 dir3<br />
+              <br />
+              # Using brace expansion<br />
+              mkdir ~/Music/{dir1,dir2}<br />
+              <br />
+              # Create parent directories<br />
+              mkdir -p ~/Music/dir1/dir12<br />
+              <br />
+              # Complex nested structure<br />
+              mkdir -p ~/Music/dir2/{dir11,dir12}
+            </div>
+          </div>
+        </div>
+
+        <h3>🔄 File and Directory Rules</h3>
+        <div class="example">
+          <h4>📝 Creation Rules:</h4>
+          <div class="command-box multi-line">
+            # You can create a file even if directory exists with same name<br />
+            mkdir test<br />
+            touch test # No error - file and directory coexist<br />
+            <br />
+            # You cannot create directory if file exists with same name<br />
+            touch test2<br />
+            mkdir test2 # Error: File exists<br />
+            <br />
+            # Use -p flag to create parent directories<br />
+            mkdir ~/Music/dir1/dir12 # Error: No such file or directory<br />
+            mkdir -p ~/Music/dir1/dir12 # Success: Creates all parents
+          </div>
+        </div>
+
+        <h3>📋 Copying Files and Directories</h3>
+        <div class="info">
+          <h4>📐 Copy Command Logic:</h4>
+          <ul>
+            <li>
+              <strong>If destination is existing folder:</strong> Copy file with
+              same name
+            </li>
+            <li>
+              <strong>If destination doesn't exist:</strong> Copy file with new
+              name
+            </li>
+            <li>
+              <strong>If destination is existing file:</strong> Overwrite (use
+              -i for confirmation)
+            </li>
+          </ul>
+        </div>
+
+        <div class="command-box multi-line">
+          # Basic file copying<br />
+          cp /etc/passwd ~/Music/ # Copy with same name<br />
+          cp /etc/passwd ~/Music/mypasswd # Copy and rename<br />
+          <br />
+          # Interactive copying (asks before overwrite)<br />
+          cp -i /etc/passwd ~/Music/mypasswd<br />
+          # cp: overwrite '/home/mina/Music/mypasswd'? y<br />
+          <br />
+          # Copy multiple files (destination must be existing directory)<br />
+          cp /etc/{passwd,group} ~/Music/<br />
+          cp ~/git/file{1..100} ~/Music/<br />
+          <br />
+          # Copy directories recursively<br />
+          cp -r ~/Videos/ ~/Music/<br />
+          cp -ir ~/Videos/ ~/Music/ # Interactive recursive copy
+        </div>
+
+        <h3>🚚 Moving and Renaming</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>📦 Moving Files/Directories</h4>
+            <div class="command-box multi-line">
+              # Move files to directory<br />
+              mv ~/Music/group ~/Videos/<br />
+              mv ~/Music/test ~/Videos/<br />
+              <br />
+              # Move multiple files<br />
+              mv ~/Music/{passwd,group} ~/Videos/<br />
+              mv ~/Music/{test,test2} ~/Videos/
+            </div>
+          </div>
+          <div class="card">
+            <h4>✏️ Renaming Files/Directories</h4>
+            <div class="command-box multi-line">
+              # Rename files<br />
+              mv ~/Music/dir1 ~/Music/dir11<br />
+              mv ~/Music/{dir1,dir11} # Shorthand<br />
+              <br />
+              # Rename files<br />
+              mv ~/Music/file1 ~/Music/file11<br />
+              mv ~/Music/{file1,file11} # Shorthand
+            </div>
+          </div>
+        </div>
+
+        <h3>🗑️ Removing Files and Directories</h3>
+        <div class="warning">
+          <strong>⚠️ Deletion Warning:</strong> Linux doesn't have a recycle
+          bin! Deleted files are permanently removed.
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>🗂️ Remove Files</h4>
+            <div class="command-box multi-line">
+              # Remove single file<br />
+              rm filename<br />
+              <br />
+              # Interactive removal<br />
+              rm -i ~/Music/group<br />
+              # rm: remove regular file '/home/mina/Music/group'? y<br />
+              <br />
+              # Remove multiple files<br />
+              rm ~/Music/file{1..100}.txt<br />
+              rm -i ~/Music/group ~/Videos/file
+            </div>
+          </div>
+          <div class="card">
+            <h4>📁 Remove Directories</h4>
+            <div class="command-box multi-line">
+              # Remove empty directory<br />
+              rmdir foldername<br />
+              <br />
+              # Remove directory with contents<br />
+              rm -r ~/Music/Videos/<br />
+              rm -ir ~/Music/Videos/ # Interactive<br />
+              <br />
+              # Remove parent directories if empty<br />
+              rmdir -p /home/mina/Music/Videos/
+            </div>
+          </div>
+        </div>
+
+        <h3>🧹 Bulk Operations</h3>
+        <div class="example">
+          <h4>🗂️ Managing Multiple Items:</h4>
+          <div class="command-box multi-line">
+            # Create multiple directories<br />
+            mkdir ~/Music/{dir1,dir2}<br />
+            <br />
+            # Create multiple files<br />
+            touch ~/Music/file{1..100}<br />
+            <br />
+            # Delete all contents of directory (keep directory)<br />
+            rm -r ~/Music/*<br />
+            <br />
+            # Complex path expansions<br />
+            # These create files in both directories:<br />
+            # ~/Music/git/test/file and ~/Music/git/test1/file<br />
+            touch ~/Music/git/{test,test1}/file
+          </div>
+        </div>
+
+        <h3>🔧 Advanced Copy Operations</h3>
+        <div class="command-box multi-line">
+          # Copy with specific conditions<br />
+          cp -ir ~/Videos/ ~/Music/myvideos # Rename during copy<br />
+          <br />
+          # Copy to multiple destinations<br />
+          cp -ir ~/Videos/ ~/Desktop ~/Music # Copy to both locations<br />
+          <br />
+          # Error handling<br />
+          cp -ir ~/Videos/ ~/Music/group<br />
+          # cp: cannot overwrite non-directory<br />
+          # (This happens when trying to copy directory over existing file)
+        </div>
+
+        <div class="danger">
+          <strong>🚨 Dangerous Commands - Use with Caution:</strong>
+          <ul>
+            <li>
+              <code>rm -rf /</code> - Could delete entire system (usually
+              protected)
+            </li>
+            <li>
+              <code>rm -r *</code> - Deletes everything in current directory
+            </li>
+            <li>
+              <code>mv important_folder /tmp/</code> - Could lose important data
+            </li>
+          </ul>
+          <p>
+            <strong>💡 Safety Tip:</strong> Always use <code>-i</code> flag for
+            interactive confirmation!
+          </p>
+        </div>
+      </section>
+
+      <section id="viewing-files" class="section fade-in">
+        <h2>👁️ 5. Viewing File Contents</h2>
+
+        <h3>📖 Basic File Viewing</h3>
+        <div class="grid grid-3">
+          <div class="card">
+            <h4>📄 Display Entire File</h4>
+            <div class="command-box">
+              cat filename<br />
+              cat -n filename # with line numbers
+            </div>
+            <p>Shows all content at once</p>
+          </div>
+          <div class="card">
+            <h4>📖 Page-by-Page Viewing</h4>
+            <div class="command-box">
+              more filename<br />
+              less filename
+            </div>
+            <p>Navigate through large files</p>
+          </div>
+          <div class="card">
+            <h4>⚠️ Cat Without Arguments</h4>
+            <div class="command-box">
+              cat # Holds terminal<br />
+              # Press Ctrl+C to exit
+            </div>
+            <p>Without arguments, cat waits for input</p>
+          </div>
+        </div>
+
+        <h3>📊 Selective File Viewing</h3>
+        <div class="table-container">
+          <table>
+            <tr>
+              <th>Command</th>
+              <th>Description</th>
+              <th>Options</th>
+              <th>Examples</th>
+            </tr>
+            <tr>
+              <td><code>head</code></td>
+              <td>First 10 lines</td>
+              <td>-n number, -number</td>
+              <td><code>head -5 /etc/passwd</code></td>
+            </tr>
+            <tr>
+              <td><code>tail</code></td>
+              <td>Last 10 lines</td>
+              <td>-n number, -number</td>
+              <td><code>tail -3 /etc/passwd</code></td>
+            </tr>
+            <tr>
+              <td><code>head -n2</code></td>
+              <td>First 2 lines</td>
+              <td>Custom count</td>
+              <td><code>head -2 /etc/passwd</code></td>
+            </tr>
+            <tr>
+              <td><code>tail -n1</code></td>
+              <td>Last 1 line</td>
+              <td>Custom count</td>
+              <td><code>tail -1 /etc/passwd</code></td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>🔀 Pipelines - Chaining Commands</h3>
+        <div class="info">
+          <h4>🧩 Pipeline Concept:</h4>
+          <p>
+            <strong>Command1 | Command2</strong> - Output of Command1 becomes
+            input of Command2
+          </p>
+        </div>
+
+        <div class="command-box multi-line">
+          # Basic pipeline examples<br />
+          ps -ef | less # View processes page by page<br />
+          sort /etc/passwd | less # Sort users and view<br />
+          cat /etc/passwd | sort | less # Chain multiple commands<br />
+          <br />
+          # File processing with line numbers<br />
+          cat -n /etc/passwd | head # Number lines, show first 10<br />
+          cat -n /etc/passwd | tail -1 # Show last line with number<br />
+          sort /etc/passwd | cat -n | head # Sort, number, then show first 10
+        </div>
+
+        <h3>🎯 Extracting Specific Line Ranges</h3>
+        <div class="example">
+          <h4>📊 Advanced Line Selection (Lines 5-11):</h4>
+          <div class="command-box multi-line">
+            # Extract lines 5 to 11 from /etc/passwd<br />
+            cat -n /etc/passwd | head -11 | tail -7<br />
+            <br />
+            # How it works:<br />
+            # 1. cat -n /etc/passwd → Number all lines<br />
+            # 2. | head -11 → Take first 11 lines (1-11)<br />
+            # 3. | tail -7 → Take last 7 of those (5-11)<br />
+            <br />
+            # Expected output:<br />
+            # 5 sync:x:4:65534:sync:/bin:/bin/sync<br />
+            # 6 games:x:5:60:games:/usr/games:/usr/sbin/nologin<br />
+            # 7 man:x:6:12:man:/var/cache/man:/usr/sbin/nologin<br />
+            # 8 lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin<br />
+            # 9 mail:x:8:8:mail:/var/mail:/usr/sbin/nologin<br />
+            # 10 news:x:9:9:news:/var/spool/news:/usr/sbin/nologin<br />
+            # 11 uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+          </div>
+        </div>
+
+        <h3>📋 Directory Listing</h3>
+        <div class="command-box multi-line">
+          # Basic directory listing<br />
+          ls # List working directory<br />
+          pwd # /home/mina/git<br />
+          ls # filegit.pdf test.txt<br />
+          <br />
+          # List specific directory<br />
+          ls /home/mina/git<br />
+          <br />
+          # List with file type indicators<br />
+          ls -F /<br />
+          # bin@ dev/ lib@ media/ proc/ sys/ var/<br />
+          # boot/ etc/ lib64@ mnt/ root/ tmp/<br />
+          # @ = symlink, / = directory, * = executable
+        </div>
+
+        <h3>🔍 File Type Identification</h3>
+        <div class="table-container">
+          <table>
+            <tr>
+              <th>Symbol</th>
+              <th>File Type</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td>@</td>
+              <td>Symbolic link</td>
+              <td>bin@ → usr/bin</td>
+            </tr>
+            <tr>
+              <td>/</td>
+              <td>Directory</td>
+              <td>home/</td>
+            </tr>
+            <tr>
+              <td>*</td>
+              <td>Executable file</td>
+              <td>install-script.sh*</td>
+            </tr>
+            <tr>
+              <td>(none)</td>
+              <td>Regular file</td>
+              <td>document.txt</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>🔍 Filtering Directory Listings</h3>
+        <div class="command-box multi-line">
+          # Filter by file type<br />
+          ls -F / | grep '/' # Show only directories<br />
+          ls -F / | grep '*' # Show only executable files<br />
+          # install-script.sh*<br />
+          <br />
+          # Filter by pattern<br />
+          ls -F / | grep 'in'<br />
+          # bin@<br />
+          # install-script.sh*<br />
+          # sbin@<br />
+          <br />
+          # Filter home directory<br />
+          ls -F /home/mina | grep '/' # Show only subdirectories<br />
+          ls -F ~ | grep '/' # Same as above
+        </div>
+
+        <h3>📊 Detailed File Information</h3>
+        <div class="example">
+          <h4>📋 Long Listing Format:</h4>
+          <div class="command-box multi-line">
+            # Long listing with details<br />
+            ls -l /<br />
+            # -rw-r--r-- 1 root root 7 Jul 10 2023 bin -> usr/bin<br />
+            # │ │ │ │ │ │ │<br />
+            # │ │ │ │ │ │ └── filename<br />
+            # │ │ │ │ │ └─────────────────── modification time<br />
+            # │ │ │ │ └───────────────────── file size<br />
+            # │ │ │ └───────────────────────────── group owner<br />
+            # │ │ └────────────────────────────────── user owner<br />
+            # │ └─────────────────────────────────── number of links<br />
+            # └────────────────────────────────────────────── permissions and
+            type
+          </div>
+        </div>
+
+        <h3>📏 Human-Readable File Sizes</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>📄 File Sizes</h4>
+            <div class="command-box multi-line">
+              # Regular long listing<br />
+              ls -l /etc/passwd<br />
+              # -rw-r--r-- 1 root root 3703 Jul 19 12:53 /etc/passwd<br />
+              <br />
+              # Human-readable sizes<br />
+              ls -lh /etc/passwd<br />
+              # -rw-r--r-- 1 root root 3.7K Jul 19 12:53 /etc/passwd<br />
+              <br />
+              # Large file example<br />
+              ls -lh ~/'Simple Example for Project.mp4'<br />
+              # -rw-rw-r-- 1 mina mina 132M Dec 31 2023 'Simple Example for
+              Project.mp4'
+            </div>
+          </div>
+          <div class="card">
+            <h4>📁 Directory Information</h4>
+            <div class="command-box multi-line">
+              # List directory contents<br />
+              ls -l /home/mina<br />
+              <br />
+              # List directory itself (not contents)<br />
+              ls -ld /home/mina<br />
+              ls -ldh /home/mina # With human-readable size<br />
+              <br />
+              # Directory size<br />
+              du -sh /home/mina<br />
+              # 52G /home/mina<br />
+              <br />
+              # File size<br />
+              du -sh /etc/passwd<br />
+              # 4.0K /etc/passwd
+            </div>
+          </div>
+        </div>
+
+        <h3>🌳 Recursive Listings and Tree View</h3>
+        <div class="command-box multi-line">
+          # Recursive listing<br />
+          ls -R ~/git<br />
+          # /home/mina/git:<br />
+          # hello.txt test<br />
+          # <br />
+          # /home/mina/git/test:<br />
+          # filegit.pdf<br />
+          <br />
+          # Install and use tree command<br />
+          sudo apt install tree<br />
+          <br />
+          # Tree view with depth limit<br />
+          tree -L 2 /<br />
+          <br />
+          # Tree view of specific directory<br />
+          tree ~/git<br />
+          # /home/mina/git<br />
+          # ├── hello.txt<br />
+          # └── test<br />
+          # └── filegit.pdf<br />
+          # <br />
+          # 1 directory, 2 files
+        </div>
+
+        <h3>👁️ Hidden Files and Sorting</h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4>🕵️ Hidden Files</h4>
+            <div class="command-box multi-line">
+              # Show all files including hidden<br />
+              ls -a ~/git/<br />
+              # . .. .ahmed .git hello.txt test<br />
+              <br />
+              # Show all except . and ..<br />
+              ls -A ~/git/<br />
+              # .ahmed .git hello.txt test
+            </div>
+          </div>
+          <div class="card">
+            <h4>📊 Sorting Options</h4>
+            <div class="command-box multi-line">
+              # Sort by modification time (newest first)<br />
+              ls -lt ~<br />
+              <br />
+              # Sort by time (oldest first)<br />
+              ls -ltr ~<br />
+              <br />
+              # Sort by size (largest first)<br />
+              ls -lS ~<br />
+              <br />
+              # Sort by size (smallest first)<br />
+              ls -lSr ~
+            </div>
+          </div>
+        </div>
+
+        <div class="info">
+          <h4>💡Tips for File Viewing:</h4>
+          <ul>
+            <li>
+              Use <code>less</code> instead of <code>more</code> for better
+              navigation
+            </li>
+            <li>
+              In <code>less</code>: Use <code>/pattern</code> to search,
+              <code>q</code> to quit
+            </li>
+            <li>
+              Use <code>tail -f filename</code> to follow growing files (like
+              logs)
+            </li>
+            <li>Combine commands with pipes for powerful text processing</li>
+            <li>Use <code>wc -l filename</code> to count lines in a file</li>
+          </ul>
+        </div>
+      </section>
       <section id="user-management" class="section fade-in">
         <h2>👥 6. User & Group Management</h2>
 
@@ -1488,7 +2660,7 @@
       </section>
 
       <div class="footer">
-        <p>Created By abdelghany</p>
+        <p>Created By: <b>Abdelghany</b></p>
       </div>
 
       <!-- Scroll to top button -->

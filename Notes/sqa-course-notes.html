@@ -19,6 +19,111 @@
         min-height: 100vh;
       }
 
+      /* Sidebar Navigation */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-header {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1002;
+      }
+
+      .sidebar-header h3 {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+      }
+
+      .sidebar-content {
+        padding: 20px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar li {
+        margin-bottom: 8px;
+      }
+
+      .sidebar a {
+        color: #2c3e50;
+        text-decoration: none;
+        padding: 12px 15px;
+        display: block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+      }
+
+      .sidebar a:hover {
+        background: #f8f9fa;
+        transform: translateX(5px);
+        border-left-color: #e74c3c;
+        color: #e74c3c;
+      }
+
+      .sidebar-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        border: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1003;
+      }
+
+      .sidebar-toggle:hover {
+        background: linear-gradient(135deg, #c0392b, #e74c3c);
+        transform: translateY(-2px);
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+
+      .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
       .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -28,6 +133,19 @@
         margin-bottom: 20px;
         border-radius: 15px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        margin-left: 20px;
+        margin-right: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .container.sidebar-open {
+        margin-left: 340px;
+      }
+
+      .container.sidebar-closed {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 1400px;
       }
 
       .header {
@@ -78,39 +196,35 @@
         flex-wrap: wrap;
       }
 
-      .nav-menu {
-        /* position: sticky; */
-        top: 20px;
-        background: rgba(255, 255, 255, 0.95);
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-      }
-
-      .nav-menu ul {
-        list-style: none;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin: 0;
-      }
-
-      .nav-menu a {
-        color: #e74c3c;
-        text-decoration: none;
-        padding: 8px 15px;
-        border-radius: 20px;
-        background: #ecf0f1;
-        transition: all 0.3s ease;
-        font-weight: 500;
-      }
-
-      .nav-menu a:hover {
-        background: #e74c3c;
+      .back-to-main {
+        position: fixed;
+        top: 80px;
+        left: 20px;
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
         color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-to-main:hover {
+        background: linear-gradient(135deg, #c0392b, #e74c3c);
         transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        color: white;
+      }
+
+      .back-to-main::before {
+        content: "🏠";
+        font-size: 1.1em;
       }
 
       .section {
@@ -429,80 +543,85 @@
       }
 
       @media (max-width: 768px) {
-        .container {
-          margin: 10px;
-          padding: 15px;
+        .sidebar {
+          width: 280px;
         }
 
-        .header h1 {
-          font-size: 2em;
+        .container.sidebar-open {
+          margin-left: 20px;
         }
 
-        .nav-menu ul {
-          flex-direction: column;
-          gap: 8px;
+        .sidebar-toggle {
+          top: 10px;
+          left: 10px;
+          padding: 10px 12px;
         }
 
-        .quadrant-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .lifecycle-container {
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .user-info {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 10px;
+        .back-to-main {
+          top: 60px;
+          left: 10px;
+          padding: 8px 15px;
+          font-size: 0.8rem;
         }
       }
+
+      /* Remove old nav-menu styles */
+      .nav-menu {
+        display: none;
+      }
+
+      /* ...existing code... */
     </style>
   </head>
   <body>
-    <div class="container">
+    <!-- Sidebar Navigation -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3>🔍 SQA Navigation</h3>
+        <p>Course Contents</p>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li>
+            <a href="#introduction" onclick="closeSidebar()">Introduction</a>
+          </li>
+          <li>
+            <a href="#code-quality" onclick="closeSidebar()">Code Quality</a>
+          </li>
+          <li>
+            <a href="#unit-testing" onclick="closeSidebar()">Unit Testing</a>
+          </li>
+          <li>
+            <a href="#tester-roles" onclick="closeSidebar()">Tester Roles</a>
+          </li>
+          <li>
+            <a href="#bug-lifecycle" onclick="closeSidebar()">Bug Lifecycle</a>
+          </li>
+          <li>
+            <a href="#bug-priority" onclick="closeSidebar()"
+              >Priority & Severity</a
+            >
+          </li>
+          <li>
+            <a href="#bug-tracking" onclick="closeSidebar()">Bug Tracking</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <a href="../index.html" class="back-to-main">Back to Main</a>
+
+    <div class="container" id="mainContainer">
       <div class="header">
         <h1>Software Quality Assurance</h1>
         <p>Writing Quality Code & Bug Management</p>
       </div>
 
-      <div class="user-info">
-        <div>👤 <strong>User:</strong> abdelghany-77</div>
-        <div>📅 <strong>Date:</strong> 2025-07-23 13:17:56 UTC</div>
-      </div>
-
-      <nav class="nav-menu">
-        <ul>
-          <li><a href="#introduction">Introduction</a></li>
-          <li><a href="#code-quality">Code Quality</a></li>
-          <li><a href="#unit-testing">Unit Testing</a></li>
-          <li><a href="#tester-roles">Tester Roles</a></li>
-          <li><a href="#bug-lifecycle">Bug Lifecycle</a></li>
-          <li><a href="#bug-priority">Priority & Severity</a></li>
-          <li><a href="#bug-tracking">Bug Tracking</a></li>
-        </ul>
-      </nav>
-
-      <section id="introduction" class="section">
-        <div class="section-header">
-          <h2>1. Why... The Idea</h2>
-        </div>
-        <div class="section-content">
-          <div class="definition-box">
-            <h4>🌍 The Modern Development Reality</h4>
-            <p><strong>Multinationals are driven by diversity.</strong></p>
-            <p>
-              This involves distributed teams and collaborative teams working
-              across different locations, time zones, and cultures.
-            </p>
-          </div>
-        </div>
-      </section>
-
       <section id="code-quality" class="section">
         <div class="section-header">
-          <h2>2. Code Quality</h2>
+          <h2>1. Code Quality</h2>
         </div>
         <div class="section-content">
           <div class="subsection">
@@ -966,10 +1085,44 @@
       </section>
 
       <div class="footer">
-        <p>🐛 Software Quality Assurance Course Notes</p>
-        <p>Focus on Quality Code, Testing, and Bug Management</p>
-        <p>Created for: abdelghany-77 | Last updated: 2025-07-23</p>
+        <p>Created By: <b>Abdelghany</b></p>
       </div>
     </div>
+
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.querySelector(".sidebar-overlay");
+        const container = document.getElementById("mainContainer");
+
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("active");
+
+        if (sidebar.classList.contains("open")) {
+          container.classList.add("sidebar-open");
+          container.classList.remove("sidebar-closed");
+        } else {
+          container.classList.remove("sidebar-open");
+          container.classList.add("sidebar-closed");
+        }
+      }
+
+      function closeSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.querySelector(".sidebar-overlay");
+        const container = document.getElementById("mainContainer");
+
+        sidebar.classList.remove("open");
+        overlay.classList.remove("active");
+        container.classList.remove("sidebar-open");
+        container.classList.add("sidebar-closed");
+      }
+
+      // Initialize with sidebar closed
+      document.addEventListener("DOMContentLoaded", function () {
+        const container = document.getElementById("mainContainer");
+        container.classList.add("sidebar-closed");
+      });
+    </script>
   </body>
 </html>

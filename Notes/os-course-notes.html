@@ -19,6 +19,111 @@
         min-height: 100vh;
       }
 
+      /* Sidebar Navigation */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-header {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1002;
+      }
+
+      .sidebar-header h3 {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+      }
+
+      .sidebar-content {
+        padding: 20px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar li {
+        margin-bottom: 8px;
+      }
+
+      .sidebar a {
+        color: #2c3e50;
+        text-decoration: none;
+        padding: 12px 15px;
+        display: block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+      }
+
+      .sidebar a:hover {
+        background: #f8f9fa;
+        transform: translateX(5px);
+        border-left-color: #3498db;
+        color: #3498db;
+      }
+
+      .sidebar-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1003;
+      }
+
+      .sidebar-toggle:hover {
+        background: linear-gradient(135deg, #2980b9, #3498db);
+        transform: translateY(-2px);
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+
+      .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
       .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -28,6 +133,19 @@
         margin-bottom: 20px;
         border-radius: 15px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        margin-left: 20px;
+        margin-right: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .container.sidebar-open {
+        margin-left: 340px;
+      }
+
+      .container.sidebar-closed {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 1400px;
       }
 
       .header {
@@ -278,95 +396,106 @@
         margin-bottom: 15px;
       }
 
-      .nav-menu {
-        /* position: sticky; */
-        top: 20px;
-        background: rgba(255, 255, 255, 0.95);
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-      }
-
-      .nav-menu ul {
-        list-style: none;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin: 0;
-      }
-
-      .nav-menu a {
-        color: #3498db;
-        text-decoration: none;
-        padding: 8px 15px;
-        border-radius: 20px;
-        background: #ecf0f1;
-        transition: all 0.3s ease;
-        font-weight: 500;
-      }
-
-      .nav-menu a:hover {
-        background: #3498db;
+      .back-to-main {
+        position: fixed;
+        top: 80px;
+        left: 20px;
+        background: linear-gradient(135deg, #2c3e50, #34495e);
         color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-to-main:hover {
+        background: linear-gradient(135deg, #34495e, #2c3e50);
         transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        color: white;
+      }
+
+      .back-to-main::before {
+        content: "🏠";
+        font-size: 1.1em;
       }
 
       @media (max-width: 768px) {
-        .container {
-          margin: 10px;
-          padding: 15px;
+        .sidebar {
+          width: 280px;
         }
 
-        .header h1 {
-          font-size: 2em;
+        .container.sidebar-open {
+          margin-left: 20px;
         }
 
-        .lesson-list {
-          grid-template-columns: 1fr;
+        .sidebar-toggle {
+          top: 10px;
+          left: 10px;
+          padding: 10px 12px;
         }
 
-        .nav-menu ul {
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .process-states {
-          flex-direction: column;
-          align-items: center;
+        .back-to-main {
+          top: 60px;
+          left: 10px;
+          padding: 8px 15px;
+          font-size: 0.8rem;
         }
       }
 
-      .footer {
-        text-align: center;
-        padding: 20px;
-        background: #2c3e50;
-        color: white;
-        border-radius: 10px;
-        margin-top: 30px;
+      /* Remove old nav-menu styles */
+      .nav-menu {
+        display: none;
       }
+
+      /* ...existing code... */
     </style>
   </head>
   <body>
-    <div class="container">
+    <!-- Sidebar Navigation -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3>📚 Course Navigation</h3>
+        <p>Operating Systems</p>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li>
+            <a href="#outline" onclick="closeSidebar()">Course Outline</a>
+          </li>
+          <li><a href="#lesson1" onclick="closeSidebar()">Introduction</a></li>
+          <li><a href="#lesson2" onclick="closeSidebar()">Processes</a></li>
+          <li><a href="#lesson3" onclick="closeSidebar()">Memory</a></li>
+          <li>
+            <a href="#lesson4" onclick="closeSidebar()">I/O Management</a>
+          </li>
+          <li><a href="#lesson5" onclick="closeSidebar()">File Systems</a></li>
+          <li>
+            <a href="#lesson6" onclick="closeSidebar()">Access & Protection</a>
+          </li>
+          <li>
+            <a href="#lesson7" onclick="closeSidebar()">Virtualization</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <a href="../index.html" class="back-to-main">Back to Main</a>
+
+    <div class="container" id="mainContainer">
       <div class="header">
         <h1>Operating Systems Course</h1>
         <p>Comprehensive Study Guide & Notes</p>
       </div>
-
-      <nav class="nav-menu">
-        <ul>
-          <li><a href="#outline">Course Outline</a></li>
-          <li><a href="#lesson1">Introduction</a></li>
-          <li><a href="#lesson2">Processes</a></li>
-          <li><a href="#lesson3">Memory</a></li>
-          <li><a href="#lesson4">I/O Management</a></li>
-          <li><a href="#lesson5">File Systems</a></li>
-          <li><a href="#lesson6">Access & Protection</a></li>
-          <li><a href="#lesson7">Virtualization</a></li>
-        </ul>
-      </nav>
 
       <section id="outline" class="course-outline">
         <h2>📚 Course Outline</h2>
@@ -1064,8 +1193,44 @@
       </div>
 
       <div class="footer">
-        <p>Created By abdelghany</p>
+        <p>Created By: <b>Abdelghany</b></p>
       </div>
     </div>
+
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.querySelector(".sidebar-overlay");
+        const container = document.getElementById("mainContainer");
+
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("active");
+
+        if (sidebar.classList.contains("open")) {
+          container.classList.add("sidebar-open");
+          container.classList.remove("sidebar-closed");
+        } else {
+          container.classList.remove("sidebar-open");
+          container.classList.add("sidebar-closed");
+        }
+      }
+
+      function closeSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.querySelector(".sidebar-overlay");
+        const container = document.getElementById("mainContainer");
+
+        sidebar.classList.remove("open");
+        overlay.classList.remove("active");
+        container.classList.remove("sidebar-open");
+        container.classList.add("sidebar-closed");
+      }
+
+      // Initialize with sidebar closed
+      document.addEventListener("DOMContentLoaded", function () {
+        const container = document.getElementById("mainContainer");
+        container.classList.add("sidebar-closed");
+      });
+    </script>
   </body>
 </html>
