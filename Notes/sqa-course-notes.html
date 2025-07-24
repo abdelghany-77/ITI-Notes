@@ -17,16 +17,28 @@
         color: #333;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         min-height: 100vh;
+        display: flex;
       }
 
-      /* Sidebar Navigation */
+      /* Layout Container */
+      .layout-container {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Styles */
       .sidebar {
         position: fixed;
         top: 0;
         left: 0;
         width: 300px;
         height: 100vh;
-        background: rgba(255, 255, 255, 0.95);
+        background: linear-gradient(
+          180deg,
+          rgba(231, 76, 60, 0.95) 0%,
+          rgba(192, 57, 43, 0.95) 100%
+        );
         backdrop-filter: blur(10px);
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
         z-index: 1001;
@@ -36,6 +48,10 @@
       }
 
       .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar.active {
         transform: translateX(0);
       }
 
@@ -50,8 +66,14 @@
       }
 
       .sidebar-header h3 {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         margin-bottom: 5px;
+        font-weight: 700;
+      }
+
+      .sidebar-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
       }
 
       .sidebar-content {
@@ -68,7 +90,7 @@
       }
 
       .sidebar a {
-        color: #2c3e50;
+        color: #ffffff;
         text-decoration: none;
         padding: 12px 15px;
         display: block;
@@ -79,10 +101,9 @@
       }
 
       .sidebar a:hover {
-        background: #f8f9fa;
+        background: rgba(255, 255, 255, 0.1);
         transform: translateX(5px);
-        border-left-color: #e74c3c;
-        color: #e74c3c;
+        border-left-color: #f39c12;
       }
 
       .sidebar-toggle {
@@ -124,6 +145,13 @@
         visibility: visible;
       }
 
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+      }
+
       .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -136,16 +164,6 @@
         margin-left: 20px;
         margin-right: 20px;
         transition: all 0.3s ease;
-      }
-
-      .container.sidebar-open {
-        margin-left: 340px;
-      }
-
-      .container.sidebar-closed {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 1400px;
       }
 
       .header {
@@ -547,8 +565,17 @@
           width: 280px;
         }
 
-        .container.sidebar-open {
-          margin-left: 20px;
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
+        .container {
+          margin: 10px;
+          padding: 15px;
         }
 
         .sidebar-toggle {
@@ -577,551 +604,583 @@
     <!-- Sidebar Navigation -->
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-    <nav class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <h3>🔍 SQA Navigation</h3>
-        <p>Course Contents</p>
-      </div>
-      <div class="sidebar-content">
-        <ul>
-          <li>
-            <a href="#introduction" onclick="closeSidebar()">Introduction</a>
-          </li>
-          <li>
-            <a href="#code-quality" onclick="closeSidebar()">Code Quality</a>
-          </li>
-          <li>
-            <a href="#unit-testing" onclick="closeSidebar()">Unit Testing</a>
-          </li>
-          <li>
-            <a href="#tester-roles" onclick="closeSidebar()">Tester Roles</a>
-          </li>
-          <li>
-            <a href="#bug-lifecycle" onclick="closeSidebar()">Bug Lifecycle</a>
-          </li>
-          <li>
-            <a href="#bug-priority" onclick="closeSidebar()"
-              >Priority & Severity</a
-            >
-          </li>
-          <li>
-            <a href="#bug-tracking" onclick="closeSidebar()">Bug Tracking</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
     <a href="../index.html" class="back-to-main">Back to Main</a>
 
-    <div class="container" id="mainContainer">
-      <div class="header">
-        <h1>Software Quality Assurance</h1>
-        <p>Writing Quality Code & Bug Management</p>
-      </div>
-
-      <section id="code-quality" class="section">
-        <div class="section-header">
-          <h2>1. Code Quality</h2>
+    <div class="layout-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h3>🔍 SQA Navigation</h3>
+          <p>Course Contents</p>
         </div>
-        <div class="section-content">
-          <div class="subsection">
-            <h3 class="subsection-title">
-              Why Care About Writing Quality Code?
-            </h3>
-
-            <div class="example-box">
-              <h4>Example 1: Square Function</h4>
-              <p><strong>Expected:</strong> square(n) = n*n, Square(2) = 4</p>
-              <div class="code-block">int square (int x) { return x*2; }</div>
-              <p><strong>Developer perspective:</strong></p>
-              <ul>
-                <li>"Works on my machine"</li>
-                <li>
-                  "My code never has bugs, it just develops random unexpected
-                  features"
-                </li>
-                <li>"My code is guaranteed 100% mistake free"</li>
-              </ul>
-              <p>
-                <strong>Testing phase:</strong> Square(3) = 6 (expected 9) ❌
-              </p>
-            </div>
-
-            <div class="example-box">
-              <h4>Example 2: Counting Zeros in an Array</h4>
-              <p><strong>Expected:</strong> numZero([0,5,0]) = 2</p>
-              <div class="code-block">for (int i=1 ; i &lt; x.length; i++)</div>
-              <p>
-                <strong>Bug:</strong> Loop starts from index 1, missing x[0]
-              </p>
-              <p><strong>Result:</strong> numZero([4,5,0]) = 1 ❌</p>
-            </div>
-
-            <div class="cost-highlight">
-              🚨 Bugs are caught when Actual Result ≠ Expected Result
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Real Business Examples</h3>
-
-            <div class="bug-example">
-              <h4>💰 Pepsi - $42 Billion Error (May 1992, Philippines)</h4>
-              <ul>
-                <li>
-                  Promotion: Win million pesos (~$40,000) by finding "349" under
-                  bottle caps
-                </li>
-                <li>
-                  <strong>Software error:</strong> 800,000 bottle caps had "349"
-                  instead of one
-                </li>
-                <li>
-                  <strong>Cost:</strong> $42 billion in potential prize money
-                </li>
-                <li>
-                  <strong>Result:</strong> Pepsi paid millions in compensation
-                </li>
-              </ul>
-            </div>
-
-            <div class="bug-example">
-              <h4>🦁 The Lion King Animated Storybook (Disney)</h4>
-              <ul>
-                <li>Disney's first multimedia CD-ROM game for kids</li>
-                <li>
-                  Released for Christmas → "Customer Support's Nightmare" on
-                  December 26th
-                </li>
-                <li>
-                  <strong>Issue:</strong> Tested only for specific PC platform
-                </li>
-                <li>
-                  <strong>Result:</strong> Failed on many popular PC operating
-                  systems
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Error → Bug → Failure Relationship</h3>
-            <div class="lifecycle-container">
-              <div class="lifecycle-state">Developer makes an ERROR</div>
-              <div class="lifecycle-state">Creates a BUG in software</div>
-              <div class="lifecycle-state">Causes FAILURE in operation</div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Causes of Software Errors</h3>
-            <div class="testing-types">
-              <ul>
-                <li>Faulty requirements definition</li>
-                <li>Client-developer communication failures</li>
-                <li>Deviations from software requirements</li>
-                <li>Logical design errors</li>
-                <li>Coding errors</li>
-                <li>
-                  Non-compliance with documentation and coding instructions
-                </li>
-                <li>Shortcomings of the testing process</li>
-                <li>Documentation errors</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Benefits of Quality Code</h3>
-            <div class="benefits-grid">
-              <div class="benefit-card">
-                <h4>🐛 Reducing Bugs</h4>
-                <p>Fewer defects in production</p>
-              </div>
-              <div class="benefit-card">
-                <h4>🔧 Lower Maintenance</h4>
-                <p>Less effort to maintain code</p>
-              </div>
-              <div class="benefit-card">
-                <h4>🍝 No Spaghetti Code</h4>
-                <p>Clean, organized structure</p>
-              </div>
-              <div class="benefit-card">
-                <h4>📈 Easier to Extend</h4>
-                <p>Simple to add new features</p>
-              </div>
-              <div class="benefit-card">
-                <h4>🤝 Builds Trust</h4>
-                <p>Quality Code = Client Trust</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Components of Code Quality</h3>
-            <div class="definition-box">
-              <h4>📝 Coding Standards Include:</h4>
-              <ul>
-                <li>Pleasant to read and easy to grasp</li>
-                <li>Abide by standards</li>
-                <li>Modular</li>
-                <li>Almost bug-free</li>
-                <li>Finished</li>
-                <li>Clean</li>
-                <li>Documented</li>
-                <li>Working</li>
-              </ul>
-            </div>
-          </div>
+        <div class="sidebar-content">
+          <ul>
+            <li>
+              <a href="#code-quality" onclick="closeSidebar()"
+                >🔍 Code Quality</a
+              >
+            </li>
+            <li>
+              <a href="#unit-testing" onclick="closeSidebar()"
+                >🧪 Unit Testing</a
+              >
+            </li>
+            <li>
+              <a href="#tester-roles" onclick="closeSidebar()"
+                >👤 Tester Roles</a
+              >
+            </li>
+            <li>
+              <a href="#bug-lifecycle" onclick="closeSidebar()"
+                >🔄 Bug Life Cycle</a
+              >
+            </li>
+            <li>
+              <a href="#bug-priority" onclick="closeSidebar()"
+                >⚡ Bug Priority</a
+              >
+            </li>
+            <li>
+              <a href="#bug-tracking" onclick="closeSidebar()"
+                >📊 Bug Tracking</a
+              >
+            </li>
+          </ul>
         </div>
-      </section>
+      </aside>
 
-      <section id="unit-testing" class="section">
-        <div class="section-header">
-          <h2>3. Unit Testing</h2>
-        </div>
-        <div class="section-content">
-          <div class="definition-box">
-            <h4>🔬 What is Unit Testing?</h4>
-            <ul>
-              <li>Test individual units of code</li>
-              <li>Isolate each part</li>
-              <li>Show that individual parts are correct</li>
-              <li>Document your code</li>
-              <li>Executed within a framework (IDE)</li>
-            </ul>
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="container" id="mainContainer">
+          <div class="header">
+            <h1>Software Quality Assurance</h1>
+            <p>Writing Quality Code & Bug Management</p>
           </div>
 
-          <div class="cost-highlight">
-            "Testing always Gives Confidence In The Developed Software"
-          </div>
+          <section id="code-quality" class="section">
+            <div class="section-header">
+              <h2>1. Code Quality</h2>
+            </div>
+            <div class="section-content">
+              <div class="subsection">
+                <h3 class="subsection-title">
+                  Why Care About Writing Quality Code?
+                </h3>
 
-          <div class="subsection">
-            <h3 class="subsection-title">Two Perspectives on Code Quality</h3>
-            <div class="benefits-grid">
-              <div class="benefit-card">
-                <h4>👤 External (User's)</h4>
+                <div class="example-box">
+                  <h4>Example 1: Square Function</h4>
+                  <p>
+                    <strong>Expected:</strong> square(n) = n*n, Square(2) = 4
+                  </p>
+                  <div class="code-block">
+                    int square (int x) { return x*2; }
+                  </div>
+                  <p><strong>Developer perspective:</strong></p>
+                  <ul>
+                    <li>"Works on my machine"</li>
+                    <li>
+                      "My code never has bugs, it just develops random
+                      unexpected features"
+                    </li>
+                    <li>"My code is guaranteed 100% mistake free"</li>
+                  </ul>
+                  <p>
+                    <strong>Testing phase:</strong> Square(3) = 6 (expected 9)
+                    ❌
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h4>Example 2: Counting Zeros in an Array</h4>
+                  <p><strong>Expected:</strong> numZero([0,5,0]) = 2</p>
+                  <div class="code-block">
+                    for (int i=1 ; i &lt; x.length; i++)
+                  </div>
+                  <p>
+                    <strong>Bug:</strong> Loop starts from index 1, missing x[0]
+                  </p>
+                  <p><strong>Result:</strong> numZero([4,5,0]) = 1 ❌</p>
+                </div>
+
+                <div class="cost-highlight">
+                  🚨 Bugs are caught when Actual Result ≠ Expected Result
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Real Business Examples</h3>
+
+                <div class="bug-example">
+                  <h4>💰 Pepsi - $42 Billion Error (May 1992, Philippines)</h4>
+                  <ul>
+                    <li>
+                      Promotion: Win million pesos (~$40,000) by finding "349"
+                      under bottle caps
+                    </li>
+                    <li>
+                      <strong>Software error:</strong> 800,000 bottle caps had
+                      "349" instead of one
+                    </li>
+                    <li>
+                      <strong>Cost:</strong> $42 billion in potential prize
+                      money
+                    </li>
+                    <li>
+                      <strong>Result:</strong> Pepsi paid millions in
+                      compensation
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="bug-example">
+                  <h4>🦁 The Lion King Animated Storybook (Disney)</h4>
+                  <ul>
+                    <li>Disney's first multimedia CD-ROM game for kids</li>
+                    <li>
+                      Released for Christmas → "Customer Support's Nightmare" on
+                      December 26th
+                    </li>
+                    <li>
+                      <strong>Issue:</strong> Tested only for specific PC
+                      platform
+                    </li>
+                    <li>
+                      <strong>Result:</strong> Failed on many popular PC
+                      operating systems
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">
+                  Error → Bug → Failure Relationship
+                </h3>
+                <div class="lifecycle-container">
+                  <div class="lifecycle-state">Developer makes an ERROR</div>
+                  <div class="lifecycle-state">Creates a BUG in software</div>
+                  <div class="lifecycle-state">Causes FAILURE in operation</div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Causes of Software Errors</h3>
+                <div class="testing-types">
+                  <ul>
+                    <li>Faulty requirements definition</li>
+                    <li>Client-developer communication failures</li>
+                    <li>Deviations from software requirements</li>
+                    <li>Logical design errors</li>
+                    <li>Coding errors</li>
+                    <li>
+                      Non-compliance with documentation and coding instructions
+                    </li>
+                    <li>Shortcomings of the testing process</li>
+                    <li>Documentation errors</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Benefits of Quality Code</h3>
+                <div class="benefits-grid">
+                  <div class="benefit-card">
+                    <h4>🐛 Reducing Bugs</h4>
+                    <p>Fewer defects in production</p>
+                  </div>
+                  <div class="benefit-card">
+                    <h4>🔧 Lower Maintenance</h4>
+                    <p>Less effort to maintain code</p>
+                  </div>
+                  <div class="benefit-card">
+                    <h4>🍝 No Spaghetti Code</h4>
+                    <p>Clean, organized structure</p>
+                  </div>
+                  <div class="benefit-card">
+                    <h4>📈 Easier to Extend</h4>
+                    <p>Simple to add new features</p>
+                  </div>
+                  <div class="benefit-card">
+                    <h4>🤝 Builds Trust</h4>
+                    <p>Quality Code = Client Trust</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Components of Code Quality</h3>
+                <div class="definition-box">
+                  <h4>📝 Coding Standards Include:</h4>
+                  <ul>
+                    <li>Pleasant to read and easy to grasp</li>
+                    <li>Abide by standards</li>
+                    <li>Modular</li>
+                    <li>Almost bug-free</li>
+                    <li>Finished</li>
+                    <li>Clean</li>
+                    <li>Documented</li>
+                    <li>Working</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="unit-testing" class="section">
+            <div class="section-header">
+              <h2>3. Unit Testing</h2>
+            </div>
+            <div class="section-content">
+              <div class="definition-box">
+                <h4>🔬 What is Unit Testing?</h4>
                 <ul>
-                  <li>Does software implement requirements correctly?</li>
-                  <li>Is it easy to use?</li>
-                  <li>Does it crash?</li>
+                  <li>Test individual units of code</li>
+                  <li>Isolate each part</li>
+                  <li>Show that individual parts are correct</li>
+                  <li>Document your code</li>
+                  <li>Executed within a framework (IDE)</li>
                 </ul>
               </div>
-              <div class="benefit-card">
-                <h4>💻 Internal (Programmer's)</h4>
+
+              <div class="cost-highlight">
+                "Testing always Gives Confidence In The Developed Software"
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">
+                  Two Perspectives on Code Quality
+                </h3>
+                <div class="benefits-grid">
+                  <div class="benefit-card">
+                    <h4>👤 External (User's)</h4>
+                    <ul>
+                      <li>Does software implement requirements correctly?</li>
+                      <li>Is it easy to use?</li>
+                      <li>Does it crash?</li>
+                    </ul>
+                  </div>
+                  <div class="benefit-card">
+                    <h4>💻 Internal (Programmer's)</h4>
+                    <ul>
+                      <li>How is the code organized?</li>
+                      <li>Where is specific functionality implemented?</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Is Unit Testing Enough?</h3>
+                <div class="definition-box">
+                  <h4>📚 IEEE Definition of "Software Quality"</h4>
+                  <ol>
+                    <li>
+                      The degree to which a system, component, or process meets
+                      <strong>specified requirements</strong>
+                    </li>
+                    <li>
+                      The degree to which a system, component, or process meets
+                      <strong>customer or user needs or expectations</strong>
+                    </li>
+                  </ol>
+                  <p>
+                    <strong>Answer:</strong> We need another detailed-oriented
+                    eye; we need a testing team.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="tester-roles" class="section">
+            <div class="section-header">
+              <h2>4. Tester Roles</h2>
+            </div>
+            <div class="section-content">
+              <div class="subsection">
+                <h3 class="subsection-title">What Testers Do</h3>
+                <div class="testing-types">
+                  <h4>🎯 Primary Responsibilities:</h4>
+                  <ul>
+                    <li>Find Bugs after unit testing</li>
+                    <li>Complete testing at different levels</li>
+                    <li>Integration testing</li>
+                    <li>System Testing</li>
+                    <li>Acceptance testing (Business needs)</li>
+                  </ul>
+                </div>
+
+                <div class="testing-types">
+                  <h4>🔍 Testing Types:</h4>
+                  <ul>
+                    <li>
+                      <strong>Functional Testing:</strong> Requirements
+                      validation
+                    </li>
+                    <li>
+                      <strong>Non-Functional Testing:</strong> Performance,
+                      Security, etc.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Team Roles & Responsibilities</h3>
+                <div class="roles-grid">
+                  <div class="role-card">
+                    <h4>👤 Customer</h4>
+                    <p>
+                      Needs qualitative, correct, complete, and secure software
+                      product
+                    </p>
+                  </div>
+                  <div class="role-card">
+                    <h4>📊 Project Manager</h4>
+                    <p>Manages everything</p>
+                  </div>
+                  <div class="role-card">
+                    <h4>💻 Developers</h4>
+                    <p>Develop the software product</p>
+                  </div>
+                  <div class="role-card">
+                    <h4>🔍 Testers</h4>
+                    <p>Test the software product</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="cost-highlight">
+                🐛 Testing is all about finding bugs. The earlier bugs are
+                found, the lower the cost to fix them and the higher the quality
+                of the software.
+              </div>
+            </div>
+          </section>
+
+          <section id="bug-lifecycle" class="section">
+            <div class="section-header">
+              <h2>5. Bug Life Cycle</h2>
+            </div>
+            <div class="section-content">
+              <div class="subsection">
+                <h3 class="subsection-title">Bug Life Cycle States</h3>
+                <div class="lifecycle-container">
+                  <div class="lifecycle-state">New</div>
+                  <div class="lifecycle-state">Assigned</div>
+                  <div class="lifecycle-state">Open</div>
+                  <div class="lifecycle-state">Fixed</div>
+                  <div class="lifecycle-state">Pending Retest</div>
+                  <div class="lifecycle-state">Retest</div>
+                  <div class="lifecycle-state">Verified</div>
+                  <div class="lifecycle-state">Closed</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="bug-priority" class="section">
+            <div class="section-header">
+              <h2>6. Bug Priority & Severity</h2>
+            </div>
+            <div class="section-content">
+              <div class="subsection">
+                <h3 class="subsection-title">Priority Levels</h3>
+                <div class="priority-grid">
+                  <div class="priority-card p1">P1 - Critical</div>
+                  <div class="priority-card p2">P2 - High</div>
+                  <div class="priority-card p3">P3 - Medium</div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Severity Levels</h3>
+                <div class="severity-grid">
+                  <div class="severity-card s1">S1 - Blocker</div>
+                  <div class="severity-card s2">S2 - Major</div>
+                  <div class="severity-card s3">S3 - Minor</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="bug-tracking" class="section">
+            <div class="section-header">
+              <h2>7. Bug Tracking</h2>
+            </div>
+            <div class="section-content">
+              <div class="subsection">
+                <h3 class="subsection-title">Bug Tracking Tools</h3>
+                <div class="definition-box">
+                  <h4>Popular Bug Tracking Systems</h4>
+                  <ul>
+                    <li>JIRA</li>
+                    <li>Bugzilla</li>
+                    <li>MantisBT</li>
+                    <li>Redmine</li>
+                    <li>Azure DevOps</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="bug-priority" class="section">
+            <div class="section-header">
+              <h2>7. Bug Priority & Severity</h2>
+            </div>
+            <div class="section-content">
+              <div class="subsection">
+                <h3 class="subsection-title">Bug Priority</h3>
+                <div class="definition-box">
+                  <h4>❓ Definition: How important is it?</h4>
+                  <p>Urgent vs Not Urgent</p>
+                </div>
+
+                <div class="priority-grid">
+                  <div class="priority-card p1">
+                    <h4>P1</h4>
+                    <p>Fix it now</p>
+                  </div>
+                  <div class="priority-card p2">
+                    <h4>P2</h4>
+                    <p>Fix it later</p>
+                  </div>
+                  <div class="priority-card p3">
+                    <h4>P3</h4>
+                    <p>Don't fix it</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Bug Severity</h3>
+                <div class="definition-box">
+                  <h4>💥 Definition: How much damage it causes</h4>
+                  <p>Severe vs Not Severe</p>
+                </div>
+
+                <div class="severity-grid">
+                  <div class="severity-card s1">
+                    <h4>S1</h4>
+                    <p>Unusable, no workaround (Show Stopper)</p>
+                  </div>
+                  <div class="severity-card s2">
+                    <h4>S2</h4>
+                    <p>Workaround possible</p>
+                  </div>
+                  <div class="severity-card s3">
+                    <h4>S3</h4>
+                    <p>Cosmetic</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">9. Bug Quadrants</h3>
+                <div class="definition-box">
+                  <h4>📊 Bugs are not inherently Good or Bad</h4>
+                  <p>Categorization based on Priority and Severity:</p>
+                </div>
+
+                <div class="quadrant-grid">
+                  <div class="quadrant-card urgent-severe">
+                    <h4>🚨 Urgent & Severe</h4>
+                    <p>Critical Issues</p>
+                  </div>
+                  <div class="quadrant-card urgent-not-severe">
+                    <h4>⚡ Urgent & Not Severe</h4>
+                    <p>Quick Fixes</p>
+                  </div>
+                  <div class="quadrant-card not-urgent-severe">
+                    <h4>💣 Not Urgent & Severe</h4>
+                    <p>Plan Carefully</p>
+                  </div>
+                  <div class="quadrant-card not-urgent-not-severe">
+                    <h4>🌱 Not Urgent & Not Severe</h4>
+                    <p>Low Priority</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">10. When are you finished?</h3>
+                <div class="cost-highlight">
+                  ✅ You are finished when the only bugs left are those that are
+                  acceptable (based on objective SQA input). Or, at least for
+                  now.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="bug-tracking" class="section">
+            <div class="section-header">
+              <h2>11. Bug Tracking Tool</h2>
+            </div>
+            <div class="section-content">
+              <div class="definition-box">
+                <h4>🛠️ Mantis Bug Tracking System Example</h4>
+                <p>Bug tracking tools provide workflows for:</p>
                 <ul>
-                  <li>How is the code organized?</li>
-                  <li>Where is specific functionality implemented?</li>
+                  <li>Viewing issues</li>
+                  <li>Issue details management</li>
+                  <li>Assigning issues to team members</li>
+                  <li>Selecting new status (resolved, etc.)</li>
+                  <li>Entering resolution notes</li>
+                  <li>Updated views after resolving issues</li>
                 </ul>
               </div>
             </div>
-          </div>
+          </section>
 
-          <div class="subsection">
-            <h3 class="subsection-title">Is Unit Testing Enough?</h3>
-            <div class="definition-box">
-              <h4>📚 IEEE Definition of "Software Quality"</h4>
-              <ol>
-                <li>
-                  The degree to which a system, component, or process meets
-                  <strong>specified requirements</strong>
-                </li>
-                <li>
-                  The degree to which a system, component, or process meets
-                  <strong>customer or user needs or expectations</strong>
-                </li>
-              </ol>
-              <p>
-                <strong>Answer:</strong> We need another detailed-oriented eye;
-                we need a testing team.
-              </p>
-            </div>
+          <div class="footer">
+            <p>Created By: <b>Abdelghany</b></p>
           </div>
         </div>
-      </section>
-
-      <section id="tester-roles" class="section">
-        <div class="section-header">
-          <h2>4. Tester Roles</h2>
-        </div>
-        <div class="section-content">
-          <div class="subsection">
-            <h3 class="subsection-title">What Testers Do</h3>
-            <div class="testing-types">
-              <h4>🎯 Primary Responsibilities:</h4>
-              <ul>
-                <li>Find Bugs after unit testing</li>
-                <li>Complete testing at different levels</li>
-                <li>Integration testing</li>
-                <li>System Testing</li>
-                <li>Acceptance testing (Business needs)</li>
-              </ul>
-            </div>
-
-            <div class="testing-types">
-              <h4>🔍 Testing Types:</h4>
-              <ul>
-                <li>
-                  <strong>Functional Testing:</strong> Requirements validation
-                </li>
-                <li>
-                  <strong>Non-Functional Testing:</strong> Performance,
-                  Security, etc.
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Team Roles & Responsibilities</h3>
-            <div class="roles-grid">
-              <div class="role-card">
-                <h4>👤 Customer</h4>
-                <p>
-                  Needs qualitative, correct, complete, and secure software
-                  product
-                </p>
-              </div>
-              <div class="role-card">
-                <h4>📊 Project Manager</h4>
-                <p>Manages everything</p>
-              </div>
-              <div class="role-card">
-                <h4>💻 Developers</h4>
-                <p>Develop the software product</p>
-              </div>
-              <div class="role-card">
-                <h4>🔍 Testers</h4>
-                <p>Test the software product</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="cost-highlight">
-            🐛 Testing is all about finding bugs. The earlier bugs are found,
-            the lower the cost to fix them and the higher the quality of the
-            software.
-          </div>
-        </div>
-      </section>
-
-      <section id="bug-lifecycle" class="section">
-        <div class="section-header">
-          <h2>5. Bug Life Cycle</h2>
-        </div>
-        <div class="section-content">
-          <div class="subsection">
-            <h3 class="subsection-title">States of a Bug</h3>
-            <div class="lifecycle-container">
-              <div class="lifecycle-state">NEW</div>
-              <div class="lifecycle-state">OPEN</div>
-              <div class="lifecycle-state">ASSIGN</div>
-              <div class="lifecycle-state">REJECTED</div>
-              <div class="lifecycle-state">DEFERRED</div>
-              <div class="lifecycle-state">TEST</div>
-              <div class="lifecycle-state">REOPENED</div>
-              <div class="lifecycle-state">VERIFIED</div>
-              <div class="lifecycle-state">CLOSED</div>
-            </div>
-
-            <div class="testing-types">
-              <h4>🔄 State Descriptions:</h4>
-              <ul>
-                <li><strong>NEW:</strong> Newly reported bug</li>
-                <li>
-                  <strong>OPEN:</strong> Bug is open for review/assignment
-                </li>
-                <li><strong>ASSIGN:</strong> Bug is assigned to a developer</li>
-                <li>
-                  <strong>REJECTED:</strong> Bug is rejected (not a bug,
-                  duplicate)
-                </li>
-                <li>
-                  <strong>DEFERRED:</strong> Bug is deferred for later fix
-                </li>
-                <li>
-                  <strong>TEST:</strong> Bug is fixed and ready for testing
-                </li>
-                <li>
-                  <strong>REOPENED:</strong> Bug is reopened if fix is not
-                  satisfactory
-                </li>
-                <li>
-                  <strong>VERIFIED:</strong> Bug fix is verified by tester
-                </li>
-                <li>
-                  <strong>CLOSED:</strong> Bug is closed after verification
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">6. Raising Bugs</h3>
-            <div class="benefits-grid">
-              <div class="benefit-card">
-                <h4>👀 SPOT</h4>
-                <p>Identify the issue</p>
-              </div>
-              <div class="benefit-card">
-                <h4>🎯 APPROACH</h4>
-                <p>Plan your approach</p>
-              </div>
-              <div class="benefit-card">
-                <h4>📝 RAISE</h4>
-                <p>Report the bug</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="bug-priority" class="section">
-        <div class="section-header">
-          <h2>7. Bug Priority & Severity</h2>
-        </div>
-        <div class="section-content">
-          <div class="subsection">
-            <h3 class="subsection-title">Bug Priority</h3>
-            <div class="definition-box">
-              <h4>❓ Definition: How important is it?</h4>
-              <p>Urgent vs Not Urgent</p>
-            </div>
-
-            <div class="priority-grid">
-              <div class="priority-card p1">
-                <h4>P1</h4>
-                <p>Fix it now</p>
-              </div>
-              <div class="priority-card p2">
-                <h4>P2</h4>
-                <p>Fix it later</p>
-              </div>
-              <div class="priority-card p3">
-                <h4>P3</h4>
-                <p>Don't fix it</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Bug Severity</h3>
-            <div class="definition-box">
-              <h4>💥 Definition: How much damage it causes</h4>
-              <p>Severe vs Not Severe</p>
-            </div>
-
-            <div class="severity-grid">
-              <div class="severity-card s1">
-                <h4>S1</h4>
-                <p>Unusable, no workaround (Show Stopper)</p>
-              </div>
-              <div class="severity-card s2">
-                <h4>S2</h4>
-                <p>Workaround possible</p>
-              </div>
-              <div class="severity-card s3">
-                <h4>S3</h4>
-                <p>Cosmetic</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">9. Bug Quadrants</h3>
-            <div class="definition-box">
-              <h4>📊 Bugs are not inherently Good or Bad</h4>
-              <p>Categorization based on Priority and Severity:</p>
-            </div>
-
-            <div class="quadrant-grid">
-              <div class="quadrant-card urgent-severe">
-                <h4>🚨 Urgent & Severe</h4>
-                <p>Critical Issues</p>
-              </div>
-              <div class="quadrant-card urgent-not-severe">
-                <h4>⚡ Urgent & Not Severe</h4>
-                <p>Quick Fixes</p>
-              </div>
-              <div class="quadrant-card not-urgent-severe">
-                <h4>💣 Not Urgent & Severe</h4>
-                <p>Plan Carefully</p>
-              </div>
-              <div class="quadrant-card not-urgent-not-severe">
-                <h4>🌱 Not Urgent & Not Severe</h4>
-                <p>Low Priority</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">10. When are you finished?</h3>
-            <div class="cost-highlight">
-              ✅ You are finished when the only bugs left are those that are
-              acceptable (based on objective SQA input). Or, at least for now.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="bug-tracking" class="section">
-        <div class="section-header">
-          <h2>11. Bug Tracking Tool</h2>
-        </div>
-        <div class="section-content">
-          <div class="definition-box">
-            <h4>🛠️ Mantis Bug Tracking System Example</h4>
-            <p>Bug tracking tools provide workflows for:</p>
-            <ul>
-              <li>Viewing issues</li>
-              <li>Issue details management</li>
-              <li>Assigning issues to team members</li>
-              <li>Selecting new status (resolved, etc.)</li>
-              <li>Entering resolution notes</li>
-              <li>Updated views after resolving issues</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <div class="footer">
-        <p>Created By: <b>Abdelghany</b></p>
-      </div>
+      </main>
     </div>
 
     <script>
       function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
         const overlay = document.querySelector(".sidebar-overlay");
-        const container = document.getElementById("mainContainer");
 
         sidebar.classList.toggle("open");
         overlay.classList.toggle("active");
 
-        if (sidebar.classList.contains("open")) {
-          container.classList.add("sidebar-open");
-          container.classList.remove("sidebar-closed");
-        } else {
-          container.classList.remove("sidebar-open");
-          container.classList.add("sidebar-closed");
+        if (window.innerWidth <= 768) {
+          sidebar.classList.toggle("active");
         }
       }
 
       function closeSidebar() {
         const sidebar = document.getElementById("sidebar");
         const overlay = document.querySelector(".sidebar-overlay");
-        const container = document.getElementById("mainContainer");
 
         sidebar.classList.remove("open");
         overlay.classList.remove("active");
-        container.classList.remove("sidebar-open");
-        container.classList.add("sidebar-closed");
+        sidebar.classList.remove("active");
       }
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener("click", function (e) {
+        const sidebar = document.getElementById("sidebar");
+        const toggle = document.querySelector(".sidebar-toggle");
+
+        if (
+          window.innerWidth <= 768 &&
+          !sidebar.contains(e.target) &&
+          !toggle.contains(e.target) &&
+          sidebar.classList.contains("active")
+        ) {
+          closeSidebar();
+        }
+      });
 
       // Initialize with sidebar closed
       document.addEventListener("DOMContentLoaded", function () {
-        const container = document.getElementById("mainContainer");
-        container.classList.add("sidebar-closed");
+        // Initialize state
       });
     </script>
   </body>

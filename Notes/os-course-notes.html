@@ -17,6 +17,14 @@
         color: #333;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         min-height: 100vh;
+        display: flex;
+      }
+
+      /* Layout Container */
+      .layout-container {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
       }
 
       /* Sidebar Navigation */
@@ -26,7 +34,11 @@
         left: 0;
         width: 300px;
         height: 100vh;
-        background: rgba(255, 255, 255, 0.95);
+        background: linear-gradient(
+          180deg,
+          rgba(52, 152, 219, 0.95) 0%,
+          rgba(41, 128, 185, 0.95) 100%
+        );
         backdrop-filter: blur(10px);
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
         z-index: 1001;
@@ -36,6 +48,10 @@
       }
 
       .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar.active {
         transform: translateX(0);
       }
 
@@ -50,8 +66,14 @@
       }
 
       .sidebar-header h3 {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         margin-bottom: 5px;
+        font-weight: 700;
+      }
+
+      .sidebar-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
       }
 
       .sidebar-content {
@@ -68,7 +90,7 @@
       }
 
       .sidebar a {
-        color: #2c3e50;
+        color: #ffffff;
         text-decoration: none;
         padding: 12px 15px;
         display: block;
@@ -79,10 +101,9 @@
       }
 
       .sidebar a:hover {
-        background: #f8f9fa;
+        background: rgba(255, 255, 255, 0.1);
         transform: translateX(5px);
-        border-left-color: #3498db;
-        color: #3498db;
+        border-left-color: #f39c12;
       }
 
       .sidebar-toggle {
@@ -124,6 +145,13 @@
         visibility: visible;
       }
 
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+      }
+
       .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -136,16 +164,6 @@
         margin-left: 20px;
         margin-right: 20px;
         transition: all 0.3s ease;
-      }
-
-      .container.sidebar-open {
-        margin-left: 340px;
-      }
-
-      .container.sidebar-closed {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 1400px;
       }
 
       .header {
@@ -432,8 +450,17 @@
           width: 280px;
         }
 
-        .container.sidebar-open {
-          margin-left: 20px;
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
+        .container {
+          margin: 10px;
+          padding: 15px;
         }
 
         .sidebar-toggle {
@@ -450,786 +477,834 @@
         }
       }
 
-      /* Remove old nav-menu styles */
       .nav-menu {
         display: none;
       }
 
-      /* ...existing code... */
     </style>
   </head>
   <body>
     <!-- Sidebar Navigation -->
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-    <nav class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <h3>📚 Course Navigation</h3>
-        <p>Operating Systems</p>
-      </div>
-      <div class="sidebar-content">
-        <ul>
-          <li>
-            <a href="#outline" onclick="closeSidebar()">Course Outline</a>
-          </li>
-          <li><a href="#lesson1" onclick="closeSidebar()">Introduction</a></li>
-          <li><a href="#lesson2" onclick="closeSidebar()">Processes</a></li>
-          <li><a href="#lesson3" onclick="closeSidebar()">Memory</a></li>
-          <li>
-            <a href="#lesson4" onclick="closeSidebar()">I/O Management</a>
-          </li>
-          <li><a href="#lesson5" onclick="closeSidebar()">File Systems</a></li>
-          <li>
-            <a href="#lesson6" onclick="closeSidebar()">Access & Protection</a>
-          </li>
-          <li>
-            <a href="#lesson7" onclick="closeSidebar()">Virtualization</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
     <a href="../index.html" class="back-to-main">Back to Main</a>
 
-    <div class="container" id="mainContainer">
-      <div class="header">
-        <h1>Operating Systems Course</h1>
-        <p>Comprehensive Study Guide & Notes</p>
-      </div>
-
-      <section id="outline" class="course-outline">
-        <h2>📚 Course Outline</h2>
-        <div class="lesson-list">
-          <div class="lesson-item">
-            <strong>Lesson 1:</strong> Introduction to Computer System and
-            Operating System
-          </div>
-          <div class="lesson-item">
-            <strong>Lesson 2:</strong> Processes and Scheduling
-          </div>
-          <div class="lesson-item">
-            <strong>Lesson 3:</strong> Memory Management
-          </div>
-          <div class="lesson-item">
-            <strong>Lesson 4:</strong> I/O Management
-          </div>
-          <div class="lesson-item"><strong>Lesson 5:</strong> File Systems</div>
-          <div class="lesson-item">
-            <strong>Lesson 6:</strong> Access and Protection
-          </div>
-          <div class="lesson-item">
-            <strong>Lesson 7:</strong> Virtualization and User Interface and
-            Shells
-          </div>
+    <div class="layout-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h3>📚 Course Navigation</h3>
+          <p>Operating Systems</p>
         </div>
-      </section>
-
-      <div id="lesson1" class="lesson">
-        <div class="lesson-header">
-          <h2>
-            Lesson 1: Introduction to Computer System and Operating System
-          </h2>
+        <div class="sidebar-content">
+          <ul>
+            <li>
+              <a href="#outline" onclick="closeSidebar()">📋 Course Outline</a>
+            </li>
+            <li>
+              <a href="#lesson1" onclick="closeSidebar()">🖥️ Introduction</a>
+            </li>
+            <li>
+              <a href="#lesson2" onclick="closeSidebar()">⚙️ Processes</a>
+            </li>
+            <li><a href="#lesson3" onclick="closeSidebar()">💾 Memory</a></li>
+            <li>
+              <a href="#lesson4" onclick="closeSidebar()">📤 I/O Management</a>
+            </li>
+            <li>
+              <a href="#lesson5" onclick="closeSidebar()">📁 File Systems</a>
+            </li>
+            <li>
+              <a href="#lesson6" onclick="closeSidebar()"
+                >🔒 Access & Protection</a
+              >
+            </li>
+            <li>
+              <a href="#lesson7" onclick="closeSidebar()">☁️ Virtualization</a>
+            </li>
+          </ul>
         </div>
-        <div class="lesson-content">
-          <div class="section">
-            <h3 class="section-title">1.1 Computer System Components</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>Hardware</h4>
-                <p>
-                  Provides basic computing resources (CPU, memory, I/O devices)
-                </p>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="container" id="mainContainer">
+          <div class="header">
+            <h1>Operating Systems Course</h1>
+            <p>Comprehensive Study Guide & Notes</p>
+          </div>
+
+          <section id="outline" class="course-outline">
+            <h2>📚 Course Outline</h2>
+            <div class="lesson-list">
+              <div class="lesson-item">
+                <strong>Lesson 1:</strong> Introduction to Computer System and
+                Operating System
               </div>
-              <div class="component-card">
-                <h4>Operating System</h4>
-                <p>
-                  Controls and coordinates hardware usage among applications
-                </p>
+              <div class="lesson-item">
+                <strong>Lesson 2:</strong> Processes and Scheduling
               </div>
-              <div class="component-card">
-                <h4>Application Programs</h4>
-                <p>Define how system resources solve computing problems</p>
+              <div class="lesson-item">
+                <strong>Lesson 3:</strong> Memory Management
               </div>
-              <div class="component-card">
-                <h4>Users</h4>
-                <p>People, machines, other computers</p>
+              <div class="lesson-item">
+                <strong>Lesson 4:</strong> I/O Management
+              </div>
+              <div class="lesson-item">
+                <strong>Lesson 5:</strong> File Systems
+              </div>
+              <div class="lesson-item">
+                <strong>Lesson 6:</strong> Access and Protection
+              </div>
+              <div class="lesson-item">
+                <strong>Lesson 7:</strong> Virtualization and User Interface and
+                Shells
+              </div>
+            </div>
+          </section>
+
+          <div id="lesson1" class="lesson">
+            <div class="lesson-header">
+              <h2>
+                Lesson 1: Introduction to Computer System and Operating System
+              </h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">1.1 Computer System Components</h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>Hardware</h4>
+                    <p>
+                      Provides basic computing resources (CPU, memory, I/O
+                      devices)
+                    </p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Operating System</h4>
+                    <p>
+                      Controls and coordinates hardware usage among applications
+                    </p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Application Programs</h4>
+                    <p>Define how system resources solve computing problems</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Users</h4>
+                    <p>People, machines, other computers</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.2 Von Neumann Architecture</h3>
+                <div class="highlight-box">
+                  <p>
+                    <strong>First published by John von Neumann in 1945</strong>
+                  </p>
+                  <p>
+                    Design includes a Control Unit (CU), Arithmetic and Logic
+                    Unit (ALU), Memory Unit, Registers, and Inputs/Outputs.
+                  </p>
+                </div>
+
+                <div class="architecture-diagram">
+                  <h4>🏗️ Von Neumann Architecture Components</h4>
+                  <p>
+                    Based on the stored-program computer concept, where
+                    instruction and program data are stored in the same memory.
+                  </p>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">
+                    1.2.1 Central Processing Unit (CPU)
+                  </h4>
+                  <div class="content-box">
+                    <p>
+                      Electronic circuit responsible for executing computer
+                      program instructions, also called microprocessor or
+                      processor. Contains the ALU, CU, and various registers.
+                    </p>
+                  </div>
+
+                  <div class="subsection">
+                    <h5 class="subsection-title">1.2.1.1 Registers</h5>
+                    <p>
+                      High-speed storage areas in the CPU where all data must be
+                      stored before processing:
+                    </p>
+                    <ul>
+                      <li>
+                        <strong>MAR (Memory Address Register):</strong> Holds
+                        memory location of data to be accessed
+                      </li>
+                      <li>
+                        <strong>MDR (Memory Data Register):</strong> Holds data
+                        being transferred to or from memory
+                      </li>
+                      <li>
+                        <strong>AC (Accumulator):</strong> Stores intermediate
+                        arithmetic and logic results
+                      </li>
+                      <li>
+                        <strong>PC (Program Counter):</strong> Contains the
+                        address of the next instruction to be executed
+                      </li>
+                      <li>
+                        <strong>CIR (Current Instruction Register):</strong>
+                        Contains the current instruction during processing
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="subsection">
+                    <h5 class="subsection-title">
+                      1.2.1.2 Arithmetic and Logic Unit (ALU)
+                    </h5>
+                    <div class="definition-box">
+                      <p>
+                        Performs arithmetic (add, subtract) and logic (AND, OR,
+                        NOT) operations.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="subsection">
+                    <h5 class="subsection-title">1.2.1.3 Control Unit (CU)</h5>
+                    <div class="definition-box">
+                      <p>
+                        Controls the operation of the computer's ALU, memory,
+                        and I/O devices, and provides timing/control signals.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">1.2.3 Buses</h4>
+                  <div class="content-box">
+                    <p>
+                      Means by which data is transmitted between computer parts,
+                      connecting major internal components to CPU and memory.
+                      Comprised of:
+                    </p>
+                    <ul>
+                      <li>
+                        <strong>Address Bus:</strong> Carries addresses of data
+                        between processor and memory
+                      </li>
+                      <li>
+                        <strong>Data Bus:</strong> Carries data between
+                        processor, memory, and I/O devices
+                      </li>
+                      <li>
+                        <strong>Control Bus:</strong> Carries control
+                        signals/commands from CPU to control and coordinate
+                        activities
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">1.2.4 Memory Unit</h4>
+                  <div class="highlight-box">
+                    <p>
+                      Consists of RAM (Random Access Memory) and ROM (Read Only
+                      Memory), also known as primary or main memory. Fast and
+                      directly accessible by the CPU, unlike hard drives
+                      (secondary memory).
+                    </p>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">1.2.5 Input Devices</h4>
+                  <div class="content-box">
+                    <p>
+                      <strong>Examples:</strong> Keyboard, Microphone, Scanner,
+                      Mouse, Trackball, Touchpad, Barcode/QR Code readers,
+                      Digital Camera
+                    </p>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">1.2.6 Output Devices</h4>
+                  <div class="content-box">
+                    <p>
+                      <strong>Examples:</strong> Screen (Monitor/Console), Data
+                      Projectors, Speaker and Headphones, Printer, Plotter,
+                      Cutter
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.3 Computer Operating System</h3>
+                <div class="definition-box">
+                  <p>
+                    A system is components integrated to perform a desired task.
+                    A computer operating system consists of integrated
+                    components for operating the computer system (hardware &
+                    software).
+                  </p>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Main Objectives of an OS</h4>
+                  <div class="component-grid">
+                    <div class="component-card">
+                      <h4>Efficiency</h4>
+                      <p>Responsiveness, fluidity</p>
+                    </div>
+                    <div class="component-card">
+                      <h4>Ease of Usability</h4>
+                      <p>User-friendly interface</p>
+                    </div>
+                    <div class="component-card">
+                      <h4>Abstraction</h4>
+                      <p>Extend to new devices and software</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">OS Categories - Usage Types</h4>
+                  <ul>
+                    <li>
+                      <strong>Batch:</strong> Sequential, repeated execution
+                      without human intervention
+                    </li>
+                    <li>
+                      <strong>Time Sharing:</strong> Multiple users/applications
+                      access common hardware
+                    </li>
+                    <li>
+                      <strong>Parallel Distributed:</strong> Single OS
+                      coordinates physically distributed hardware
+                    </li>
+                    <li>
+                      <strong>Network:</strong> Systems connected over network
+                      protocols
+                    </li>
+                    <li>
+                      <strong>Real Time:</strong> Fine-grained time precision in
+                      execution
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.7 Responsibilities of an OS</h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>📅 Scheduling</h4>
+                    <p>
+                      Implements scheduling algorithms for CPU time allocation
+                    </p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🧠 Memory Management</h4>
+                    <p>Provides APIs for memory utilization</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>💾 I/O Management</h4>
+                    <p>Device and I/O management interfaces</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>📁 File Systems</h4>
+                    <p>Storage and retrieval via directory system</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🔒 Access & Protection</h4>
+                    <p>Security subsystem for access control</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🖥️ User Interface</h4>
+                    <p>GUI for ease of use</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="section">
-            <h3 class="section-title">1.2 Von Neumann Architecture</h3>
-            <div class="highlight-box">
-              <p>
-                <strong>First published by John von Neumann in 1945</strong>
-              </p>
-              <p>
-                Design includes a Control Unit (CU), Arithmetic and Logic Unit
-                (ALU), Memory Unit, Registers, and Inputs/Outputs.
-              </p>
+          <div id="lesson2" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 2: Processes and Scheduling</h2>
             </div>
-
-            <div class="architecture-diagram">
-              <h4>🏗️ Von Neumann Architecture Components</h4>
-              <p>
-                Based on the stored-program computer concept, where instruction
-                and program data are stored in the same memory.
-              </p>
-            </div>
-
-            <div class="subsection">
-              <h4 class="subsection-title">
-                1.2.1 Central Processing Unit (CPU)
-              </h4>
-              <div class="content-box">
-                <p>
-                  Electronic circuit responsible for executing computer program
-                  instructions, also called microprocessor or processor.
-                  Contains the ALU, CU, and various registers.
-                </p>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">2.2 Program and Process Concept</h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>Program</h4>
+                    <p>
+                      Static set of capabilities, processed code built for the
+                      OS
+                    </p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Process</h4>
+                    <p>
+                      An executing program; OS assigns process ID and tracking
+                      metrics
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <div class="subsection">
-                <h5 class="subsection-title">1.2.1.1 Registers</h5>
-                <p>
-                  High-speed storage areas in the CPU where all data must be
-                  stored before processing:
-                </p>
+              <div class="section">
+                <h3 class="section-title">2.3 Process Contents</h3>
                 <ul>
+                  <li><strong>Text section:</strong> Program instructions</li>
                   <li>
-                    <strong>MAR (Memory Address Register):</strong> Holds memory
-                    location of data to be accessed
+                    <strong>Program Counter (PC):</strong> Next instruction
+                    address
                   </li>
                   <li>
-                    <strong>MDR (Memory Data Register):</strong> Holds data
-                    being transferred to or from memory
+                    <strong>Stack Section:</strong> Local variables, return
+                    addresses, method parameters
                   </li>
                   <li>
-                    <strong>AC (Accumulator):</strong> Stores intermediate
-                    arithmetic and logic results
+                    <strong>Heap Section:</strong> Dynamic allocation (at
+                    run-time)
                   </li>
                   <li>
-                    <strong>PC (Program Counter):</strong> Contains the address
-                    of the next instruction to be executed
-                  </li>
-                  <li>
-                    <strong>CIR (Current Instruction Register):</strong>
-                    Contains the current instruction during processing
+                    <strong>Data Section:</strong> Global and Static Variables
                   </li>
                 </ul>
               </div>
 
-              <div class="subsection">
-                <h5 class="subsection-title">
-                  1.2.1.2 Arithmetic and Logic Unit (ALU)
-                </h5>
+              <div class="section">
+                <h3 class="section-title">2.4 Process States</h3>
+                <div class="process-states">
+                  <div class="state-box">New</div>
+                  <div class="state-box">Ready</div>
+                  <div class="state-box">Running</div>
+                  <div class="state-box">Waiting</div>
+                  <div class="state-box">Terminated</div>
+                </div>
+                <div class="content-box">
+                  <ul>
+                    <li><strong>New:</strong> The process is being created</li>
+                    <li>
+                      <strong>Running:</strong> Instructions are being executed
+                    </li>
+                    <li>
+                      <strong>Waiting:</strong> Process is waiting for some
+                      event to occur
+                    </li>
+                    <li>
+                      <strong>Ready:</strong> Process is waiting to be assigned
+                      to a processor
+                    </li>
+                    <li>
+                      <strong>Terminated:</strong> Process has finished
+                      execution
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.5 Process Control Block (PCB)</h3>
+                <div class="highlight-box">
+                  <p>
+                    The PCB contains essential information about each process:
+                  </p>
+                  <ul>
+                    <li>Unique identifier (process ID)</li>
+                    <li>Process state</li>
+                    <li>Pointer (process hierarchy)</li>
+                    <li>Priority level</li>
+                    <li>Program counter</li>
+                    <li>CPU registers</li>
+                    <li>Memory management info</li>
+                    <li>I/O status information</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.7 Scheduling</h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>Ready Queue</h4>
+                    <p>Processes ready to be scheduled</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Waiting Queue</h4>
+                    <p>Processes blocked by I/O or devices</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Job Queue</h4>
+                    <p>All processes in the system</p>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Scheduling Algorithms</h4>
+                  <ul>
+                    <li>First Come, First Serve (FCFS)</li>
+                    <li>Shortest Job First (SJF)</li>
+                    <li>Shortest Remaining Time First (SRTF)</li>
+                    <li>Round-Robin</li>
+                    <li>Static/Dynamic Priority</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.8 Thread Concepts</h3>
                 <div class="definition-box">
                   <p>
-                    Performs arithmetic (add, subtract) and logic (AND, OR, NOT)
-                    operations.
+                    <strong>Thread:</strong> A lightweight process. A process
+                    can create one or more threads internally for execution on
+                    the processor.
+                  </p>
+                </div>
+                <div class="content-box">
+                  <p>
+                    <strong>Examples:</strong> Chatting programs
+                    (sending/receiving independently), strategic games (multiple
+                    simultaneous actions)
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson3" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 3: Memory Management</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">3.1 Need of Memory Management</h3>
+                <div class="highlight-box">
+                  <p>
+                    In systems with multiple programs running, many processes
+                    may reside in memory, each with specific memory needs:
+                  </p>
+                  <ul>
+                    <li>Executable code (instructions)</li>
+                    <li>Data part of the executable</li>
+                    <li>Runtime memory requests from stack/heap</li>
+                    <li>OS and kernel components</li>
+                    <li>Device-specific memory portions</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.2 Address Binding</h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>Symbolic Addresses</h4>
+                    <p>
+                      References to variables, instructions, and source code
+                    </p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Logical Address</h4>
+                    <p>Translated symbolic addresses after compilation</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Physical Address</h4>
+                    <p>Actual memory location in hardware</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>MMU</h4>
+                    <p>Memory Management Unit translates addresses</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">
+                  3.3 Inter-process Communication (IPC)
+                </h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>🔄 Shared Memory</h4>
+                    <p>
+                      Processes create shared memory area accessible by both
+                    </p>
+                  </div>
+                  <div class="component-card">
+                    <h4>📨 Message Passing</h4>
+                    <p>
+                      Processes use predefined communication links and protocols
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson4" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 4: I/O Management</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">4.3 I/O Devices Categories</h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>📦 Block Devices</h4>
+                    <p>
+                      Communicate by sending blocks of data (e.g., Flash memory,
+                      digital camera)
+                    </p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🔤 Character Devices</h4>
+                    <p>
+                      Communication by single characters (e.g., keyboards,
+                      sensors)
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.4 I/O Protocols Categories</h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>⚡ Special Instruction I/O</h4>
+                    <p>Custom CPU instructions for device communication</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🗺️ Memory-Mapped I/O</h4>
+                    <p>Most common - devices use common address range</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🚀 Direct Memory Access</h4>
+                    <p>For slower devices - DMA controller handles transfers</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.7 Synchronization</h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>🔒 Mutex</h4>
+                    <p>Mutual exclusion - only one process can hold the key</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🚦 Semaphore</h4>
+                    <p>
+                      Generalized mutex for coordinating access to shared
+                      resources
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.8 Deadlocks</h3>
+                <div class="highlight-box">
+                  <p><strong>Four Conditions for Deadlock:</strong></p>
+                  <ol>
+                    <li>
+                      <strong>Mutual Exclusion:</strong> Resources not shareable
+                    </li>
+                    <li>
+                      <strong>Hold and Wait:</strong> Process holds resources
+                      while waiting for others
+                    </li>
+                    <li>
+                      <strong>No Preemption:</strong> Resources cannot be
+                      forcefully taken
+                    </li>
+                    <li>
+                      <strong>Circular Wait:</strong> Processes waiting for each
+                      other in circular fashion
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson5" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 5: File Systems</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">5.1 Need for File Systems</h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>📂 Directory Service</h4>
+                    <p>
+                      Manages files uniquely and structurally, handles access
+                      controls
+                    </p>
+                  </div>
+                  <div class="component-card">
+                    <h4>💿 Storage Service</h4>
+                    <p>
+                      Communicates with underlying hardware, abstracts storage
+                      devices
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.2 File Concept</h3>
+                <div class="definition-box">
+                  <p>
+                    From a user's perspective, a file is a collection of related
+                    data stored together and accessed via a unique file ID (file
+                    name).
                   </p>
                 </div>
               </div>
 
-              <div class="subsection">
-                <h5 class="subsection-title">1.2.1.3 Control Unit (CU)</h5>
+              <div class="section">
+                <h3 class="section-title">5.4 Access Control</h3>
+                <div class="content-box">
+                  <ul>
+                    <li>
+                      Different access levels at file and directory levels
+                    </li>
+                    <li>OS provides access control IDs and permissions</li>
+                    <li>
+                      Each file can have different permissions (Read, Write,
+                      Modify)
+                    </li>
+                    <li>Helpful for multi-user systems</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson6" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 6: Access and Protection</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">
+                  6.2 User Mode and Kernel Mode (Rings)
+                </h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>Ring 3 (User Mode)</h4>
+                    <p>
+                      Least privileged - Applications and user-mode services
+                    </p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Ring 0 (Kernel Mode)</h4>
+                    <p>Most privileged - Drivers with direct hardware access</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson7" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 7: Virtualization and User Interface</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">7.1 Virtualization</h3>
                 <div class="definition-box">
                   <p>
-                    Controls the operation of the computer's ALU, memory, and
-                    I/O devices, and provides timing/control signals.
+                    A feature provided by OSs and modern hardware that
+                    virtualizes hardware, making each calling environment
+                    believe it has dedicated access.
                   </p>
                 </div>
-              </div>
-            </div>
 
-            <div class="subsection">
-              <h4 class="subsection-title">1.2.3 Buses</h4>
-              <div class="content-box">
-                <p>
-                  Means by which data is transmitted between computer parts,
-                  connecting major internal components to CPU and memory.
-                  Comprised of:
-                </p>
-                <ul>
-                  <li>
-                    <strong>Address Bus:</strong> Carries addresses of data
-                    between processor and memory
-                  </li>
-                  <li>
-                    <strong>Data Bus:</strong> Carries data between processor,
-                    memory, and I/O devices
-                  </li>
-                  <li>
-                    <strong>Control Bus:</strong> Carries control
-                    signals/commands from CPU to control and coordinate
-                    activities
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="subsection">
-              <h4 class="subsection-title">1.2.4 Memory Unit</h4>
-              <div class="highlight-box">
-                <p>
-                  Consists of RAM (Random Access Memory) and ROM (Read Only
-                  Memory), also known as primary or main memory. Fast and
-                  directly accessible by the CPU, unlike hard drives (secondary
-                  memory).
-                </p>
-              </div>
-            </div>
-
-            <div class="subsection">
-              <h4 class="subsection-title">1.2.5 Input Devices</h4>
-              <div class="content-box">
-                <p>
-                  <strong>Examples:</strong> Keyboard, Microphone, Scanner,
-                  Mouse, Trackball, Touchpad, Barcode/QR Code readers, Digital
-                  Camera
-                </p>
-              </div>
-            </div>
-
-            <div class="subsection">
-              <h4 class="subsection-title">1.2.6 Output Devices</h4>
-              <div class="content-box">
-                <p>
-                  <strong>Examples:</strong> Screen (Monitor/Console), Data
-                  Projectors, Speaker and Headphones, Printer, Plotter, Cutter
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">1.3 Computer Operating System</h3>
-            <div class="definition-box">
-              <p>
-                A system is components integrated to perform a desired task. A
-                computer operating system consists of integrated components for
-                operating the computer system (hardware & software).
-              </p>
-            </div>
-
-            <div class="subsection">
-              <h4 class="subsection-title">Main Objectives of an OS</h4>
-              <div class="component-grid">
-                <div class="component-card">
-                  <h4>Efficiency</h4>
-                  <p>Responsiveness, fluidity</p>
+                <div class="advantages-list">
+                  <h4>Advantages of Virtualization</h4>
+                  <ul>
+                    <li>Run OSs when physical hardware is unavailable</li>
+                    <li>Easier to create new machines, backup machines</li>
+                    <li>Software testing using "clean" installs</li>
+                    <li>Emulate more machines than physically available</li>
+                    <li>Debug problems (suspend and resume)</li>
+                    <li>Easy migration of virtual machines</li>
+                    <li>Run legacy systems</li>
+                  </ul>
                 </div>
-                <div class="component-card">
-                  <h4>Ease of Usability</h4>
-                  <p>User-friendly interface</p>
-                </div>
-                <div class="component-card">
-                  <h4>Abstraction</h4>
-                  <p>Extend to new devices and software</p>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">7.3 User Interface and Shell</h3>
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>🖥️ Graphical UI (GUI)</h4>
+                    <p>Rich graphical front-end for user interaction</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>⌨️ Command Line Shell</h4>
+                    <p>Simpler text-based interface for quick operations</p>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div class="subsection">
-              <h4 class="subsection-title">OS Categories - Usage Types</h4>
-              <ul>
-                <li>
-                  <strong>Batch:</strong> Sequential, repeated execution without
-                  human intervention
-                </li>
-                <li>
-                  <strong>Time Sharing:</strong> Multiple users/applications
-                  access common hardware
-                </li>
-                <li>
-                  <strong>Parallel Distributed:</strong> Single OS coordinates
-                  physically distributed hardware
-                </li>
-                <li>
-                  <strong>Network:</strong> Systems connected over network
-                  protocols
-                </li>
-                <li>
-                  <strong>Real Time:</strong> Fine-grained time precision in
-                  execution
-                </li>
-              </ul>
-            </div>
           </div>
 
-          <div class="section">
-            <h3 class="section-title">1.7 Responsibilities of an OS</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>📅 Scheduling</h4>
-                <p>Implements scheduling algorithms for CPU time allocation</p>
-              </div>
-              <div class="component-card">
-                <h4>🧠 Memory Management</h4>
-                <p>Provides APIs for memory utilization</p>
-              </div>
-              <div class="component-card">
-                <h4>💾 I/O Management</h4>
-                <p>Device and I/O management interfaces</p>
-              </div>
-              <div class="component-card">
-                <h4>📁 File Systems</h4>
-                <p>Storage and retrieval via directory system</p>
-              </div>
-              <div class="component-card">
-                <h4>🔒 Access & Protection</h4>
-                <p>Security subsystem for access control</p>
-              </div>
-              <div class="component-card">
-                <h4>🖥️ User Interface</h4>
-                <p>GUI for ease of use</p>
-              </div>
-            </div>
+          <div class="footer">
+            <p>Created By: <b>Abdelghany</b></p>
           </div>
         </div>
-      </div>
-
-      <div id="lesson2" class="lesson">
-        <div class="lesson-header">
-          <h2>Lesson 2: Processes and Scheduling</h2>
-        </div>
-        <div class="lesson-content">
-          <div class="section">
-            <h3 class="section-title">2.2 Program and Process Concept</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>Program</h4>
-                <p>
-                  Static set of capabilities, processed code built for the OS
-                </p>
-              </div>
-              <div class="component-card">
-                <h4>Process</h4>
-                <p>
-                  An executing program; OS assigns process ID and tracking
-                  metrics
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">2.3 Process Contents</h3>
-            <ul>
-              <li><strong>Text section:</strong> Program instructions</li>
-              <li>
-                <strong>Program Counter (PC):</strong> Next instruction address
-              </li>
-              <li>
-                <strong>Stack Section:</strong> Local variables, return
-                addresses, method parameters
-              </li>
-              <li>
-                <strong>Heap Section:</strong> Dynamic allocation (at run-time)
-              </li>
-              <li>
-                <strong>Data Section:</strong> Global and Static Variables
-              </li>
-            </ul>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">2.4 Process States</h3>
-            <div class="process-states">
-              <div class="state-box">New</div>
-              <div class="state-box">Ready</div>
-              <div class="state-box">Running</div>
-              <div class="state-box">Waiting</div>
-              <div class="state-box">Terminated</div>
-            </div>
-            <div class="content-box">
-              <ul>
-                <li><strong>New:</strong> The process is being created</li>
-                <li>
-                  <strong>Running:</strong> Instructions are being executed
-                </li>
-                <li>
-                  <strong>Waiting:</strong> Process is waiting for some event to
-                  occur
-                </li>
-                <li>
-                  <strong>Ready:</strong> Process is waiting to be assigned to a
-                  processor
-                </li>
-                <li>
-                  <strong>Terminated:</strong> Process has finished execution
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">2.5 Process Control Block (PCB)</h3>
-            <div class="highlight-box">
-              <p>The PCB contains essential information about each process:</p>
-              <ul>
-                <li>Unique identifier (process ID)</li>
-                <li>Process state</li>
-                <li>Pointer (process hierarchy)</li>
-                <li>Priority level</li>
-                <li>Program counter</li>
-                <li>CPU registers</li>
-                <li>Memory management info</li>
-                <li>I/O status information</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">2.7 Scheduling</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>Ready Queue</h4>
-                <p>Processes ready to be scheduled</p>
-              </div>
-              <div class="component-card">
-                <h4>Waiting Queue</h4>
-                <p>Processes blocked by I/O or devices</p>
-              </div>
-              <div class="component-card">
-                <h4>Job Queue</h4>
-                <p>All processes in the system</p>
-              </div>
-            </div>
-
-            <div class="subsection">
-              <h4 class="subsection-title">Scheduling Algorithms</h4>
-              <ul>
-                <li>First Come, First Serve (FCFS)</li>
-                <li>Shortest Job First (SJF)</li>
-                <li>Shortest Remaining Time First (SRTF)</li>
-                <li>Round-Robin</li>
-                <li>Static/Dynamic Priority</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">2.8 Thread Concepts</h3>
-            <div class="definition-box">
-              <p>
-                <strong>Thread:</strong> A lightweight process. A process can
-                create one or more threads internally for execution on the
-                processor.
-              </p>
-            </div>
-            <div class="content-box">
-              <p>
-                <strong>Examples:</strong> Chatting programs (sending/receiving
-                independently), strategic games (multiple simultaneous actions)
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="lesson3" class="lesson">
-        <div class="lesson-header">
-          <h2>Lesson 3: Memory Management</h2>
-        </div>
-        <div class="lesson-content">
-          <div class="section">
-            <h3 class="section-title">3.1 Need of Memory Management</h3>
-            <div class="highlight-box">
-              <p>
-                In systems with multiple programs running, many processes may
-                reside in memory, each with specific memory needs:
-              </p>
-              <ul>
-                <li>Executable code (instructions)</li>
-                <li>Data part of the executable</li>
-                <li>Runtime memory requests from stack/heap</li>
-                <li>OS and kernel components</li>
-                <li>Device-specific memory portions</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">3.2 Address Binding</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>Symbolic Addresses</h4>
-                <p>References to variables, instructions, and source code</p>
-              </div>
-              <div class="component-card">
-                <h4>Logical Address</h4>
-                <p>Translated symbolic addresses after compilation</p>
-              </div>
-              <div class="component-card">
-                <h4>Physical Address</h4>
-                <p>Actual memory location in hardware</p>
-              </div>
-              <div class="component-card">
-                <h4>MMU</h4>
-                <p>Memory Management Unit translates addresses</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">3.3 Inter-process Communication (IPC)</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>🔄 Shared Memory</h4>
-                <p>Processes create shared memory area accessible by both</p>
-              </div>
-              <div class="component-card">
-                <h4>📨 Message Passing</h4>
-                <p>
-                  Processes use predefined communication links and protocols
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="lesson4" class="lesson">
-        <div class="lesson-header">
-          <h2>Lesson 4: I/O Management</h2>
-        </div>
-        <div class="lesson-content">
-          <div class="section">
-            <h3 class="section-title">4.3 I/O Devices Categories</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>📦 Block Devices</h4>
-                <p>
-                  Communicate by sending blocks of data (e.g., Flash memory,
-                  digital camera)
-                </p>
-              </div>
-              <div class="component-card">
-                <h4>🔤 Character Devices</h4>
-                <p>
-                  Communication by single characters (e.g., keyboards, sensors)
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">4.4 I/O Protocols Categories</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>⚡ Special Instruction I/O</h4>
-                <p>Custom CPU instructions for device communication</p>
-              </div>
-              <div class="component-card">
-                <h4>🗺️ Memory-Mapped I/O</h4>
-                <p>Most common - devices use common address range</p>
-              </div>
-              <div class="component-card">
-                <h4>🚀 Direct Memory Access</h4>
-                <p>For slower devices - DMA controller handles transfers</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">4.7 Synchronization</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>🔒 Mutex</h4>
-                <p>Mutual exclusion - only one process can hold the key</p>
-              </div>
-              <div class="component-card">
-                <h4>🚦 Semaphore</h4>
-                <p>
-                  Generalized mutex for coordinating access to shared resources
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">4.8 Deadlocks</h3>
-            <div class="highlight-box">
-              <p><strong>Four Conditions for Deadlock:</strong></p>
-              <ol>
-                <li>
-                  <strong>Mutual Exclusion:</strong> Resources not shareable
-                </li>
-                <li>
-                  <strong>Hold and Wait:</strong> Process holds resources while
-                  waiting for others
-                </li>
-                <li>
-                  <strong>No Preemption:</strong> Resources cannot be forcefully
-                  taken
-                </li>
-                <li>
-                  <strong>Circular Wait:</strong> Processes waiting for each
-                  other in circular fashion
-                </li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="lesson5" class="lesson">
-        <div class="lesson-header">
-          <h2>Lesson 5: File Systems</h2>
-        </div>
-        <div class="lesson-content">
-          <div class="section">
-            <h3 class="section-title">5.1 Need for File Systems</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>📂 Directory Service</h4>
-                <p>
-                  Manages files uniquely and structurally, handles access
-                  controls
-                </p>
-              </div>
-              <div class="component-card">
-                <h4>💿 Storage Service</h4>
-                <p>
-                  Communicates with underlying hardware, abstracts storage
-                  devices
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">5.2 File Concept</h3>
-            <div class="definition-box">
-              <p>
-                From a user's perspective, a file is a collection of related
-                data stored together and accessed via a unique file ID (file
-                name).
-              </p>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">5.4 Access Control</h3>
-            <div class="content-box">
-              <ul>
-                <li>Different access levels at file and directory levels</li>
-                <li>OS provides access control IDs and permissions</li>
-                <li>
-                  Each file can have different permissions (Read, Write, Modify)
-                </li>
-                <li>Helpful for multi-user systems</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="lesson6" class="lesson">
-        <div class="lesson-header">
-          <h2>Lesson 6: Access and Protection</h2>
-        </div>
-        <div class="lesson-content">
-          <div class="section">
-            <h3 class="section-title">6.2 User Mode and Kernel Mode (Rings)</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>Ring 3 (User Mode)</h4>
-                <p>Least privileged - Applications and user-mode services</p>
-              </div>
-              <div class="component-card">
-                <h4>Ring 0 (Kernel Mode)</h4>
-                <p>Most privileged - Drivers with direct hardware access</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="lesson7" class="lesson">
-        <div class="lesson-header">
-          <h2>Lesson 7: Virtualization and User Interface</h2>
-        </div>
-        <div class="lesson-content">
-          <div class="section">
-            <h3 class="section-title">7.1 Virtualization</h3>
-            <div class="definition-box">
-              <p>
-                A feature provided by OSs and modern hardware that virtualizes
-                hardware, making each calling environment believe it has
-                dedicated access.
-              </p>
-            </div>
-
-            <div class="advantages-list">
-              <h4>Advantages of Virtualization</h4>
-              <ul>
-                <li>Run OSs when physical hardware is unavailable</li>
-                <li>Easier to create new machines, backup machines</li>
-                <li>Software testing using "clean" installs</li>
-                <li>Emulate more machines than physically available</li>
-                <li>Debug problems (suspend and resume)</li>
-                <li>Easy migration of virtual machines</li>
-                <li>Run legacy systems</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="section">
-            <h3 class="section-title">7.3 User Interface and Shell</h3>
-            <div class="component-grid">
-              <div class="component-card">
-                <h4>🖥️ Graphical UI (GUI)</h4>
-                <p>Rich graphical front-end for user interaction</p>
-              </div>
-              <div class="component-card">
-                <h4>⌨️ Command Line Shell</h4>
-                <p>Simpler text-based interface for quick operations</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer">
-        <p>Created By: <b>Abdelghany</b></p>
-      </div>
+      </main>
     </div>
 
     <script>
       function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
         const overlay = document.querySelector(".sidebar-overlay");
-        const container = document.getElementById("mainContainer");
 
         sidebar.classList.toggle("open");
         overlay.classList.toggle("active");
 
-        if (sidebar.classList.contains("open")) {
-          container.classList.add("sidebar-open");
-          container.classList.remove("sidebar-closed");
-        } else {
-          container.classList.remove("sidebar-open");
-          container.classList.add("sidebar-closed");
+        if (window.innerWidth <= 768) {
+          sidebar.classList.toggle("active");
         }
       }
 
       function closeSidebar() {
         const sidebar = document.getElementById("sidebar");
         const overlay = document.querySelector(".sidebar-overlay");
-        const container = document.getElementById("mainContainer");
 
         sidebar.classList.remove("open");
         overlay.classList.remove("active");
-        container.classList.remove("sidebar-open");
-        container.classList.add("sidebar-closed");
+        sidebar.classList.remove("active");
       }
 
-      // Initialize with sidebar closed
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener("click", function (e) {
+        const sidebar = document.getElementById("sidebar");
+        const toggle = document.querySelector(".sidebar-toggle");
+
+        if (
+          window.innerWidth <= 768 &&
+          !sidebar.contains(e.target) &&
+          !toggle.contains(e.target) &&
+          sidebar.classList.contains("active")
+        ) {
+          closeSidebar();
+        }
+      });
+
+      // Initialize
       document.addEventListener("DOMContentLoaded", function () {
-        const container = document.getElementById("mainContainer");
-        container.classList.add("sidebar-closed");
+        // Initialize state
       });
     </script>
   </body>

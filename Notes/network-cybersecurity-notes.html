@@ -17,6 +17,122 @@
         color: #333;
         background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
         min-height: 100vh;
+        display: flex;
+      }
+
+      /* Layout Container */
+      .layout-container {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100vh;
+        background: linear-gradient(
+          180deg,
+          rgba(30, 60, 114, 0.95) 0%,
+          rgba(42, 82, 152, 0.95) 100%
+        );
+        backdrop-filter: blur(10px);
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        overflow-y: auto;
+        transform: translateX(0);
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar.collapsed {
+        transform: translateX(-100%);
+      }
+
+      .sidebar-header {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1002;
+      }
+
+      .sidebar-header h3 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+        font-weight: 700;
+      }
+
+      .sidebar-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .sidebar-nav {
+        padding: 20px;
+      }
+
+      .sidebar-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .sidebar-nav li {
+        margin-bottom: 8px;
+      }
+
+      .sidebar-nav a {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 15px;
+        display: block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+      }
+
+      .sidebar-nav a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+        border-left-color: #3498db;
+      }
+
+      .sidebar-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: white;
+        border: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1003;
+      }
+
+      .sidebar-toggle:hover {
+        background: linear-gradient(135deg, #2a5298, #1e3c72);
+        transform: translateY(-2px);
+      }
+
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        margin-left: 300px;
+        transition: margin-left 0.3s ease;
+      }
+
+      .main-content.full-width {
+        margin-left: 0;
       }
 
       .container {
@@ -26,15 +142,9 @@
         background: rgba(255, 255, 255, 0.95);
         margin-top: 20px;
         margin-bottom: 20px;
-        margin-left: 300px;
         border-radius: 15px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        transition: margin-left 0.3s ease, max-width 0.3s ease;
-      }
-
-      .container.full-width {
-        margin-left: 20px;
-        max-width: calc(100% - 40px);
+        transition: all 0.3s ease;
       }
 
       .header {
@@ -85,89 +195,10 @@
         flex-wrap: wrap;
       }
 
-      .nav-menu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 280px;
-        height: 100vh;
-        background: rgba(255, 255, 255, 0.98);
-        padding: 80px 20px 20px;
-        border-right: 3px solid #1e3c72;
-        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        z-index: 999;
-        overflow-y: auto;
-        transition: transform 0.3s ease;
-      }
-
-      .nav-menu.collapsed {
-        transform: translateX(-100%);
-      }
-
-      .nav-menu h3 {
-        color: #1e3c72;
-        margin-bottom: 20px;
-        font-size: 1.2rem;
-        font-weight: 700;
-        text-align: center;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #ecf0f1;
-      }
-
-      .nav-menu ul {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin: 0;
-      }
-
-      .nav-menu a {
-        color: #2c3e50;
-        text-decoration: none;
-        padding: 12px 15px;
-        border-radius: 8px;
-        background: #f8f9fa;
-        transition: all 0.3s ease;
-        font-weight: 500;
-        font-size: 0.9rem;
-        display: block;
-        border-left: 4px solid transparent;
-      }
-
-      .nav-menu a:hover {
-        background: #1e3c72;
-        color: white;
-        transform: translateX(5px);
-        border-left-color: #3498db;
-      }
-
-      .nav-toggle {
-        position: fixed;
-        top: 25px;
-        left: 25px;
-        background: linear-gradient(135deg, #1e3c72, #2a5298);
-        color: white;
-        border: none;
-        padding: 12px;
-        border-radius: 8px;
-        cursor: pointer;
-        z-index: 1001;
-        font-size: 1.2rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-      }
-
-      .nav-toggle:hover {
-        background: linear-gradient(135deg, #2a5298, #1e3c72);
-        transform: scale(1.05);
-      }
-
       .back-to-main {
         position: fixed;
-        top: 25px;
-        right: 25px;
+        top: 80px;
+        left: 20px;
         background: linear-gradient(135deg, #1e3c72, #2a5298);
         color: white;
         text-decoration: none;
@@ -496,18 +527,35 @@
       }
 
       @media (max-width: 768px) {
+        .sidebar {
+          width: 280px;
+          transform: translateX(-100%);
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
         .container {
           margin: 10px;
           padding: 15px;
-          margin-left: 10px;
         }
 
-        .container.full-width {
-          margin-left: 10px;
+        .sidebar-toggle {
+          top: 10px;
+          left: 10px;
+          padding: 10px 12px;
         }
 
-        .nav-menu {
-          width: 250px;
+        .back-to-main {
+          top: 60px;
+          left: 10px;
+          padding: 8px 15px;
+          font-size: 0.8rem;
         }
 
         .header h1 {
@@ -532,630 +580,694 @@
     </style>
   </head>
   <body>
-    <button class="nav-toggle" id="navToggle">☰</button>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <a href="../index.html" class="back-to-main">Back to Main</a>
 
-    <nav class="nav-menu" id="navMenu">
-      <h3>📚 Study Navigation</h3>
-      <ul>
-        <li><a href="#session1">🌐 Network Essentials</a></li>
-        <li><a href="#session2">🔒 Cyber Security</a></li>
-        <li><a href="#session3">☁️ Distributed Systems</a></li>
-        <li><a href="#protocols">📡 Protocols</a></li>
-        <li><a href="#attacks">⚔️ Attack Methods</a></li>
-        <li><a href="#cloud">🌥️ Cloud Computing</a></li>
-      </ul>
-    </nav>
-
-    <div class="container" id="mainContainer">
-      <div class="header">
-        <h1>Network Essentials & Cyber Security</h1>
-        <p>
-          Comprehensive Course Notes on Networking, Security & Distributed
-          Systems
-        </p>
-      </div>
-
-      <section id="session1" class="session">
-        <div class="session-header">
-          <h2>Session 1: Network Essentials</h2>
+    <div class="layout-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h3>📚 Study Navigation</h3>
+          <p>Course Contents</p>
         </div>
-        <div class="session-content">
-          <div class="subsection">
-            <h3 class="subsection-title">Computer Network Definition</h3>
-            <div class="definition-box">
-              <h4>🌐 What is a Computer Network?</h4>
-              <p>
-                A collection of computers and other devices or peripherals
-                connected through connecting media to perform tasks like sharing
-                resources.
-              </p>
-              <p>
-                <strong>Resources include:</strong> File sharing, Device
-                sharing, Software sharing with multi-user licenses, Voice and
-                Video calls, Shared Internet Access.
-              </p>
-            </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="#session1" onclick="closeSidebar()"
+                >🌐 Network Essentials</a
+              >
+            </li>
+            <li>
+              <a href="#session2" onclick="closeSidebar()">🔒 Cyber Security</a>
+            </li>
+            <li>
+              <a href="#session3" onclick="closeSidebar()"
+                >☁️ Distributed Systems</a
+              >
+            </li>
+            <li>
+              <a href="#protocols" onclick="closeSidebar()">📡 Protocols</a>
+            </li>
+            <li>
+              <a href="#attacks" onclick="closeSidebar()">⚔️ Attack Methods</a>
+            </li>
+            <li>
+              <a href="#cloud" onclick="closeSidebar()">🌥️ Cloud Computing</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content" id="mainContent">
+        <div class="container" id="mainContainer">
+          <div class="header">
+            <h1>Network Essentials & Cyber Security</h1>
+            <p>
+              Comprehensive Course Notes on Networking, Security & Distributed
+              Systems
+            </p>
           </div>
 
-          <div class="subsection">
-            <h3 class="subsection-title">Network Elements</h3>
-            <div class="network-elements">
-              <div class="element-card">
-                <h4>🖥️ Hardware</h4>
-                <p>
-                  Devices like Computers, Printers, Phones, Routers, Switches
-                </p>
+          <section id="session1" class="session">
+            <div class="session-header">
+              <h2>Session 1: Network Essentials</h2>
+            </div>
+            <div class="session-content">
+              <div class="subsection">
+                <h3 class="subsection-title">Computer Network Definition</h3>
+                <div class="definition-box">
+                  <h4>🌐 What is a Computer Network?</h4>
+                  <p>
+                    A collection of computers and other devices or peripherals
+                    connected through connecting media to perform tasks like
+                    sharing resources.
+                  </p>
+                  <p>
+                    <strong>Resources include:</strong> File sharing, Device
+                    sharing, Software sharing with multi-user licenses, Voice
+                    and Video calls, Shared Internet Access.
+                  </p>
+                </div>
               </div>
-              <div class="element-card">
-                <h4>📡 Medium</h4>
-                <p>Wired, Wireless, Satellites</p>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Network Elements</h3>
+                <div class="network-elements">
+                  <div class="element-card">
+                    <h4>🖥️ Hardware</h4>
+                    <p>
+                      Devices like Computers, Printers, Phones, Routers,
+                      Switches
+                    </p>
+                  </div>
+                  <div class="element-card">
+                    <h4>📡 Medium</h4>
+                    <p>Wired, Wireless, Satellites</p>
+                  </div>
+                  <div class="element-card">
+                    <h4>💻 Software</h4>
+                    <p>
+                      <strong>Messages:</strong> Information traveling over
+                      medium (Mails, WhatsApp)
+                    </p>
+                    <p>
+                      <strong>Protocols:</strong> Communication rules (HTTP,
+                      HTTPS, FTP, RDP)
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div class="element-card">
-                <h4>💻 Software</h4>
-                <p>
-                  <strong>Messages:</strong> Information traveling over medium
-                  (Mails, WhatsApp)
-                </p>
-                <p>
-                  <strong>Protocols:</strong> Communication rules (HTTP, HTTPS,
-                  FTP, RDP)
-                </p>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Network Basic Terminologies</h3>
+                <div class="terminology-grid">
+                  <div class="term-card">
+                    <h5>🔌 NIC (Network Interface Card)</h5>
+                    <p>
+                      Hardware enabling device to access network. Can be
+                      internal or external (Wireless/USB based)
+                    </p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🏷️ MAC Address</h5>
+                    <p>
+                      Physical Address, unique worldwide, burned on the NIC card
+                    </p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🌐 IP Address</h5>
+                    <p>
+                      Logical address, identifies each device on an IP network
+                      layer
+                    </p>
+                  </div>
+                  <div class="term-card">
+                    <h5>📋 Protocols</h5>
+                    <p>Communication rules that all entities must agree on</p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🔄 Hub</h5>
+                    <p>
+                      Allows different nodes to communicate but slows the
+                      network
+                    </p>
+                  </div>
+                  <div class="term-card">
+                    <h5>📶 Repeater</h5>
+                    <p>
+                      Regenerates signal before it becomes weak or corrupted
+                    </p>
+                  </div>
+                  <div class="term-card">
+                    <h5>📡 Access Point (AP)</h5>
+                    <p>Allows Wi-Fi devices to connect to wired network</p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🔀 Switch</h5>
+                    <p>
+                      Allows nodes to communicate without slowing each other
+                    </p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🌍 Router</h5>
+                    <p>
+                      Allows different networks to communicate with each other
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Network Classifications</h3>
+
+                <div class="definition-box">
+                  <h4>📊 According to Covered Area</h4>
+                  <p>
+                    <strong>LAN (Local Area Networks):</strong> Small
+                    geographical area (school, campus, office). High
+                    communication speed, allows file/service sharing, under
+                    administrative control.
+                  </p>
+                  <p>
+                    <strong>WAN (Wide Area Networks):</strong> Large
+                    geographical area (country). Can contain multiple LANs/MANs.
+                    Very low speed, under ISP control. The Internet is a WAN
+                    example.
+                  </p>
+                </div>
+
+                <div class="definition-box">
+                  <h4>🔗 According to Network Model</h4>
+                  <p>
+                    <strong>Peer-to-Peer:</strong> No dedicated resources, easy
+                    to work with, all nodes equal in resource usage.
+                  </p>
+                  <p>
+                    <strong>Client/Server:</strong> Some nodes (servers)
+                    dedicated to providing services to other nodes (clients).
+                    Servers are more powerful (Mail, Web, File, Print Servers).
+                  </p>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">The Internet</h3>
+                <div class="definition-box">
+                  <h4>🌍 Global Mesh of Interconnected Networks</h4>
+                  <p>
+                    No one owns the Internet; many organizations, ISPs,
+                    companies, and governments own pieces of its infrastructure.
+                  </p>
+                  <p>
+                    <strong>Key organizations:</strong> ISOC (Internet Society),
+                    IETF (Internet Engineering Task Forum), ICANN (Internet
+                    Corporation for Assigned Names and Numbers)
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <div class="subsection">
-            <h3 class="subsection-title">Network Basic Terminologies</h3>
-            <div class="terminology-grid">
-              <div class="term-card">
-                <h5>🔌 NIC (Network Interface Card)</h5>
-                <p>
-                  Hardware enabling device to access network. Can be internal or
-                  external (Wireless/USB based)
-                </p>
+          <section id="protocols" class="session">
+            <div class="session-header">
+              <h2>TCP/IP Protocol Suite & OSI Model</h2>
+            </div>
+            <div class="session-content">
+              <div class="subsection">
+                <h3 class="subsection-title">OSI Reference Model</h3>
+                <div class="protocol-stack">
+                  <h4>📚 Open Systems Interconnect (OSI) - 7 Layers</h4>
+                  <div class="layer layer-7">7. Application Layer</div>
+                  <div class="layer layer-6">6. Presentation Layer</div>
+                  <div class="layer layer-5">5. Session Layer</div>
+                  <div class="layer layer-4">4. Transport Layer</div>
+                  <div class="layer layer-3">3. Network Layer</div>
+                  <div class="layer layer-2">2. Data Link (MAC) Layer</div>
+                  <div class="layer layer-1">1. Physical Layer</div>
+                </div>
               </div>
-              <div class="term-card">
-                <h5>🏷️ MAC Address</h5>
-                <p>
-                  Physical Address, unique worldwide, burned on the NIC card
-                </p>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Application Layer Protocols</h3>
+                <div class="terminology-grid">
+                  <div class="term-card">
+                    <h5>🌐 HTTP</h5>
+                    <p>
+                      Hyper Text Transfer Protocol - Supports delivery of web
+                      pages to client
+                    </p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🔍 DNS</h5>
+                    <p>
+                      Domain Name Servers - Translates human-readable names into
+                      IP addresses
+                    </p>
+                  </div>
+                  <div class="term-card">
+                    <h5>📁 FTP</h5>
+                    <p>
+                      File Transfer Protocol - Provides reliable data transfer
+                      between hosts
+                    </p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🔐 SSH</h5>
+                    <p>
+                      Secure Shell - Port 22, very secure, encrypted remote
+                      access
+                    </p>
+                  </div>
+                  <div class="term-card">
+                    <h5>📧 SMTP</h5>
+                    <p>
+                      Simple Mail Transfer Protocol - Sends messages between
+                      Mail Servers
+                    </p>
+                  </div>
+                  <div class="term-card">
+                    <h5>📬 POP3/IMAP4</h5>
+                    <p>
+                      Email retrieval protocols - POP3 downloads, IMAP4
+                      retrieves headers
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div class="term-card">
-                <h5>🌐 IP Address</h5>
-                <p>
-                  Logical address, identifies each device on an IP network layer
-                </p>
-              </div>
-              <div class="term-card">
-                <h5>📋 Protocols</h5>
-                <p>Communication rules that all entities must agree on</p>
-              </div>
-              <div class="term-card">
-                <h5>🔄 Hub</h5>
-                <p>
-                  Allows different nodes to communicate but slows the network
-                </p>
-              </div>
-              <div class="term-card">
-                <h5>📶 Repeater</h5>
-                <p>Regenerates signal before it becomes weak or corrupted</p>
-              </div>
-              <div class="term-card">
-                <h5>📡 Access Point (AP)</h5>
-                <p>Allows Wi-Fi devices to connect to wired network</p>
-              </div>
-              <div class="term-card">
-                <h5>🔀 Switch</h5>
-                <p>Allows nodes to communicate without slowing each other</p>
-              </div>
-              <div class="term-card">
-                <h5>🌍 Router</h5>
-                <p>Allows different networks to communicate with each other</p>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Transport Layer Protocols</h3>
+                <div class="network-elements">
+                  <div class="element-card">
+                    <h4>🔄 TCP (Transmission Control Protocol)</h4>
+                    <p>
+                      <strong>Features:</strong> Reliable, Connection-oriented,
+                      Full duplex, Error control, Data-recovery
+                    </p>
+                    <p>
+                      <strong>Used for:</strong> Email, File sharing,
+                      Downloading
+                    </p>
+                  </div>
+                  <div class="element-card">
+                    <h4>⚡ UDP (User Datagram Protocol)</h4>
+                    <p>
+                      <strong>Features:</strong> Unreliable, Connectionless,
+                      Full duplex, Limited error checking
+                    </p>
+                    <p>
+                      <strong>Used for:</strong> Voice Streaming, Video
+                      Streaming
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <div class="subsection">
-            <h3 class="subsection-title">Network Classifications</h3>
-
-            <div class="definition-box">
-              <h4>📊 According to Covered Area</h4>
-              <p>
-                <strong>LAN (Local Area Networks):</strong> Small geographical
-                area (school, campus, office). High communication speed, allows
-                file/service sharing, under administrative control.
-              </p>
-              <p>
-                <strong>WAN (Wide Area Networks):</strong> Large geographical
-                area (country). Can contain multiple LANs/MANs. Very low speed,
-                under ISP control. The Internet is a WAN example.
-              </p>
+          <section id="session2" class="session">
+            <div class="session-header security">
+              <h2>Session 2: Cyber Security Essentials</h2>
             </div>
+            <div class="session-content security">
+              <div class="subsection">
+                <h3 class="subsection-title">Cyber Security Definition</h3>
+                <div class="definition-box">
+                  <h4>🔒 What is Cyber Security?</h4>
+                  <p>
+                    Protection of systems, networks, programs, devices, and data
+                    from cyber attacks.
+                    <strong>Security is a shared responsibility.</strong>
+                  </p>
+                </div>
+              </div>
 
-            <div class="definition-box">
-              <h4>🔗 According to Network Model</h4>
-              <p>
-                <strong>Peer-to-Peer:</strong> No dedicated resources, easy to
-                work with, all nodes equal in resource usage.
-              </p>
-              <p>
-                <strong>Client/Server:</strong> Some nodes (servers) dedicated
-                to providing services to other nodes (clients). Servers are more
-                powerful (Mail, Web, File, Print Servers).
-              </p>
-            </div>
-          </div>
+              <div class="subsection">
+                <h3 class="subsection-title">Security Goals (CIA Triad)</h3>
+                <div class="security-goals">
+                  <div class="goal-card">
+                    <h4>🤐 Confidentiality</h4>
+                    <p>
+                      Ensuring information is not revealed to unauthorized
+                      persons
+                    </p>
+                  </div>
+                  <div class="goal-card">
+                    <h4>✅ Integrity</h4>
+                    <p>
+                      Ensuring consistency of data and ability to detect
+                      modifications
+                    </p>
+                  </div>
+                  <div class="goal-card">
+                    <h4>🌐 Availability</h4>
+                    <p>
+                      Ensuring legitimate users are not denied access to
+                      information
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-          <div class="subsection">
-            <h3 class="subsection-title">The Internet</h3>
-            <div class="definition-box">
-              <h4>🌍 Global Mesh of Interconnected Networks</h4>
-              <p>
-                No one owns the Internet; many organizations, ISPs, companies,
-                and governments own pieces of its infrastructure.
-              </p>
-              <p>
-                <strong>Key organizations:</strong> ISOC (Internet Society),
-                IETF (Internet Engineering Task Forum), ICANN (Internet
-                Corporation for Assigned Names and Numbers)
-              </p>
+              <div class="subsection">
+                <h3 class="subsection-title">Risks & Threats</h3>
+                <div class="definition-box">
+                  <h4>⚠️ Risk Formula</h4>
+                  <p><strong>Risk = Threat × Vulnerabilities</strong></p>
+                  <p>
+                    <strong>Vulnerability:</strong> Degree of weakness in every
+                    network and device
+                  </p>
+                  <p>
+                    <strong>Threat:</strong> A person, thing, event, or idea
+                    posing danger to an asset
+                  </p>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Attacker Methodology</h3>
+                <div class="terminology-grid">
+                  <div class="term-card">
+                    <h5>🔍 Reconnaissance</h5>
+                    <p>Gathering information about target before attack</p>
+                  </div>
+                  <div class="term-card">
+                    <h5>📡 Scanning</h5>
+                    <p>Scanning network for open ports, OS, applications</p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🎯 Gaining Access</h5>
+                    <p>True attack phase where hacker exploits the system</p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🔒 Maintaining Access</h5>
+                    <p>Hacker tries to retain "ownership" of system</p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🧹 Covering Tracks</h5>
+                    <p>Activities to extend misuse without detection</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection" id="attacks">
+                <h3 class="subsection-title">Attack Methods</h3>
+                <div class="attack-types">
+                  <h4>🎭 Social Engineering Attacks</h4>
+                  <ul>
+                    <li>
+                      <strong>Phishing:</strong> Fake web pages to steal
+                      credentials
+                    </li>
+                    <li>
+                      <strong>Session Hijacking:</strong> Taking over sessions
+                      between parties
+                    </li>
+                    <li>
+                      <strong>Insider Attack:</strong> Attacks from within the
+                      organization
+                    </li>
+                    <li>
+                      <strong>Spoof Attack:</strong> Modifying source addresses
+                      to appear from someone else
+                    </li>
+                    <li>
+                      <strong>Password Attack:</strong> Dictionary, Brute-force,
+                      Hybrid attacks
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Malicious Software (Malware)</h3>
+                <div class="malware-grid">
+                  <div class="malware-card">
+                    <h5>🚪 Backdoor/Trapdoor</h5>
+                    <p>Secret entry point into program, cannot be scanned</p>
+                  </div>
+                  <div class="malware-card">
+                    <h5>🐴 Trojan Horse</h5>
+                    <p>
+                      Program with hidden side-effects, superficially attractive
+                    </p>
+                  </div>
+                  <div class="malware-card">
+                    <h5>🦠 Viruses</h5>
+                    <p>Malicious software attached to other programs</p>
+                  </div>
+                  <div class="malware-card">
+                    <h5>🐛 Worms</h5>
+                    <p>
+                      Self-replicating, spreads over network exploiting
+                      vulnerabilities
+                    </p>
+                  </div>
+                  <div class="malware-card">
+                    <h5>🧟 Zombie</h5>
+                    <p>
+                      Secretly controlled computer used for indirect attacks
+                    </p>
+                  </div>
+                  <div class="malware-card">
+                    <h5>💰 Ransomware</h5>
+                    <p>
+                      Encrypts data, demands ransom payment for decryption key
+                    </p>
+                  </div>
+                  <div class="malware-card">
+                    <h5>📧 Spam</h5>
+                    <p>Overloads ISPs, email servers, and end-user systems</p>
+                  </div>
+                  <div class="malware-card">
+                    <h5>👁️ Spyware</h5>
+                    <p>Gathers personal information without permission</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Attack Mitigation</h3>
+                <div class="mitigation-grid">
+                  <div class="mitigation-card">
+                    <h4>🔥 Firewall</h4>
+                    <p>
+                      Protects internal users from external threats, controls
+                      traffic
+                    </p>
+                  </div>
+                  <div class="mitigation-card">
+                    <h4>🛡️ Proxy Server</h4>
+                    <p>Intercepts requests, hides client IP addresses</p>
+                  </div>
+                  <div class="mitigation-card">
+                    <h4>🔐 VPN</h4>
+                    <p>Tunnels traffic between network sides securely</p>
+                  </div>
+                  <div class="mitigation-card">
+                    <h4>🚨 IDS/IPS</h4>
+                    <p>Detects and prevents network intrusions</p>
+                  </div>
+                  <div class="mitigation-card">
+                    <h4>🔒 Encryption</h4>
+                    <p>Converts plaintext to ciphertext using algorithms</p>
+                  </div>
+                  <div class="mitigation-card">
+                    <h4>🛡️ NGFW</h4>
+                    <p>Next Generation Firewall with deep packet inspection</p>
+                  </div>
+                </div>
+              </div>
             </div>
+          </section>
+
+          <section id="session3" class="session">
+            <div class="session-header distributed">
+              <h2>Session 3: Distributed Systems</h2>
+            </div>
+            <div class="session-content distributed">
+              <div class="subsection">
+                <h3 class="subsection-title">Distributed Systems Overview</h3>
+                <div class="definition-box">
+                  <h4>☁️ What are Distributed Systems?</h4>
+                  <p>
+                    A group of computers working together appearing as a single
+                    computer to the end-user. Collection of independent
+                    components on different machines sharing messages to achieve
+                    common goals.
+                  </p>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Centralized vs. Distributed</h3>
+                <div class="network-elements">
+                  <div class="element-card">
+                    <h4>🏢 Centralized System</h4>
+                    <p>
+                      <strong>Pros:</strong> Simpler, easier to understand,
+                      faster for single user
+                    </p>
+                    <p>
+                      <strong>Cons:</strong> Single point of failure, limited
+                      scalability
+                    </p>
+                  </div>
+                  <div class="element-card">
+                    <h4>🌐 Distributed System</h4>
+                    <p>
+                      <strong>Pros:</strong> More robust, scalable,
+                      fault-tolerant
+                    </p>
+                    <p>
+                      <strong>Cons:</strong> More complex to design and manage
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Virtualization</h3>
+                <div class="definition-box">
+                  <h4>💻 Virtualization Technology</h4>
+                  <p>
+                    Technology to run multiple same or different operating
+                    systems, completely isolated, simultaneously on the same
+                    machine.
+                  </p>
+                  <p>
+                    <strong>Benefits:</strong> Hardware consolidation,
+                    Redundancy, Migration, Centralized management
+                  </p>
+                </div>
+              </div>
+
+              <div class="subsection" id="cloud">
+                <h3 class="subsection-title">Cloud Computing</h3>
+                <div class="definition-box">
+                  <h4>☁️ Cloud Computing Definition</h4>
+                  <p>
+                    A pool of resources that can be rapidly provisioned in an
+                    automated, on-demand manner.
+                  </p>
+                  <p>
+                    <strong>Value:</strong> Economies of scale, Elasticity, Cost
+                    benefits, Easy access regardless of location
+                  </p>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Cloud Service Models</h3>
+                <div class="cloud-models">
+                  <div class="model-card onprem">
+                    <h4>🏢 On-Premises</h4>
+                    <p>Customer manages everything</p>
+                  </div>
+                  <div class="model-card iaas">
+                    <h4>🛠️ IaaS</h4>
+                    <p>
+                      Infrastructure as a Service - Customer controls OS &
+                      applications
+                    </p>
+                  </div>
+                  <div class="model-card paas">
+                    <h4>⚙️ PaaS</h4>
+                    <p>
+                      Platform as a Service - Customer deploys applications only
+                    </p>
+                  </div>
+                  <div class="model-card saas">
+                    <h4>📱 SaaS</h4>
+                    <p>
+                      Software as a Service - Customer uses applications only
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Cloud Deployment Models</h3>
+                <div class="terminology-grid">
+                  <div class="term-card">
+                    <h5>🌍 Public Cloud</h5>
+                    <p>Open to general public, owned by third party</p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🏢 Private Cloud</h5>
+                    <p>Used exclusively by single organization</p>
+                  </div>
+                  <div class="term-card">
+                    <h5>🔄 Hybrid Cloud</h5>
+                    <p>Combines multiple deployment models</p>
+                  </div>
+                  <div class="term-card">
+                    <h5>👥 Community Cloud</h5>
+                    <p>Shared by specific group of organizations</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="footer">
+            <p>Created By: <b>Abdelghany</b></p>
           </div>
         </div>
-      </section>
-
-      <section id="protocols" class="session">
-        <div class="session-header">
-          <h2>TCP/IP Protocol Suite & OSI Model</h2>
-        </div>
-        <div class="session-content">
-          <div class="subsection">
-            <h3 class="subsection-title">OSI Reference Model</h3>
-            <div class="protocol-stack">
-              <h4>📚 Open Systems Interconnect (OSI) - 7 Layers</h4>
-              <div class="layer layer-7">7. Application Layer</div>
-              <div class="layer layer-6">6. Presentation Layer</div>
-              <div class="layer layer-5">5. Session Layer</div>
-              <div class="layer layer-4">4. Transport Layer</div>
-              <div class="layer layer-3">3. Network Layer</div>
-              <div class="layer layer-2">2. Data Link (MAC) Layer</div>
-              <div class="layer layer-1">1. Physical Layer</div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Application Layer Protocols</h3>
-            <div class="terminology-grid">
-              <div class="term-card">
-                <h5>🌐 HTTP</h5>
-                <p>
-                  Hyper Text Transfer Protocol - Supports delivery of web pages
-                  to client
-                </p>
-              </div>
-              <div class="term-card">
-                <h5>🔍 DNS</h5>
-                <p>
-                  Domain Name Servers - Translates human-readable names into IP
-                  addresses
-                </p>
-              </div>
-              <div class="term-card">
-                <h5>📁 FTP</h5>
-                <p>
-                  File Transfer Protocol - Provides reliable data transfer
-                  between hosts
-                </p>
-              </div>
-              <div class="term-card">
-                <h5>🔐 SSH</h5>
-                <p>
-                  Secure Shell - Port 22, very secure, encrypted remote access
-                </p>
-              </div>
-              <div class="term-card">
-                <h5>📧 SMTP</h5>
-                <p>
-                  Simple Mail Transfer Protocol - Sends messages between Mail
-                  Servers
-                </p>
-              </div>
-              <div class="term-card">
-                <h5>📬 POP3/IMAP4</h5>
-                <p>
-                  Email retrieval protocols - POP3 downloads, IMAP4 retrieves
-                  headers
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Transport Layer Protocols</h3>
-            <div class="network-elements">
-              <div class="element-card">
-                <h4>🔄 TCP (Transmission Control Protocol)</h4>
-                <p>
-                  <strong>Features:</strong> Reliable, Connection-oriented, Full
-                  duplex, Error control, Data-recovery
-                </p>
-                <p>
-                  <strong>Used for:</strong> Email, File sharing, Downloading
-                </p>
-              </div>
-              <div class="element-card">
-                <h4>⚡ UDP (User Datagram Protocol)</h4>
-                <p>
-                  <strong>Features:</strong> Unreliable, Connectionless, Full
-                  duplex, Limited error checking
-                </p>
-                <p>
-                  <strong>Used for:</strong> Voice Streaming, Video Streaming
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="session2" class="session">
-        <div class="session-header security">
-          <h2>Session 2: Cyber Security Essentials</h2>
-        </div>
-        <div class="session-content security">
-          <div class="subsection">
-            <h3 class="subsection-title">Cyber Security Definition</h3>
-            <div class="definition-box">
-              <h4>🔒 What is Cyber Security?</h4>
-              <p>
-                Protection of systems, networks, programs, devices, and data
-                from cyber attacks.
-                <strong>Security is a shared responsibility.</strong>
-              </p>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Security Goals (CIA Triad)</h3>
-            <div class="security-goals">
-              <div class="goal-card">
-                <h4>🤐 Confidentiality</h4>
-                <p>
-                  Ensuring information is not revealed to unauthorized persons
-                </p>
-              </div>
-              <div class="goal-card">
-                <h4>✅ Integrity</h4>
-                <p>
-                  Ensuring consistency of data and ability to detect
-                  modifications
-                </p>
-              </div>
-              <div class="goal-card">
-                <h4>🌐 Availability</h4>
-                <p>
-                  Ensuring legitimate users are not denied access to information
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Risks & Threats</h3>
-            <div class="definition-box">
-              <h4>⚠️ Risk Formula</h4>
-              <p><strong>Risk = Threat × Vulnerabilities</strong></p>
-              <p>
-                <strong>Vulnerability:</strong> Degree of weakness in every
-                network and device
-              </p>
-              <p>
-                <strong>Threat:</strong> A person, thing, event, or idea posing
-                danger to an asset
-              </p>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Attacker Methodology</h3>
-            <div class="terminology-grid">
-              <div class="term-card">
-                <h5>🔍 Reconnaissance</h5>
-                <p>Gathering information about target before attack</p>
-              </div>
-              <div class="term-card">
-                <h5>📡 Scanning</h5>
-                <p>Scanning network for open ports, OS, applications</p>
-              </div>
-              <div class="term-card">
-                <h5>🎯 Gaining Access</h5>
-                <p>True attack phase where hacker exploits the system</p>
-              </div>
-              <div class="term-card">
-                <h5>🔒 Maintaining Access</h5>
-                <p>Hacker tries to retain "ownership" of system</p>
-              </div>
-              <div class="term-card">
-                <h5>🧹 Covering Tracks</h5>
-                <p>Activities to extend misuse without detection</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection" id="attacks">
-            <h3 class="subsection-title">Attack Methods</h3>
-            <div class="attack-types">
-              <h4>🎭 Social Engineering Attacks</h4>
-              <ul>
-                <li>
-                  <strong>Phishing:</strong> Fake web pages to steal credentials
-                </li>
-                <li>
-                  <strong>Session Hijacking:</strong> Taking over sessions
-                  between parties
-                </li>
-                <li>
-                  <strong>Insider Attack:</strong> Attacks from within the
-                  organization
-                </li>
-                <li>
-                  <strong>Spoof Attack:</strong> Modifying source addresses to
-                  appear from someone else
-                </li>
-                <li>
-                  <strong>Password Attack:</strong> Dictionary, Brute-force,
-                  Hybrid attacks
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Malicious Software (Malware)</h3>
-            <div class="malware-grid">
-              <div class="malware-card">
-                <h5>🚪 Backdoor/Trapdoor</h5>
-                <p>Secret entry point into program, cannot be scanned</p>
-              </div>
-              <div class="malware-card">
-                <h5>🐴 Trojan Horse</h5>
-                <p>
-                  Program with hidden side-effects, superficially attractive
-                </p>
-              </div>
-              <div class="malware-card">
-                <h5>🦠 Viruses</h5>
-                <p>Malicious software attached to other programs</p>
-              </div>
-              <div class="malware-card">
-                <h5>🐛 Worms</h5>
-                <p>
-                  Self-replicating, spreads over network exploiting
-                  vulnerabilities
-                </p>
-              </div>
-              <div class="malware-card">
-                <h5>🧟 Zombie</h5>
-                <p>Secretly controlled computer used for indirect attacks</p>
-              </div>
-              <div class="malware-card">
-                <h5>💰 Ransomware</h5>
-                <p>Encrypts data, demands ransom payment for decryption key</p>
-              </div>
-              <div class="malware-card">
-                <h5>📧 Spam</h5>
-                <p>Overloads ISPs, email servers, and end-user systems</p>
-              </div>
-              <div class="malware-card">
-                <h5>👁️ Spyware</h5>
-                <p>Gathers personal information without permission</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Attack Mitigation</h3>
-            <div class="mitigation-grid">
-              <div class="mitigation-card">
-                <h4>🔥 Firewall</h4>
-                <p>
-                  Protects internal users from external threats, controls
-                  traffic
-                </p>
-              </div>
-              <div class="mitigation-card">
-                <h4>🛡️ Proxy Server</h4>
-                <p>Intercepts requests, hides client IP addresses</p>
-              </div>
-              <div class="mitigation-card">
-                <h4>🔐 VPN</h4>
-                <p>Tunnels traffic between network sides securely</p>
-              </div>
-              <div class="mitigation-card">
-                <h4>🚨 IDS/IPS</h4>
-                <p>Detects and prevents network intrusions</p>
-              </div>
-              <div class="mitigation-card">
-                <h4>🔒 Encryption</h4>
-                <p>Converts plaintext to ciphertext using algorithms</p>
-              </div>
-              <div class="mitigation-card">
-                <h4>🛡️ NGFW</h4>
-                <p>Next Generation Firewall with deep packet inspection</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="session3" class="session">
-        <div class="session-header distributed">
-          <h2>Session 3: Distributed Systems</h2>
-        </div>
-        <div class="session-content distributed">
-          <div class="subsection">
-            <h3 class="subsection-title">Distributed Systems Overview</h3>
-            <div class="definition-box">
-              <h4>☁️ What are Distributed Systems?</h4>
-              <p>
-                A group of computers working together appearing as a single
-                computer to the end-user. Collection of independent components
-                on different machines sharing messages to achieve common goals.
-              </p>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Centralized vs. Distributed</h3>
-            <div class="network-elements">
-              <div class="element-card">
-                <h4>🏢 Centralized System</h4>
-                <p>
-                  <strong>Pros:</strong> Simpler, easier to understand, faster
-                  for single user
-                </p>
-                <p>
-                  <strong>Cons:</strong> Single point of failure, limited
-                  scalability
-                </p>
-              </div>
-              <div class="element-card">
-                <h4>🌐 Distributed System</h4>
-                <p>
-                  <strong>Pros:</strong> More robust, scalable, fault-tolerant
-                </p>
-                <p><strong>Cons:</strong> More complex to design and manage</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Virtualization</h3>
-            <div class="definition-box">
-              <h4>💻 Virtualization Technology</h4>
-              <p>
-                Technology to run multiple same or different operating systems,
-                completely isolated, simultaneously on the same machine.
-              </p>
-              <p>
-                <strong>Benefits:</strong> Hardware consolidation, Redundancy,
-                Migration, Centralized management
-              </p>
-            </div>
-          </div>
-
-          <div class="subsection" id="cloud">
-            <h3 class="subsection-title">Cloud Computing</h3>
-            <div class="definition-box">
-              <h4>☁️ Cloud Computing Definition</h4>
-              <p>
-                A pool of resources that can be rapidly provisioned in an
-                automated, on-demand manner.
-              </p>
-              <p>
-                <strong>Value:</strong> Economies of scale, Elasticity, Cost
-                benefits, Easy access regardless of location
-              </p>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Cloud Service Models</h3>
-            <div class="cloud-models">
-              <div class="model-card onprem">
-                <h4>🏢 On-Premises</h4>
-                <p>Customer manages everything</p>
-              </div>
-              <div class="model-card iaas">
-                <h4>🛠️ IaaS</h4>
-                <p>
-                  Infrastructure as a Service - Customer controls OS &
-                  applications
-                </p>
-              </div>
-              <div class="model-card paas">
-                <h4>⚙️ PaaS</h4>
-                <p>
-                  Platform as a Service - Customer deploys applications only
-                </p>
-              </div>
-              <div class="model-card saas">
-                <h4>📱 SaaS</h4>
-                <p>Software as a Service - Customer uses applications only</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <h3 class="subsection-title">Cloud Deployment Models</h3>
-            <div class="terminology-grid">
-              <div class="term-card">
-                <h5>🌍 Public Cloud</h5>
-                <p>Open to general public, owned by third party</p>
-              </div>
-              <div class="term-card">
-                <h5>🏢 Private Cloud</h5>
-                <p>Used exclusively by single organization</p>
-              </div>
-              <div class="term-card">
-                <h5>🔄 Hybrid Cloud</h5>
-                <p>Combines multiple deployment models</p>
-              </div>
-              <div class="term-card">
-                <h5>👥 Community Cloud</h5>
-                <p>Shared by specific group of organizations</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div class="footer">
-        <p>Created By: <b>Abdelghany</b></p>
-      </div>
+      </main>
     </div>
 
     <script>
-      // Sidebar toggle functionality
-      const navToggle = document.getElementById("navToggle");
-      const navMenu = document.getElementById("navMenu");
-      const mainContainer = document.getElementById("mainContainer");
+      // Sidebar functionality
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.getElementById("mainContent");
 
-      navToggle.addEventListener("click", function () {
-        navMenu.classList.toggle("collapsed");
-        mainContainer.classList.toggle("full-width");
-
-        // Update toggle button icon
-        if (navMenu.classList.contains("collapsed")) {
-          navToggle.textContent = "☰";
+        sidebar.classList.toggle("collapsed");
+        if (window.innerWidth <= 768) {
+          sidebar.classList.toggle("active");
         } else {
-          navToggle.textContent = "✕";
+          mainContent.classList.toggle("full-width");
+        }
+      }
+
+      function closeSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.getElementById("mainContent");
+
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove("active");
+        }
+      }
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener("click", function (e) {
+        const sidebar = document.getElementById("sidebar");
+        const toggle = document.querySelector(".sidebar-toggle");
+
+        if (
+          window.innerWidth <= 768 &&
+          !sidebar.contains(e.target) &&
+          !toggle.contains(e.target) &&
+          sidebar.classList.contains("active")
+        ) {
+          closeSidebar();
         }
       });
 
-      // Close sidebar when clicking on a link (mobile)
-      const navLinks = document.querySelectorAll(".nav-menu a");
-      navLinks.forEach((link) => {
-        link.addEventListener("click", function () {
-          if (window.innerWidth <= 768) {
-            navMenu.classList.add("collapsed");
-            mainContainer.classList.add("full-width");
-            navToggle.textContent = "☰";
-          }
-        });
-      });
-
-      // Auto-collapse sidebar on mobile and handle window resize
+      // Handle window resize
       function handleResize() {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.getElementById("mainContent");
+
         if (window.innerWidth <= 768) {
-          navMenu.classList.add("collapsed");
-          mainContainer.classList.add("full-width");
-          navToggle.textContent = "☰";
+          sidebar.classList.remove("active");
+          mainContent.classList.remove("full-width");
         } else {
-          navMenu.classList.remove("collapsed");
-          mainContainer.classList.remove("full-width");
-          navToggle.textContent = "✕";
+          sidebar.classList.remove("collapsed");
+          sidebar.classList.remove("active");
         }
       }
 
