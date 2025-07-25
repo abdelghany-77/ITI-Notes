@@ -2,13 +2,63 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
     <title>Complete Linux Commands & System Administration Guide</title>
     <style>
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+
+      /* Enhanced touch targets for mobile */
+      button,
+      a,
+      .card,
+      .sidebar-nav a,
+      .back-to-main,
+      .sidebar-toggle {
+        -webkit-tap-highlight-color: rgba(240, 147, 251, 0.2);
+        touch-action: manipulation;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+      }
+
+      /* Enhanced focus states for accessibility */
+      button:focus,
+      a:focus,
+      .sidebar-nav a:focus,
+      .back-to-main:focus,
+      .sidebar-toggle:focus {
+        outline: 2px solid #f093fb;
+        outline-offset: 2px;
+      }
+
+      /* Improved text selection on mobile */
+      .command-box,
+      code {
+        -webkit-user-select: all;
+        -moz-user-select: all;
+        -ms-user-select: all;
+        user-select: all;
+        position: relative;
+      }
+
+      /* Smooth scrolling for all devices */
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
       }
 
       body {
@@ -24,6 +74,9 @@
         min-height: 100vh;
         margin: 0;
         padding: 0;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
       }
 
       /* Sidebar Layout */
@@ -35,7 +88,7 @@
       /* Sidebar Styles */
       .sidebar {
         width: 300px;
-        background: rgba(44, 62, 80, 0.95);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
         position: fixed;
@@ -46,11 +99,36 @@
         z-index: 1000;
         transition: transform 0.3s ease;
         box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+        -webkit-overflow-scrolling: touch;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      /* Sidebar overlay for mobile */
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
       }
 
       .sidebar-header {
         padding: 1.5rem;
-        background: rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.1);
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
 
@@ -68,6 +146,38 @@
         padding: 1rem 0;
       }
 
+      .sidebar-nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .sidebar-nav li {
+        margin: 0;
+        padding: 0;
+      }
+
+      .sidebar-nav ul ul {
+        padding-left: 0;
+        margin-left: 1rem;
+        border-left: 2px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar-nav ul ul li {
+        position: relative;
+      }
+
+      .sidebar-nav ul ul li::before {
+        content: "";
+        position: absolute;
+        left: -2px;
+        top: 50%;
+        width: 8px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-50%);
+      }
+
       .sidebar-nav a {
         display: block;
         color: rgba(255, 255, 255, 0.8);
@@ -79,45 +189,103 @@
         font-size: 0.9rem;
       }
 
+      .sidebar-nav ul ul a {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
       .sidebar-nav a:hover {
         background: rgba(255, 255, 255, 0.1);
-        border-left-color: #3498db;
+        border-left-color: #f093fb;
         color: white;
         transform: translateX(5px);
       }
 
       .sidebar-nav a.active {
-        background: rgba(52, 152, 219, 0.2);
-        border-left-color: #3498db;
-        color: #3498db;
+        background: rgba(240, 147, 251, 0.2);
+        border-left-color: #f093fb;
+        color: #f093fb;
       }
 
       /* Main Content Area */
       .main-content {
         flex: 1;
-        margin-left: 300px;
+        margin-left: 0;
         min-height: 100vh;
+        transition: margin-left 0.3s ease;
       }
 
+      /* Study-focused layout improvements */
       .container {
-        max-width: 1200px;
+        max-width: none;
         margin: 0 auto;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.95);
+        padding: 70px 20px 20px 20px;
+        background: rgba(255, 255, 255, 0.98);
         border-radius: 0;
         box-shadow: none;
         min-height: 100vh;
       }
 
-      /* Header Styles */
-      header {
-        background: linear-gradient(135deg, #2c3e50, #34495e);
+      /* Study progress indicator */
+      .study-progress {
+        position: fixed;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #667eea, #764ba2);
         color: white;
-        padding: 2rem 2rem;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        z-index: 900;
+        display: none;
+      }
+
+      /* Difficulty indicators */
+      .difficulty {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .difficulty.beginner {
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .difficulty.intermediate {
+        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+
+      .difficulty.advanced {
+        background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      /* Study-focused header */
+      header {
+        background: linear-gradient(135deg, #1a237e, #283593, #3949ab);
+        color: white;
+        padding: 3rem 2rem;
         text-align: center;
         margin-bottom: 2rem;
-        border-radius: 15px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         position: relative;
         overflow: hidden;
       }
@@ -129,13 +297,45 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
-        opacity: 0.3;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="10" r="1.2" fill="rgba(255,255,255,0.08)"/><circle cx="10" cy="70" r="0.8" fill="rgba(255,255,255,0.08)"/></svg>');
+        opacity: 0.4;
       }
 
       header * {
         position: relative;
         z-index: 1;
+      }
+
+      .study-stats {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .stat-item {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 1rem 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .stat-number {
+        font-size: 1.8rem;
+        font-weight: 800;
+        display: block;
+        color: #81c784;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
       }
 
       h1 {
@@ -165,118 +365,464 @@
         top: 20px;
         left: 20px;
         z-index: 1001;
-        background: rgba(44, 62, 80, 0.9);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
         padding: 10px 12px;
         border-radius: 5px;
         cursor: pointer;
-        display: none;
+        display: block;
         font-size: 1.2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
       }
 
-      /* Section Styles */
+      .sidebar-toggle:hover {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Enhanced Section Styles for better content readability */
       .section {
-        background: white;
-        margin: 2rem 0;
-        padding: 2.5rem;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
+        background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+        margin: 3rem 0;
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        opacity: 0.8;
       }
 
       .section:hover {
-        transform: translateY(-2px);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
       }
 
       .section h2 {
-        color: #3498db;
-        border-bottom: 3px solid #3498db;
-        padding-bottom: 0.75rem;
-        margin-bottom: 2rem;
-        font-size: 2rem;
+        color: #2c3e50;
+        border-bottom: 3px solid transparent;
+        border-image: linear-gradient(90deg, #667eea, #764ba2) 1;
+        padding-bottom: 1rem;
+        margin-bottom: 2.5rem;
+        font-size: 2.25rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        letter-spacing: -0.02em;
+      }
+
+      .section h3 {
+        color: #34495e;
+        margin: 2.5rem 0 2rem 0;
+        font-size: 1.6rem;
         font-weight: 700;
         display: flex;
         align-items: center;
         gap: 0.75rem;
+        position: relative;
+        padding-left: 1rem;
       }
 
-      .section h3 {
-        color: #2c3e50;
-        margin: 2rem 0 1.5rem 0;
-        font-size: 1.4rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+      .section h3::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 2rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 2px;
       }
 
       .section h4 {
         color: #2c3e50;
-        margin-bottom: 1rem;
+        margin-bottom: 1.25rem;
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
+
+      .section p {
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+        font-size: 1.05rem;
+      }
+
+      .section ul, .section ol {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+        padding-left: 1.5rem;
+      }
+
+      .section li {
+        margin-bottom: 0.75rem;
+        font-size: 1.05rem;
+      }
+
+      /* Enhanced command box for better readability */
+      .command-box {
+        background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+        color: #f0f6fc;
+        border-radius: 16px;
+        padding: 2.5rem;
+        margin: 2rem 0;
+        font-family: "JetBrains Mono", "Fira Code", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+        font-size: 1.1rem;
+        line-height: 2;
+        font-weight: 500;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: pre-line;
+        word-break: normal;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid rgba(110, 118, 129, 0.2);
+        backdrop-filter: blur(20px);
+      }
+
+      .command-box:active {
+        transform: scale(0.98);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      }
+
+      .command-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35);
+        border-color: rgba(88, 166, 255, 0.4);
+      }
+
+      /* Command syntax highlighting */
+      .cmd {
+        color: #7dd3fc;
         font-weight: 600;
       }
 
-      /* Command and Code Styles */
-      .command-box {
-        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-        color: #ecf0f1;
+      .cmd-option {
+        color: #fbbf24;
+        font-weight: 500;
+      }
+
+      .cmd-path {
+        color: #34d399;
+        font-weight: 500;
+      }
+
+      .cmd-comment {
+        color: #6b7280;
+        font-style: italic;
+        opacity: 0.8;
+      }
+
+      .cmd-output {
+        color: #a78bfa;
+        font-weight: 400;
+        opacity: 0.9;
+      }
+
+      .cmd-prompt {
+        color: #10b981;
+        font-weight: 700;
+        margin-right: 0.5rem;
+      }
+
+      /* Enhanced copy indicator for command boxes */
+      .command-box::after {
+        /* content: "� Terminal"; */
+        position: absolute;
+        top: 16px;
+        right: 20px;
+        background: linear-gradient(135deg, #1f2937, #374151);
+        color: #9ca3af;
+        padding: 8px 16px;
         border-radius: 12px;
-        padding: 1.5rem;
-        margin: 1.5rem 0;
-        font-family: "Fira Code", "Courier New", monospace;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        position: relative;
-        overflow-x: auto;
+        font-size: 0.8rem;
+        font-family: system-ui, -apple-system, sans-serif;
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .command-box:hover::after,
+      .command-box:focus::after {
+        opacity: 1;
+        color: #f9fafb;
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
       }
 
       .command-box::before {
+        content: "";
+      }
+
+      .command-box.single-line::before {
         content: "$ ";
-        color: #4ecdc4;
+        color: #10b981;
         font-weight: bold;
+        font-size: 1.1em;
+        margin-right: 0.5rem;
       }
 
       .command-box.multi-line::before {
         content: "";
       }
 
-      /* Alert Boxes */
-      .example {
-        background: #e8f5e8;
-        border-left: 5px solid #2ecc71;
-        padding: 1.5rem;
-        margin: 1.5rem 0;
+      .command-box .comment {
+        color: #6b7280;
+        font-style: italic;
+        opacity: 0.8;
+      }
+
+      .command-box.practice-mode {
+        border-left: 6px solid #10b981;
+        background: linear-gradient(135deg, #0d1117 0%, #161b22 100%), 
+                    linear-gradient(90deg, rgba(16, 185, 129, 0.1), transparent);
+      }
+
+      .command-box.practice-mode::after {
+        content: "🎯 Practice Mode";
+        opacity: 1;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+      }
+
+      /* Command line structure */
+      .cmd-line {
+        display: block;
+        margin: 0.5rem 0;
+        position: relative;
+        padding-left: 2rem;
+      }
+
+      .cmd-line::before {
+        content: "$ ";
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: 700;
+      }
+
+      .cmd-line.root::before {
+        content: "# ";
+        color: #ef4444;
+      }
+
+      .cmd-line.output {
+        color: #a78bfa;
+        padding-left: 0;
+        opacity: 0.9;
+        font-weight: 400;
+      }
+
+      .cmd-line.output::before {
+        content: "";
+      }
+
+      .cmd-line.comment {
+        color: #6b7280;
+        padding-left: 0;
+        font-style: italic;
+        opacity: 0.8;
+      }
+
+      .cmd-line.comment::before {
+        content: "# ";
+        color: #6b7280;
+      }
+
+      /* Enhanced inline code styling */
+      code {
+        background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+        color: #1e293b;
+        padding: 0.3rem 0.6rem;
+        border-radius: 8px;
+        font-family: "JetBrains Mono", "Fira Code", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+        font-size: 0.9em;
+        font-weight: 600;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+      }
+
+      code:hover {
+        background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Command summary box styling */
+      .command-summary {
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border: 2px solid #3b82f6;
+        border-radius: 16px;
+        padding: 2rem;
+        margin: 2rem 0;
+        position: relative;
+        box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
+      }
+
+      .command-summary::before {
+        content: "📋 Command Summary";
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: white;
+        padding: 6px 16px;
         border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        font-size: 0.85rem;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+
+      .command-summary h4 {
+        color: #1e40af;
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+      }
+
+      /* Study mode enhancements */
+      .study-checklist {
+        background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+        border: 2px solid #4caf50;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .study-checklist h4 {
+        color: #2e7d32;
+        margin-bottom: 1rem;
+      }
+
+      .checklist-item {
+        display: flex;
+        align-items: center;
+        margin: 0.75rem 0;
+        padding: 0.5rem;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
+        cursor: pointer;
+      }
+
+      .checklist-item:hover {
+        background: rgba(76, 175, 80, 0.1);
+      }
+
+      .checklist-item input[type="checkbox"] {
+        margin-right: 0.75rem;
+        transform: scale(1.2);
+      }
+
+      .checklist-item.completed {
+        text-decoration: line-through;
+        opacity: 0.7;
+      }
+
+      /* Responsive adjustments for study elements */
+      @media (max-width: 767px) {
+        .study-progress {
+          font-size: 0.8rem;
+          padding: 6px 15px;
+        }
+        
+        .stat-item {
+          padding: 0.75rem 1rem;
+        }
+        
+        .stat-number {
+          font-size: 1.4rem;
+        }
+        
+        .study-stats {
+          gap: 1rem;
+        }
+      }
+
+      /* Improved Alert Boxes with better contrast */
+      .example {
+        background: linear-gradient(135deg, #f0fff4 0%, #e8f5e8 100%);
+        border-left: 5px solid #2ecc71;
+        padding: 2rem;
+        margin: 2rem 0;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(46, 204, 113, 0.1);
+        border: 1px solid rgba(46, 204, 113, 0.2);
+      }
+
+      .example h4 {
+        color: #27ae60;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
       }
 
       .warning {
-        background: #fff3cd;
+        background: linear-gradient(135deg, #fffbf0 0%, #fff3cd 100%);
         border-left: 5px solid #f39c12;
-        padding: 1.5rem;
-        margin: 1.5rem 0;
+        padding: 2rem;
+        margin: 2rem 0;
         border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 25px rgba(243, 156, 18, 0.1);
+        border: 1px solid rgba(243, 156, 18, 0.2);
+      }
+
+      .warning h4 {
+        color: #e67e22;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
       }
 
       .danger {
-        background: #f8d7da;
+        background: linear-gradient(135deg, #fff5f5 0%, #f8d7da 100%);
         border-left: 5px solid #e74c3c;
-        padding: 1.5rem;
-        margin: 1.5rem 0;
+        padding: 2rem;
+        margin: 2rem 0;
         border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 25px rgba(231, 76, 60, 0.1);
+        border: 1px solid rgba(231, 76, 60, 0.2);
+      }
+
+      .danger h4 {
+        color: #c0392b;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
       }
 
       .info {
-        background: #d1ecf1;
+        background: linear-gradient(135deg, #f0f8ff 0%, #d1ecf1 100%);
         border-left: 5px solid #3498db;
-        padding: 1.5rem;
-        margin: 1.5rem 0;
+        padding: 2rem;
+        margin: 2rem 0;
         border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.1);
+        border: 1px solid rgba(52, 152, 219, 0.2);
+      }
+
+      .info h4 {
+        color: #2980b9;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
       }
 
       /* Grid and Card Layouts */
@@ -299,69 +845,314 @@
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       }
 
+      /* Enhanced Card Layouts for better readability */
       .card {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 12px;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        padding: 2rem;
+        border-radius: 16px;
         border: 1px solid #e9ecef;
-        transition: transform 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        opacity: 0;
+        transition: opacity 0.3s ease;
       }
 
       .card:hover {
-        transform: translateY(-5px);
-        border-color: #3498db;
+        transform: translateY(-8px);
+        border-color: #667eea;
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+      }
+
+      .card:hover::before {
+        opacity: 1;
       }
 
       .card h4 {
-        color: #3498db;
-        margin-bottom: 1rem;
-        font-size: 1.1rem;
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        font-size: 1.25rem;
+        font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.75rem;
       }
 
-      /* Tables */
+      .card p {
+        margin-bottom: 1rem;
+        color: #555;
+        line-height: 1.7;
+      }
+
+      .card ul {
+        color: #666;
+        line-height: 1.8;
+      }
+
+      /* Enhanced card content styling */
+      .info-highlight {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border: 2px solid #007bff;
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 1rem 0;
+        text-align: center;
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        font-weight: 600;
+        color: #1e40af;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+      }
+
+      .info-highlight code {
+        background: transparent;
+        color: #1e40af;
+        border: none;
+        box-shadow: none;
+        font-size: 1rem;
+        padding: 0;
+      }
+
+      .examples {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+        border-left: 4px solid #28a745;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .examples strong {
+        color: #28a745;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .examples code {
+        background: #e9ecef;
+        color: #495057;
+        font-size: 0.85rem;
+        padding: 0.2rem 0.4rem;
+        margin: 0;
+      }
+
+      /* User badge styling */
+      .user-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin: 0.5rem 0 1rem 0;
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+
+      .user-badge.user-root {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: white;
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+      }
+
+      .user-badge.user-normal {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+      }
+
+      .user-badge.user-service {
+        background: linear-gradient(135deg, #6f42c1, #e83e8c);
+        color: white;
+        box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+      }
+
+      /* Study components */
+      .quick-ref {
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        border: 2px solid #2196f3;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        position: relative;
+      }
+
+      .quick-ref::before {
+        content: "📝 Quick Reference";
+        position: absolute;
+        top: -10px;
+        left: 20px;
+        background: #2196f3;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .practice-section {
+        background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+        border: 2px solid #9c27b0;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        position: relative;
+      }
+
+      .practice-section::before {
+        content: "🎯 Practice Time";
+        position: absolute;
+        top: -10px;
+        left: 20px;
+        background: #9c27b0;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .study-tip {
+        background: linear-gradient(135deg, #fff8e1, #ffecb3);
+        border: 2px solid #ffc107;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        position: relative;
+      }
+
+      .study-tip::before {
+        content: "💡 Study Tip";
+        position: absolute;
+        top: -10px;
+        left: 20px;
+        background: #ffc107;
+        color: #333;
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .command-summary {
+        background: linear-gradient(135deg, #f1f8e9, #dcedc8);
+        border: 2px solid #8bc34a;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        position: relative;
+      }
+
+      .command-summary::before {
+        content: "📋 Command Summary";
+        position: absolute;
+        top: -10px;
+        left: 20px;
+        background: #8bc34a;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      /* Enhanced Tables with better readability */
       .table-container {
         overflow-x: auto;
-        margin: 1.5rem 0;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin: 2.5rem 0;
+        border-radius: 16px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        background: white;
       }
 
       table {
         width: 100%;
         border-collapse: collapse;
         background: white;
+        font-size: 1rem;
       }
 
       th,
       td {
-        padding: 1rem;
+        padding: 1.5rem 1.25rem;
         text-align: left;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 1px solid #f1f3f4;
+        vertical-align: top;
       }
 
       th {
-        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        font-weight: 600;
+        font-weight: 700;
+        font-size: 1.05rem;
+        letter-spacing: 0.025em;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+      }
+
+      tbody tr {
+        transition: background-color 0.2s ease;
       }
 
       tbody tr:hover {
-        background: #f8f9fa;
+        background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
       }
 
-      /* Code elements */
-      code {
-        background: #f1f3f4;
-        padding: 0.25rem 0.5rem;
-        border-radius: 6px;
-        font-family: "Fira Code", "Courier New", monospace;
-        font-size: 0.9em;
+      tbody tr:nth-child(even) {
+        background: #fafbfc;
+      }
+
+      tbody tr:nth-child(even):hover {
+        background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+      }
+
+      td {
+        color: #555;
+        line-height: 1.6;
+      }
+
+      td strong {
         color: #2c3e50;
-        border: 1px solid #e1e5e9;
+        font-weight: 700;
+      }
+
+      /* Enhanced Code elements for inline code */
+      code {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 0.4rem 0.7rem;
+        border-radius: 8px;
+        font-family: "Fira Code", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+        font-size: 0.92em;
+        color: #d73a49;
+        border: 1px solid rgba(209, 58, 73, 0.2);
+        font-weight: 600;
+        letter-spacing: 0.025em;
+      }
+
+      /* Better spacing for text content */
+      .section p + p {
+        margin-top: 1.5rem;
+      }
+
+      .section p strong {
+        color: #2c3e50;
+        font-weight: 700;
+      }
+
+      .section li strong {
+        color: #2c3e50;
+        font-weight: 700;
       }
 
       /* Progress indicators */
@@ -459,51 +1250,1000 @@
       }
 
       /* Responsive Design */
-      @media (max-width: 1024px) {
-        .sidebar {
-          transform: translateX(-100%);
-        }
 
-        .sidebar.open {
-          transform: translateX(0);
-        }
-
-        .sidebar-toggle {
-          display: block;
-        }
-
-        .main-content {
-          margin-left: 0;
-        }
-
+      /* Large Desktop (1400px and up) */
+      @media (min-width: 1400px) {
         .container {
-          padding: 60px 15px 15px 15px;
+          max-width: 1600px;
+          padding: 70px 60px 60px 60px;
+        }
+
+        .sidebar {
+          width: 350px;
         }
       }
 
-      @media (max-width: 768px) {
+      /* Desktop (1200px - 1399px) */
+      @media (min-width: 1200px) and (max-width: 1399px) {
+        .container {
+          max-width: 1400px;
+          padding: 70px 40px 40px 40px;
+        }
+      }
+
+      /* Large Tablet / Small Desktop (1024px - 1199px) */
+      @media (max-width: 1199px) {
+        .container {
+          padding: 70px 20px 20px 20px;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .back-to-main {
+          top: 15px;
+          right: 15px;
+          padding: 10px 16px;
+          font-size: 0.85rem;
+        }
+
+        /* Enhanced grid responsiveness */
+        .grid-2 {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+
+        .grid-3 {
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-4 {
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+      }
+
+      /* Tablet Portrait (768px - 1023px) */
+      @media (max-width: 1023px) {
+        .section {
+          padding: 2rem 1.5rem;
+          margin: 1.5rem 0;
+        }
+
+        .grid-2 {
+          grid-template-columns: 1fr;
+          gap: 1.25rem;
+        }
+
+        .grid-3 {
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 1.25rem;
+        }
+
+        .grid-4 {
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
+        }
+
+        header {
+          padding: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+
+        h1 {
+          font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+        }
+
+        .section h2 {
+          font-size: 1.7rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .section h3 {
+          font-size: 1.3rem;
+          margin: 1.5rem 0 1rem 0;
+        }
+
+        /* Enhanced table responsiveness */
+        .table-container {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          border-radius: 8px;
+        }
+
+        table {
+          min-width: 700px;
+        }
+
+        th, td {
+          padding: 0.75rem;
+          font-size: 0.9rem;
+        }
+
+        /* Better card spacing */
+        .card {
+          padding: 1.5rem;
+          margin: 1rem 0;
+        }
+
+        /* Command box adjustments for tablets */
+        .command-box {
+          font-size: 0.95rem;
+          padding: 1.75rem;
+          line-height: 1.7;
+          margin: 1.75rem 0;
+        }
+
+        /* Enhanced alert boxes for tablets */
+        .example,
+        .warning,
+        .danger,
+        .info {
+          padding: 1.75rem;
+          margin: 1.75rem 0;
+        }
+
+        /* Better card spacing for tablets */
+        .card {
+          padding: 1.75rem;
+          margin: 1.25rem 0;
+        }
+
+        /* Section adjustments for tablets */
+        .section {
+          padding: 2.25rem;
+          margin: 2.5rem 0;
+        }
+      }
+
+      /* Mobile Landscape / Small Tablet (600px - 767px) */
+      @media (max-width: 767px) {
+        .container {
+          padding: 70px 12px 12px 12px;
+        }
+
         .section {
           padding: 1.5rem;
+          margin: 1.5rem 0;
+          border-radius: 16px;
         }
 
         .grid {
           grid-template-columns: 1fr;
+          gap: 1.25rem;
         }
 
+        .grid-3,
+        .grid-4 {
+          grid-template-columns: 1fr;
+        }
+
+        /* Enhanced mobile command box */
+        .command-box {
+          font-size: 0.9rem;
+          padding: 1.5rem;
+          overflow-x: auto;
+          margin: 1.5rem 0;
+          line-height: 1.8;
+          border-radius: 12px;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: thin;
+        }
+
+        .command-box::-webkit-scrollbar {
+          height: 4px;
+        }
+
+        .command-box::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+        }
+
+        .command-box::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 4px;
+        }
+
+        /* Mobile command line styling */
+        .cmd-line {
+          margin: 0.5rem 0;
+          word-break: break-all;
+          overflow-wrap: break-word;
+        }
+
+        /* Mobile alert boxes */
+        .example,
+        .warning,
+        .danger,
+        .info {
+          padding: 1.5rem;
+          margin: 1.5rem 0;
+          border-radius: 12px;
+        }
+
+        /* Mobile card adjustments */
+        .card {
+          padding: 1.5rem;
+          margin: 1.25rem 0;
+          border-radius: 12px;
+        }
+
+        .sidebar {
+          width: 85vw;
+          max-width: 300px;
+        }
+
+        h1 {
+          font-size: clamp(1.5rem, 5vw, 2rem);
+          margin-bottom: 1rem;
+          line-height: 1.2;
+        }
+
+        .section h2 {
+          font-size: 1.6rem;
+          margin-bottom: 1.5rem;
+          line-height: 1.3;
+        }
+
+        .section h3 {
+          font-size: 1.3rem;
+          margin: 1.5rem 0 1rem 0;
+          line-height: 1.3;
+        }
+
+        .back-to-main {
+          position: fixed;
+          top: 15px;
+          right: 15px;
+          padding: 10px 14px;
+          font-size: 0.85rem;
+          border-radius: 25px;
+          min-height: 44px;
+          min-width: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* Enhanced table for mobile */
+        .table-container {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          margin: 1.5rem 0;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+          min-width: 100%;
+          font-size: 0.85rem;
+        }
+
+        th,
+        td {
+          padding: 0.75rem;
+          white-space: nowrap;
+        }
+
+        /* Better sidebar navigation on mobile */
+        .sidebar-nav a {
+          padding: 1rem 1.5rem;
+          font-size: 0.9rem;
+          min-height: 48px;
+          display: flex;
+          align-items: center;
+        }
+
+        .sidebar-nav ul ul a {
+          padding: 0.875rem 1.5rem;
+          font-size: 0.85rem;
+          min-height: 44px;
+        }
+
+        /* Enhanced study elements for mobile */
+        .info-highlight {
+          padding: 1rem;
+          margin: 1rem 0;
+          border-radius: 10px;
+          font-size: 0.9rem;
+        }
+
+        .examples {
+          padding: 1rem;
+          margin: 1rem 0;
+          border-radius: 8px;
+          font-size: 0.85rem;
+        }
+
+        .user-badge {
+          padding: 0.5rem 1rem;
+          font-size: 0.85rem;
+          margin: 0.75rem 0;
+        }
+
+        /* Better touch targets */
+        .sidebar-toggle {
+          padding: 12px 14px;
+          min-height: 48px;
+          min-width: 48px;
+          font-size: 1.1rem;
+        }
+      }
+
+      /* Mobile Portrait (480px - 599px) */
+      @media (max-width: 599px) {
+        .container {
+          padding: 65px 10px 10px 10px;
+        }
+
+        .section {
+          padding: 1.25rem;
+          margin: 1.25rem 0;
+          border-radius: 14px;
+        }
+
+        header {
+          padding: 1.25rem 1rem;
+          margin-bottom: 1.5rem;
+          border-radius: 12px;
+        }
+
+        h1 {
+          font-size: clamp(1.3rem, 4.5vw, 1.7rem);
+          margin-bottom: 0.875rem;
+          line-height: 1.1;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .section h2 {
+          font-size: 1.4rem;
+          margin-bottom: 1.25rem;
+          line-height: 1.2;
+        }
+
+        .section h3 {
+          font-size: 1.2rem;
+          margin: 1.25rem 0 0.75rem 0;
+          line-height: 1.2;
+        }
+
+        /* Optimized command box for small screens */
         .command-box {
           font-size: 0.85rem;
+          padding: 1.25rem;
+          margin: 1.25rem 0;
+          border-radius: 10px;
+          line-height: 1.9;
+          overflow-x: auto;
+          max-width: calc(100vw - 40px);
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .cmd-line {
+          margin: 0.4rem 0;
+          font-size: 0.85rem;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          hyphens: auto;
+        }
+
+        /* Enhanced mobile alert boxes */
+        .example,
+        .warning,
+        .danger,
+        .info {
+          padding: 1.25rem;
+          margin: 1.25rem 0;
+          border-radius: 10px;
+          font-size: 0.9rem;
+        }
+
+        /* Better mobile cards */
+        .card {
+          padding: 1.25rem;
+          margin: 1rem 0;
+          border-radius: 10px;
+        }
+
+        /* Enhanced study elements */
+        .info-highlight {
+          padding: 0.875rem;
+          margin: 0.875rem 0;
+          border-radius: 8px;
+          font-size: 0.85rem;
+        }
+
+        .examples {
+          padding: 0.875rem;
+          margin: 0.875rem 0;
+          border-radius: 6px;
+          font-size: 0.8rem;
+        }
+
+        .user-badge {
+          padding: 0.4rem 0.875rem;
+          font-size: 0.8rem;
+          margin: 0.625rem 0;
+          border-radius: 14px;
+        }
+
+        .sidebar {
+          width: 90vw;
+          max-width: 280px;
+        }
+
+        /* Improved sidebar navigation */
+        .sidebar-nav a {
+          padding: 0.875rem 1.25rem;
+          font-size: 0.875rem;
+          min-height: 46px;
+          line-height: 1.3;
+        }
+
+        .sidebar-nav ul ul a {
+          padding: 0.75rem 1.25rem;
+          font-size: 0.8rem;
+          min-height: 42px;
+        }
+
+        .sidebar-nav ul ul {
+          margin-left: 0.5rem;
+        }
+
+        .back-to-main {
+          top: 12px;
+          right: 12px;
+          padding: 8px 12px;
+          font-size: 0.8rem;
+          border-radius: 22px;
+          min-height: 40px;
+          min-width: 40px;
+          gap: 4px;
+        }
+
+        .sidebar-toggle {
+          padding: 10px 12px;
+          min-height: 44px;
+          min-width: 44px;
+          font-size: 1rem;
+        }
+
+        .scroll-to-top {
+          bottom: 20px;
+          right: 20px;
+          width: 45px;
+          height: 45px;
+        }
+
+        /* Mobile table improvements */
+        .table-container {
+          margin: 1.25rem 0;
+          border-radius: 10px;
+          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+          font-size: 0.8rem;
+          min-width: 100%;
+        }
+
+        th,
+        td {
+          padding: 0.625rem;
+          white-space: normal;
+          word-wrap: break-word;
+          font-size: 0.8rem;
+        }
+      }
+
+      /* Small Mobile (320px - 479px) */
+      @media (max-width: 479px) {
+        .container {
+          padding: 60px 8px 8px 8px;
+        }
+
+        .section {
+          padding: 1rem;
+          margin: 1rem 0;
+          border-radius: 12px;
+        }
+
+        header {
+          padding: 1rem 0.75rem;
+          margin-bottom: 1.25rem;
+          border-radius: 10px;
+        }
+
+        h1 {
+          font-size: clamp(1.2rem, 6vw, 1.4rem);
+          margin-bottom: 0.625rem;
+          line-height: 1.1;
+        }
+
+        .subtitle {
+          font-size: 0.9rem;
+          margin-bottom: 0.625rem;
+        }
+
+        .date-info {
+          padding: 0.375rem 0.75rem;
+          font-size: 0.8rem;
+        }
+
+        .section h2 {
+          font-size: 1.3rem;
+          margin-bottom: 1rem;
+          line-height: 1.2;
+        }
+
+        .section h3 {
+          font-size: 1rem;
+          margin: 1rem 0 0.5rem 0;
+          line-height: 1.2;
+        }
+
+        /* Ultra compact command boxes */
+        .command-box {
+          font-size: 0.8rem;
+          padding: 1rem;
+          margin: 1rem 0;
+          border-radius: 8px;
+          line-height: 2;
+          overflow-x: auto;
+          max-width: calc(100vw - 32px);
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .cmd-line {
+          margin: 0.3rem 0;
+          font-size: 0.8rem;
+          word-break: break-all;
+          overflow-wrap: break-word;
+        }
+
+        /* Compact alert boxes */
+        .example,
+        .warning,
+        .danger,
+        .info {
+          padding: 1rem;
+          margin: 1rem 0;
+          border-radius: 8px;
+          font-size: 0.85rem;
+        }
+
+        /* Compact cards */
+        .card {
+          padding: 1rem;
+          margin: 0.875rem 0;
+          border-radius: 8px;
+        }
+
+        /* Ultra compact study elements */
+        .info-highlight {
+          padding: 0.75rem;
+          margin: 0.75rem 0;
+          border-radius: 6px;
+          font-size: 0.8rem;
+        }
+
+        .examples {
+          padding: 0.75rem;
+          margin: 0.75rem 0;
+          border-radius: 4px;
+          font-size: 0.75rem;
+        }
+
+        .user-badge {
+          padding: 0.3rem 0.75rem;
+          font-size: 0.75rem;
+          margin: 0.5rem 0;
+          border-radius: 12px;
+        }
+
+        .sidebar {
+          width: 95vw;
+          max-width: 260px;
+        }
+
+        /* Ultra compact navigation */
+        .sidebar-nav a {
+          padding: 0.75rem 1rem;
+          font-size: 0.8rem;
+          min-height: 44px;
+          line-height: 1.2;
+        }
+
+        .sidebar-nav ul ul a {
+          padding: 0.625rem 1rem;
+          font-size: 0.75rem;
+          min-height: 40px;
+        }
+
+        .sidebar-nav ul ul {
+          margin-left: 0.375rem;
+        }
+
+        .back-to-main {
+          top: 8px;
+          right: 8px;
+          padding: 6px 10px;
+          font-size: 0.7rem;
+          border-radius: 18px;
+          min-height: 36px;
+          min-width: 36px;
+          gap: 3px;
+        }
+
+        .sidebar-toggle {
+          padding: 8px 10px;
+          min-height: 40px;
+          min-width: 40px;
+          font-size: 0.9rem;
+        }
+
+        .scroll-to-top {
+          bottom: 15px;
+          right: 15px;
+          width: 40px;
+          height: 40px;
+          font-size: 1rem;
+        }
+
+        /* Ultra compact tables */
+        .table-container {
+          margin: 1rem -0.5rem;
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+          font-size: 0.75rem;
+          min-width: 100%;
+        }
+
+        th,
+        td {
+          padding: 0.5rem 0.375rem;
+          font-size: 0.75rem;
+          white-space: normal;
+          word-wrap: break-word;
+        }
+
+        /* Enhanced grid for ultra small screens */
+        .grid {
+          gap: 0.875rem;
+        }
+
+        /* Better touch targets */
+        button,
+        .button,
+        a {
+          min-height: 36px;
+          min-width: 36px;
+        }
+      }
+
+        /* Very small mobile optimization */
+        .command-box {
+          font-size: 0.8rem;
+          padding: 1rem;
+          line-height: 1.5;
+          border-radius: 8px;
+          margin: 1rem 0;
+        }
+
+        /* Very small mobile alert boxes */
+        .example,
+        .warning,
+        .danger,
+        .info {
+          padding: 1rem;
+          margin: 1rem 0;
+          border-radius: 8px;
+        }
+
+        /* Very small mobile cards */
+        .card {
+          padding: 1rem;
+          margin: 0.75rem 0;
+          border-radius: 8px;
+        }
+
+        /* Very small mobile sections */
+        .section {
+          padding: 1.5rem 1rem;
+          margin: 1.5rem 0;
+          border-radius: 10px;
+        }
+
+        .card {
+          padding: 0.875rem;
+          margin: 0.75rem 0;
+          border-radius: 6px;
+        }
+
+        .card h4 {
+          font-size: 1rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .example,
+        .warning,
+        .danger,
+        .info {
+          padding: 0.875rem;
+          margin: 0.875rem 0;
+          border-radius: 6px;
+        }
+
+        .sidebar {
+          width: 240px;
+        }
+
+        .sidebar-header {
           padding: 1rem;
         }
 
+        .sidebar-title {
+          font-size: 1rem;
+        }
+
+        .sidebar-nav a {
+          padding: 0.625rem 0.875rem;
+          font-size: 0.8rem;
+          min-height: 40px;
+        }
+
+        .sidebar-nav ul ul a {
+          padding: 0.5rem 0.875rem;
+          font-size: 0.7rem;
+          min-height: 36px;
+        }
+
+        .sidebar-nav ul ul {
+          margin-left: 0.5rem;
+        }
+
+        .back-to-main {
+          top: 5px;
+          right: 5px;
+          padding: 5px 8px;
+          font-size: 0.7rem;
+          gap: 3px;
+        }
+
+        .sidebar-toggle {
+          top: 15px;
+          left: 15px;
+          padding: 8px 10px;
+          font-size: 1.1rem;
+        }
+
+        .scroll-to-top {
+          bottom: 15px;
+          right: 15px;
+          width: 40px;
+          height: 40px;
+        }
+
+        /* Ultra compact tables */
+        .table-container {
+          margin: 0.75rem -0.5rem;
+          border-radius: 0;
+        }
+
+        th,
+        td {
+          padding: 0.5rem 0.25rem;
+          font-size: 0.8rem;
+        }
+
+      table {
+        min-width: 400px;
+      }
+
+        .sidebar-nav a {
+          padding: 0.5rem 0.875rem;
+          font-size: 0.8rem;
+        }
+
+        .back-to-main {
+          top: 5px;
+          right: 5px;
+          padding: 5px 8px;
+          font-size: 0.7rem;
+          gap: 3px;
+        }
+
+        .sidebar-toggle {
+          top: 15px;
+          left: 15px;
+          padding: 8px 10px;
+          font-size: 1.1rem;
+        }
+
+        .scroll-to-top {
+          bottom: 15px;
+          right: 15px;
+          width: 40px;
+          height: 40px;
+        }
+
+        th,
+        td {
+          padding: 0.5rem 0.25rem;
+          font-size: 0.8rem;
+        }
+
+        table {
+          min-width: 400px;
+        }
+      }
+
+      /* Extra Small Mobile (280px - 319px) */
+      @media (max-width: 319px) {
+        .container {
+          padding: 55px 5px 5px 5px;
+        }
+
+        .section {
+          padding: 0.875rem 0.375rem;
+        }
+
+        h1 {
+          font-size: 1.1rem;
+        }
+
+        .section h2 {
+          font-size: 1.2rem;
+        }
+
+        .section h3 {
+          font-size: 0.95rem;
+        }
+
+        /* Extra small mobile command boxes */
+        .command-box {
+          font-size: 0.75rem;
+          padding: 0.875rem;
+          line-height: 1.5;
+          border-radius: 6px;
+          margin: 0.875rem 0;
+        }
+
+        /* Extra small mobile sections */
+        .section {
+          padding: 1.25rem 0.75rem;
+          margin: 1.25rem 0;
+          border-radius: 8px;
+        }
+
+        .sidebar {
+          width: 220px;
+        }
+
+        .back-to-main {
+          padding: 4px 6px;
+          font-size: 0.65rem;
+        }
+
+        .sidebar-toggle {
+          padding: 6px 8px;
+          font-size: 1rem;
+        }
+      }
+
+      /* iOS Safari viewport height fix */
+      @supports (-webkit-touch-callout: none) {
+        .sidebar {
+          height: -webkit-fill-available;
+        }
+      }
+
+      /* Reduce motion for users who prefer it */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
+      /* High contrast mode support */
+      @media (prefers-contrast: high) {
+        .command-box {
+          border: 2px solid;
+        }
+
+        .card {
+          border: 2px solid;
+        }
+      }
+
+      /* Dark mode preferences */
+      @media (prefers-color-scheme: dark) {
+        /* The page already has a dark theme, but we can add some tweaks if needed */
+        .table-container {
+          box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+        }
+      }
+
+      /* Enhanced mobile interactions */
+      @media (hover: none) and (pointer: coarse) {
+        /* Disable hover effects on touch devices */
+        .command-box::after {
+          opacity: 0.7;
+        }
+
+        .card:hover {
+          transform: none;
+        }
+
+        .section:hover {
+          transform: none;
+        }
+
+        /* Better touch targets */
+        .back-to-main,
+        .sidebar-toggle,
+        .scroll-to-top {
+          min-height: 44px;
+          min-width: 44px;
+        }
+
+        /* Enhanced focus for touch navigation */
+        button:focus,
+        a:focus {
+          outline: 3px solid #667eea;
+          outline-offset: 2px;
+        }
+      }
+
+      /* Mobile landscape orientation fixes */
+      @media screen and (orientation: landscape) and (max-height: 600px) {
         .sidebar {
           width: 280px;
         }
 
-        h1 {
-          font-size: 1.5rem;
+        .container {
+          padding-top: 50px;
+        }
+
+        .section {
+          padding: 1rem;
+          margin: 1rem 0;
         }
       }
 
+      /* Mobile keyboard support */
+      @media (max-width: 767px) {
+        /* Ensure content doesn't hide behind virtual keyboard */
+        body.keyboard-visible {
+          position: fixed;
+          width: 100%;
+        }
+
+        /* Better command box scrolling on mobile */
+        .command-box {
+          scrollbar-gutter: stable;
+        }
+
+        /* Prevent zoom on form inputs */
+        input,
+        select,
+        textarea {
+          font-size: 16px;
+        }
+      }
       .back-to-main {
         position: fixed;
         top: 20px;
@@ -565,7 +2305,11 @@
 
   <body>
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
-    <a href="../index.html" class="back-to-main">Back to Main</a>
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+    <!-- <div class="study-progress" id="studyProgress">
+      📚 Study Progress: <span id="progressText">0%</span>
+    </div> -->
+    <a href="../index.html" class="back-to-main"> </a>
 
     <div class="layout-container">
       <!-- Sidebar -->
@@ -574,48 +2318,386 @@
           <h2 class="sidebar-title">📚 Table of Contents</h2>
         </div>
         <nav class="sidebar-nav">
-          <a href="#linux-basics" onclick="closeSidebar()"
-            >1. 🏗️ Linux Architecture & Open Source</a
-          >
-          <a href="#getting-help" onclick="closeSidebar()"
-            >2. 📖 Getting Help & Information</a
-          >
-          <a href="#navigation" onclick="closeSidebar()"
-            >3. 🧭 Navigation & File System</a
-          >
-          <a href="#file-operations" onclick="closeSidebar()"
-            >4. 📁 File & Directory Operations</a
-          >
-          <a href="#viewing-files" onclick="closeSidebar()"
-            >5. 👁️ Viewing File Contents</a
-          >
-          <a href="#user-management" onclick="closeSidebar()"
-            >6. 👥 User & Group Management</a
-          >
-          <a href="#permissions" onclick="closeSidebar()"
-            >7. 🔐 File Permissions & Ownership</a
-          >
-          <a href="#shell-environment" onclick="closeSidebar()"
-            >8. 🐚 Shell Environment & Variables</a
-          >
-          <a href="#wildcards" onclick="closeSidebar()"
-            >9. 🎯 Wildcards & Pattern Matching</a
-          >
-          <a href="#cli-basics" onclick="closeSidebar()"
-            >10. 💻 Command Line Interface Basics</a
-          >
-          <a href="#process-management" onclick="closeSidebar()"
-            >11. ⚙️ Process Management</a
-          >
-          <a href="#redirection-pipes" onclick="closeSidebar()"
-            >12. 🔄 Redirection & Pipes</a
-          >
-          <a href="#file-compression" onclick="closeSidebar()"
-            >13. 🗜️ File Compression & Archives</a
-          >
-          <a href="#advanced-topics" onclick="closeSidebar()"
-            >14. 🚀 Advanced Topics</a
-          >
+          <ul>
+            <li>
+              <a href="#linux-basics" onclick="closeSidebar()"
+                >🏗️ Linux Architecture & Open Source</a
+              >
+              <ul>
+                <li>
+                  <a href="#linux-basics" onclick="closeSidebar()"
+                    >Open Source Principles</a
+                  >
+                </li>
+                <li>
+                  <a href="#linux-basics" onclick="closeSidebar()"
+                    >Linux Architecture</a
+                  >
+                </li>
+                <li>
+                  <a href="#linux-basics" onclick="closeSidebar()"
+                    >Distribution Families</a
+                  >
+                </li>
+                <li>
+                  <a href="#linux-basics" onclick="closeSidebar()"
+                    >Package Managers</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#getting-help" onclick="closeSidebar()"
+                >📖 Getting Help & Information</a
+              >
+              <ul>
+                <li>
+                  <a href="#getting-help" onclick="closeSidebar()"
+                    >Manual Pages</a
+                  >
+                </li>
+                <li>
+                  <a href="#getting-help" onclick="closeSidebar()"
+                    >Info System</a
+                  >
+                </li>
+                <li>
+                  <a href="#getting-help" onclick="closeSidebar()"
+                    >Command Help</a
+                  >
+                </li>
+                <li>
+                  <a href="#getting-help" onclick="closeSidebar()"
+                    >Search & Discovery</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#navigation" onclick="closeSidebar()"
+                >🧭 Navigation & File System</a
+              >
+              <ul>
+                <li>
+                  <a href="#navigation" onclick="closeSidebar()"
+                    >Basic Navigation</a
+                  >
+                </li>
+                <li>
+                  <a href="#navigation" onclick="closeSidebar()"
+                    >Understanding Paths</a
+                  >
+                </li>
+                <li>
+                  <a href="#navigation" onclick="closeSidebar()"
+                    >Home Directory Navigation</a
+                  >
+                </li>
+                <li>
+                  <a href="#navigation" onclick="closeSidebar()"
+                    >Root Directory Concepts</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#file-operations" onclick="closeSidebar()"
+                >📁 File & Directory Operations</a
+              >
+              <ul>
+                <li>
+                  <a href="#file-operations" onclick="closeSidebar()"
+                    >Creating Files & Directories</a
+                  >
+                </li>
+                <li>
+                  <a href="#file-operations" onclick="closeSidebar()"
+                    >Copying & Moving</a
+                  >
+                </li>
+                <li>
+                  <a href="#file-operations" onclick="closeSidebar()"
+                    >Removing Files & Directories</a
+                  >
+                </li>
+                <li>
+                  <a href="#file-operations" onclick="closeSidebar()"
+                    >Bulk Operations</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#viewing-files" onclick="closeSidebar()"
+                >👁️ Viewing File Contents</a
+              >
+              <ul>
+                <li>
+                  <a href="#viewing-files" onclick="closeSidebar()"
+                    >Basic File Viewing</a
+                  >
+                </li>
+                <li>
+                  <a href="#viewing-files" onclick="closeSidebar()"
+                    >Selective Viewing</a
+                  >
+                </li>
+                <li>
+                  <a href="#viewing-files" onclick="closeSidebar()"
+                    >Pipelines & Chaining</a
+                  >
+                </li>
+                <li>
+                  <a href="#viewing-files" onclick="closeSidebar()"
+                    >Line Range Extraction</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#user-management" onclick="closeSidebar()"
+                >👥 User & Group Management</a
+              >
+              <ul>
+                <li>
+                  <a href="#user-management" onclick="closeSidebar()"
+                    >User Accounts</a
+                  >
+                </li>
+                <li>
+                  <a href="#user-management" onclick="closeSidebar()"
+                    >Group Management</a
+                  >
+                </li>
+                <li>
+                  <a href="#user-management" onclick="closeSidebar()"
+                    >Password Management</a
+                  >
+                </li>
+                <li>
+                  <a href="#user-management" onclick="closeSidebar()"
+                    >User Switching</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#permissions" onclick="closeSidebar()"
+                >🔐 File Permissions & Ownership</a
+              >
+              <ul>
+                <li>
+                  <a href="#permissions" onclick="closeSidebar()"
+                    >Permission System</a
+                  >
+                </li>
+                <li>
+                  <a href="#permissions" onclick="closeSidebar()"
+                    >Changing Permissions</a
+                  >
+                </li>
+                <li>
+                  <a href="#permissions" onclick="closeSidebar()"
+                    >Ownership Management</a
+                  >
+                </li>
+                <li>
+                  <a href="#permissions" onclick="closeSidebar()"
+                    >Advanced Permissions</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#shell-environment" onclick="closeSidebar()"
+                >🐚 Shell Environment & Variables</a
+              >
+              <ul>
+                <li>
+                  <a href="#shell-environment" onclick="closeSidebar()"
+                    >Environment Variables</a
+                  >
+                </li>
+                <li>
+                  <a href="#shell-environment" onclick="closeSidebar()"
+                    >Path Configuration</a
+                  >
+                </li>
+                <li>
+                  <a href="#shell-environment" onclick="closeSidebar()"
+                    >Shell Configuration</a
+                  >
+                </li>
+                <li>
+                  <a href="#shell-environment" onclick="closeSidebar()"
+                    >Aliases & Functions</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#wildcards" onclick="closeSidebar()"
+                >🎯 Wildcards & Pattern Matching</a
+              >
+              <ul>
+                <li>
+                  <a href="#wildcards" onclick="closeSidebar()"
+                    >Basic Wildcards</a
+                  >
+                </li>
+                <li>
+                  <a href="#wildcards" onclick="closeSidebar()"
+                    >Character Classes</a
+                  >
+                </li>
+                <li>
+                  <a href="#wildcards" onclick="closeSidebar()"
+                    >Brace Expansion</a
+                  >
+                </li>
+                <li>
+                  <a href="#wildcards" onclick="closeSidebar()"
+                    >Advanced Patterns</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#cli-basics" onclick="closeSidebar()"
+                >💻 Command Line Interface Basics</a
+              >
+              <ul>
+                <li>
+                  <a href="#cli-basics" onclick="closeSidebar()"
+                    >Command Structure</a
+                  >
+                </li>
+                <li>
+                  <a href="#cli-basics" onclick="closeSidebar()"
+                    >Options & Arguments</a
+                  >
+                </li>
+                <li>
+                  <a href="#cli-basics" onclick="closeSidebar()"
+                    >Command History</a
+                  >
+                </li>
+                <li>
+                  <a href="#cli-basics" onclick="closeSidebar()"
+                    >Tab Completion</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#process-management" onclick="closeSidebar()"
+                >⚙️ Process Management</a
+              >
+              <ul>
+                <li>
+                  <a href="#process-management" onclick="closeSidebar()"
+                    >Viewing Processes</a
+                  >
+                </li>
+                <li>
+                  <a href="#process-management" onclick="closeSidebar()"
+                    >Process Control</a
+                  >
+                </li>
+                <li>
+                  <a href="#process-management" onclick="closeSidebar()"
+                    >Background Jobs</a
+                  >
+                </li>
+                <li>
+                  <a href="#process-management" onclick="closeSidebar()"
+                    >System Monitoring</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#redirection-pipes" onclick="closeSidebar()"
+                >🔄 Redirection & Pipes</a
+              >
+              <ul>
+                <li>
+                  <a href="#redirection-pipes" onclick="closeSidebar()"
+                    >Input/Output Redirection</a
+                  >
+                </li>
+                <li>
+                  <a href="#redirection-pipes" onclick="closeSidebar()"
+                    >Pipes & Chaining</a
+                  >
+                </li>
+                <li>
+                  <a href="#redirection-pipes" onclick="closeSidebar()"
+                    >Error Handling</a
+                  >
+                </li>
+                <li>
+                  <a href="#redirection-pipes" onclick="closeSidebar()"
+                    >Advanced Redirection</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#file-compression" onclick="closeSidebar()"
+                >🗜️ File Compression & Archives</a
+              >
+              <ul>
+                <li>
+                  <a href="#file-compression" onclick="closeSidebar()"
+                    >Archive Creation</a
+                  >
+                </li>
+                <li>
+                  <a href="#file-compression" onclick="closeSidebar()"
+                    >Compression Methods</a
+                  >
+                </li>
+                <li>
+                  <a href="#file-compression" onclick="closeSidebar()"
+                    >Extraction & Viewing</a
+                  >
+                </li>
+                <li>
+                  <a href="#file-compression" onclick="closeSidebar()"
+                    >Best Practices</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#advanced-topics" onclick="closeSidebar()"
+                >🚀 Advanced Topics</a
+              >
+              <ul>
+                <li>
+                  <a href="#advanced-topics" onclick="closeSidebar()"
+                    >Regular Expressions</a
+                  >
+                </li>
+                <li>
+                  <a href="#advanced-topics" onclick="closeSidebar()"
+                    >Text Processing</a
+                  >
+                </li>
+                <li>
+                  <a href="#advanced-topics" onclick="closeSidebar()"
+                    >Network Tools</a
+                  >
+                </li>
+                <li>
+                  <a href="#advanced-topics" onclick="closeSidebar()"
+                    >System Administration</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
         </nav>
       </aside>
 
@@ -623,7 +2705,8 @@
       <main class="main-content">
         <div class="container">
           <header class="fade-in">
-            <h1>🐧 Linux Commands & System Administration Guide</h1>
+            <h1>🐧 Linux Commands & System Administration Study Guide</h1>
+            <p class="subtitle">Complete Learning Resource for Linux Mastery</p>
           </header>
 
           <section id="linux-basics" class="section fade-in">
@@ -671,18 +2754,17 @@
             </div>
 
             <div class="command-box multi-line">
-              # Check your kernel version<br />
-              uname -r<br />
-              # 5.15.0-72-generic<br />
-              <br />
-              # View system information<br />
-              uname -a<br />
-              # Linux ubuntu 5.15.0-72-generic #79-Ubuntu SMP x86_64
-              GNU/Linux<br />
-              <br />
-              # Check distribution info<br />
-              lsb_release -a<br />
-              cat /etc/os-release
+              <div class="cmd-line comment"># Check your kernel version</div>
+              <div class="cmd-line">uname -r</div>
+              <div class="cmd-line output">5.15.0-72-generic</div>
+              
+              <div class="cmd-line comment"># View system information</div>
+              <div class="cmd-line">uname -a</div>
+              <div class="cmd-line output">Linux ubuntu 5.15.0-72-generic #79-Ubuntu SMP x86_64 GNU/Linux</div>
+              
+              <div class="cmd-line comment"># Check distribution info</div>
+              <div class="cmd-line">lsb_release -a</div>
+              <div class="cmd-line">cat /etc/os-release</div>
             </div>
 
             <h3>🌍 Linux Distribution Families</h3>
@@ -756,17 +2838,17 @@
             <div class="example">
               <h4>🛠️ Programming Language Package Managers:</h4>
               <div class="command-box multi-line">
-                # Node.js packages<br />
-                npm install package-name<br />
-                <br />
-                # Python packages<br />
-                pip install package-name<br />
-                <br />
-                # Ruby gems<br />
-                gem install gem-name<br />
-                <br />
-                # PHP packages<br />
-                composer install package-name
+                <div class="cmd-line comment"># Node.js packages</div>
+                <div class="cmd-line">npm install package-name</div>
+                
+                <div class="cmd-line comment"># Python packages</div>
+                <div class="cmd-line">pip install package-name</div>
+                
+                <div class="cmd-line comment"># Ruby gems</div>
+                <div class="cmd-line">gem install gem-name</div>
+                
+                <div class="cmd-line comment"># PHP packages</div>
+                <div class="cmd-line">composer install package-name</div>
               </div>
             </div>
 
@@ -793,19 +2875,19 @@
             <div class="example">
               <h4>🖥️ Ubuntu + Web Server Setup:</h4>
               <div class="command-box multi-line">
-                # Install Apache web server<br />
-                sudo apt update<br />
-                sudo apt install apache2<br />
-                <br />
-                # Or install Nginx<br />
-                sudo apt install nginx<br />
-                <br />
-                # Start the service<br />
-                sudo systemctl start apache2<br />
-                sudo systemctl enable apache2<br />
-                <br />
-                # Check status<br />
-                sudo systemctl status apache2
+                <div class="cmd-line comment"># Install Apache web server</div>
+                <div class="cmd-line">sudo apt update</div>
+                <div class="cmd-line">sudo apt install apache2</div>
+                
+                <div class="cmd-line comment"># Or install Nginx</div>
+                <div class="cmd-line">sudo apt install nginx</div>
+                
+                <div class="cmd-line comment"># Start the service</div>
+                <div class="cmd-line">sudo systemctl start apache2</div>
+                <div class="cmd-line">sudo systemctl enable apache2</div>
+                
+                <div class="cmd-line comment"># Check status</div>
+                <div class="cmd-line">sudo systemctl status apache2</div>
               </div>
               <p>
                 <strong>Result:</strong> Hardware + Software = Web Server
@@ -849,98 +2931,232 @@
           </section>
 
           <section id="getting-help" class="section fade-in">
-            <h2>📖 2. Getting Help & Information</h2>
+            <div class="difficulty beginner">🟢 Beginner Level</div>
+            <h2>📖 2. Getting Help & Information Systems</h2>
 
-            <h3>🆘 Information Commands</h3>
+            <div class="study-tip">
+              <h4>💡 Study Strategy</h4>
+              <p>Master the help system first! This is your best friend in Linux. Practice using:</p>
+              <ul>
+                <li><code>man</code> for detailed documentation</li>
+                <li><code>--help</code> for quick syntax reminders</li>
+                <li><code>info</code> for hypertext documentation</li>
+                <li>Tab completion to discover commands</li>
+              </ul>
+            </div>
+
+            <h3>🆘 Essential Help Commands</h3>
             <div class="grid grid-3">
               <div class="card">
                 <h4>📋 Manual Pages</h4>
-                <div class="command-box">man command</div>
+                <div class="info-highlight">
+                  <code>man command</code>
+                </div>
                 <p>Comprehensive documentation for commands</p>
+                <div class="examples">
+                  <strong>Examples:</strong><br>
+                  <code>man ls</code> - List command manual<br>
+                  <code>man cp</code> - Copy command manual<br>
+                  <code>man passwd</code> - Password manual
+                </div>
               </div>
               <div class="card">
                 <h4>ℹ️ Info System</h4>
-                <div class="command-box">info command</div>
+                <div class="info-highlight">
+                  <code>info command</code>
+                </div>
                 <p>GNU info documentation (hypertext format)</p>
+                <div class="examples">
+                  <strong>Navigation:</strong><br>
+                  Use arrow keys to navigate<br>
+                  Press 'q' to quit<br>
+                  Press 'h' for help
+                </div>
               </div>
               <div class="card">
                 <h4>❓ Quick Help</h4>
-                <div class="command-box">
-                  command --help<br />
-                  help command
+                <div class="info-highlight">
+                  <code>command --help</code><br>
+                  <code>help command</code>
                 </div>
-                <p>Brief usage information</p>
+                <p>Brief usage information and options</p>
+                <div class="examples">
+                  <strong>Try:</strong><br>
+                  <code>ls --help</code> - List options<br>
+                  <code>cp --help</code> - Copy options<br>
+                  <code>help cd</code> - Built-in help
+                </div>
               </div>
             </div>
 
-            <h3>🔍 Manual Page Navigation</h3>
+            <div class="practice-section">
+              <h4>🎯 Practice: Exploring Help Systems</h4>
+              <div class="command-box multi-line">
+                <div class="cmd-line comment"># Try these commands to explore help systems:</div>
+                <div class="cmd-line">man ls          <span class="cmd-comment"># Detailed manual for 'ls'</span></div>
+                <div class="cmd-line">ls --help       <span class="cmd-comment"># Quick help for 'ls'</span></div>
+                <div class="cmd-line">info coreutils  <span class="cmd-comment"># Info documentation</span></div>
+                <div class="cmd-line">whatis ls       <span class="cmd-comment"># Brief description</span></div>
+                <div class="cmd-line">apropos copy    <span class="cmd-comment"># Find commands related to 'copy'</span></div>
+                <div class="cmd-line">which ls        <span class="cmd-comment"># Find location of 'ls' command</span></div>
+                <div class="cmd-line">type ls         <span class="cmd-comment"># Check if ls is built-in or external</span></div>
+              </div>
+            </div>
+
+            <h3>🔍 Manual Page Navigation & Sections</h3>
             <div class="table-container">
               <table>
                 <tr>
                   <th>Command</th>
                   <th>Description</th>
                   <th>Example</th>
+                  <th>Pro Tip</th>
                 </tr>
                 <tr>
                   <td><code>whatis command</code></td>
                   <td>Shows brief description</td>
                   <td><code>whatis passwd</code></td>
+                  <td>Quick overview of command purpose</td>
                 </tr>
                 <tr>
                   <td><code>man -f command</code></td>
                   <td>Same as whatis</td>
                   <td><code>man -f passwd</code></td>
+                  <td>Alternative syntax</td>
                 </tr>
                 <tr>
                   <td><code>man -k "keyword"</code></td>
                   <td>Search by keyword</td>
                   <td><code>man -k "directory"</code></td>
+                  <td>Find related commands</td>
                 </tr>
                 <tr>
                   <td><code>man -s5 passwd</code></td>
                   <td>Show specific section</td>
                   <td>Shows file format</td>
+                  <td>Access different manual sections</td>
                 </tr>
                 <tr>
                   <td><code>man -a passwd</code></td>
                   <td>Browse all sections</td>
                   <td>All passwd manual pages</td>
+                  <td>See all available documentation</td>
                 </tr>
               </table>
             </div>
 
-            <div class="example">
-              <h4>📚 Manual Section Numbers:</h4>
-              <div class="command-box multi-line">
-                # Manual page sections:<br />
-                # 1 - User commands (ls, cat, cp)<br />
-                # 2 - System calls (open, read, write)<br />
-                # 3 - Library functions (printf, malloc)<br />
-                # 4 - Device files (/dev/null, /dev/tty)<br />
-                # 5 - File formats (/etc/passwd, /etc/hosts)<br />
-                # 6 - Games and demos<br />
-                # 7 - Miscellaneous (man pages, conventions)<br />
-                # 8 - System administration (mount, fsck)<br />
-                # 9 - Kernel routines (non-standard)
+            <div class="info">
+              <h4>📚 Manual Section Numbers (Essential to Know!)</h4>
+              <div class="grid grid-2">
+                <div>
+                  <strong>Common Sections:</strong>
+                  <ul>
+                    <li><strong>1:</strong> User commands (ls, cat, cp)</li>
+                    <li><strong>5:</strong> File formats (/etc/passwd, /etc/hosts)</li>
+                    <li><strong>8:</strong> System administration (mount, fsck)</li>
+                  </ul>
+                </div>
+                <div>
+                  <strong>Advanced Sections:</strong>
+                  <ul>
+                    <li><strong>2:</strong> System calls (open, read, write)</li>
+                    <li><strong>3:</strong> Library functions (printf, malloc)</li>
+                    <li><strong>7:</strong> Miscellaneous (conventions, protocols)</li>
+                  </ul>
+                </div>
               </div>
             </div>
 
+            <div class="command-summary">
+              <h4>📋 Help Commands Cheat Sheet</h4>
+              <div class="grid grid-2">
+                <div>
+                  <strong>Quick Help:</strong>
+                  <div class="command-box">
+                    command --help     # Quick usage<br />
+                    command -h         # Short help<br />
+                    help command       # Bash built-ins<br />
+                    type command       # Command type
+                  </div>
+                </div>
+                <div>
+                  <strong>Detailed Help:</strong>
+                  <div class="command-box">
+                    man command        # Full manual<br />
+                    info command       # Info pages<br />
+                    whatis command     # Brief description<br />
+                    apropos keyword    # Search commands
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="command-summary">
+              <h4>📋 Help Commands Cheat Sheet</h4>
+              <div class="grid grid-2">
+                <div>
+                  <strong>Quick Help:</strong>
+                  <div class="command-box multi-line">
+                    <div class="cmd-line">command --help     <span class="cmd-comment"># Quick usage</span></div>
+                    <div class="cmd-line">command -h         <span class="cmd-comment"># Short help</span></div>
+                    <div class="cmd-line">help command       <span class="cmd-comment"># Bash built-ins</span></div>
+                    <div class="cmd-line">type command       <span class="cmd-comment"># Command type</span></div>
+                  </div>
+                </div>
+                <div>
+                  <strong>Detailed Help:</strong>
+                  <div class="command-box multi-line">
+                    <div class="cmd-line">man command        <span class="cmd-comment"># Full manual</span></div>
+                    <div class="cmd-line">info command       <span class="cmd-comment"># Info pages</span></div>
+                    <div class="cmd-line">whatis command     <span class="cmd-comment"># Brief description</span></div>
+                    <div class="cmd-line">apropos keyword    <span class="cmd-comment"># Search commands</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="quick-ref">
+              <h4>📝 Navigation Keys in Manual Pages</h4>
+              <div class="grid grid-3">
+                <div>
+                  <strong>Movement:</strong><br />
+                  <code>Space</code> - Next page<br />
+                  <code>b</code> - Previous page<br />
+                  <code>g</code> - Go to beginning<br />
+                  <code>G</code> - Go to end
+                </div>
+                <div>
+                  <strong>Search:</strong><br />
+                  <code>/pattern</code> - Search forward<br />
+                  <code>?pattern</code> - Search backward<br />
+                  <code>n</code> - Next match<br />
+                  <code>N</code> - Previous match
+                </div>
+                <div>
+                  <strong>Exit:</strong><br />
+                  <code>q</code> - Quit manual<br />
+                  <code>h</code> - Help<br />
+                  <code>:q</code> - Alternative quit
+                </div>
+              </div>
+            </div>
+          </section>
+
             <h3>🔧 Manual Page Examples</h3>
             <div class="command-box multi-line">
-              # passwd command has multiple sections<br />
-              whatis passwd<br />
-              # passwd (1) - change user password<br />
-              # passwd (5) - the password file<br />
-              # passwd (1ssl) - OpenSSL application commands<br />
-              <br />
-              # View specific section<br />
-              man -s1 passwd # passwd command<br />
-              man -s5 passwd # passwd file format<br />
-              <br />
-              # Browse all sections interactively<br />
-              man -a passwd<br />
-              # --Man-- next: passwd(1ssl) [ view (return) | skip (Ctrl-D) |
-              quit (Ctrl-C) ]
+              <div class="cmd-line comment"># passwd command has multiple sections</div>
+              <div class="cmd-line">whatis passwd</div>
+              <div class="cmd-line output">passwd (1) - change user password</div>
+              <div class="cmd-line output">passwd (5) - the password file</div>
+              <div class="cmd-line output">passwd (1ssl) - OpenSSL application commands</div>
+              
+              <div class="cmd-line comment"># View specific section</div>
+              <div class="cmd-line">man -s1 passwd <span class="cmd-comment"># passwd command</span></div>
+              <div class="cmd-line">man -s5 passwd <span class="cmd-comment"># passwd file format</span></div>
+              
+              <div class="cmd-line comment"># Browse all sections interactively</div>
+              <div class="cmd-line">man -a passwd</div>
+              <div class="cmd-line output">--Man-- next: passwd(1ssl) [ view (return) | skip (Ctrl-D) | quit (Ctrl-C) ]</div>
             </div>
 
             <div class="warning">
@@ -965,21 +3181,21 @@
             <div class="example">
               <h4>🕵️ Finding Commands:</h4>
               <div class="command-box multi-line">
-                # Search for directory-related commands<br />
-                man -k "directory"<br />
-                # mkdir (1) - make directories<br />
-                # rmdir (1) - remove empty directories<br />
-                # opendir (3) - open a directory<br />
-                <br />
-                # Alternative search method<br />
-                apropos "create directory"<br />
-                # mkdir (2) - create a directory<br />
-                # mkdirat (2) - create a directory<br />
-                <br />
-                # Search for password-related commands<br />
-                man -k pass<br />
-                # passwd (1) - change user password<br />
-                # chpasswd (8) - update passwords in batch mode
+                <div class="cmd-line comment"># Search for directory-related commands</div>
+                <div class="cmd-line">man -k "directory"</div>
+                <div class="cmd-line output">mkdir (1) - make directories</div>
+                <div class="cmd-line output">rmdir (1) - remove empty directories</div>
+                <div class="cmd-line output">opendir (3) - open a directory</div>
+                
+                <div class="cmd-line comment"># Alternative search method</div>
+                <div class="cmd-line">apropos "create directory"</div>
+                <div class="cmd-line output">mkdir (2) - create a directory</div>
+                <div class="cmd-line output">mkdirat (2) - create a directory</div>
+                
+                <div class="cmd-line comment"># Search for password-related commands</div>
+                <div class="cmd-line">man -k pass</div>
+                <div class="cmd-line output">passwd (1) - change user password</div>
+                <div class="cmd-line output">chpasswd (8) - update passwords in batch mode</div>
               </div>
             </div>
 
@@ -988,30 +3204,30 @@
               <div class="card">
                 <h4>✅ Commands with --help</h4>
                 <div class="command-box multi-line">
-                  # Most external commands support --help<br />
-                  cat --help<br />
-                  ls --help<br />
-                  cp --help<br />
-                  grep --help
+                  <div class="cmd-line comment"># Most external commands support --help</div>
+                  <div class="cmd-line">cat --help</div>
+                  <div class="cmd-line">ls --help</div>
+                  <div class="cmd-line">cp --help</div>
+                  <div class="cmd-line">grep --help</div>
                 </div>
               </div>
               <div class="card">
                 <h4>🐚 Shell Built-in Commands</h4>
                 <div class="command-box multi-line">
-                  # Built-in commands use 'help'<br />
-                  help echo<br />
-                  help cd<br />
-                  help export<br />
-                  help alias
+                  <div class="cmd-line comment"># Built-in commands use 'help'</div>
+                  <div class="cmd-line">help echo</div>
+                  <div class="cmd-line">help cd</div>
+                  <div class="cmd-line">help export</div>
+                  <div class="cmd-line">help alias</div>
                 </div>
               </div>
             </div>
 
             <div class="info">
               <h4>🔧 Troubleshooting Help System:</h4>
-              <div class="command-box">
-                # If man -k or man -f don't work:<br />
-                sudo mandb
+              <div class="command-box multi-line">
+                <div class="cmd-line comment"># If man -k or man -f don't work:</div>
+                <div class="cmd-line root">sudo mandb</div>
               </div>
               <p>This command rebuilds the manual page database index.</p>
             </div>
@@ -1024,7 +3240,7 @@
             <div class="grid grid-3">
               <div class="card">
                 <h4>📌 Where Am I?</h4>
-                <div class="command-box">pwd</div>
+                <div class="command-box single-line">pwd</div>
                 <p>
                   <strong>Present Working Directory</strong> - Shows current
                   location
@@ -1032,15 +3248,15 @@
               </div>
               <div class="card">
                 <h4>👤 Who Am I?</h4>
-                <div class="command-box">
-                  whoami<br />
-                  who am i
+                <div class="command-box multi-line">
+                  <div class="cmd-line">whoami</div>
+                  <div class="cmd-line">who am i</div>
                 </div>
                 <p>Shows current user identity</p>
               </div>
               <div class="card">
                 <h4>🚀 Change Location</h4>
-                <div class="command-box">cd directory</div>
+                <div class="command-box single-line">cd directory</div>
                 <p>Navigate to different directory</p>
               </div>
             </div>
@@ -1079,35 +3295,35 @@
             <div class="example">
               <h4>🌳 Directory Tree:</h4>
               <div class="command-box multi-line">
-                /<br />
-                ├── home/<br />
-                │ ├── ali/<br />
-                │ │ └── test/<br />
-                │ │ └── f.txt<br />
-                │ └── mina/<br />
-                │ └── test2/<br />
-                │ └── f2.txt<br />
-                └── etc/<br />
-                └── passwd
+                /
+                ├── home/
+                │   ├── ali/
+                │   │   └── test/
+                │   │       └── f.txt
+                │   └── mina/
+                │       └── test2/
+                │           └── f2.txt
+                └── etc/
+                    └── passwd
               </div>
             </div>
 
             <h3>🧭 Path Navigation Examples</h3>
             <div class="command-box multi-line">
-              # Current location: /home/ali/test<br />
-              pwd<br />
-              # /home/ali/test<br />
-              <br />
-              # Relative path examples:<br />
-              cat f.txt # Current directory file<br />
-              cat ./f.txt # Explicit current directory<br />
-              cat ../../mina/test2/f2.txt # Navigate to other user's file<br />
-              cat ../../../etc/passwd # System file via relative path<br />
-              <br />
-              # Absolute path examples:<br />
-              cat /home/ali/test/f.txt # Direct path to current file<br />
-              cat /home/mina/test2/f2.txt # Direct path to other file<br />
-              cat /etc/passwd # Direct path to system file
+              <div class="cmd-line comment"># Current location: /home/ali/test</div>
+              <div class="cmd-line">pwd</div>
+              <div class="cmd-line output">/home/ali/test</div>
+              
+              <div class="cmd-line comment"># Relative path examples:</div>
+              <div class="cmd-line">cat f.txt <span class="cmd-comment"># Current directory file</span></div>
+              <div class="cmd-line">cat ./f.txt <span class="cmd-comment"># Explicit current directory</span></div>
+              <div class="cmd-line">cat ../../mina/test2/f2.txt <span class="cmd-comment"># Navigate to other user's file</span></div>
+              <div class="cmd-line">cat ../../../etc/passwd <span class="cmd-comment"># System file via relative path</span></div>
+              
+              <div class="cmd-line comment"># Absolute path examples:</div>
+              <div class="cmd-line">cat /home/ali/test/f.txt <span class="cmd-comment"># Direct path to current file</span></div>
+              <div class="cmd-line">cat /home/mina/test2/f2.txt <span class="cmd-comment"># Direct path to other file</span></div>
+              <div class="cmd-line">cat /etc/passwd <span class="cmd-comment"># Direct path to system file</span></div>
             </div>
 
             <h3>🏠 Home Directory Navigation</h3>
@@ -1793,12 +4009,12 @@
                   System administrator with unlimited privileges. Can perform
                   any operation on the system.
                 </p>
-                <div class="command-box">
-                  # Switch to root<br />
-                  sudo -i<br />
-                  sudo -s<br />
-                  su -<br />
-                  su root
+                <div class="examples">
+                  <strong>Switch to root:</strong><br>
+                  <code>sudo -i</code> - Interactive login<br>
+                  <code>sudo -s</code> - Non-login shell<br>
+                  <code>su -</code> - Full root environment<br>
+                  <code>su root</code> - Basic switch
                 </div>
               </div>
               <div class="card">
@@ -1808,11 +4024,12 @@
                   Regular users with limited privileges. Each user has their own
                   home directory and settings.
                 </p>
-                <div class="command-box">
-                  # Regular user operations<br />
-                  whoami<br />
-                  id username<br />
-                  groups username
+                <div class="examples">
+                  <strong>User operations:</strong><br>
+                  <code>whoami</code> - Current user<br>
+                  <code>id username</code> - User details<br>
+                  <code>groups username</code> - User groups<br>
+                  <code>finger username</code> - User info
                 </div>
               </div>
               <div class="card">
@@ -1822,11 +4039,12 @@
                   System accounts for running services and daemons. Usually
                   don't have login shells.
                 </p>
-                <div class="command-box">
-                  # Examples<br />
-                  # www-data (web server)<br />
-                  # mysql (database)<br />
-                  # mail (mail service)
+                <div class="examples">
+                  <strong>Common examples:</strong><br>
+                  <code>www-data</code> - Web server<br>
+                  <code>mysql</code> - Database service<br>
+                  <code>mail</code> - Mail service<br>
+                  <code>nobody</code> - Minimal privileges
                 </div>
               </div>
             </div>
@@ -3847,15 +6065,31 @@
     </div>
 
     <script>
-      // Sidebar functionality
+      // Enhanced Sidebar functionality
       function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
-        sidebar.classList.toggle("active");
+        const overlay = document.querySelector(".sidebar-overlay");
+
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("active");
+
+        // Prevent body scroll when sidebar is open on smaller screens
+        if (window.innerWidth <= 1199) {
+          document.body.style.overflow = sidebar.classList.contains("open")
+            ? "hidden"
+            : "";
+        }
       }
 
       function closeSidebar() {
         const sidebar = document.getElementById("sidebar");
-        sidebar.classList.remove("active");
+        const overlay = document.querySelector(".sidebar-overlay");
+
+        sidebar.classList.remove("open");
+        overlay.classList.remove("active");
+
+        // Restore body scroll
+        document.body.style.overflow = "";
       }
 
       // Close sidebar when clicking outside on mobile
@@ -3864,39 +6098,65 @@
         const toggle = document.querySelector(".sidebar-toggle");
 
         if (
-          window.innerWidth <= 768 &&
           !sidebar.contains(e.target) &&
           !toggle.contains(e.target) &&
-          sidebar.classList.contains("active")
+          sidebar.classList.contains("open")
         ) {
           closeSidebar();
         }
       });
 
-      // Enhanced scroll functionality
+      // Handle window resize - only manage body overflow
+      window.addEventListener("resize", function () {
+        const sidebar = document.getElementById("sidebar");
+        if (window.innerWidth > 1199 && sidebar.classList.contains("open")) {
+          document.body.style.overflow = "";
+        }
+      });
+
+      // Enhanced scroll functionality with study progress
+      let scrollTimeout;
       window.onscroll = function () {
-        const scrollBtn = document.getElementById("scrollToTop");
-        if (
-          document.body.scrollTop > 300 ||
-          document.documentElement.scrollTop > 300
-        ) {
-          scrollBtn.classList.add("visible");
-        } else {
-          scrollBtn.classList.remove("visible");
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
         }
 
-        // Update progress bar (if it exists)
-        const progressBar = document.querySelector(".progress-fill");
-        if (progressBar) {
-          const winScroll =
-            document.body.scrollTop || document.documentElement.scrollTop;
-          const height =
-            document.documentElement.scrollHeight -
-            document.documentElement.clientHeight;
-          const scrolled = (winScroll / height) * 100;
-          progressBar.style.width = scrolled + "%";
-        }
+        scrollTimeout = setTimeout(function () {
+          // Update study progress
+          updateStudyProgress();
+          
+          // Scroll to top button
+          const scrollBtn = document.getElementById("scrollToTop");
+          if (scrollBtn) {
+            if (
+              document.body.scrollTop > 300 ||
+              document.documentElement.scrollTop > 300
+            ) {
+              scrollBtn.classList.add("visible");
+            } else {
+              scrollBtn.classList.remove("visible");
+            }
+          }
+
+          // Update progress bar (if it exists)
+          const progressBar = document.querySelector(".progress-fill");
+          if (progressBar) {
+            const winScroll =
+              document.body.scrollTop || document.documentElement.scrollTop;
+            const height =
+              document.documentElement.scrollHeight -
+              document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+          }
+        }, 10);
       };
+
+      // Initialize study features
+      document.addEventListener('DOMContentLoaded', function() {
+        enhanceCommandBoxes();
+        updateStudyProgress();
+      });
 
       function scrollToTop() {
         document.body.scrollTop = 0;
@@ -3922,7 +6182,7 @@
         observer.observe(section);
       });
 
-      // Smooth scrolling for navigation links
+      // Enhanced navigation with keyboard support
       document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         anchor.addEventListener("click", function (e) {
           e.preventDefault();
@@ -3932,8 +6192,61 @@
               behavior: "smooth",
               block: "start",
             });
+            // Close sidebar on mobile after navigation
+            if (window.innerWidth <= 1199) {
+              closeSidebar();
+            }
           }
         });
+      });
+
+      // Keyboard navigation support
+      document.addEventListener("keydown", function (e) {
+        // ESC key closes sidebar
+        if (e.key === "Escape") {
+          closeSidebar();
+        }
+
+        // Alt + M opens/closes sidebar (accessibility)
+        if (e.altKey && e.key === "m") {
+          e.preventDefault();
+          toggleSidebar();
+        }
+
+        // Alt + T scrolls to top
+        if (e.altKey && e.key === "t") {
+          e.preventDefault();
+          scrollToTop();
+        }
+      });
+
+      // Touch gesture support for mobile
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      document.addEventListener("touchstart", function (e) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      });
+
+      document.addEventListener("touchend", function (e) {
+        if (!touchStartX || !touchStartY) return;
+
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+
+        const diffX = touchStartX - touchEndX;
+        const diffY = touchStartY - touchEndY;
+
+        // Swipe right to open sidebar (only if close to left edge)
+        if (Math.abs(diffX) > Math.abs(diffY) && touchStartX < 50) {
+          if (diffX < -100 && window.innerWidth <= 1199) {
+            toggleSidebar();
+          }
+        }
+
+        touchStartX = 0;
+        touchStartY = 0;
       });
 
       // Add click effects to cards
@@ -3945,6 +6258,83 @@
           }, 150);
         });
       });
+
+      // Study progress tracking
+      function updateStudyProgress() {
+        const sections = document.querySelectorAll('.section');
+        const progressIndicator = document.getElementById('studyProgress');
+        const progressText = document.getElementById('progressText');
+        
+        if (!sections.length || !progressIndicator) return;
+        
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight;
+        
+        // Calculate overall progress
+        const scrollPercent = Math.min(100, Math.round((scrollTop / (docHeight - windowHeight)) * 100));
+        
+        // Show progress indicator when scrolling
+        if (scrollTop > 300) {
+          progressIndicator.style.display = 'block';
+          progressText.textContent = scrollPercent + '%';
+        } else {
+          progressIndicator.style.display = 'none';
+        }
+        
+        // Highlight current section in sidebar
+        let currentSection = '';
+        sections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            currentSection = section.id;
+          }
+        });
+        
+        // Update active link in sidebar
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + currentSection) {
+            link.classList.add('active');
+          }
+        });
+      }
+
+      // Command box interaction for better studying
+      function enhanceCommandBoxes() {
+        document.querySelectorAll(".command-box").forEach((commandBox) => {
+          // Add copy functionality
+          commandBox.addEventListener("click", function () {
+            if (window.getSelection) {
+              const selection = window.getSelection();
+              const range = document.createRange();
+              range.selectNodeContents(this);
+              selection.removeAllRanges();
+              selection.addRange(range);
+            }
+
+            // Visual feedback
+            this.style.transform = "scale(0.99)";
+            this.style.background = "linear-gradient(135deg, #1a237e, #3949ab)";
+            setTimeout(() => {
+              this.style.transform = "";
+              this.style.background = "";
+            }, 200);
+          });
+
+          // Add practice mode indicator
+          commandBox.addEventListener("dblclick", function () {
+            this.classList.toggle('practice-mode');
+            if (this.classList.contains('practice-mode')) {
+              this.style.borderLeft = "4px solid #4caf50";
+              this.setAttribute('title', 'Practice Mode: Try this command!');
+            } else {
+              this.style.borderLeft = "";
+              this.removeAttribute('title');
+            }
+          });
+        });
+      }
     </script>
   </body>
 </html>
