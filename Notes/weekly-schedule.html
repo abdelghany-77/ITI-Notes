@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weekly Schedule </title>
+    <title>Weekly Schedule</title>
     <style>
       * {
         margin: 0;
@@ -386,31 +386,301 @@
 
       .mobile-scroll {
         overflow-x: auto;
+        overflow-y: visible;
         margin: 0 -20px;
         padding: 0 20px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(52, 152, 219, 0.5) transparent;
+        width: 100%;
+        position: relative;
       }
 
-      @media (max-width: 768px) {
-        .container {
-          margin: 10px;
-          padding: 15px;
+      .mobile-scroll::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      .mobile-scroll::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+      }
+
+      .mobile-scroll::-webkit-scrollbar-thumb {
+        background: rgba(52, 152, 219, 0.5);
+        border-radius: 10px;
+      }
+
+      .mobile-scroll::-webkit-scrollbar-thumb:hover {
+        background: rgba(52, 152, 219, 0.7);
+      }
+
+      /* Touch-friendly interactions */
+      @media (hover: none) and (pointer: coarse) {
+        .week-nav-btn,
+        .back-button {
+          min-height: 44px;
+          min-width: 44px;
+          touch-action: manipulation;
+        }
+
+        .week-nav-btn:hover,
+        .back-button:hover {
+          transform: none;
+        }
+
+        .week-nav-btn:active,
+        .back-button:active {
+          transform: scale(0.98);
+        }
+      }
+
+      /* Landscape orientation optimizations */
+      @media screen and (orientation: landscape) and (max-height: 600px) {
+        .header {
+          padding: 15px 0;
+          margin-bottom: 15px;
         }
 
         .header h1 {
-          font-size: 2em;
+          font-size: 1.8em;
         }
 
-        .schedule-table {
-          min-width: 800px;
+        .week-navigation {
+          margin-bottom: 20px;
+          padding: 15px;
+        }
+
+        .stats-container {
+          grid-template-columns: repeat(5, 1fr);
+          gap: 10px;
+        }
+
+        .stat-card {
+          padding: 10px;
+        }
+
+        .week-summary {
+          padding: 15px;
+        }
+      }
+
+      /* High contrast support */
+      @media (prefers-contrast: high) {
+        .schedule-table th,
+        .schedule-table td {
+          border: 2px solid;
         }
 
         .class-cell {
-          min-height: 100px;
-          padding: 8px 6px;
+          border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+      }
+
+      /* Reduced motion support */
+      @media (prefers-reduced-motion: reduce) {
+        .week-nav-btn,
+        .back-button,
+        .schedule-table tbody {
+          transition: none;
+        }
+
+        .week-nav-btn:hover,
+        .back-button:hover {
+          transform: none;
+        }
+      }
+
+      /* Scroll indicator for mobile */
+      .scroll-indicator {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        background: rgba(52, 152, 219, 0.8);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 0.7em;
+        opacity: 0.9;
+        pointer-events: none;
+        z-index: 10;
+        animation: fadeInOut 3s ease-in-out infinite;
+      }
+
+      @keyframes fadeInOut {
+        0%,
+        100% {
+          opacity: 0.9;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* Hide scroll indicator when scrolled */
+      .mobile-scroll.scrolled .scroll-indicator {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      /* Dark mode support */
+      @media (prefers-color-scheme: dark) {
+        .mobile-scroll::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-scroll::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+        }
+      }
+
+      /* Additional mobile table fixes */
+      @media (max-width: 767px) {
+        .schedule-container {
+          position: relative;
+          overflow: visible;
+        }
+
+        .schedule-table {
+          table-layout: fixed;
+        }
+
+        .schedule-table th:nth-child(1),
+        .schedule-table td:nth-child(1) {
+          min-width: 100px;
+          width: 100px;
+        }
+
+        .schedule-table th:nth-child(2),
+        .schedule-table td:nth-child(2) {
+          min-width: 90px;
+          width: 90px;
+        }
+
+        .schedule-table th:nth-child(3),
+        .schedule-table td:nth-child(3) {
+          min-width: 200px;
+          width: 200px;
+        }
+
+        .schedule-table th:nth-child(4),
+        .schedule-table td:nth-child(4) {
+          min-width: 200px;
+          width: 200px;
+        }
+      }
+
+      /* Large Tablet / Small Desktop (1024px - 1199px) */
+      @media (max-width: 1199px) {
+        .container {
+          max-width: 95%;
+          padding: 18px;
+        }
+
+        .stats-container {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+          padding: 12px 6px;
+        }
+
+        .class-title {
+          font-size: 0.9em;
+        }
+
+        .subjects-list {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* Tablet Portrait (768px - 1023px) */
+      @media (max-width: 1023px) {
+        .container {
+          margin: 15px;
+          padding: 16px;
+        }
+
+        .header h1 {
+          font-size: 2.2em;
+        }
+
+        .schedule-table {
+          min-width: 700px;
+          font-size: 0.9em;
+        }
+
+        .stats-container {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 15px;
+        }
+
+        .class-cell {
+          min-height: 90px;
+          padding: 10px 6px;
+        }
+
+        .class-title {
+          font-size: 0.85em;
+        }
+
+        .class-type {
+          font-size: 0.75em;
+        }
+
+        .instructor-name {
+          font-size: 0.7em;
+        }
+
+        .week-navigation {
+          flex-direction: column;
+          gap: 15px;
+          text-align: center;
+        }
+
+        .week-nav-btn {
+          width: 100%;
+          max-width: 200px;
+          margin: 0 auto;
+        }
+
+        .subjects-list {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Mobile Landscape / Large Mobile (600px - 767px) */
+      @media (max-width: 767px) {
+        .container {
+          margin: 10px;
+          padding: 14px;
+        }
+
+        .header {
+          padding: 20px 0;
+          margin-bottom: 20px;
+        }
+
+        .header h1 {
+          font-size: 1.8em;
+          margin-bottom: 8px;
+        }
+
+        .schedule-table {
+          min-width: 750px;
+          font-size: 0.85em;
+          width: max-content;
+        }
+
+        .class-cell {
+          min-height: 85px;
+          padding: 8px 5px;
         }
 
         .class-title {
           font-size: 0.8em;
+          line-height: 1.2;
         }
 
         .class-type {
@@ -424,24 +694,429 @@
         .legend {
           flex-direction: column;
           align-items: center;
+          gap: 10px;
+        }
+
+        .legend-item {
+          font-size: 0.85em;
         }
 
         .stats-container {
           grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
         }
 
-        .user-info {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 10px;
+        .stat-card {
+          padding: 15px;
+        }
+
+        .stat-number {
+          font-size: 1.8em;
+        }
+
+        .back-button {
+          padding: 10px 20px;
+          font-size: 0.9em;
+          margin-bottom: 20px;
+        }
+
+        .week-navigation {
+          padding: 15px;
+          margin-bottom: 25px;
         }
 
         .week-navigation::after {
           display: none;
         }
 
+        .current-week {
+          font-size: 1.1em;
+        }
+
+        .week-summary {
+          padding: 20px;
+        }
+
+        .week-summary h3 {
+          font-size: 1.2em;
+        }
+
+        .subject-item {
+          padding: 12px;
+        }
+      }
+
+      /* Mobile Portrait (480px - 599px) */
+      @media (max-width: 599px) {
+        .container {
+          margin: 8px;
+          padding: 12px;
+        }
+
+        .header {
+          padding: 18px 0;
+          margin-bottom: 18px;
+        }
+
+        .header h1 {
+          font-size: 1.6em;
+          margin-bottom: 6px;
+        }
+
+        .schedule-table {
+          min-width: 700px;
+          font-size: 0.8em;
+          width: max-content;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+          padding: 8px 4px;
+        }
+
+        .day-cell {
+          width: 90px;
+        }
+
+        .date-cell {
+          width: 85px;
+        }
+
+        .class-cell {
+          min-height: 80px;
+          padding: 6px 4px;
+        }
+
+        .class-title {
+          font-size: 0.75em;
+          line-height: 1.1;
+          margin-bottom: 3px;
+        }
+
+        .class-type {
+          font-size: 0.65em;
+          margin-bottom: 2px;
+        }
+
+        .instructor-name {
+          font-size: 0.6em;
+        }
+
+        .stats-container {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+
+        .stat-card {
+          padding: 12px;
+        }
+
+        .stat-number {
+          font-size: 1.6em;
+        }
+
+        .stat-label {
+          font-size: 0.8em;
+        }
+
+        .back-button {
+          padding: 8px 16px;
+          font-size: 0.85em;
+          margin-bottom: 18px;
+        }
+
         .week-navigation {
-          margin-bottom: 30px;
+          padding: 12px;
+          margin-bottom: 20px;
+          gap: 12px;
+        }
+
+        .week-nav-btn {
+          padding: 8px 16px;
+          font-size: 0.9em;
+        }
+
+        .current-week {
+          font-size: 1em;
+        }
+
+        .current-week div:first-child {
+          font-size: 0.9em;
+        }
+
+        .current-week div:last-child {
+          font-size: 0.85em;
+        }
+
+        .legend {
+          padding: 15px;
+          gap: 8px;
+        }
+
+        .legend-item {
+          font-size: 0.8em;
+        }
+
+        .legend-color {
+          width: 16px;
+          height: 16px;
+        }
+
+        .week-summary {
+          padding: 16px;
+        }
+
+        .week-summary h3 {
+          font-size: 1.1em;
+          margin-bottom: 12px;
+        }
+
+        .subject-item {
+          padding: 10px;
+        }
+
+        .subject-name {
+          font-size: 0.9em;
+          margin-bottom: 4px;
+        }
+
+        .subject-details {
+          font-size: 0.8em;
+        }
+
+        .footer {
+          padding: 18px;
+          font-size: 0.9em;
+        }
+      }
+
+      /* Small Mobile (320px - 479px) */
+      @media (max-width: 479px) {
+        .container {
+          margin: 5px;
+          padding: 10px;
+          border-radius: 12px;
+        }
+
+        .header {
+          padding: 15px 0;
+          margin-bottom: 15px;
+        }
+
+        .header h1 {
+          font-size: 1.4em;
+          margin-bottom: 5px;
+        }
+
+        .schedule-table {
+          min-width: 650px;
+          font-size: 0.75em;
+          width: max-content;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+          padding: 6px 3px;
+        }
+
+        .day-cell {
+          width: 80px;
+          font-size: 0.8em;
+        }
+
+        .date-cell {
+          width: 75px;
+          font-size: 0.75em;
+        }
+
+        .class-cell {
+          min-height: 75px;
+          padding: 5px 3px;
+        }
+
+        .class-title {
+          font-size: 0.7em;
+          line-height: 1;
+          margin-bottom: 2px;
+        }
+
+        .class-type {
+          font-size: 0.6em;
+          margin-bottom: 1px;
+        }
+
+        .instructor-name {
+          font-size: 0.55em;
+        }
+
+        .stats-container {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+
+        .stat-card {
+          padding: 10px;
+          border-radius: 8px;
+        }
+
+        .stat-number {
+          font-size: 1.4em;
+        }
+
+        .stat-label {
+          font-size: 0.75em;
+        }
+
+        .back-button {
+          padding: 6px 12px;
+          font-size: 0.8em;
+          margin-bottom: 15px;
+          border-radius: 20px;
+        }
+
+        .week-navigation {
+          padding: 10px;
+          margin-bottom: 18px;
+          gap: 10px;
+          flex-direction: column;
+        }
+
+        .week-nav-btn {
+          padding: 6px 12px;
+          font-size: 0.8em;
+          border-radius: 15px;
+          width: 100%;
+          max-width: 150px;
+        }
+
+        .current-week {
+          font-size: 0.9em;
+          order: -1;
+        }
+
+        .current-week div:first-child {
+          font-size: 0.85em;
+        }
+
+        .current-week div:last-child {
+          font-size: 0.8em;
+        }
+
+        .legend {
+          padding: 12px;
+          gap: 6px;
+        }
+
+        .legend-item {
+          font-size: 0.75em;
+          flex-direction: column;
+          text-align: center;
+          gap: 4px;
+        }
+
+        .legend-color {
+          width: 14px;
+          height: 14px;
+        }
+
+        .week-summary {
+          padding: 12px;
+        }
+
+        .week-summary h3 {
+          font-size: 1em;
+          margin-bottom: 10px;
+        }
+
+        .subject-item {
+          padding: 8px;
+          border-radius: 6px;
+        }
+
+        .subject-name {
+          font-size: 0.85em;
+          margin-bottom: 3px;
+        }
+
+        .subject-details {
+          font-size: 0.75em;
+        }
+
+        .subject-details div {
+          margin-bottom: 2px;
+        }
+
+        .footer {
+          padding: 15px;
+          font-size: 0.85em;
+        }
+
+        .mobile-scroll {
+          margin: 0 -10px;
+          padding: 0 10px;
+        }
+      }
+
+      /* Extra Small Mobile (280px - 319px) */
+      @media (max-width: 319px) {
+        .container {
+          margin: 3px;
+          padding: 8px;
+        }
+
+        .header h1 {
+          font-size: 1.2em;
+        }
+
+        .schedule-table {
+          min-width: 600px;
+          font-size: 0.7em;
+          width: max-content;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+          padding: 4px 2px;
+        }
+
+        .class-cell {
+          min-height: 70px;
+          padding: 4px 2px;
+        }
+
+        .class-title {
+          font-size: 0.65em;
+        }
+
+        .class-type {
+          font-size: 0.55em;
+        }
+
+        .instructor-name {
+          font-size: 0.5em;
+        }
+
+        .stats-container {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+
+        .back-button {
+          padding: 5px 10px;
+          font-size: 0.75em;
+        }
+
+        .week-nav-btn {
+          padding: 5px 10px;
+          font-size: 0.75em;
+        }
+
+        .legend-item {
+          font-size: 0.7em;
+        }
+
+        .subject-details {
+          font-size: 0.7em;
         }
       }
 
@@ -458,8 +1133,7 @@
   <body>
     <div class="container">
       <div class="header">
-        <h1>📅 Weekly Academic Schedule</h1>
-        <p>Your Complete Study Timetable</p>
+        <h1>📅 Weekly Schedule</h1>
       </div>
 
       <a href="../index.html" class="back-button"> ← Back to Main Page </a>
@@ -526,6 +1200,7 @@
       </div>
 
       <div class="mobile-scroll">
+        <!-- <div class="scroll-indicator">← →</div> -->
         <div class="schedule-container">
           <table class="schedule-table">
             <thead>
@@ -769,9 +1444,7 @@
       <div class="footer">
         <p>📅 Weekly Schedule</p>
         <p>Stay organized and never miss a class!</p>
-        <p style="margin-top: 10px">
-          <strong>Created by:</strong> Abdelghany
-        </p>
+        <p style="margin-top: 10px"><strong>Created by:</strong> Abdelghany</p>
       </div>
     </div>
 
@@ -1308,6 +1981,11 @@
         updateNavigationButtons();
         updateDateTime();
 
+        // Initialize mobile optimizations
+        updateMobileLayout();
+        addTouchGestures();
+        optimizeForMobile();
+
         // Update time every second
         setInterval(updateDateTime, 1000);
 
@@ -1325,12 +2003,175 @@
             nextWeek();
           }
         });
+
+        // Add visual feedback for mobile interactions
+        const buttons = document.querySelectorAll(
+          ".week-nav-btn, .back-button"
+        );
+        buttons.forEach((button) => {
+          button.addEventListener(
+            "touchstart",
+            () => {
+              button.style.transform = "scale(0.95)";
+            },
+            { passive: true }
+          );
+
+          button.addEventListener(
+            "touchend",
+            () => {
+              setTimeout(() => {
+                button.style.transform = "";
+              }, 100);
+            },
+            { passive: true }
+          );
+        });
       });
 
       // Mobile responsiveness helper
       window.addEventListener("resize", function () {
         // Handle responsive adjustments if needed
+        updateMobileLayout();
       });
+
+      // Mobile layout optimizations
+      function updateMobileLayout() {
+        const isMobile = window.innerWidth <= 768;
+        const isSmallMobile = window.innerWidth <= 479;
+
+        // Adjust scroll behavior on mobile
+        if (isMobile) {
+          const mobileScroll = document.querySelector(".mobile-scroll");
+          const table = document.querySelector(".schedule-table");
+          const scrollIndicator = document.querySelector(".scroll-indicator");
+
+          // Handle scroll indicator
+          if (scrollIndicator && mobileScroll) {
+            // Hide indicator after user scrolls
+            let scrollTimeout;
+            mobileScroll.addEventListener(
+              "scroll",
+              () => {
+                if (mobileScroll.scrollLeft > 10) {
+                  mobileScroll.classList.add("scrolled");
+                } else {
+                  mobileScroll.classList.remove("scrolled");
+                }
+
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                  if (mobileScroll.scrollLeft === 0) {
+                    mobileScroll.classList.remove("scrolled");
+                  }
+                }, 1000);
+              },
+              { passive: true }
+            );
+
+            // Auto-hide indicator after 5 seconds
+            setTimeout(() => {
+              if (mobileScroll.scrollLeft === 0) {
+                mobileScroll.classList.add("scrolled");
+              }
+            }, 5000);
+          }
+
+          // Ensure table is properly sized for mobile
+          if (table) {
+            const minWidth = isSmallMobile ? "650px" : "750px";
+            table.style.minWidth = minWidth;
+            table.style.width = "max-content";
+          }
+        }
+
+        // Optimize button sizes for touch
+        if (isSmallMobile) {
+          const buttons = document.querySelectorAll(
+            ".week-nav-btn, .back-button"
+          );
+          buttons.forEach((button) => {
+            button.style.minHeight = "44px";
+            button.style.minWidth = "44px";
+          });
+        }
+      }
+
+      // Touch gesture support for week navigation
+      function addTouchGestures() {
+        let startX = 0;
+        let startY = 0;
+        let endX = 0;
+        let endY = 0;
+
+        const container = document.querySelector(".container");
+
+        container.addEventListener(
+          "touchstart",
+          (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+          },
+          { passive: true }
+        );
+
+        container.addEventListener(
+          "touchend",
+          (e) => {
+            endX = e.changedTouches[0].clientX;
+            endY = e.changedTouches[0].clientY;
+
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+
+            // Only trigger if horizontal swipe is dominant and significant
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+              if (
+                deltaX > 0 &&
+                !document.querySelector(".week-nav-btn:first-child").disabled
+              ) {
+                // Swipe right - previous week
+                previousWeek();
+              } else if (
+                deltaX < 0 &&
+                !document.querySelector(".week-nav-btn:last-child").disabled
+              ) {
+                // Swipe left - next week
+                nextWeek();
+              }
+            }
+          },
+          { passive: true }
+        );
+      }
+
+      // Optimize performance for mobile
+      function optimizeForMobile() {
+        // Debounce resize events
+        let resizeTimeout;
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(updateMobileLayout, 150);
+        });
+
+        // Add passive event listeners for better scroll performance
+        const mobileScroll = document.querySelector(".mobile-scroll");
+        if (mobileScroll) {
+          mobileScroll.addEventListener(
+            "scroll",
+            () => {
+              // Smooth scroll behavior
+            },
+            { passive: true }
+          );
+        }
+
+        // Optimize table rendering on mobile
+        if (window.innerWidth <= 768) {
+          const table = document.querySelector(".schedule-table");
+          table.style.willChange = "transform";
+        }
+      }
     </script>
   </body>
 </html>

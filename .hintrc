@@ -1,12 +1,12 @@
 {
-  "extends": [
-    "development"
-  ],
+  "extends": ["development"],
   "browserslist": [
     "defaults",
     "not ie 11",
     "not ios_saf <= 18.3",
-    "not safari <= 18.3"
+    "not safari <= 18.3",
+    "not chrome <= 109",
+    "not samsung <= 27"
   ],
   "hints": {
     "meta-viewport": "off",
@@ -15,7 +15,10 @@
       {
         "ignore": [
           "text-size-adjust",
-          "-webkit-overflow-scrolling"
+          "-webkit-overflow-scrolling",
+          "scrollbar-width",
+          "scrollbar-width: thin",
+          "scrollbar-width: thin"
         ]
       }
     ],
