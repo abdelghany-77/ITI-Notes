@@ -275,6 +275,44 @@
         margin-top: 30px;
       }
 
+      /* Scroll to Top Button */
+      .scroll-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .scroll-to-top.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .scroll-to-top:hover {
+        background: linear-gradient(135deg, #2980b9, #1f5582);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+      }
+
+      .scroll-to-top:active {
+        transform: translateY(-1px);
+      }
+
       @media (max-width: 768px) {
         .container {
           margin: 10px;
@@ -291,6 +329,15 @@
 
         .stats-container {
           grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* Mobile scroll to top button */
+        .scroll-to-top {
+          bottom: 20px;
+          right: 20px;
+          width: 45px;
+          height: 45px;
+          font-size: 16px;
         }
       }
 
@@ -1681,10 +1728,65 @@
       </div>
 
       <div class="footer">
-        <p style="margin-top: 10px">
-          <strong>Created By:</strong> Abdelghany
-        </p>
+        <p style="margin-top: 10px"><strong>Created By:</strong> Abdelghany</p>
       </div>
     </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to Top">
+      ↑
+    </button>
+
+    <script>
+      // Scroll to Top Button Functionality
+      window.addEventListener("scroll", function () {
+        const scrollToTopBtn = document.querySelector(".scroll-to-top");
+
+        if (window.pageYOffset > 300) {
+          scrollToTopBtn.classList.add("show");
+        } else {
+          scrollToTopBtn.classList.remove("show");
+        }
+      });
+
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+
+      // Enhanced scroll behavior for better UX
+      let isScrolling = false;
+
+      function handleScroll() {
+        const scrollToTopBtn = document.querySelector(".scroll-to-top");
+
+        if (window.pageYOffset > 300) {
+          scrollToTopBtn.classList.add("show");
+        } else {
+          scrollToTopBtn.classList.remove("show");
+        }
+
+        // Clear the timeout throughout the scroll
+        clearTimeout(isScrolling);
+
+        // Set a timeout to run after scrolling ends
+        isScrolling = setTimeout(function () {
+          // Add any post-scroll functionality here if needed
+        }, 66);
+      }
+
+      // Use passive event listener for better performance
+      window.addEventListener("scroll", handleScroll, { passive: true });
+
+      // Add keyboard support (Ctrl + Home)
+      document.addEventListener("keydown", function (e) {
+        if (e.ctrlKey && e.key === "Home") {
+          e.preventDefault();
+          scrollToTop();
+        }
+      });
+    </script>
   </body>
 </html>
