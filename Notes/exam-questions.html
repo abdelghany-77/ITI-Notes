@@ -275,6 +275,141 @@
         margin-top: 30px;
       }
 
+      /* Table of Contents Sidebar */
+      .toc-sidebar {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 280px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        transition: all 0.3s ease;
+        transform: translateX(-100%);
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .toc-sidebar.show {
+        transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .toc-header {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 15px 15px 0 0;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+
+      .toc-content {
+        padding: 20px;
+      }
+
+      .toc-section {
+        margin-bottom: 20px;
+      }
+
+      .toc-section-title {
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+        border-radius: 8px;
+        font-size: 0.95em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .toc-section-title:hover {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        transform: translateX(5px);
+      }
+
+      .toc-section-title.os {
+        border-left: 4px solid #3498db;
+      }
+
+      .toc-section-title.network {
+        border-left: 4px solid #e74c3c;
+      }
+
+      .toc-section-title.testing {
+        border-left: 4px solid #2ecc71;
+      }
+
+      .toc-questions {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        margin-top: 10px;
+      }
+
+      .toc-question-link {
+        background: #f8f9fa;
+        border: 1px solid #ecf0f1;
+        border-radius: 6px;
+        padding: 6px 4px;
+        text-align: center;
+        text-decoration: none;
+        color: #2c3e50;
+        font-size: 0.8em;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .toc-question-link:hover {
+        background: #3498db;
+        color: white;
+        transform: scale(1.05);
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+      }
+
+      .toc-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        cursor: pointer;
+        font-size: 18px;
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        transition: all 0.3s ease;
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .toc-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+      }
+
+      .toc-sidebar.hidden {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+
+      .toc-toggle.sidebar-hidden {
+        left: 20px;
+      }
+
       /* Scroll to Top Button */
       .scroll-to-top {
         position: fixed;
@@ -339,6 +474,67 @@
           height: 45px;
           font-size: 16px;
         }
+
+        /* Mobile TOC */
+        .toc-sidebar {
+          width: 60px;
+          top: 10px;
+          left: 10px;
+          transform: translateX(-100%);
+          opacity: 0;
+          visibility: hidden;
+        }
+
+        .toc-sidebar.show {
+          transform: translateX(0);
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .toc-header {
+          padding: 8px 5px;
+          font-size: 0.7em;
+          writing-mode: vertical-rl;
+          text-orientation: mixed;
+        }
+
+        .toc-content {
+          padding: 10px 5px;
+        }
+
+        .toc-section-title {
+          font-size: 0.6em;
+          padding: 4px 2px;
+          text-align: center;
+          margin-bottom: 8px;
+          writing-mode: vertical-rl;
+          text-orientation: mixed;
+          height: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .toc-questions {
+          grid-template-columns: 1fr;
+          gap: 3px;
+        }
+
+        .toc-question-link {
+          padding: 4px 2px;
+          font-size: 0.7em;
+        }
+
+        .toc-toggle {
+          left: 10px;
+          width: 35px;
+          height: 35px;
+          font-size: 14px;
+        }
+
+        .toc-toggle.sidebar-hidden {
+          left: 10px;
+        }
       }
 
       .multiple-correct {
@@ -352,6 +548,217 @@
     </style>
   </head>
   <body>
+    <!-- Table of Contents Sidebar -->
+    <div class="toc-sidebar" id="tocSidebar">
+      <div class="toc-header">📚 Table of Contents</div>
+      <div class="toc-content">
+        <div class="toc-section">
+          <div
+            class="toc-section-title os"
+            onclick="scrollToSection('os-section')"
+          >
+            💻 Operating Systems
+          </div>
+          <div class="toc-questions">
+            <a class="toc-question-link" onclick="scrollToQuestion('Q1')">Q1</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q2')">Q2</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q3')">Q3</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q4')">Q4</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q5')">Q5</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q6')">Q6</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q7')">Q7</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q8')">Q8</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q9')">Q9</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q10')"
+              >Q10</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q11')"
+              >Q11</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q12')"
+              >Q12</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q13')"
+              >Q13</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q14')"
+              >Q14</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q15')"
+              >Q15</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q16')"
+              >Q16</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q17')"
+              >Q17</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q18')"
+              >Q18</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q19')"
+              >Q19</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q20')"
+              >Q20</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q21')"
+              >Q21</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q22')"
+              >Q22</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q23')"
+              >Q23</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q24')"
+              >Q24</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q25')"
+              >Q25</a
+            >
+          </div>
+        </div>
+
+        <div class="toc-section">
+          <div
+            class="toc-section-title network"
+            onclick="scrollToSection('network-section')"
+          >
+            🌐 Computer Networks
+          </div>
+          <div class="toc-questions">
+            <a class="toc-question-link" onclick="scrollToQuestion('Q26')"
+              >Q26</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q27')"
+              >Q27</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q28')"
+              >Q28</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q29')"
+              >Q29</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q30')"
+              >Q30</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q31')"
+              >Q31</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q32')"
+              >Q32</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q33')"
+              >Q33</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q34')"
+              >Q34</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q35')"
+              >Q35</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q36')"
+              >Q36</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q37')"
+              >Q37</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q38')"
+              >Q38</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q39')"
+              >Q39</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q40')"
+              >Q40</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q41')"
+              >Q41</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q42')"
+              >Q42</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q43')"
+              >Q43</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q44')"
+              >Q44</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q45')"
+              >Q45</a
+            >
+          </div>
+        </div>
+
+        <div class="toc-section">
+          <div
+            class="toc-section-title testing"
+            onclick="scrollToSection('testing-section')"
+          >
+            🧪 Software Testing
+          </div>
+          <div class="toc-questions">
+            <a class="toc-question-link" onclick="scrollToQuestion('Q46')"
+              >Q46</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q47')"
+              >Q47</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q48')"
+              >Q48</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q49')"
+              >Q49</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q50')"
+              >Q50</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q51')"
+              >Q51</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q52')"
+              >Q52</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q53')"
+              >Q53</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q54')"
+              >Q54</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q55')"
+              >Q55</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q56')"
+              >Q56</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q57')"
+              >Q57</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q58')"
+              >Q58</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q59')"
+              >Q59</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q60')"
+              >Q60</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOC Toggle Button -->
+    <button
+      class="toc-toggle"
+      id="tocToggle"
+      onclick="toggleTOC()"
+      title="Toggle Table of Contents"
+    >
+      ☰
+    </button>
+
     <div class="container">
       <div class="header">
         <h1>📝 Preliminary Test</h1>
@@ -380,7 +787,7 @@
       </div>
 
       <!-- Part I: Operating Systems -->
-      <div class="exam-section">
+      <div class="exam-section" id="os-section">
         <div class="section-header os">
           Part I: Operating Systems Fundamentals
         </div>
@@ -922,7 +1329,7 @@
       </div>
 
       <!-- Part II: Computer Networks -->
-      <div class="exam-section">
+      <div class="exam-section" id="network-section">
         <div class="section-header network">
           Part II: Computer Networks Fundamentals and Security
         </div>
@@ -1351,7 +1758,7 @@
       </div>
 
       <!-- Part III: Software Testing -->
-      <div class="exam-section">
+      <div class="exam-section" id="testing-section">
         <div class="section-header testing">
           Part III: Software Testing Fundamentals
         </div>
@@ -1738,6 +2145,126 @@
     </button>
 
     <script>
+      // Table of Contents Functionality
+      function toggleTOC() {
+        const sidebar = document.getElementById("tocSidebar");
+        const toggle = document.getElementById("tocToggle");
+        const isMobile = window.innerWidth <= 768;
+
+        sidebar.classList.toggle("show");
+
+        // Change toggle icon and position
+        if (sidebar.classList.contains("show")) {
+          toggle.innerHTML = "✕";
+          toggle.title = "Hide Table of Contents";
+          if (!isMobile) {
+            toggle.style.left = "320px"; // Move button when sidebar is open on desktop
+          }
+        } else {
+          toggle.innerHTML = "☰";
+          toggle.title = "Show Table of Contents";
+          if (!isMobile) {
+            toggle.style.left = "20px"; // Reset button position when sidebar is closed on desktop
+          }
+        }
+      }
+
+      function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+          highlightSection(sectionId);
+        }
+      }
+
+      function scrollToQuestion(questionId) {
+        // Find the question by its number
+        const questions = document.querySelectorAll(".question-number");
+        let targetQuestion = null;
+
+        questions.forEach((question) => {
+          if (question.textContent.trim() === questionId) {
+            targetQuestion = question.closest(".question");
+          }
+        });
+
+        if (targetQuestion) {
+          targetQuestion.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+          highlightQuestion(targetQuestion);
+        }
+      }
+
+      function highlightSection(sectionId) {
+        // Remove any existing highlights
+        document.querySelectorAll(".section-header").forEach((header) => {
+          header.style.boxShadow = "";
+        });
+
+        // Add highlight to target section
+        const section = document.getElementById(sectionId);
+        if (section) {
+          const header = section.querySelector(".section-header");
+          if (header) {
+            header.style.boxShadow = "0 0 20px rgba(255, 255, 255, 0.6)";
+            setTimeout(() => {
+              header.style.boxShadow = "";
+            }, 2000);
+          }
+        }
+      }
+
+      function highlightQuestion(questionElement) {
+        // Remove any existing highlights
+        document.querySelectorAll(".question").forEach((q) => {
+          q.style.boxShadow = "";
+          q.style.transform = "";
+        });
+
+        // Add highlight to target question
+        questionElement.style.boxShadow = "0 8px 25px rgba(52, 152, 219, 0.3)";
+        questionElement.style.transform = "translateY(-5px)";
+
+        setTimeout(() => {
+          questionElement.style.boxShadow = "";
+          questionElement.style.transform = "";
+        }, 2000);
+      }
+
+      // Auto-hide TOC on scroll for mobile
+      let lastScrollTop = 0;
+      let ticking = false;
+
+      function updateTOCOnScroll() {
+        const st = window.pageYOffset || document.documentElement.scrollTop;
+        const sidebar = document.getElementById("tocSidebar");
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile && sidebar.classList.contains("show")) {
+          if (st > lastScrollTop && st > 100) {
+            // Scrolling down - hide TOC
+            sidebar.style.transform = "translateX(-100%)";
+            sidebar.style.opacity = "0";
+          } else {
+            // Scrolling up - show TOC
+            sidebar.style.transform = "translateX(0)";
+            sidebar.style.opacity = "1";
+          }
+        }
+
+        lastScrollTop = st <= 0 ? 0 : st;
+        ticking = false;
+      }
+
+      window.addEventListener("scroll", function () {
+        if (!ticking) {
+          requestAnimationFrame(updateTOCOnScroll);
+          ticking = true;
+        }
+      });
+
       // Scroll to Top Button Functionality
       window.addEventListener("scroll", function () {
         const scrollToTopBtn = document.querySelector(".scroll-to-top");
@@ -1785,6 +2312,47 @@
         if (e.ctrlKey && e.key === "Home") {
           e.preventDefault();
           scrollToTop();
+        }
+
+        // Toggle TOC with Ctrl + T
+        if (e.ctrlKey && e.key === "t") {
+          e.preventDefault();
+          toggleTOC();
+        }
+      });
+
+      // Initialize TOC state based on screen size
+      window.addEventListener("load", function () {
+        const sidebar = document.getElementById("tocSidebar");
+        const toggle = document.getElementById("tocToggle");
+
+        // Start with TOC hidden on all screen sizes
+        sidebar.classList.remove("show");
+        toggle.innerHTML = "☰";
+        toggle.title = "Show Table of Contents";
+        toggle.style.left = "20px";
+      });
+
+      // Handle window resize
+      window.addEventListener("resize", function () {
+        const sidebar = document.getElementById("tocSidebar");
+        const toggle = document.getElementById("tocToggle");
+        const isMobile = window.innerWidth <= 768;
+
+        if (!isMobile) {
+          // Desktop - reset any mobile transforms
+          sidebar.style.transform = "";
+          sidebar.style.opacity = "";
+
+          // Update toggle position based on sidebar state
+          if (sidebar.classList.contains("show")) {
+            toggle.style.left = "320px";
+          } else {
+            toggle.style.left = "20px";
+          }
+        } else {
+          // Mobile - ensure toggle is in correct position
+          toggle.style.left = "10px";
         }
       });
     </script>
