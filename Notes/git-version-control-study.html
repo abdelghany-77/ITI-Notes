@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Git & Version Control</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 50%,
+          #f093fb 100%
+        );
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* Layout Container */
+      .layout-container {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      .container {
+        flex: 1;
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 320px;
+        height: 100vh;
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+        color: white;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .sidebar-header {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1002;
+      }
+
+      .sidebar-header h3 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+        font-weight: 700;
+      }
+
+      .sidebar-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .sidebar-content {
+        padding: 20px;
+      }
+
+      .sidebar-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1003;
+      }
+
+      .sidebar-toggle:hover {
+        background: linear-gradient(135deg, #2980b9, #3498db);
+        transform: translateY(-2px);
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+
+      .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar ul li {
+        margin-bottom: 8px;
+      }
+
+      .sidebar ul li a {
+        color: #ffffff;
+        text-decoration: none;
+        display: block;
+        padding: 12px 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+        font-size: 0.9em;
+      }
+
+      .sidebar ul li a:hover,
+      .sidebar ul li a.active {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+        border-left-color: #3498db;
+        color: white;
+      }
+
+      .sidebar ul li ul {
+        margin-left: 15px;
+        margin-top: 5px;
+      }
+
+      .sidebar ul li ul li a {
+        font-size: 0.8em;
+        color: #bdc3c7;
+        padding: 8px 12px;
+      }
+
+      .main-content {
+        width: 100%;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .scroll-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1000;
+      }
+
+      .scroll-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .scroll-to-top:hover {
+        transform: translateY(-5px) scale(1.1);
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+      }
+
+      .header {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .user-info {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 20px;
+        margin: 20px;
+        border-radius: 8px;
+        border-left: 5px solid #3498db;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .back-button {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 20px;
+        cursor: pointer;
+      }
+
+      .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+      }
+
+      .content {
+        padding: 0 30px 30px;
+      }
+
+      .section {
+        margin-bottom: 40px;
+        scroll-margin-top: 80px;
+      }
+
+      .section-title {
+        color: #2c3e50;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #3498db;
+        position: relative;
+      }
+
+      .section-title::before {
+        content: "🔧";
+        margin-right: 10px;
+      }
+
+      .subsection {
+        margin-bottom: 25px;
+      }
+
+      .subsection-title {
+        color: #34495e;
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        padding-left: 20px;
+        border-left: 4px solid #3498db;
+      }
+
+      .command-box {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        margin: 15px 0;
+        border-left: 4px solid #3498db;
+        overflow-x: auto;
+      }
+
+      .command {
+        color: #f39c12;
+        font-weight: bold;
+      }
+
+      .description {
+        color: #bdc3c7;
+        margin-top: 5px;
+        font-size: 0.9em;
+      }
+
+      .concept-box {
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #2196f3;
+        margin: 15px 0;
+      }
+
+      .concept-box h4 {
+        color: #1976d2;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+      }
+
+      .important-box {
+        background: linear-gradient(135deg, #fff3e0, #ffe0cc);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #ff9800;
+        margin: 15px 0;
+      }
+
+      .important-box h4 {
+        color: #ef6c00;
+        margin-bottom: 10px;
+      }
+
+      .warning-box {
+        background: linear-gradient(135deg, #ffebee, #ffcdd2);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #f44336;
+        margin: 15px 0;
+      }
+
+      .warning-box h4 {
+        color: #d32f2f;
+        margin-bottom: 10px;
+      }
+
+      .git-workflow {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .workflow-step {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-top: 4px solid #3498db;
+        text-align: center;
+      }
+
+      .workflow-step h5 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+
+      .workflow-step .step-number {
+        background: #3498db;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+        font-weight: bold;
+      }
+
+      .commands-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .command-card {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #28a745;
+      }
+
+      .command-card .cmd {
+        font-family: "Courier New", monospace;
+        background: #2c3e50;
+        color: #f39c12;
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        display: block;
+        font-weight: bold;
+      }
+
+      .git-branches {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .branch {
+        background: #3498db;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        margin: 0 10px;
+        font-weight: bold;
+      }
+
+      .branch.main {
+        background: #e74c3c;
+      }
+
+      .branch.feature {
+        background: #2ecc71;
+      }
+
+      @media (max-width: 1024px) {
+        .container {
+          margin: 10px;
+          padding: 15px;
+        }
+
+        .sidebar {
+          width: 90%;
+        }
+
+        .header h1 {
+          font-size: 2em;
+        }
+
+        .user-info {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .scroll-to-top {
+          bottom: 20px;
+          right: 20px;
+          width: 50px;
+          height: 50px;
+          font-size: 1.2em;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .content {
+          padding: 0 15px 15px;
+        }
+
+        .sidebar {
+          width: 95%;
+        }
+
+        .sidebar-toggle {
+          top: 10px;
+          left: 10px;
+          padding: 10px 12px;
+          font-size: 1rem;
+        }
+
+        .header h1 {
+          font-size: 1.8em;
+        }
+
+        .section-title {
+          font-size: 1.5em;
+        }
+
+        .subsection-title {
+          font-size: 1.2em;
+        }
+      }
+
+      .footer {
+        text-align: center;
+        padding: 30px;
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        border-radius: 12px;
+        margin: 30px;
+      }
+
+      .interview-qa {
+        background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #9c27b0;
+        margin: 15px 0;
+      }
+
+      .interview-qa h4 {
+        color: #7b1fa2;
+        margin-bottom: 10px;
+      }
+
+      .qa-item {
+        margin-bottom: 15px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 6px;
+      }
+
+      .question {
+        font-weight: bold;
+        color: #4a148c;
+        margin-bottom: 5px;
+      }
+
+      .answer {
+        color: #6a1b9a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout-container">
+      <!-- Sidebar Toggle Button -->
+      <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+      <!-- Sidebar Overlay -->
+      <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+      <!-- Sidebar Navigation -->
+      <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h3>📖 Study Guide</h3>
+          <p>Git & Version Control</p>
+        </div>
+        <div class="sidebar-content">
+          <ul>
+            <li>
+              <a href="#introduction" onclick="setActive(this)"
+                >🏠 Introduction</a
+              >
+            </li>
+            <li>
+              <a href="#terminology" onclick="setActive(this)"
+                >📚 Key Terminology</a
+              >
+            </li>
+            <li>
+              <a href="#basic-commands" onclick="setActive(this)"
+                >⌨️ Basic Commands</a
+              >
+              <ul>
+                <li>
+                  <a href="#setup" onclick="setActive(this)">Setup & Config</a>
+                </li>
+                <li>
+                  <a href="#basic-workflow" onclick="setActive(this)"
+                    >Basic Workflow</a
+                  >
+                </li>
+                <li>
+                  <a href="#history" onclick="setActive(this)"
+                    >History & Status</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#undoing" onclick="setActive(this)"
+                >↩️ Undoing Changes</a
+              >
+            </li>
+            <li>
+              <a href="#branches" onclick="setActive(this)">🌳 Branches</a>
+              <ul>
+                <li>
+                  <a href="#branch-management" onclick="setActive(this)"
+                    >Branch Management</a
+                  >
+                </li>
+                <li>
+                  <a href="#merging" onclick="setActive(this)"
+                    >Merging & Rebasing</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#remote" onclick="setActive(this)"
+                >🌐 Remote Repositories</a
+              >
+            </li>
+            <li>
+              <a href="#github" onclick="setActive(this)">🐙 GitHub Features</a>
+            </li>
+            <li>
+              <a href="#advanced" onclick="setActive(this)"
+                >🚀 Advanced Concepts</a
+              >
+            </li>
+            <li>
+              <a href="#best-practices" onclick="setActive(this)"
+                >✨ Best Practices</a
+              >
+            </li>
+            <li>
+              <a href="#security" onclick="setActive(this)">🔒 Security</a>
+            </li>
+            <li>
+              <a href="#interview" onclick="setActive(this)"
+                >💼 Interview Q&A</a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="container">
+          <div class="header">
+            <h1>🔧 Git & Version Control</h1>
+            <p>Complete Study Guide for Developers</p>
+          </div>
+
+          <a href="../index.html" class="back-button"> ← Back to Main Page </a>
+
+          <div class="content">
+            <section id="introduction" class="section">
+              <h2 class="section-title">Introduction to Version Control</h2>
+
+              <div class="concept-box">
+                <h4>🎯 What is Version Control?</h4>
+                <p>
+                  A system that records changes to a file or set of files over
+                  time so that you can recall specific versions later. Essential
+                  for collaboration, tracking history, and managing different
+                  lines of development.
+                </p>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Why Use Version Control?</h3>
+                <div class="git-workflow">
+                  <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <h5>Collaboration</h5>
+                    <p>
+                      Multiple developers can work on the same project without
+                      overwriting each other's work
+                    </p>
+                  </div>
+                  <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <h5>History Tracking</h5>
+                    <p>
+                      Detailed record of every change, who made it, when, and
+                      why
+                    </p>
+                  </div>
+                  <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <h5>Rollbacks</h5>
+                    <p>Easily revert to previous stable versions of the code</p>
+                  </div>
+                  <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <h5>Branching & Merging</h5>
+                    <p>Parallel development and integration of features</p>
+                  </div>
+                  <div class="workflow-step">
+                    <div class="step-number">5</div>
+                    <h5>Experimentation</h5>
+                    <p>Safely try new ideas without affecting main codebase</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="important-box">
+                <h4>🔥 What is Git?</h4>
+                <p>
+                  A <strong>distributed version control system</strong> that
+                  tracks changes to files. Unlike centralized systems, every
+                  developer has a full copy of the repository, including its
+                  entire history. This allows for offline work and resilience.
+                </p>
+              </div>
+            </section>
+
+            <section id="terminology" class="section">
+              <h2 class="section-title">Key Git Terminology</h2>
+
+              <div class="commands-grid">
+                <div class="command-card">
+                  <h5>📁 Repository (Repo)</h5>
+                  <p>
+                    A folder where Git tracks changes. Contains all project
+                    files and entire history of commits.
+                  </p>
+                </div>
+                <div class="command-card">
+                  <h5>📸 Commit</h5>
+                  <p>
+                    A snapshot of changes at a specific time. Each has a unique
+                    ID (hash) and commit message.
+                  </p>
+                </div>
+                <div class="command-card">
+                  <h5>🌿 Branch</h5>
+                  <p>
+                    A parallel line of development. Allows work on features in
+                    isolation from main codebase.
+                  </p>
+                </div>
+                <div class="command-card">
+                  <h5>🔗 Merge</h5>
+                  <p>Combining changes from different branches into one.</p>
+                </div>
+                <div class="command-card">
+                  <h5>🌐 Remote</h5>
+                  <p>
+                    A hosted repository (GitHub, GitLab) where team's code is
+                    stored and shared.
+                  </p>
+                </div>
+                <div class="command-card">
+                  <h5>👉 HEAD</h5>
+                  <p>
+                    A pointer to the tip of the current branch (latest commit).
+                  </p>
+                </div>
+                <div class="command-card">
+                  <h5>📂 Working Directory</h5>
+                  <p>
+                    The actual files you see and edit on your local machine.
+                  </p>
+                </div>
+                <div class="command-card">
+                  <h5>🎭 Staging Area (Index)</h5>
+                  <p>
+                    Intermediate area where you prepare changes for next commit.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section id="basic-commands" class="section">
+              <h2 class="section-title">Git Basic Commands</h2>
+
+              <div class="subsection" id="setup">
+                <h3 class="subsection-title">Setup & Configuration</h3>
+
+                <div class="command-box">
+                  <div class="command">git init &lt;directory&gt;</div>
+                  <div class="description">
+                    Create an empty Git repository in specified directory
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git clone &lt;repo_url&gt;</div>
+                  <div class="description">
+                    Clone a repository from remote location to local machine
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">
+                    git config --global user.name "&lt;name&gt;"
+                  </div>
+                  <div class="description">
+                    Set global username for all repositories
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">
+                    git config --global user.email "&lt;email&gt;"
+                  </div>
+                  <div class="description">
+                    Set global email for all repositories
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">
+                    git config --global alias.&lt;alias-name&gt;
+                    "&lt;git-command&gt;"
+                  </div>
+                  <div class="description">
+                    Create shortcuts for Git commands
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection" id="basic-workflow">
+                <h3 class="subsection-title">Basic Workflow</h3>
+
+                <div class="command-box">
+                  <div class="command">git add &lt;file_or_directory&gt;</div>
+                  <div class="description">Stage changes for next commit</div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git commit -m "&lt;message&gt;"</div>
+                  <div class="description">
+                    Commit staged snapshot with message
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git status</div>
+                  <div class="description">
+                    Show which files are staged, unstaged, and untracked
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git diff</div>
+                  <div class="description">
+                    Show unstaged changes between working directory and staging
+                    area
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git diff --cached</div>
+                  <div class="description">
+                    Show staged changes compared to last commit
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection" id="history">
+                <h3 class="subsection-title">History & Viewing Changes</h3>
+
+                <div class="command-box">
+                  <div class="command">git log</div>
+                  <div class="description">Display entire commit history</div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git log --oneline</div>
+                  <div class="description">
+                    Condense each commit to single line
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git log --graph --decorate</div>
+                  <div class="description">
+                    Show text-based graph with branch/tag names
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git log --author="&lt;pattern&gt;"</div>
+                  <div class="description">
+                    Search commits by specific author
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git log --grep="&lt;pattern&gt;"</div>
+                  <div class="description">
+                    Search commits by commit message
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="undoing" class="section">
+              <h2 class="section-title">Undoing Changes</h2>
+
+              <div class="warning-box">
+                <h4>⚠️ Important Warning</h4>
+                <p>
+                  Some Git operations are destructive and cannot be undone.
+                  Always be careful with <code>reset --hard</code> and similar
+                  commands!
+                </p>
+              </div>
+
+              <div class="command-box">
+                <div class="command">git revert &lt;commit&gt;</div>
+                <div class="description">
+                  Create new commit that undoes changes (safe, preserves
+                  history)
+                </div>
+              </div>
+
+              <div class="command-box">
+                <div class="command">git reset &lt;file&gt;</div>
+                <div class="description">
+                  Remove file from staging area (unstage)
+                </div>
+              </div>
+
+              <div class="command-box">
+                <div class="command">git reset --hard</div>
+                <div class="description">
+                  ⚠️ DESTRUCTIVE: Reset staging and working directory to last
+                  commit
+                </div>
+              </div>
+
+              <div class="command-box">
+                <div class="command">git clean -n</div>
+                <div class="description">
+                  Show which untracked files would be removed (dry run)
+                </div>
+              </div>
+
+              <div class="command-box">
+                <div class="command">git clean -f</div>
+                <div class="description">
+                  Remove untracked files from working directory
+                </div>
+              </div>
+            </section>
+
+            <section id="branches" class="section">
+              <h2 class="section-title">Git Branches</h2>
+
+              <div class="git-branches">
+                <div class="branch main">main</div>
+                <span>→</span>
+                <div class="branch feature">feature/login</div>
+                <span>→</span>
+                <div class="branch">bugfix/navbar</div>
+              </div>
+
+              <div class="subsection" id="branch-management">
+                <h3 class="subsection-title">Branch Management</h3>
+
+                <div class="command-box">
+                  <div class="command">git branch</div>
+                  <div class="description">List all local branches</div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git branch &lt;branch_name&gt;</div>
+                  <div class="description">Create new branch</div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git checkout &lt;branch_name&gt;</div>
+                  <div class="description">Switch to existing branch</div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git checkout -b &lt;new_branch&gt;</div>
+                  <div class="description">
+                    Create and switch to new branch in one step
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git branch -d &lt;branch_name&gt;</div>
+                  <div class="description">Delete local branch (safe)</div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git branch -D &lt;branch_name&gt;</div>
+                  <div class="description">Force delete local branch</div>
+                </div>
+              </div>
+
+              <div class="subsection" id="merging">
+                <h3 class="subsection-title">Merging & Rebasing</h3>
+
+                <div class="concept-box">
+                  <h4>🔀 Merging Process</h4>
+                  <ol>
+                    <li>
+                      Switch to target branch: <code>git checkout main</code>
+                    </li>
+                    <li>
+                      Merge feature branch: <code>git merge feature/login</code>
+                    </li>
+                    <li>Resolve conflicts if any</li>
+                    <li>Commit the merge</li>
+                  </ol>
+                </div>
+
+                <div class="important-box">
+                  <h4>⚔️ Handling Merge Conflicts</h4>
+                  <p>When Git cannot automatically combine changes:</p>
+                  <ol>
+                    <li>
+                      Open conflicted files (look for
+                      &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD markers)
+                    </li>
+                    <li>Manually edit to resolve conflicts</li>
+                    <li>
+                      Stage resolved files: <code>git add &lt;file&gt;</code>
+                    </li>
+                    <li>
+                      Commit the merge:
+                      <code>git commit -m "Merge conflict resolved"</code>
+                    </li>
+                  </ol>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git merge &lt;branch_name&gt;</div>
+                  <div class="description">
+                    Merge specified branch into current branch
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git rebase &lt;base&gt;</div>
+                  <div class="description">
+                    Rebase current branch onto specified base (creates linear
+                    history)
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git rebase -i &lt;base&gt;</div>
+                  <div class="description">
+                    Interactive rebase (squash, reorder, edit commits)
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="remote" class="section">
+              <h2 class="section-title">Remote Repositories</h2>
+
+              <div class="command-box">
+                <div class="command">
+                  git remote add origin &lt;github-repo-url&gt;
+                </div>
+                <div class="description">
+                  Connect local repo to remote repository
+                </div>
+              </div>
+
+              <div class="command-box">
+                <div class="command">git push -u origin main</div>
+                <div class="description">
+                  Push main branch and set upstream tracking
+                </div>
+              </div>
+
+              <div class="command-box">
+                <div class="command">git fetch &lt;remote&gt;</div>
+                <div class="description">
+                  Download changes from remote (doesn't merge)
+                </div>
+              </div>
+
+              <div class="command-box">
+                <div class="command">git pull &lt;remote&gt;</div>
+                <div class="description">
+                  Fetch and merge remote changes (git fetch + git merge)
+                </div>
+              </div>
+
+              <div class="command-box">
+                <div class="command">
+                  git push &lt;remote&gt; &lt;branch&gt;
+                </div>
+                <div class="description">
+                  Push local branch to remote repository
+                </div>
+              </div>
+
+              <div class="command-box">
+                <div class="command">git push --force</div>
+                <div class="description">
+                  ⚠️ Force push (rewrites remote history - use with caution!)
+                </div>
+              </div>
+            </section>
+
+            <section id="github" class="section">
+              <h2 class="section-title">GitHub Features & Collaboration</h2>
+
+              <div class="git-workflow">
+                <div class="workflow-step">
+                  <div class="step-number">1</div>
+                  <h5>Fork Repository</h5>
+                  <p>Create your own copy of a repository on GitHub</p>
+                </div>
+                <div class="workflow-step">
+                  <div class="step-number">2</div>
+                  <h5>Clone Fork</h5>
+                  <p>git clone https://github.com/your-username/repo.git</p>
+                </div>
+                <div class="workflow-step">
+                  <div class="step-number">3</div>
+                  <h5>Add Upstream</h5>
+                  <p>git remote add upstream &lt;original-repo-url&gt;</p>
+                </div>
+                <div class="workflow-step">
+                  <div class="step-number">4</div>
+                  <h5>Create Feature Branch</h5>
+                  <p>git checkout -b feature/new-feature</p>
+                </div>
+                <div class="workflow-step">
+                  <div class="step-number">5</div>
+                  <h5>Make Changes & Commit</h5>
+                  <p>Edit files, git add, git commit</p>
+                </div>
+                <div class="workflow-step">
+                  <div class="step-number">6</div>
+                  <h5>Push & Create PR</h5>
+                  <p>git push origin feature/new-feature</p>
+                </div>
+              </div>
+
+              <div class="concept-box">
+                <h4>🔄 Syncing with Upstream</h4>
+                <div class="command-box">
+                  <div class="command">git fetch upstream</div>
+                  <div class="command">git merge upstream/main</div>
+                  <div class="description">
+                    Keep your fork updated with original repository
+                  </div>
+                </div>
+              </div>
+
+              <div class="important-box">
+                <h4>📋 Pull Requests (PRs)</h4>
+                <p>
+                  A mechanism to propose changes from one branch to another:
+                </p>
+                <ul>
+                  <li>Propose changes from feature branch to main</li>
+                  <li>Enable code review and discussion</li>
+                  <li>Include automated testing and checks</li>
+                  <li>Document changes and reasoning</li>
+                </ul>
+              </div>
+            </section>
+
+            <section id="advanced" class="section">
+              <h2 class="section-title">Advanced Git Concepts</h2>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Stashing</h3>
+
+                <div class="command-box">
+                  <div class="command">git stash</div>
+                  <div class="description">
+                    Save uncommitted changes temporarily
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git stash pop</div>
+                  <div class="description">
+                    Restore most recent stashed changes
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git stash list</div>
+                  <div class="description">Show all stashed changesets</div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Tagging & Versioning</h3>
+
+                <div class="command-box">
+                  <div class="command">git tag &lt;tag_name&gt;</div>
+                  <div class="description">
+                    Create lightweight tag (e.g., git tag v1.0)
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">
+                    git tag -a &lt;tag_name&gt; -m "message"
+                  </div>
+                  <div class="description">
+                    Create annotated tag with message
+                  </div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git push --tags</div>
+                  <div class="description">Push all local tags to remote</div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">git tag -d &lt;tag_name&gt;</div>
+                  <div class="description">Delete local tag</div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Ignoring Files (.gitignore)</h3>
+
+                <div class="concept-box">
+                  <h4>📝 Common .gitignore Examples</h4>
+                  <div class="command-box">
+                    <div class="command"># Dependencies</div>
+                    <div class="command">node_modules/</div>
+                    <div class="command">*.log</div>
+                    <div class="command"># Environment files</div>
+                    <div class="command">.env</div>
+                    <div class="command"># IDE files</div>
+                    <div class="command">.vscode/</div>
+                    <div class="command"># Build files</div>
+                    <div class="command">dist/</div>
+                    <div class="command">build/</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="best-practices" class="section">
+              <h2 class="section-title">Best Practices</h2>
+
+              <div class="important-box">
+                <h4>💬 Commit Message Conventions</h4>
+                <ul>
+                  <li>
+                    <strong>Use imperative tense:</strong> "Fix login bug" (not
+                    "Fixed login bug")
+                  </li>
+                  <li><strong>Keep first line under 50 characters</strong></li>
+                  <li>
+                    <strong>Use conventional commits:</strong> feat:, fix:,
+                    docs:, style:, refactor:
+                  </li>
+                  <li>
+                    <strong>Example:</strong> feat: Add user authentication
+                    system
+                  </li>
+                </ul>
+              </div>
+
+              <div class="concept-box">
+                <h4>🌿 Branch Naming Conventions</h4>
+                <ul>
+                  <li><code>feature/user-authentication</code></li>
+                  <li><code>bugfix/navbar-alignment</code></li>
+                  <li><code>hotfix/security-patch</code></li>
+                  <li><code>docs/api-documentation</code></li>
+                </ul>
+              </div>
+
+              <div class="git-workflow">
+                <div class="workflow-step">
+                  <h5>🔒 Security</h5>
+                  <p>
+                    Never commit secrets, passwords, or API keys. Use .gitignore
+                    and environment variables.
+                  </p>
+                </div>
+                <div class="workflow-step">
+                  <h5>👥 Code Reviews</h5>
+                  <p>
+                    Use Pull Requests for collaboration and enforce reviews
+                    before merging.
+                  </p>
+                </div>
+                <div class="workflow-step">
+                  <h5>⚛️ Atomic Commits</h5>
+                  <p>
+                    Make small, focused commits that address single logical
+                    changes.
+                  </p>
+                </div>
+                <div class="workflow-step">
+                  <h5>🔄 Regular Pulls</h5>
+                  <p>
+                    Frequently pull changes from remote to minimize merge
+                    conflicts.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section id="security" class="section">
+              <h2 class="section-title">GitHub Security</h2>
+
+              <div class="subsection">
+                <h3 class="subsection-title">SSH Keys Setup</h3>
+
+                <div class="command-box">
+                  <div class="command">
+                    ssh-keygen -t ed25519 -C "your-email@example.com"
+                  </div>
+                  <div class="description">Generate new SSH key pair</div>
+                </div>
+
+                <div class="command-box">
+                  <div class="command">cat ~/.ssh/id_ed25519.pub</div>
+                  <div class="description">
+                    Display public key to add to GitHub
+                  </div>
+                </div>
+
+                <div class="concept-box">
+                  <h4>🔑 SSH Key Benefits</h4>
+                  <ul>
+                    <li>No need to enter password for every operation</li>
+                    <li>More secure than HTTPS with passwords</li>
+                    <li>Required for many Git operations in enterprise</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">Branch Protection Rules</h3>
+
+                <div class="important-box">
+                  <h4>🛡️ Recommended Protection Settings</h4>
+                  <ul>
+                    <li>Require PR reviews before merging</li>
+                    <li>Require status checks to pass</li>
+                    <li>Require branches to be up to date</li>
+                    <li>Restrict pushes to matching branches</li>
+                    <li>Require administrator review for high-risk changes</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <section id="interview" class="section">
+              <h2 class="section-title">Interview Questions & Answers</h2>
+
+              <div class="interview-qa">
+                <h4>💼 Common Git Interview Questions</h4>
+
+                <div class="qa-item">
+                  <div class="question">
+                    Q: What's the difference between git fetch and git pull?
+                  </div>
+                  <div class="answer">
+                    A: git fetch downloads changes from remote but doesn't merge
+                    them. git pull is git fetch + git merge combined.
+                  </div>
+                </div>
+
+                <div class="qa-item">
+                  <div class="question">Q: How do you revert a commit?</div>
+                  <div class="answer">
+                    A: Use git revert &lt;commit-hash&gt; to create a new "undo"
+                    commit (safe), or git reset --hard HEAD~1 to remove
+                    completely (destructive).
+                  </div>
+                </div>
+
+                <div class="qa-item">
+                  <div class="question">Q: What is a .gitignore file?</div>
+                  <div class="answer">
+                    A: A file specifying which files/directories Git should
+                    ignore (e.g., node_modules/, .env, build files).
+                  </div>
+                </div>
+
+                <div class="qa-item">
+                  <div class="question">
+                    Q: Explain the difference between merge and rebase.
+                  </div>
+                  <div class="answer">
+                    A: Merge combines branches and preserves history. Rebase
+                    moves commits to create linear history by replaying changes.
+                  </div>
+                </div>
+
+                <div class="qa-item">
+                  <div class="question">
+                    Q: What are the three states of files in Git?
+                  </div>
+                  <div class="answer">
+                    A: Modified (changed but not staged), Staged (marked for
+                    next commit), Committed (stored in repository).
+                  </div>
+                </div>
+
+                <div class="qa-item">
+                  <div class="question">
+                    Q: How do you undo the last commit but keep changes?
+                  </div>
+                  <div class="answer">
+                    A: Use git reset --soft HEAD~1 to undo commit but keep
+                    changes staged, or git reset HEAD~1 to unstage them too.
+                  </div>
+                </div>
+
+                <div class="qa-item">
+                  <div class="question">Q: What is a fast-forward merge?</div>
+                  <div class="answer">
+                    A: When the target branch hasn't diverged, Git simply moves
+                    the pointer forward. No merge commit is created.
+                  </div>
+                </div>
+
+                <div class="qa-item">
+                  <div class="question">
+                    Q: How do you resolve merge conflicts?
+                  </div>
+                  <div class="answer">
+                    A: Open conflicted files, edit to resolve conflicts (remove
+                    &lt;&lt;&lt;, ===, &gt;&gt;&gt; markers), stage files with
+                    git add, then commit.
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="footer">
+            <p style="margin-top: 10px">
+              <strong>Created By:</strong> Abdelghany
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">
+      ↑
+    </button>
+
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.querySelector(".sidebar-overlay");
+
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("active");
+
+        if (window.innerWidth <= 768) {
+          sidebar.classList.toggle("active");
+        }
+      }
+
+      function closeSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.querySelector(".sidebar-overlay");
+
+        sidebar.classList.remove("open");
+        overlay.classList.remove("active");
+        sidebar.classList.remove("active");
+      }
+
+      function setActive(element) {
+        // Remove active class from all links
+        document.querySelectorAll(".sidebar a").forEach((link) => {
+          link.classList.remove("active");
+        });
+
+        // Add active class to clicked link
+        element.classList.add("active");
+
+        // Close sidebar after clicking a link
+        closeSidebar();
+      }
+
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+
+      // Show/hide scroll to top button
+      window.addEventListener("scroll", function () {
+        const scrollButton = document.getElementById("scrollToTop");
+        if (window.pageYOffset > 300) {
+          scrollButton.classList.add("visible");
+        } else {
+          scrollButton.classList.remove("visible");
+        }
+
+        // Highlight active section on scroll
+        const sections = document.querySelectorAll(".section, .subsection");
+        const scrollPos = window.scrollY + 100;
+
+        sections.forEach(function (section) {
+          const top = section.offsetTop;
+          const bottom = top + section.offsetHeight;
+          const id = section.getAttribute("id");
+
+          if (scrollPos >= top && scrollPos <= bottom && id) {
+            document.querySelectorAll(".sidebar a").forEach((link) => {
+              link.classList.remove("active");
+            });
+            const activeLink = document.querySelector(
+              `.sidebar a[href="#${id}"]`
+            );
+            if (activeLink) {
+              activeLink.classList.add("active");
+            }
+          }
+        });
+      });
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Close sidebar when clicking outside
+      document.addEventListener("click", function (e) {
+        const sidebar = document.getElementById("sidebar");
+        const toggle = document.querySelector(".sidebar-toggle");
+
+        if (
+          window.innerWidth <= 768 &&
+          !sidebar.contains(e.target) &&
+          !toggle.contains(e.target) &&
+          sidebar.classList.contains("active")
+        ) {
+          closeSidebar();
+        }
+      });
+    </script>
+  </body>
+</html>

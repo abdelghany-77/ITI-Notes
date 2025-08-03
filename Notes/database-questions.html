@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Database Management Systems Exam</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 50%,
+          #f093fb 100%
+        );
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 30px 0;
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .user-info {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border-left: 5px solid #667eea;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .back-button {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 25px;
+        cursor: pointer;
+      }
+
+      .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+      }
+
+      .exam-section {
+        background: white;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-header {
+        padding: 20px;
+        color: white;
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+
+      .section-header.theory {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+      }
+
+      .section-header.sql {
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+      }
+
+      .section-header.design {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+      }
+
+      .section-content {
+        padding: 25px;
+      }
+
+      .question {
+        background: #f8f9fa;
+        border-left: 4px solid #667eea;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+      }
+
+      .question:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .question-number {
+        background: #667eea;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 0.9em;
+        display: inline-block;
+        margin-bottom: 10px;
+      }
+
+      .question-text {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        color: #2c3e50;
+        font-weight: 500;
+      }
+
+      .options {
+        margin: 15px 0;
+      }
+
+      .option {
+        background: white;
+        padding: 10px 15px;
+        margin: 8px 0;
+        border-radius: 6px;
+        border: 2px solid #ecf0f1;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .option:hover {
+        border-color: #bdc3c7;
+        background: #f8f9fa;
+      }
+
+      .option.correct {
+        background: linear-gradient(135deg, #d5f4e6, #a8e6cf);
+        border-color: #2ecc71;
+        color: #27ae60;
+        font-weight: 600;
+      }
+
+      .option.correct::before {
+        content: "✓ ";
+        color: #27ae60;
+        font-weight: bold;
+      }
+
+      .true-false {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 15px 0;
+      }
+
+      .tf-option {
+        background: white;
+        padding: 12px;
+        text-align: center;
+        border-radius: 6px;
+        border: 2px solid #ecf0f1;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .tf-option:hover {
+        border-color: #bdc3c7;
+      }
+
+      .tf-option.true {
+        background: linear-gradient(135deg, #d5f4e6, #a8e6cf);
+        border-color: #2ecc71;
+        color: #27ae60;
+      }
+
+      .tf-option.false {
+        background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+        border-color: #f39c12;
+        color: #d68910;
+      }
+
+      .answer-explanation {
+        background: linear-gradient(135deg, #e8f5e8, #d4f4d4);
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #2ecc71;
+        margin-top: 15px;
+      }
+
+      .answer-explanation h4 {
+        color: #27ae60;
+        margin-bottom: 8px;
+        font-size: 1em;
+      }
+
+      .code-snippet {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-family: "Courier New", monospace;
+        margin: 10px 0;
+        border-left: 4px solid #3498db;
+        font-size: 0.9em;
+        overflow-x: auto;
+      }
+
+      .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border-top: 4px solid #667eea;
+      }
+
+      .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+        color: #667eea;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9em;
+      }
+
+      .table-container {
+        overflow-x: auto;
+        margin: 15px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+      }
+
+      .data-table th {
+        background: #34495e;
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+      }
+
+      .data-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #ecf0f1;
+      }
+
+      .data-table tr:nth-child(even) {
+        background: #f8f9fa;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 25px;
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        border-radius: 12px;
+        margin-top: 30px;
+      }
+
+      /* Scroll to Top Button */
+      .scroll-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.5em;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        z-index: 1000;
+      }
+
+      .scroll-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .scroll-to-top:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, #764ba2, #5a6db8);
+      }
+
+      .scroll-to-top:active {
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          margin: 10px;
+          padding: 15px;
+        }
+
+        .header h1 {
+          font-size: 2em;
+        }
+
+        .true-false {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .user-info {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🗄️ Database Management Systems Questions</h1>
+        <p>Complete Guide to DBMS Theory, SQL & Database Design</p>
+      </div>
+      <a href="../index.html" class="back-button"> ← Back to Main Page </a>
+
+      <!-- Part 1: Database Theory -->
+      <div class="exam-section">
+        <div class="section-header theory">
+          Part I: Database Theory & Concepts
+        </div>
+        <div class="section-content">
+          <div class="question">
+            <div class="question-number">Q1</div>
+            <div class="question-text">
+              The normal forms 1NF and 2NF are intermediate steps to 3NF.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                To achieve 3NF, a relation must first be in 1NF, then 2NF. Each
+                normal form builds upon the previous one as progressive steps
+                toward better database design.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q2</div>
+            <div class="question-text">
+              A relation R is in the second normal form if and only if it is in
+              1NF and every nonkey attribute is fully dependent on the foreign
+              key.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                <strong>Correction:</strong> A relation is in 2NF if it is in
+                1NF and every nonkey attribute is fully dependent on the
+                <strong>primary key</strong>, not the foreign key.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q3</div>
+            <div class="question-text">
+              Database management system is a layer of software between the
+              physical database itself and the users of the system.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                DBMS acts as an interface layer that manages data storage,
+                retrieval, and manipulation while abstracting the physical
+                implementation from users.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q4</div>
+            <div class="question-text">
+              SQL language has data definition statements such as INSERT,
+              UPDATE, DELETE and data manipulation statements such as CREATE.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                <strong>Correction:</strong> DDL (Data Definition Language)
+                includes CREATE, ALTER, DROP. DML (Data Manipulation Language)
+                includes INSERT, UPDATE, DELETE.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q5</div>
+            <div class="question-text">
+              The relationship between Employee and Project is always one to
+              many (1:M).
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                <strong>Correction:</strong> The relationship between Employee
+                and Project is typically many-to-many (M:N) because an employee
+                can work on multiple projects and a project can have multiple
+                employees.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q6</div>
+            <div class="question-text">
+              Two distinct tuples cannot have identical values in all fields
+              that comprise a primary key.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                Primary key constraint ensures uniqueness - no two rows can have
+                the same primary key value(s).
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q7</div>
+            <div class="question-text">
+              We can use this statement:<br />
+              <div class="code-snippet">
+                SELECT ENAME FROM EMP WHERE ENAME ='K%'
+              </div>
+              To get all employee names that start with letter 'K' in table EMP.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                <strong>Correction:</strong> Should use LIKE operator:
+                <code>SELECT ENAME FROM EMP WHERE ENAME LIKE 'K%'</code>
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q8</div>
+            <div class="question-text">
+              If a base table is dropped, all the related views will be
+              automatically dropped.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                <strong>Correction:</strong> Views are not automatically dropped
+                when base tables are dropped. The views become invalid but
+                remain in the system catalog.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q9</div>
+            <div class="question-text">
+              There are physical records corresponding to user created views.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                <strong>Correction:</strong> Views are virtual tables - they
+                don't store data physically. The data is retrieved from
+                underlying base tables when the view is queried.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q10</div>
+            <div class="question-text">
+              Relational database relation may accept multi-valued data items
+              (attributes).
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                <strong>Correction:</strong> In relational databases, each
+                attribute must contain atomic (single) values. Multi-valued
+                attributes violate 1NF.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q11</div>
+            <div class="question-text">
+              Deleting all tuples of a relation is equivalent to dropping it.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                <strong>Correction:</strong> Deleting all tuples (DELETE
+                command) removes data but keeps the table structure. Dropping
+                (DROP command) removes both data and structure.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q12</div>
+            <div class="question-text">
+              Part of the primary key may accept null value.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                <strong>Correction:</strong> Primary key attributes cannot
+                contain NULL values. All components of a primary key must be NOT
+                NULL.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q13</div>
+            <div class="question-text">
+              In a relation the tuples are ordered top to bottom.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                <strong>Correction:</strong> In relational theory, tuples in a
+                relation are unordered. Order is only imposed when using ORDER
+                BY in queries.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q14</div>
+            <div class="question-text">
+              Which of the following is true about the following SQL
+              statement?<br />
+              <div class="code-snippet">
+                SELECT * FROM products WHERE quantity = 1 or quantity = 2 and
+                colour='red'
+              </div>
+            </div>
+            <div class="options">
+              <div class="option">
+                A) Product with quantity 1 and any colour
+              </div>
+              <div class="option">
+                B) Product with quantity 2 and any colour
+              </div>
+              <div class="option">
+                C) Product with quantity 2 and colour=red
+              </div>
+              <div class="option">D) A,B</div>
+              <div class="option correct">E) A,C</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: E) A,C</h4>
+              <p>
+                Due to operator precedence, AND is evaluated before OR. The
+                query returns: (quantity = 1) OR (quantity = 2 AND colour='red')
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q15</div>
+            <div class="question-text">
+              A column Y of table A is said to be functionally dependent upon
+              column X of table R if:
+            </div>
+            <div class="options">
+              <div class="option">
+                A) each value of Y has associated with one value of X
+              </div>
+              <div class="option correct">
+                B) each value of X has associated with one value of Y
+              </div>
+              <div class="option">
+                C) each value of Y has associated with all value of X
+              </div>
+              <div class="option">
+                D) each value of X has associated with all value of Y
+              </div>
+              <div class="option">E) none of above</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>
+                Correct Answer: B) each value of X has associated with one value
+                of Y
+              </h4>
+              <p>
+                Functional dependency X → Y means that for each value of X,
+                there is exactly one corresponding value of Y.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q16</div>
+            <div class="question-text">
+              An attribute that can be broken down into smaller parts is called
+              a(n) ____________ attribute.
+            </div>
+            <div class="options">
+              <div class="option">A) associative</div>
+              <div class="option">B) simple</div>
+              <div class="option correct">C) composite</div>
+              <div class="option">D) complex</div>
+              <div class="option">E) none of the above</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: C) composite</h4>
+              <p>
+                A composite attribute can be divided into smaller
+                sub-attributes. For example, "Address" can be broken into
+                Street, City, State, ZIP.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q17</div>
+            <div class="question-text">
+              To get all the rows from the students table, which of the
+              following SQL Statements should be used?
+            </div>
+            <div class="options">
+              <div class="option">
+                A) Select * from Students where name= none group by name.
+              </div>
+              <div class="option correct">B) Select * from Students.</div>
+              <div class="option">
+                C) Select * from Students where name= A or B Group by name.
+              </div>
+              <div class="option">D) None of the above.</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: B) Select * from Students</h4>
+              <p>
+                To retrieve all rows from a table, use SELECT * FROM table_name
+                without any WHERE clause conditions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 2: SQL Queries -->
+      <div class="exam-section">
+        <div class="section-header sql">Part II: SQL Queries & Operations</div>
+        <div class="section-content">
+          <div class="question">
+            <div class="question-number">Q18</div>
+            <div class="question-text">
+              Given a relation country (name, continent, population) which of
+              the following is a valid SQL statement?
+            </div>
+            <div class="options">
+              <div class="option">
+                A) SELECT continent, population FROM country GROUP BY continent
+              </div>
+              <div class="option correct">
+                B) SELECT continent, SUM(population) FROM country GROUP BY
+                continent
+              </div>
+              <div class="option">
+                C) SELECT name, population FROM country GROUP BY continent
+              </div>
+              <div class="option">
+                D) SELECT name, SUM(population) FROM country GROUP BY continent
+              </div>
+              <div class="option">
+                E) None of the above OR more than one of the above
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>
+                Correct Answer: B) SELECT continent, SUM(population) FROM
+                country GROUP BY continent
+              </h4>
+              <p>
+                When using GROUP BY, all non-aggregate columns in SELECT must be
+                in the GROUP BY clause. Only B follows this rule correctly.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q19</div>
+            <div class="question-text">
+              Examine the data in the EMPLOYEES table:
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>LAST_NAME</th>
+                    <th>DEPARTMENT_ID</th>
+                    <th>SALARY</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Getz</td>
+                    <td>10</td>
+                    <td>3000</td>
+                  </tr>
+                  <tr>
+                    <td>Davis</td>
+                    <td>20</td>
+                    <td>1500</td>
+                  </tr>
+                  <tr>
+                    <td>King</td>
+                    <td>20</td>
+                    <td>2200</td>
+                  </tr>
+                  <tr>
+                    <td>Davis</td>
+                    <td>30</td>
+                    <td>5000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="question-text">Which subquery will work?</div>
+            <div class="options">
+              <div class="option">
+                A) SELECT * FROM employees Where salary > (SELECT MIN (salary)
+                FROM employees GROUP BY department_id);
+              </div>
+              <div class="option">
+                B) SELECT * FROM employees WHERE salary = (SELECT AVG (salary)
+                FROM employees GROUP BY department_id);
+              </div>
+              <div class="option">
+                C) SELECT department_id FROM employees WHERE salary > ALL
+                (SELECT AVG (salary) FROM employees GROUP BY AVG (SALARY));
+              </div>
+              <div class="option correct">D) None of the above.</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: D) None of the above</h4>
+              <p>
+                All options have syntax errors or logical issues. A and B return
+                multiple values from GROUP BY subqueries but use = operator. C
+                has invalid GROUP BY syntax.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q20</div>
+            <div class="question-text">
+              Which two statements are true regarding the ORDER BY clause?
+              (Choose two)
+            </div>
+            <div class="options">
+              <div class="option correct">
+                A) The sort is in ascending order by default.
+              </div>
+              <div class="option">
+                B) The sort is in descending order by default.
+              </div>
+              <div class="option">
+                C) The ORDER BY clause must precede the WHERE clause.
+              </div>
+              <div class="option">
+                D) The ORDER BY clause is executed on the client side.
+              </div>
+              <div class="option correct">
+                E) The ORDER BY clause comes last in the SELECT statement.
+              </div>
+              <div class="option">
+                F) The ORDER BY clause is executed first in the query execution
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: A and E</h4>
+              <p>
+                ORDER BY sorts in ascending order by default and must come last
+                in the SELECT statement syntax.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q21</div>
+            <div class="question-text">
+              Evaluate this SQL statement:<br />
+              <div class="code-snippet">
+                SELECT ename, sal, 12*sal+100 FROM emp;
+              </div>
+              The SAL column stores the monthly salary. Which change calculates
+              "monthly salary plus $100, multiplied by 12"?
+            </div>
+            <div class="options">
+              <div class="option">
+                A) No change is required to achieve the desired results.
+              </div>
+              <div class="option correct">
+                B) SELECT ename, sal, 12*(sal+100) FROM emp;
+              </div>
+              <div class="option">
+                C) SELECT ename, sal, (12*sal)+100 FROM emp;
+              </div>
+              <div class="option">D) SELECT ename, sal+100,*12 FROM emp;</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>
+                Correct Answer: B) SELECT ename, sal, 12*(sal+100) FROM emp;
+              </h4>
+              <p>
+                Parentheses are needed to ensure addition happens before
+                multiplication: (sal+100)*12
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q22</div>
+            <div class="question-text">
+              You want to display book titles with these criteria:<br />•
+              Purchased before January 21, 2001<br />• Price < $500 or > $900<br />•
+              Sort by purchase date (most recent first)
+            </div>
+            <div class="options">
+              <div class="option">
+                A) SELECT book_title FROM books WHERE price between 500 and 900
+                AND purchase_date < '21-JAN-2001' ORDER BY purchase_date;
+              </div>
+              <div class="option">
+                B) SELECT book_title FROM books WHERE price IN (500,900) AND
+                purchase_date < '21-JAN-2001' ORDER BY purchase_date ASC;
+              </div>
+              <div class="option">
+                C) SELECT book_title FROM books WHERE price < 500 or > 900 AND
+                purchase_date < '21-JAN-2001' ORDER BY purchase_date DESC;
+              </div>
+              <div class="option correct">
+                D) SELECT book_title FROM books WHERE (price < 500 OR price >
+                900) AND purchase_date < '21-JAN-2001' ORDER BY purchase_date
+                DESC;
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: D)</h4>
+              <p>
+                Option D correctly uses parentheses for OR condition, proper
+                date comparison, and DESC for most recent first.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q23</div>
+            <div class="question-text">
+              Consider the INVENTORY table. Which query will cause an error?
+            </div>
+            <div class="code-snippet">
+              SELECT id_number, description from inventory where id_number =
+              (select id_number from inventory where quantity > 500 or price >
+              5.00)
+            </div>
+            <div class="options">
+              <div class="option">A) From inventory</div>
+              <div class="option correct">B) where id_number =</div>
+              <div class="option">C) select id_number,description</div>
+              <div class="option">D) the statement is correct</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: B) where id_number =</h4>
+              <p>
+                The subquery returns multiple rows, but the = operator expects a
+                single value. Should use IN or EXISTS instead.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q24</div>
+            <div class="question-text">
+              Which value would be displayed?<br />
+              <div class="code-snippet">
+                Select id_number from inventory where price in (8.25, 0.25);
+              </div>
+            </div>
+            <div class="options">
+              <div class="option">A) 25023, 25027</div>
+              <div class="option">B) 25025, 25027</div>
+              <div class="option correct">C) 45025, 25027</div>
+              <div class="option">D) No value would be displayed</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: C) 45025, 25027</h4>
+              <p>
+                Looking at the inventory table, id 45025 has price 8.25 and id
+                25027 has price 0.25.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q25</div>
+            <div class="question-text">
+              Which value will be displayed?<br />
+              <div class="code-snippet">
+                Select id_number from inventory where price = (select Max(price)
+                from inventory);
+              </div>
+            </div>
+            <div class="options">
+              <div class="option">A) 25027</div>
+              <div class="option">B) 25025</div>
+              <div class="option">C) 25026</div>
+              <div class="option correct">D) 32081</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: D) 32081</h4>
+              <p>
+                From the inventory table, 32081 (Vinyl Sheets) has the highest
+                price at 27.21.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q26</div>
+            <div class="question-text">
+              If you are writing a SELECT statement to join three tables using
+              join conditions, what is the number of join conditions needed?
+            </div>
+            <div class="options">
+              <div class="option">A) 0</div>
+              <div class="option">B) 1</div>
+              <div class="option correct">C) 2</div>
+              <div class="option">D) 3</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: C) 2</h4>
+              <p>
+                For n tables, you need (n-1) join conditions. For 3 tables, you
+                need 2 join conditions to connect them properly.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 3: Database Design -->
+      <div class="exam-section">
+        <div class="section-header design">
+          Part III: Database Design & Normalization
+        </div>
+        <div class="section-content">
+          <div class="question">
+            <div class="question-number">Q27</div>
+            <div class="question-text">
+              Given the table:<br /><br /><strong>Donation</strong> (DonorID#,
+              Date, Name, Member, Phone, Address, City, State, Zip, Location,
+              Description, Age, Price, Quantity, Value, TotalValue)<br /><br />With
+              DonorID# and Date as primary key, normalize this table to 3NF.
+            </div>
+            <div class="answer-explanation">
+              <h4>Normalization Solution:</h4>
+              <p><strong>1NF to 2NF:</strong> Remove partial dependencies</p>
+              <div class="code-snippet">
+                Donor (DonorID#, Name, Member, Phone, Address, City, State, Zip,
+                Location, Age) Donation (DonorID#, Date) DonationItem (DonorID#,
+                Date, Description, Price, Quantity, Value)
+              </div>
+              <p><strong>2NF to 3NF:</strong> Remove transitive dependencies</p>
+              <div class="code-snippet">
+                Donor (DonorID#, Name, Member, Phone, Age, LocationID) Location
+                (LocationID, Address, City, State, Zip) Donation (DonorID#,
+                Date) DonationItem (DonorID#, Date, Description, Price,
+                Quantity, Value)
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q28</div>
+            <div class="question-text">
+              For a banking system database, design ER diagram with entities:
+              Customer, Branch, Credit, Transaction. Include all relationships
+              and constraints.
+            </div>
+            <div class="answer-explanation">
+              <h4>ER Diagram Components:</h4>
+              <p><strong>Entities:</strong></p>
+              <ul>
+                <li>Customer (cust_id, name, address, phone)</li>
+                <li>Branch (branch_name, address, phone, loan_permitted)</li>
+                <li>Credit (credit_no, amount, last_transaction_date)</li>
+                <li>
+                  Transaction (trns_no, trans_type, trans_date, trans_amount)
+                </li>
+              </ul>
+              <p><strong>Relationships:</strong></p>
+              <ul>
+                <li>
+                  Customer-Credit: 1:1 (each customer has exactly one credit)
+                </li>
+                <li>
+                  Customer-Transaction: 1:M (customer can have many
+                  transactions)
+                </li>
+                <li>
+                  Branch-Transaction: 1:M (branch processes many transactions)
+                </li>
+                <li>
+                  Customer-Branch: M:N (customer can deal with any branch)
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q29</div>
+            <div class="question-text">
+              Design normalized relations for a company with departments,
+              employees, projects, offices, and phones. Include job and salary
+              history.
+            </div>
+            <div class="answer-explanation">
+              <h4>Normalized Relations:</h4>
+              <div class="code-snippet">
+                Department (dept_no, budget, manager_emp_no) Employee (emp_no,
+                current_project_no, office_no, phone_no) Project (project_no,
+                budget, dept_no) Office (office_no, area_sqft, dept_no) Phone
+                (phone_no, office_no) Job_History (emp_no, job_title,
+                start_date, end_date) Salary_History (emp_no, job_title, salary,
+                salary_date)
+              </div>
+              <p>
+                This design satisfies all the given constraints and maintains
+                referential integrity.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q30</div>
+            <div class="question-text">
+              Write SQL to display pilot names who can operate planes with
+              cruising range > 3000 miles but are not certified on any Boeing
+              aircraft.
+            </div>
+            <div class="answer-explanation">
+              <h4>SQL Solution:</h4>
+              <div class="code-snippet">
+                SELECT DISTINCT p.ename FROM Pilots p JOIN Certified c ON p.eid
+                = c.eid JOIN Aircraft a ON c.aid = a.aid WHERE a.cruisingrange >
+                3000 AND p.eid NOT IN ( SELECT c2.eid FROM Certified c2 JOIN
+                Aircraft a2 ON c2.aid = a2.aid WHERE a2.aname LIKE '%Boeing%' );
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q31</div>
+            <div class="question-text">
+              Write SQL to show department names, locations, employees' last
+              names, job titles and salaries for employees working in location
+              1800.
+            </div>
+            <div class="answer-explanation">
+              <h4>SQL Solution:</h4>
+              <div class="code-snippet">
+                SELECT d.dept_name, d.location_id, e.lname, e.job_name, e.salary
+                FROM Departments d JOIN Employees e ON d.dept_id = e.dept_id
+                WHERE d.location_id = 1800;
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q32</div>
+            <div class="question-text">
+              Write SQL to show department names, locations and number of
+              employees, including departments without employees.
+            </div>
+            <div class="answer-explanation">
+              <h4>SQL Solution:</h4>
+              <div class="code-snippet">
+                SELECT d.dept_name, d.location_id, COUNT(e.emp_id) as emp_count
+                FROM Departments d LEFT JOIN Employees e ON d.dept_id =
+                e.dept_id GROUP BY d.dept_name, d.location_id;
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q33</div>
+            <div class="question-text">
+              Write SQL to create view EMP_DEPT with columns ENAME, DNAME, SAL,
+              excluding anyone with salary < 1000.
+            </div>
+            <div class="answer-explanation">
+              <h4>SQL Solution:</h4>
+              <div class="code-snippet">
+                CREATE VIEW EMP_DEPT AS SELECT e.ename, d.dname, e.sal FROM
+                Employee e JOIN Department d ON e.deptno = d.deptno WHERE e.sal
+                >= 1000; -- To drop the view: DROP VIEW EMP_DEPT;
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q34</div>
+            <div class="question-text">
+              Write SQL to find employees who worked (not as project manager) in
+              more than one project.
+            </div>
+            <div class="answer-explanation">
+              <h4>SQL Solution:</h4>
+              <div class="code-snippet">
+                SELECT e.ename FROM Employee e JOIN Employee_team et ON e.empno
+                = et.empno JOIN Project p ON et.team_id = p.team_id JOIN Team t
+                ON p.team_id = t.team_id WHERE e.empno != t.mgrno GROUP BY
+                e.empno, e.ename HAVING COUNT(DISTINCT p.proj_id) > 1;
+              </div>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q35</div>
+            <div class="question-text">
+              Write SQL to raise every employee salary by 10%.
+            </div>
+            <div class="answer-explanation">
+              <h4>SQL Solution:</h4>
+              <div class="code-snippet">
+                UPDATE Employee SET sal = sal * 1.10; -- For the pilots table:
+                UPDATE Pilots SET salary = salary * 1.10;
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p style="margin-top: 10px"><strong>Created for:</strong> Abdelghany</p>
+      </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTop" title="Scroll to top">
+      ↑
+    </button>
+
+    <script>
+      // Scroll to Top Button Functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        const scrollToTopBtn = document.getElementById("scrollToTop");
+
+        // Show/hide button based on scroll position
+        window.addEventListener("scroll", function () {
+          if (window.pageYOffset > 300) {
+            scrollToTopBtn.classList.add("visible");
+          } else {
+            scrollToTopBtn.classList.remove("visible");
+          }
+        });
+
+        // Smooth scroll to top when button is clicked
+        scrollToTopBtn.addEventListener("click", function () {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+        });
+
+        // Add question interaction effects
+        document.querySelectorAll(".question").forEach((question) => {
+          question.addEventListener("mouseenter", function () {
+            this.style.transform = "translateY(-2px)";
+          });
+
+          question.addEventListener("mouseleave", function () {
+            this.style.transform = "translateY(0)";
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
