@@ -1317,7 +1317,7 @@
                     <span class="keyword">ADD</span> City
                     <span class="keyword">varchar</span>(30);
 
-                    <span class="comment">-- Drop column</span>
+                    <span class="comment"> <br>-- Drop column</span>
                     <span class="keyword">ALTER TABLE</span> employee
                     <span class="keyword">DROP</span> City;
                   </div>
@@ -1333,7 +1333,7 @@
                   <div class="concept-card">
                     <h5>➕ INSERT</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Single row</span>
+                      <span class="comment">-- Single row</span> <br>
                       <span class="keyword">INSERT INTO</span> Employee
                       <span class="keyword">VALUES</span> (1,
                       <span class="string">'John'</span>,
@@ -1341,7 +1341,7 @@
                       <span class="string">'123 Main St'</span>,
                       <span class="string">'1990-01-01'</span>);
 
-                      <span class="comment">-- Multiple rows</span>
+                      <span class="comment"><br>-- Multiple rows</span> <br>
                       <span class="keyword">INSERT INTO</span> Employee
                       <span class="keyword">VALUES</span>
                       (2, <span class="string">'Jane'</span>,
@@ -1358,13 +1358,13 @@
                   <div class="concept-card">
                     <h5>✏️ UPDATE</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Update with WHERE clause</span>
+                      <span class="comment">-- Update with WHERE clause</span> <br>
                       <span class="keyword">UPDATE</span> Employee
                       <span class="keyword">SET</span> Address =
                       <span class="string">'New Address'</span>
                       <span class="keyword">WHERE</span> ID = 1;
 
-                      <span class="comment">-- Update with expression</span>
+                      <span class="comment"> <br>-- Update with expression</span> <br>
                       <span class="keyword">UPDATE</span> Employee
                       <span class="keyword">SET</span> LName =
                       <span class="keyword">UPPER</span>(LName);
@@ -1374,11 +1374,11 @@
                   <div class="concept-card">
                     <h5>🗑️ DELETE</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Delete specific rows</span>
+                      <span class="comment">-- Delete specific rows</span> <br>
                       <span class="keyword">DELETE FROM</span> Employee
                       <span class="keyword">WHERE</span> ID = 1;
 
-                      <span class="comment">-- Delete all rows</span>
+                      <span class="comment"> <br>-- Delete all rows</span> <br>
                       <span class="keyword">DELETE FROM</span> Employee;
                     </div>
                   </div>
@@ -1390,7 +1390,7 @@
                         >-- Faster than DELETE, cannot be used with FOREIGN KEY
                         constraints</span
                       >
-                      <span class="keyword">TRUNCATE TABLE</span> Employee;
+                      <span class="keyword"> <br>TRUNCATE TABLE</span> Employee;
                     </div>
                   </div>
                 </div>
@@ -1425,15 +1425,15 @@
                   <div class="concept-card">
                     <h5>🔍 Basic SELECT</h5>
                     <div class="sql-code">
-                      <span class="comment">-- All columns</span>
+                      <span class="comment">-- All columns</span><br>
                       <span class="keyword">SELECT</span> *
                       <span class="keyword">FROM</span> Employee;
 
-                      <span class="comment">-- Specific columns</span>
+                      <span class="comment"> <br>-- Specific columns</span><br>
                       <span class="keyword">SELECT</span> FName, LName
                       <span class="keyword">FROM</span> Employee;
 
-                      <span class="comment">-- With aliases</span>
+                      <span class="comment"><br>-- With aliases</span><br>
                       <span class="keyword">SELECT</span> FName
                       <span class="keyword">AS</span>
                       <span class="string">'First Name'</span>, LName
@@ -1446,19 +1446,19 @@
                   <div class="concept-card">
                     <h5>🎯 WHERE Clause</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Comparison operators</span>
+                      <span class="comment">-- Comparison operators</span><br>
                       <span class="keyword">SELECT</span> *
                       <span class="keyword">FROM</span> Employee
                       <span class="keyword">WHERE</span> ID > 5;
 
-                      <span class="comment">-- String matching</span>
+                      <span class="comment"><br>-- String matching</span><br>
                       <span class="keyword">SELECT</span> *
                       <span class="keyword">FROM</span> Employee
                       <span class="keyword">WHERE</span> FName
                       <span class="keyword">LIKE</span>
                       <span class="string">'J%'</span>;
 
-                      <span class="comment">-- Multiple conditions</span>
+                      <span class="comment"><br>-- Multiple conditions</span><br>
                       <span class="keyword">SELECT</span> *
                       <span class="keyword">FROM</span> Employee
                       <span class="keyword">WHERE</span> ID
@@ -1474,19 +1474,19 @@
                   <div class="concept-card">
                     <h5>🔢 NULL Handling</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Check for NULL</span>
+                      <span class="comment">-- Check for NULL</span><br>
                       <span class="keyword">SELECT</span> *
                       <span class="keyword">FROM</span> Employee
                       <span class="keyword">WHERE</span> Address
                       <span class="keyword">IS NULL</span>;
 
-                      <span class="comment">-- Handle NULL values</span>
+                      <span class="comment"><br>-- Handle NULL values</span><br>
                       <span class="keyword">SELECT</span>
                       <span class="keyword">ISNULL</span>(Address,
                       <span class="string">'No Address'</span>)
                       <span class="keyword">FROM</span> Employee;
 
-                      <span class="comment">-- COALESCE function</span>
+                      <span class="comment"><br>-- COALESCE function</span><br>
                       <span class="keyword">SELECT</span>
                       <span class="keyword">COALESCE</span>(Address, City,
                       <span class="string">'Unknown'</span>)
@@ -1497,16 +1497,16 @@
                   <div class="concept-card">
                     <h5>📋 Sorting & Distinct</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Sort results</span>
+                      <span class="comment">-- Sort results</span><br>
                       <span class="keyword">SELECT</span> *
                       <span class="keyword">FROM</span> Employee
                       <span class="keyword">ORDER BY</span> LName, FName;
 
-                      <span class="comment">-- Remove duplicates</span>
+                      <span class="comment"><br>-- Remove duplicates</span><br>
                       <span class="keyword">SELECT DISTINCT</span> City
                       <span class="keyword">FROM</span> Employee;
 
-                      <span class="comment">-- Limit results</span>
+                      <span class="comment"><br>-- Limit results</span><br>
                       <span class="keyword">SELECT TOP</span> 10 *
                       <span class="keyword">FROM</span> Employee;
                     </div>
@@ -1561,7 +1561,7 @@
                   <div class="concept-card">
                     <h5>❌ CROSS JOIN</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Cartesian product</span>
+                      <span class="comment">-- Cartesian product</span><br>
                       <span class="keyword">SELECT</span> e.FName, d.DeptName
                       <span class="keyword">FROM</span> Employee e
                       <span class="keyword">CROSS JOIN</span> Department d;
@@ -1571,7 +1571,7 @@
                   <div class="concept-card">
                     <h5>🔄 SELF JOIN</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Employee and their manager</span>
+                      <span class="comment">-- Employee and their manager</span><br>
                       <span class="keyword">SELECT</span> e.FName
                       <span class="keyword">AS</span> Employee, m.FName
                       <span class="keyword">AS</span> Manager
@@ -1591,7 +1591,7 @@
                   <div class="sql-code">
                     <span class="comment"
                       >-- Find department with highest paid employee</span
-                    >
+                    ><br>
                     <span class="keyword">SELECT</span> dname
                     <span class="keyword">FROM</span> dept
                     <span class="keyword">WHERE</span> deptno = (
@@ -1607,7 +1607,7 @@
                 <div class="concept-card">
                   <h5>🔍 EXISTS Condition</h5>
                   <div class="sql-code">
-                    <span class="comment">-- Find suppliers with orders</span>
+                    <span class="comment">-- Find suppliers with orders</span><br>
                     <span class="keyword">SELECT</span> *
                     <span class="keyword">FROM</span> suppliers s
                     <span class="keyword">WHERE EXISTS</span> (
@@ -1623,7 +1623,7 @@
                   <div class="sql-code">
                     <span class="comment"
                       >-- Salary greater than all in department 5</span
-                    >
+                    > <br>
                     <span class="keyword">SELECT</span> *
                     <span class="keyword">FROM</span> employee
                     <span class="keyword">WHERE</span> salary >
@@ -1660,7 +1660,7 @@
                   <div class="concept-card">
                     <h5>🔢 GROUP BY</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Group by department</span>
+                      <span class="comment">-- Group by department</span><br>
                       <span class="keyword">SELECT</span> dno,
                       <span class="keyword">COUNT</span>(*)
                       <span class="keyword">AS</span> EmpCount,
@@ -1674,7 +1674,7 @@
                   <div class="concept-card">
                     <h5>🎯 HAVING</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Filter groups</span>
+                      <span class="comment">-- Filter groups</span><br>
                       <span class="keyword">SELECT</span> pnumber, pname,
                       <span class="keyword">COUNT</span>(*)
                       <span class="keyword">AS</span> WorkerCount
@@ -1693,15 +1693,15 @@
                   <div class="concept-card">
                     <h5>✅ GRANT</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Grant SELECT permission</span>
+                      <span class="comment">-- Grant SELECT permission</span><br>
                       <span class="keyword">GRANT SELECT ON</span> employees
                       <span class="keyword">TO</span> Ahmed;
 
-                      <span class="comment">-- Grant ALL permissions</span>
+                      <span class="comment"><br>-- Grant ALL permissions</span><br>
                       <span class="keyword">GRANT ALL ON</span> department
                       <span class="keyword">TO</span> Mary, Ahmed;
 
-                      <span class="comment">-- Grant with GRANT option</span>
+                      <span class="comment"><br>-- Grant with GRANT option</span><br>
                       <span class="keyword">GRANT SELECT ON</span> employees
                       <span class="keyword">TO</span> Ahmed
                       <span class="keyword">WITH GRANT OPTION</span>;
@@ -1711,11 +1711,11 @@
                   <div class="concept-card">
                     <h5>❌ REVOKE</h5>
                     <div class="sql-code">
-                      <span class="comment">-- Revoke specific permission</span>
+                      <span class="comment">-- Revoke specific permission</span><br>
                       <span class="keyword">REVOKE UPDATE ON</span> department
                       <span class="keyword">FROM</span> Mary;
 
-                      <span class="comment">-- Revoke all permissions</span>
+                      <span class="comment"><br>-- Revoke all permissions</span><br>
                       <span class="keyword">REVOKE ALL ON</span> department
                       <span class="keyword">FROM</span> Mary, Ahmed;
                     </div>
@@ -1814,11 +1814,11 @@
                       </li>
                     </ul>
                     <div class="sql-code">
-                      <span class="comment">-- Before 1NF</span>
+                      <span class="comment">-- Before 1NF</span><br>
                       Student(SID, SName, Subjects) Subjects: Math, Physics,
                       Chemistry
 
-                      <span class="comment">-- After 1NF</span>
+                      <span class="comment"><br>-- After 1NF</span><br>
                       Student(SID, SName, Birthdate, City, ZipCode)
                       Student_Subject(SID, Subject, Grade, Teacher)
                     </div>
@@ -1837,10 +1837,10 @@
                     <div class="sql-code">
                       <span class="comment"
                         >-- Before 2NF (Teacher depends only on Subject)</span
-                      >
+                      ><br>
                       Student_Subject(SID, Subject, Grade, Teacher)
 
-                      <span class="comment">-- After 2NF</span>
+                      <span class="comment"><br>-- After 2NF</span><br>
                       Student_Subject(SID, Subject, Grade) Subject(Subject,
                       Teacher)
                     </div>
@@ -1857,10 +1857,10 @@
                     <div class="sql-code">
                       <span class="comment"
                         >-- Before 3NF (ZipCode → City is transitive)</span
-                      >
+                      ><br>
                       Student(SID, SName, Birthdate, City, ZipCode)
 
-                      <span class="comment">-- After 3NF</span>
+                      <span class="comment"><br>-- After 3NF</span><br>
                       Student(SID, SName, Birthdate, ZipCode) City_Info(ZipCode,
                       City)
                     </div>
@@ -2126,7 +2126,7 @@
                   <span class="keyword">AND</span> Country =
                   <span class="string">'UK'</span>;
                   <br>
-                  <span class="comment">-- Good: Using appropriate JOIN</span>
+                  <span class="comment">-- Good: Using appropriate JOIN</span><br>
                   <span class="keyword">SELECT</span> c.CustomerName,
                   o.OrderDate <span class="keyword">FROM</span> Customers c
                   <span class="keyword">INNER JOIN</span> Orders o
@@ -2136,7 +2136,7 @@
 
                   <span class="comment"
                     > <br>-- Good: Using indexes effectively</span
-                  >
+                  ><br>
                   <span class="keyword">CREATE INDEX</span>
                   IX_Orders_CustomerID_Date
                   <span class="keyword">ON</span> Orders(CustomerID, OrderDate);
