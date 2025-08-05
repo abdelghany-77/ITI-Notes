@@ -611,9 +611,7 @@
   </head>
   <body>
     <!-- Sidebar Navigation -->
-    <button class="sidebar-toggle" onclick="toggleSidebar()">
-      ☰
-    </button>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <div class="sidebar-overlay" onclick="closeSidebar()"></div>
     <a href="../index.html" class="back-to-main"></a>
 
@@ -770,7 +768,9 @@
             <h1>🗃️ Database Course</h1>
             <p>Complete Guide to Database Design, SQL & Normalization</p>
           </div>
-            <a href="./database-questions.html" class="practice-link">Practice Questions</a>
+          <a href="./database-questions.html" class="practice-link"
+            >Practice Questions</a
+          >
           <div class="content">
             <section id="introduction" class="section">
               <h2 class="section-title">Database Systems</h2>
@@ -1329,7 +1329,7 @@
                   DML - Data Manipulation Language
                 </h3>
 
-                <div class="concept-grid">
+                <!-- <div class="concept-grid"> -->
                   <div class="concept-card">
                     <h5>➕ INSERT</h5>
                     <div class="sql-code">
@@ -1421,7 +1421,7 @@
                   </ol>
                 </div>
 
-                <div class="concept-grid">
+                <div class="concept-card">
                   <div class="concept-card">
                     <h5>🔍 Basic SELECT</h5>
                     <div class="sql-code">
@@ -1517,7 +1517,7 @@
               <div class="subsection" id="joins">
                 <h3 class="subsection-title">Joins</h3>
 
-                <div class="concept-grid">
+                <div class="concept-card">
                   <div class="concept-card">
                     <h5>🔗 INNER JOIN</h5>
                     <div class="sql-code">
@@ -1638,7 +1638,7 @@
               <div class="subsection" id="aggregates">
                 <h3 class="subsection-title">Aggregate Functions</h3>
 
-                <div class="concept-grid">
+                <div class="concept-card">
                   <div class="concept-card">
                     <h5>📊 Basic Aggregates</h5>
                     <div class="sql-code">
@@ -1689,7 +1689,7 @@
               <div class="subsection" id="dcl-commands">
                 <h3 class="subsection-title">DCL - Data Control Language</h3>
 
-                <div class="concept-grid">
+                <div class="concept-card">
                   <div class="concept-card">
                     <h5>✅ GRANT</h5>
                     <div class="sql-code">
@@ -1890,7 +1890,7 @@
                       <strong>Action:</strong> Separate multivalued telephone
                       numbers
                     </p>
-                    <div class="concept-grid">
+                    <div class="concept-card">
                       <div class="concept-card">
                         <h5>📊 Platform Table</h5>
                         <div class="sql-code">
@@ -1922,7 +1922,7 @@
                       <strong>Action:</strong> Remove partial dependencies -
                       separate student details
                     </p>
-                    <div class="concept-grid">
+                    <div class="concept-card">
                       <div class="concept-card">
                         <h5>👤 Students Table</h5>
                         <div class="sql-code">
@@ -1960,7 +1960,7 @@
                       <strong>Action:</strong> Remove transitive dependency -
                       faculty depends on F-Code
                     </p>
-                    <div class="concept-grid">
+                    <div class="concept-card">
                       <div class="concept-card">
                         <h5>👤 Students Table (Final)</h5>
                         <div class="sql-code">
@@ -2116,7 +2116,7 @@
                     </li>
                   </ul>
                 </div>
-
+                
                 <div class="sql-code">
                   <span class="comment">-- Good: Selective WHERE clause</span>
                   <span class="keyword">SELECT</span> CustomerID, CustomerName
@@ -2125,7 +2125,7 @@
                   <span class="string">'London'</span>
                   <span class="keyword">AND</span> Country =
                   <span class="string">'UK'</span>;
-
+                  <br>
                   <span class="comment">-- Good: Using appropriate JOIN</span>
                   <span class="keyword">SELECT</span> c.CustomerName,
                   o.OrderDate <span class="keyword">FROM</span> Customers c
@@ -2135,7 +2135,7 @@
                   <span class="string">'2023-01-01'</span>;
 
                   <span class="comment"
-                    >-- Good: Using indexes effectively</span
+                    > <br>-- Good: Using indexes effectively</span
                   >
                   <span class="keyword">CREATE INDEX</span>
                   IX_Orders_CustomerID_Date
