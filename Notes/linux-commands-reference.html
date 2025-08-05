@@ -111,11 +111,21 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
         z-index: 1003;
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .sidebar-toggle:hover {
         background: linear-gradient(135deg, #2a5298, #1e3c72);
         transform: translateY(-2px);
+      }
+
+      .sidebar-toggle:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       }
 
       .sidebar-overlay {
@@ -154,6 +164,10 @@
         font-weight: 500;
         border-left: 4px solid transparent;
         font-size: 0.9em;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        touch-action: manipulation;
       }
 
       .sidebar ul li a:hover,
@@ -162,6 +176,11 @@
         transform: translateX(5px);
         border-left-color: #1e3c72;
         color: white;
+      }
+
+      .sidebar ul li a:active {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateX(3px);
       }
 
       .sidebar ul li ul {
@@ -377,17 +396,30 @@
         }
 
         .sidebar {
-          width: 90%;
+          width: 280px;
         }
 
         .header h1 {
           font-size: 2em;
         }
 
+        .header p {
+          font-size: 1.1em;
+        }
+
         .user-info {
           flex-direction: column;
           align-items: flex-start;
           gap: 10px;
+          margin: 15px;
+        }
+
+        .back-button {
+          margin: 15px;
+        }
+
+        .content {
+          padding: 0 20px 20px;
         }
 
         .scroll-to-top {
@@ -399,13 +431,68 @@
         }
       }
 
-      @media (max-width: 600px) {
+      @media (max-width: 768px) {
+        .container {
+          margin: 5px;
+          padding: 10px;
+          border-radius: 10px;
+        }
+
+        .sidebar {
+          width: 100%;
+          max-width: 320px;
+        }
+
+        .header {
+          padding: 20px 15px;
+        }
+
+        .header h1 {
+          font-size: 1.8em;
+          margin-bottom: 8px;
+        }
+
+        .header p {
+          font-size: 1em;
+        }
+
+        .user-info {
+          margin: 10px;
+          padding: 15px;
+        }
+
+        .back-button {
+          margin: 10px;
+          padding: 10px 20px;
+          font-size: 0.9em;
+        }
+
         .content {
           padding: 0 15px 15px;
         }
 
-        .sidebar {
-          width: 95%;
+        .section-title {
+          font-size: 1.5em;
+          margin-bottom: 15px;
+        }
+
+        .command-item {
+          padding: 15px;
+          margin-bottom: 12px;
+        }
+
+        .command-name {
+          font-size: 0.8em;
+          padding: 5px 10px;
+        }
+
+        .command-description {
+          font-size: 1em;
+        }
+
+        .command-example {
+          padding: 10px 12px;
+          font-size: 0.8em;
         }
 
         .sidebar-toggle {
@@ -414,13 +501,145 @@
           padding: 10px 12px;
           font-size: 1rem;
         }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          margin: 2px;
+          padding: 8px;
+          margin-top: 5px;
+          margin-bottom: 5px;
+        }
+
+        .header {
+          padding: 15px 10px;
+        }
 
         .header h1 {
-          font-size: 1.8em;
+          font-size: 1.6em;
+          margin-bottom: 5px;
+        }
+
+        .header p {
+          font-size: 0.9em;
+        }
+
+        .user-info {
+          margin: 8px;
+          padding: 12px;
+          font-size: 0.9em;
+        }
+
+        .back-button {
+          margin: 8px;
+          padding: 8px 16px;
+          font-size: 0.85em;
+        }
+
+        .content {
+          padding: 0 10px 10px;
         }
 
         .section-title {
-          font-size: 1.5em;
+          font-size: 1.3em;
+          margin-bottom: 12px;
+        }
+
+        .command-item {
+          padding: 12px;
+          margin-bottom: 10px;
+        }
+
+        .command-name {
+          font-size: 0.75em;
+          padding: 4px 8px;
+          margin-bottom: 8px;
+        }
+
+        .command-description {
+          font-size: 0.95em;
+          margin-bottom: 8px;
+        }
+
+        .command-example {
+          padding: 8px 10px;
+          font-size: 0.75em;
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+
+        .command-output {
+          padding: 6px 10px;
+          font-size: 0.7em;
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+
+        .command-note {
+          padding: 8px 12px;
+          font-size: 0.8em;
+        }
+
+        .sidebar {
+          width: 100%;
+          max-width: 300px;
+        }
+
+        .sidebar-content {
+          padding: 15px;
+        }
+
+        .sidebar ul li a {
+          padding: 10px 12px;
+          font-size: 0.85em;
+        }
+
+        .sidebar ul li ul li a {
+          font-size: 0.75em;
+          padding: 6px 10px;
+        }
+
+        .scroll-to-top {
+          bottom: 15px;
+          right: 15px;
+          width: 45px;
+          height: 45px;
+          font-size: 1.1em;
+        }
+
+        .footer {
+          margin: 15px 8px;
+          padding: 20px 15px;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .container {
+          margin: 1px;
+          padding: 5px;
+        }
+
+        .header h1 {
+          font-size: 1.4em;
+        }
+
+        .header p {
+          font-size: 0.85em;
+        }
+
+        .section-title {
+          font-size: 1.2em;
+        }
+
+        .command-example,
+        .command-output {
+          font-size: 0.7em;
+        }
+
+        .scroll-to-top {
+          width: 40px;
+          height: 40px;
+          font-size: 1em;
         }
       }
 
@@ -1483,36 +1702,50 @@
       }
 
       // Show/hide scroll to top button
-      window.addEventListener("scroll", function () {
-        const scrollButton = document.getElementById("scrollToTop");
-        if (window.pageYOffset > 300) {
-          scrollButton.classList.add("visible");
-        } else {
-          scrollButton.classList.remove("visible");
-        }
+      let scrollTimeout;
+      window.addEventListener(
+        "scroll",
+        function () {
+          const scrollButton = document.getElementById("scrollToTop");
+          const scrollY =
+            window.pageYOffset || document.documentElement.scrollTop;
 
-        // Highlight active section on scroll
-        const sections = document.querySelectorAll(".section");
-        const scrollPos = window.scrollY + 100;
+          // Clear previous timeout
+          clearTimeout(scrollTimeout);
 
-        sections.forEach(function (section) {
-          const top = section.offsetTop;
-          const bottom = top + section.offsetHeight;
-          const id = section.getAttribute("id");
-
-          if (scrollPos >= top && scrollPos <= bottom && id) {
-            document.querySelectorAll(".sidebar a").forEach((link) => {
-              link.classList.remove("active");
-            });
-            const activeLink = document.querySelector(
-              `.sidebar a[href="#${id}"]`
-            );
-            if (activeLink) {
-              activeLink.classList.add("active");
+          // Debounce scroll events for better performance
+          scrollTimeout = setTimeout(() => {
+            if (scrollY > 300) {
+              scrollButton.classList.add("visible");
+            } else {
+              scrollButton.classList.remove("visible");
             }
-          }
-        });
-      });
+          }, 10);
+
+          // Highlight active section on scroll
+          const sections = document.querySelectorAll(".section");
+          const scrollPos = scrollY + 100;
+
+          sections.forEach(function (section) {
+            const top = section.offsetTop;
+            const bottom = top + section.offsetHeight;
+            const id = section.getAttribute("id");
+
+            if (scrollPos >= top && scrollPos <= bottom && id) {
+              document.querySelectorAll(".sidebar a").forEach((link) => {
+                link.classList.remove("active");
+              });
+              const activeLink = document.querySelector(
+                `.sidebar a[href="#${id}"]`
+              );
+              if (activeLink) {
+                activeLink.classList.add("active");
+              }
+            }
+          });
+        },
+        { passive: true }
+      );
 
       // Smooth scrolling for anchor links
       document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
