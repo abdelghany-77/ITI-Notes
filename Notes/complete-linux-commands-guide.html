@@ -2429,16 +2429,6 @@
           closeSidebar();
         }
       });
-
-      function updateTimestamp() {
-        const now = new Date();
-        const utcString = now.toISOString().slice(0, 19).replace("T", " ");
-        const timestampElement = document.querySelector(".footer p:last-child");
-        if (timestampElement) {
-          timestampElement.innerHTML = `✨ From Linux foundations to enterprise Red Hat administration | Live: ${utcString} UTC`;
-        }
-      }
-
       setInterval(updateTimestamp, 60000);
     </script>
   </body>
