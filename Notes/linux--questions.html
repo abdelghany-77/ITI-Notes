@@ -247,6 +247,46 @@
         margin-top: 30px;
       }
 
+      /* Scroll to Top Button */
+      .scroll-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.5em;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .scroll-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .scroll-to-top:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        background: linear-gradient(135deg, #ee5a52, #e74c3c);
+      }
+
+      .scroll-to-top:active {
+        transform: translateY(-2px);
+      }
+
       @media (max-width: 768px) {
         .container {
           margin: 10px;
@@ -266,6 +306,14 @@
           align-items: flex-start;
           gap: 10px;
         }
+
+        .scroll-to-top {
+          bottom: 20px;
+          right: 20px;
+          width: 45px;
+          height: 45px;
+          font-size: 1.3em;
+        }
       }
     </style>
   </head>
@@ -275,7 +323,9 @@
         <h1>🐧 Linux System Administration</h1>
       </div>
 
-      <a href="../Notes/complete-linux-commands-guide.html" class="back-button"> ← Back to Linux Page </a>
+      <a href="../Notes/complete-linux-commands-guide.html" class="back-button">
+        ← Back to Linux Page
+      </a>
 
       <div class="exam-section">
         <div class="section-content">
@@ -354,7 +404,8 @@
               <p>
                 To display lines 6-20 (15 lines starting from line 6): First get
                 the first 20 lines with head, then get the last 15 of those with
-                tail. This gives you lines 6 through 20 (End - start +1) -> 20 - 6 + 1= 15 then head -n 20 logfile | tail -n 15.
+                tail. This gives you lines 6 through 20 (End - start +1) -> 20 -
+                6 + 1= 15 then head -n 20 logfile | tail -n 15.
               </p>
             </div>
           </div>
@@ -2551,7 +2602,55 @@
 
         // Update timestamp every minute
         setInterval(updateTimestamp, 60000);
+
+        // Scroll to Top Button Functionality
+        const scrollToTopButton = document.querySelector(".scroll-to-top");
+        let scrollTimer = null;
+
+        function handleScroll() {
+          if (scrollTimer) {
+            clearTimeout(scrollTimer);
+          }
+
+          scrollTimer = setTimeout(() => {
+            if (window.pageYOffset > 300) {
+              scrollToTopButton.classList.add("visible");
+            } else {
+              scrollToTopButton.classList.remove("visible");
+            }
+          }, 10);
+        }
+
+        function scrollToTop() {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+        }
+
+        // Add scroll event listener with passive option for better performance
+        window.addEventListener("scroll", handleScroll, { passive: true });
+
+        // Initial check for scroll position
+        handleScroll();
       });
+
+      // Global scroll to top function for button click
+      function scrollToTopGlobal() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
     </script>
+
+    <!-- Scroll to Top Button -->
+    <button
+      class="scroll-to-top"
+      onclick="scrollToTopGlobal()"
+      title="Go to top"
+    >
+      ↑
+    </button>
   </body>
 </html>
