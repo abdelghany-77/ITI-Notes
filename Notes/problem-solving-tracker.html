@@ -1,0 +1,2823 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Problem Solving Tracker</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 50%,
+          #f093fb 100%
+        );
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .back-button {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 25px;
+        cursor: pointer;
+      }
+
+      .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+      }
+
+      .leetcode-banner {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+      }
+
+      .leetcode-banner h3 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+      }
+
+      .leetcode-banner p {
+        opacity: 0.9;
+      }
+
+      .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border-top: 4px solid #667eea;
+        transition: transform 0.3s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+        color: #667eea;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9em;
+      }
+
+      .controls {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .controls-left {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+      }
+
+      .filter-btn {
+        background: #f8f9fa;
+        color: #495057;
+        border: 2px solid #dee2e6;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9em;
+      }
+
+      .filter-btn.active {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+      }
+
+      .filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-box {
+        padding: 10px 15px;
+        border: 2px solid #dee2e6;
+        border-radius: 25px;
+        font-size: 14px;
+        width: 250px;
+        transition: border-color 0.3s ease;
+      }
+
+      .search-box:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .load-problems-btn {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .load-problems-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+      }
+
+      .add-problem-btn {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .add-problem-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+      }
+
+      .problems-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .problem-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border-left: 5px solid #dee2e6;
+      }
+
+      .problem-card.solved {
+        border-left-color: #28a745;
+      }
+
+      .problem-card.unsolved {
+        border-left-color: #dc3545;
+      }
+
+      .problem-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-header {
+        padding: 20px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+      }
+
+      .card-title {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 10px;
+      }
+
+      .problem-checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        transform: scale(1.2);
+      }
+
+      .problem-name {
+        font-size: 1.2em;
+        font-weight: 600;
+        color: #2c3e50;
+        flex-grow: 1;
+      }
+
+      .difficulty-badge {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .difficulty-easy {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .difficulty-medium {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .difficulty-hard {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .problem-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        font-size: 0.9em;
+        color: #6c757d;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      .problem-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .action-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+
+      .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .expand-btn {
+        background: #f8f9fa;
+        color: #495057;
+        border: 2px solid #dee2e6;
+        padding: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-left: auto;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .expand-btn:hover {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+      }
+
+      .expanded-content {
+        display: none;
+        padding: 20px;
+        border-top: 1px solid #dee2e6;
+        background: #f8f9fa;
+      }
+
+      .expanded-content.show {
+        display: block;
+        animation: slideDown 0.3s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          max-height: 0;
+        }
+        to {
+          opacity: 1;
+          max-height: 1000px;
+        }
+      }
+
+      .code-section {
+        margin-bottom: 20px;
+      }
+
+      .section-title {
+        font-size: 1.1em;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .code-editor {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 20px;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        border: 2px solid #34495e;
+        resize: vertical;
+        min-height: 200px;
+        width: 100%;
+      }
+
+      .video-section {
+        margin-bottom: 20px;
+      }
+
+      .video-input {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .video-url-input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+
+      .video-add-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .video-container {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 56.25%;
+        margin-bottom: 15px;
+      }
+
+      .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+      }
+
+      .notes-section {
+        margin-top: 20px;
+      }
+
+      .notes-textarea {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 14px;
+        resize: vertical;
+        min-height: 120px;
+        font-family: inherit;
+      }
+
+      .save-notes-btn {
+        background: #17a2b8;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .save-notes-btn:hover {
+        background: #138496;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+      }
+
+      .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 30px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        position: relative;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+
+      .close:hover {
+        color: #000;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .form-select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 14px;
+        background: white;
+        cursor: pointer;
+      }
+
+      .form-textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 14px;
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 20px;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-save {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-cancel {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+      }
+
+      .empty-state-icon {
+        font-size: 4em;
+        margin-bottom: 20px;
+        opacity: 0.5;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          margin: 10px;
+          padding: 15px;
+        }
+
+        .header h1 {
+          font-size: 2em;
+        }
+
+        .stats-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .problems-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .controls {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .controls-left {
+          justify-content: center;
+        }
+
+        .search-box {
+          width: 100%;
+        }
+      }
+
+      .footer {
+        text-align: center;
+        padding: 30px;
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        border-radius: 12px;
+        margin-top: 30px;
+      }
+
+      .progress-bar {
+        background: #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 10px 0;
+      }
+
+      .progress-fill {
+        background: linear-gradient(90deg, #28a745, #20c997);
+        height: 8px;
+        transition: width 0.5s ease;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🧩 LeetCode Top 150 Interview Problems</h1>
+        <p>Master the Most Important Coding Interview Questions</p>
+      </div>
+
+      <a href="../index.html" class="back-button"> ← Back to Main Page </a>
+
+      <div class="leetcode-banner">
+        <h3>🎯 LeetCode Top Interview 150</h3>
+        <p>
+          Curated collection of must-know problems for technical interviews at
+          top companies
+        </p>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        <p id="progress-text">0 of 150 problems solved (0%)</p>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-card">
+          <span class="stat-number" id="total-problems">150</span>
+          <span class="stat-label">Total Problems</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="solved-problems">0</span>
+          <span class="stat-label">Solved Problems</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="success-rate">0%</span>
+          <span class="stat-label">Success Rate</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="streak-count">0</span>
+          <span class="stat-label">Current Streak</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="controls-left">
+          <button class="filter-btn active" data-filter="all">
+            All Problems
+          </button>
+          <button class="filter-btn" data-filter="solved">Solved</button>
+          <button class="filter-btn" data-filter="unsolved">Unsolved</button>
+          <button class="filter-btn" data-filter="easy">Easy</button>
+          <button class="filter-btn" data-filter="medium">Medium</button>
+          <button class="filter-btn" data-filter="hard">Hard</button>
+          <input
+            type="text"
+            class="search-box"
+            placeholder="Search problems..."
+            id="search-input"
+          />
+        </div>
+        <div style="display: flex; gap: 10px">
+          <button class="load-problems-btn" onclick="loadTop150Problems()">
+            🔄 Reset to LeetCode 150
+          </button>
+          <button class="add-problem-btn" onclick="openAddModal()">
+            ➕ Add Custom Problem
+          </button>
+        </div>
+      </div>
+
+      <div class="problems-grid" id="problems-grid">
+        <!-- Problems will be dynamically added here -->
+      </div>
+
+      <div class="empty-state" id="empty-state" style="display: none">
+        <div class="empty-state-icon">🔍</div>
+        <h3>No Problems Found</h3>
+        <p>Adjust your filters or search criteria</p>
+      </div>
+
+      <div class="footer">
+        <p style="margin-top: 10px"><strong>Created By:</strong> Abdelghany</p>
+      </div>
+    </div>
+
+    <!-- Add Problem Modal -->
+    <div id="addModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeAddModal()">&times;</span>
+        <h2>➕ Add Custom Problem</h2>
+        <form id="addProblemForm">
+          <div class="form-group">
+            <label class="form-label">Problem Name *</label>
+            <input
+              type="text"
+              class="form-input"
+              id="problemName"
+              required
+              placeholder="e.g., Two Sum, Binary Search, etc."
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Difficulty *</label>
+            <select class="form-select" id="problemDifficulty" required>
+              <option value="">Select Difficulty</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Platform</label>
+            <input
+              type="text"
+              class="form-input"
+              id="problemPlatform"
+              placeholder="e.g., LeetCode, HackerRank, CodeForces"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Problem URL</label>
+            <input
+              type="url"
+              class="form-input"
+              id="problemUrl"
+              placeholder="https://leetcode.com/problems/..."
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tags (comma-separated)</label>
+            <input
+              type="text"
+              class="form-input"
+              id="problemTags"
+              placeholder="array, hash-table, two-pointers"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea
+              class="form-textarea"
+              id="problemDescription"
+              placeholder="Brief description of the problem..."
+            ></textarea>
+          </div>
+
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-cancel"
+              onclick="closeAddModal()"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-save">Add Problem</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // LeetCode Top 150 Interview Problems Data
+      const top150Problems = [
+        // Array / String
+        {
+          name: "Merge Sorted Array",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/merge-sorted-array/",
+          tags: ["array", "two-pointers", "sorting"],
+          description: "Merge two sorted arrays in-place.",
+        },
+        {
+          name: "Remove Element",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/remove-element/",
+          tags: ["array", "two-pointers"],
+          description: "Remove all instances of a value from array in-place.",
+        },
+        {
+          name: "Remove Duplicates from Sorted Array",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/remove-duplicates-from-sorted-array/",
+          tags: ["array", "two-pointers"],
+          description: "Remove duplicates from sorted array in-place.",
+        },
+        {
+          name: "Remove Duplicates from Sorted Array II",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/",
+          tags: ["array", "two-pointers"],
+          description:
+            "Remove duplicates from sorted array, keeping at most 2 duplicates.",
+        },
+        {
+          name: "Majority Element",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/majority-element/",
+          tags: ["array", "hash-table", "divide-and-conquer"],
+          description: "Find the majority element in an array.",
+        },
+        {
+          name: "Rotate Array",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/rotate-array/",
+          tags: ["array", "math", "two-pointers"],
+          description: "Rotate array to the right by k steps.",
+        },
+        {
+          name: "Best Time to Buy and Sell Stock",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
+          tags: ["array", "dynamic-programming"],
+          description: "Find maximum profit from one transaction.",
+        },
+        {
+          name: "Best Time to Buy and Sell Stock II",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/",
+          tags: ["array", "dynamic-programming", "greedy"],
+          description: "Find maximum profit from multiple transactions.",
+        },
+        {
+          name: "Jump Game",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/jump-game/",
+          tags: ["array", "dynamic-programming", "greedy"],
+          description: "Determine if you can reach the last index.",
+        },
+        {
+          name: "Jump Game II",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/jump-game-ii/",
+          tags: ["array", "dynamic-programming", "greedy"],
+          description: "Find minimum jumps to reach the last index.",
+        },
+        {
+          name: "H-Index",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/h-index/",
+          tags: ["array", "sorting", "counting-sort"],
+          description: "Calculate the H-Index of a researcher.",
+        },
+        {
+          name: "Insert Delete GetRandom O(1)",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/insert-delete-getrandom-o1/",
+          tags: ["array", "hash-table", "math", "randomized"],
+          description: "Design a data structure with O(1) operations.",
+        },
+        {
+          name: "Product of Array Except Self",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/product-of-array-except-self/",
+          tags: ["array", "prefix-sum"],
+          description:
+            "Calculate product of array except self without division.",
+        },
+        {
+          name: "Gas Station",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/gas-station/",
+          tags: ["array", "greedy"],
+          description: "Find starting gas station to complete circular tour.",
+        },
+        {
+          name: "Candy",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/candy/",
+          tags: ["array", "greedy"],
+          description: "Minimum candy distribution with rating constraints.",
+        },
+        {
+          name: "Trapping Rain Water",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/trapping-rain-water/",
+          tags: ["array", "two-pointers", "dynamic-programming", "stack"],
+          description: "Calculate trapped rainwater.",
+        },
+        {
+          name: "Roman to Integer",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/roman-to-integer/",
+          tags: ["hash-table", "math", "string"],
+          description: "Convert Roman numeral to integer.",
+        },
+        {
+          name: "Integer to Roman",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/integer-to-roman/",
+          tags: ["hash-table", "math", "string"],
+          description: "Convert integer to Roman numeral.",
+        },
+        {
+          name: "Length of Last Word",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/length-of-last-word/",
+          tags: ["string"],
+          description: "Find length of the last word.",
+        },
+        {
+          name: "Longest Common Prefix",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/longest-common-prefix/",
+          tags: ["string"],
+          description: "Find longest common prefix among strings.",
+        },
+        {
+          name: "Reverse Words in a String",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/reverse-words-in-a-string/",
+          tags: ["two-pointers", "string"],
+          description: "Reverse the order of words in a string.",
+        },
+        {
+          name: "Zigzag Conversion",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/zigzag-conversion/",
+          tags: ["string"],
+          description: "Convert string to zigzag pattern.",
+        },
+        {
+          name: "Find the Index of the First Occurrence in a String",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/",
+          tags: ["two-pointers", "string", "string-matching"],
+          description: "Implement strStr() function.",
+        },
+        {
+          name: "Text Justification",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/text-justification/",
+          tags: ["array", "string", "simulation"],
+          description: "Format text with full justification.",
+        },
+
+        // Two Pointers
+        {
+          name: "Valid Palindrome",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/valid-palindrome/",
+          tags: ["two-pointers", "string"],
+          description: "Check if string is a valid palindrome.",
+        },
+        {
+          name: "Is Subsequence",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/is-subsequence/",
+          tags: ["two-pointers", "string", "dynamic-programming"],
+          description: "Check if s is subsequence of t.",
+        },
+        {
+          name: "Two Sum II - Input Array Is Sorted",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
+          tags: ["array", "two-pointers", "binary-search"],
+          description:
+            "Find two numbers that add up to target in sorted array.",
+        },
+        {
+          name: "Container With Most Water",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/container-with-most-water/",
+          tags: ["array", "two-pointers", "greedy"],
+          description: "Find container that holds the most water.",
+        },
+        {
+          name: "3Sum",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/3sum/",
+          tags: ["array", "two-pointers", "sorting"],
+          description: "Find all unique triplets that sum to zero.",
+        },
+
+        // Sliding Window
+        {
+          name: "Minimum Window Substring",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/minimum-window-substring/",
+          tags: ["hash-table", "string", "sliding-window"],
+          description:
+            "Find minimum window substring containing all characters.",
+        },
+        {
+          name: "Substring with Concatenation of All Words",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/substring-with-concatenation-of-all-words/",
+          tags: ["hash-table", "string", "sliding-window"],
+          description: "Find all starting indices of concatenated substrings.",
+        },
+        {
+          name: "Minimum Size Subarray Sum",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/minimum-size-subarray-sum/",
+          tags: ["array", "binary-search", "sliding-window", "prefix-sum"],
+          description: "Find minimum length subarray with sum >= target.",
+        },
+        {
+          name: "Longest Substring Without Repeating Characters",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+          tags: ["hash-table", "string", "sliding-window"],
+          description:
+            "Find length of longest substring without repeating characters.",
+        },
+
+        // Matrix
+        {
+          name: "Valid Sudoku",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/valid-sudoku/",
+          tags: ["array", "hash-table", "matrix"],
+          description: "Determine if 9x9 Sudoku board is valid.",
+        },
+        {
+          name: "Spiral Matrix",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/spiral-matrix/",
+          tags: ["array", "matrix", "simulation"],
+          description: "Return matrix elements in spiral order.",
+        },
+        {
+          name: "Rotate Image",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/rotate-image/",
+          tags: ["array", "math", "matrix"],
+          description: "Rotate matrix 90 degrees clockwise in-place.",
+        },
+        {
+          name: "Set Matrix Zeroes",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/set-matrix-zeroes/",
+          tags: ["array", "hash-table", "matrix"],
+          description: "Set entire row and column to zero if element is zero.",
+        },
+        {
+          name: "Game of Life",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/game-of-life/",
+          tags: ["array", "matrix", "simulation"],
+          description: "Compute next state according to Conway's Game of Life.",
+        },
+
+        // Hashmap
+        {
+          name: "Ransom Note",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/ransom-note/",
+          tags: ["hash-table", "string", "counting"],
+          description: "Check if ransom note can be constructed from magazine.",
+        },
+        {
+          name: "Isomorphic Strings",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/isomorphic-strings/",
+          tags: ["hash-table", "string"],
+          description: "Check if two strings are isomorphic.",
+        },
+        {
+          name: "Word Pattern",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/word-pattern/",
+          tags: ["hash-table", "string"],
+          description: "Check if string follows the same pattern.",
+        },
+        {
+          name: "Valid Anagram",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/valid-anagram/",
+          tags: ["hash-table", "string", "sorting"],
+          description: "Check if two strings are anagrams.",
+        },
+        {
+          name: "Group Anagrams",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/group-anagrams/",
+          tags: ["array", "hash-table", "string", "sorting"],
+          description: "Group anagrams together.",
+        },
+        {
+          name: "Two Sum",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/two-sum/",
+          tags: ["array", "hash-table"],
+          description: "Find two numbers that add up to target.",
+        },
+        {
+          name: "Happy Number",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/happy-number/",
+          tags: ["hash-table", "math", "two-pointers"],
+          description: "Determine if number is happy.",
+        },
+        {
+          name: "Contains Duplicate II",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/contains-duplicate-ii/",
+          tags: ["array", "hash-table", "sliding-window"],
+          description: "Check if array contains nearby duplicates.",
+        },
+        {
+          name: "Longest Consecutive Sequence",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/longest-consecutive-sequence/",
+          tags: ["array", "hash-table", "union-find"],
+          description: "Find length of longest consecutive sequence.",
+        },
+
+        // Intervals
+        {
+          name: "Summary Ranges",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/summary-ranges/",
+          tags: ["array"],
+          description: "Return summary of ranges in sorted array.",
+        },
+        {
+          name: "Merge Intervals",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/merge-intervals/",
+          tags: ["array", "sorting"],
+          description: "Merge overlapping intervals.",
+        },
+        {
+          name: "Insert Interval",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/insert-interval/",
+          tags: ["array"],
+          description: "Insert interval into sorted non-overlapping intervals.",
+        },
+        {
+          name: "Minimum Number of Arrows to Burst Balloons",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/",
+          tags: ["array", "greedy", "sorting"],
+          description: "Find minimum arrows to burst all balloons.",
+        },
+
+        // Stack
+        {
+          name: "Valid Parentheses",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/valid-parentheses/",
+          tags: ["string", "stack"],
+          description: "Check if parentheses are valid.",
+        },
+        {
+          name: "Simplify Path",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/simplify-path/",
+          tags: ["string", "stack"],
+          description: "Simplify Unix file path.",
+        },
+        {
+          name: "Min Stack",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/min-stack/",
+          tags: ["stack", "design"],
+          description: "Design stack with getMin() in O(1).",
+        },
+        {
+          name: "Evaluate Reverse Polish Notation",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/evaluate-reverse-polish-notation/",
+          tags: ["array", "math", "stack"],
+          description: "Evaluate arithmetic expression in RPN.",
+        },
+        {
+          name: "Basic Calculator",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/basic-calculator/",
+          tags: ["math", "string", "stack"],
+          description: "Implement basic calculator.",
+        },
+
+        // Linked List
+        {
+          name: "Linked List Cycle",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/linked-list-cycle/",
+          tags: ["hash-table", "linked-list", "two-pointers"],
+          description: "Detect cycle in linked list.",
+        },
+        {
+          name: "Add Two Numbers",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/add-two-numbers/",
+          tags: ["linked-list", "math", "recursion"],
+          description: "Add two numbers represented as linked lists.",
+        },
+        {
+          name: "Merge Two Sorted Lists",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/merge-two-sorted-lists/",
+          tags: ["linked-list", "recursion"],
+          description: "Merge two sorted linked lists.",
+        },
+        {
+          name: "Copy List with Random Pointer",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/copy-list-with-random-pointer/",
+          tags: ["hash-table", "linked-list"],
+          description: "Deep copy linked list with random pointers.",
+        },
+        {
+          name: "Reverse Linked List II",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/reverse-linked-list-ii/",
+          tags: ["linked-list"],
+          description: "Reverse linked list from position m to n.",
+        },
+        {
+          name: "Reverse Nodes in k-Group",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/reverse-nodes-in-k-group/",
+          tags: ["linked-list", "recursion"],
+          description: "Reverse nodes in groups of k.",
+        },
+        {
+          name: "Remove Nth Node From End of List",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
+          tags: ["linked-list", "two-pointers"],
+          description: "Remove nth node from end of list.",
+        },
+        {
+          name: "Remove Duplicates from Sorted List II",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/",
+          tags: ["linked-list", "two-pointers"],
+          description: "Remove all duplicates from sorted list.",
+        },
+        {
+          name: "Rotate List",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/rotate-list/",
+          tags: ["linked-list", "two-pointers"],
+          description: "Rotate list to the right by k places.",
+        },
+        {
+          name: "Partition List",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/partition-list/",
+          tags: ["linked-list", "two-pointers"],
+          description: "Partition list around value x.",
+        },
+        {
+          name: "LRU Cache",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/lru-cache/",
+          tags: ["hash-table", "linked-list", "design"],
+          description: "Design LRU cache data structure.",
+        },
+
+        // Binary Tree General
+        {
+          name: "Maximum Depth of Binary Tree",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
+          tags: [
+            "tree",
+            "depth-first-search",
+            "breadth-first-search",
+            "binary-tree",
+          ],
+          description: "Find maximum depth of binary tree.",
+        },
+        {
+          name: "Same Tree",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/same-tree/",
+          tags: [
+            "tree",
+            "depth-first-search",
+            "breadth-first-search",
+            "binary-tree",
+          ],
+          description: "Check if two trees are the same.",
+        },
+        {
+          name: "Invert Binary Tree",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/invert-binary-tree/",
+          tags: [
+            "tree",
+            "depth-first-search",
+            "breadth-first-search",
+            "binary-tree",
+          ],
+          description: "Invert a binary tree.",
+        },
+        {
+          name: "Symmetric Tree",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/symmetric-tree/",
+          tags: [
+            "tree",
+            "depth-first-search",
+            "breadth-first-search",
+            "binary-tree",
+          ],
+          description: "Check if tree is symmetric.",
+        },
+        {
+          name: "Construct Binary Tree from Preorder and Inorder Traversal",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/",
+          tags: [
+            "array",
+            "hash-table",
+            "divide-and-conquer",
+            "tree",
+            "binary-tree",
+          ],
+          description: "Build tree from preorder and inorder traversals.",
+        },
+        {
+          name: "Construct Binary Tree from Inorder and Postorder Traversal",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/",
+          tags: [
+            "array",
+            "hash-table",
+            "divide-and-conquer",
+            "tree",
+            "binary-tree",
+          ],
+          description: "Build tree from inorder and postorder traversals.",
+        },
+        {
+          name: "Populating Next Right Pointers in Each Node II",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/",
+          tags: [
+            "linked-list",
+            "tree",
+            "depth-first-search",
+            "breadth-first-search",
+            "binary-tree",
+          ],
+          description: "Populate next right pointers in each node.",
+        },
+        {
+          name: "Flatten Binary Tree to Linked List",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/flatten-binary-tree-to-linked-list/",
+          tags: [
+            "linked-list",
+            "stack",
+            "tree",
+            "depth-first-search",
+            "binary-tree",
+          ],
+          description: "Flatten binary tree to linked list in-place.",
+        },
+        {
+          name: "Path Sum",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/path-sum/",
+          tags: [
+            "tree",
+            "depth-first-search",
+            "breadth-first-search",
+            "binary-tree",
+          ],
+          description: "Check if tree has root-to-leaf path with given sum.",
+        },
+        {
+          name: "Sum Root to Leaf Numbers",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/sum-root-to-leaf-numbers/",
+          tags: ["tree", "depth-first-search", "binary-tree"],
+          description: "Sum all root-to-leaf numbers.",
+        },
+        {
+          name: "Binary Tree Maximum Path Sum",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/binary-tree-maximum-path-sum/",
+          tags: [
+            "dynamic-programming",
+            "tree",
+            "depth-first-search",
+            "binary-tree",
+          ],
+          description: "Find maximum path sum in binary tree.",
+        },
+        {
+          name: "Binary Search Tree Iterator",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/binary-search-tree-iterator/",
+          tags: [
+            "stack",
+            "tree",
+            "design",
+            "binary-search-tree",
+            "binary-tree",
+            "iterator",
+          ],
+          description: "Implement BST iterator.",
+        },
+        {
+          name: "Count Complete Tree Nodes",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/count-complete-tree-nodes/",
+          tags: ["binary-search", "bit-manipulation", "tree", "binary-tree"],
+          description: "Count nodes in complete binary tree.",
+        },
+        {
+          name: "Lowest Common Ancestor of a Binary Tree",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",
+          tags: ["tree", "depth-first-search", "binary-tree"],
+          description: "Find LCA of two nodes in binary tree.",
+        },
+
+        // Binary Tree BFS
+        {
+          name: "Binary Tree Right Side View",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/binary-tree-right-side-view/",
+          tags: [
+            "tree",
+            "depth-first-search",
+            "breadth-first-search",
+            "binary-tree",
+          ],
+          description: "Return right side view of binary tree.",
+        },
+        {
+          name: "Average of Levels in Binary Tree",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/average-of-levels-in-binary-tree/",
+          tags: [
+            "tree",
+            "depth-first-search",
+            "breadth-first-search",
+            "binary-tree",
+          ],
+          description: "Find average value of nodes on each level.",
+        },
+        {
+          name: "Binary Tree Level Order Traversal",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/binary-tree-level-order-traversal/",
+          tags: ["tree", "breadth-first-search", "binary-tree"],
+          description: "Return level order traversal of binary tree.",
+        },
+        {
+          name: "Binary Tree Zigzag Level Order Traversal",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/",
+          tags: ["tree", "breadth-first-search", "binary-tree"],
+          description: "Return zigzag level order traversal.",
+        },
+
+        // Binary Search Tree
+        {
+          name: "Minimum Absolute Difference in BST",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/minimum-absolute-difference-in-bst/",
+          tags: [
+            "tree",
+            "depth-first-search",
+            "breadth-first-search",
+            "binary-search-tree",
+            "binary-tree",
+          ],
+          description:
+            "Find minimum absolute difference between BST node values.",
+        },
+        {
+          name: "Kth Smallest Element in a BST",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/kth-smallest-element-in-a-bst/",
+          tags: [
+            "tree",
+            "depth-first-search",
+            "binary-search-tree",
+            "binary-tree",
+          ],
+          description: "Find kth smallest element in BST.",
+        },
+        {
+          name: "Validate Binary Search Tree",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/validate-binary-search-tree/",
+          tags: [
+            "tree",
+            "depth-first-search",
+            "binary-search-tree",
+            "binary-tree",
+          ],
+          description: "Validate if tree is a valid BST.",
+        },
+
+        // Graph General
+        {
+          name: "Number of Islands",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/number-of-islands/",
+          tags: [
+            "array",
+            "depth-first-search",
+            "breadth-first-search",
+            "union-find",
+            "matrix",
+          ],
+          description: "Count number of islands in 2D grid.",
+        },
+        {
+          name: "Surrounded Regions",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/surrounded-regions/",
+          tags: [
+            "array",
+            "depth-first-search",
+            "breadth-first-search",
+            "union-find",
+            "matrix",
+          ],
+          description: "Capture surrounded regions on board.",
+        },
+        {
+          name: "Clone Graph",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/clone-graph/",
+          tags: [
+            "hash-table",
+            "depth-first-search",
+            "breadth-first-search",
+            "graph",
+          ],
+          description: "Clone an undirected graph.",
+        },
+        {
+          name: "Evaluate Division",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/evaluate-division/",
+          tags: [
+            "array",
+            "depth-first-search",
+            "breadth-first-search",
+            "union-find",
+            "graph",
+            "shortest-path",
+          ],
+          description: "Evaluate division equations.",
+        },
+        {
+          name: "Course Schedule",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/course-schedule/",
+          tags: [
+            "depth-first-search",
+            "breadth-first-search",
+            "graph",
+            "topological-sort",
+          ],
+          description: "Determine if you can finish all courses.",
+        },
+        {
+          name: "Course Schedule II",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/course-schedule-ii/",
+          tags: [
+            "depth-first-search",
+            "breadth-first-search",
+            "graph",
+            "topological-sort",
+          ],
+          description: "Find order to finish all courses.",
+        },
+
+        // Graph BFS
+        {
+          name: "Snakes and Ladders",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/snakes-and-ladders/",
+          tags: ["array", "breadth-first-search", "matrix"],
+          description: "Find minimum moves to reach end of board.",
+        },
+        {
+          name: "Minimum Genetic Mutation",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/minimum-genetic-mutation/",
+          tags: ["hash-table", "string", "breadth-first-search"],
+          description: "Find minimum mutations from start to end gene.",
+        },
+        {
+          name: "Word Ladder",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/word-ladder/",
+          tags: ["hash-table", "string", "breadth-first-search"],
+          description: "Find shortest transformation sequence.",
+        },
+
+        // Trie
+        {
+          name: "Implement Trie (Prefix Tree)",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/implement-trie-prefix-tree/",
+          tags: ["hash-table", "string", "design", "trie"],
+          description: "Implement trie data structure.",
+        },
+        {
+          name: "Design Add and Search Words Data Structure",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/design-add-and-search-words-data-structure/",
+          tags: ["string", "depth-first-search", "design", "trie"],
+          description: "Design data structure for add and search words.",
+        },
+        {
+          name: "Word Search II",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/word-search-ii/",
+          tags: ["array", "string", "backtracking", "trie", "matrix"],
+          description: "Find all words in 2D board.",
+        },
+
+        // Backtracking
+        {
+          name: "Letter Combinations of a Phone Number",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/letter-combinations-of-a-phone-number/",
+          tags: ["hash-table", "string", "backtracking"],
+          description: "Generate letter combinations from phone number.",
+        },
+        {
+          name: "Generate Parentheses",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/generate-parentheses/",
+          tags: ["string", "dynamic-programming", "backtracking"],
+          description: "Generate all valid parentheses combinations.",
+        },
+        {
+          name: "Word Search",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/word-search/",
+          tags: ["array", "backtracking", "matrix"],
+          description: "Search for word in 2D board.",
+        },
+        {
+          name: "Combinations",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/combinations/",
+          tags: ["backtracking"],
+          description: "Generate all combinations of k numbers.",
+        },
+        {
+          name: "Permutations",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/permutations/",
+          tags: ["array", "backtracking"],
+          description: "Generate all permutations of array.",
+        },
+        {
+          name: "Combination Sum",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/combination-sum/",
+          tags: ["array", "backtracking"],
+          description: "Find combinations that sum to target.",
+        },
+        {
+          name: "N-Queens II",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/n-queens-ii/",
+          tags: ["backtracking"],
+          description: "Count solutions to N-Queens problem.",
+        },
+        {
+          name: "Sudoku Solver",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/sudoku-solver/",
+          tags: ["array", "backtracking", "matrix"],
+          description: "Solve Sudoku puzzle.",
+        },
+        {
+          name: "Palindrome Partitioning",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/palindrome-partitioning/",
+          tags: ["string", "dynamic-programming", "backtracking"],
+          description: "Partition string into palindromic substrings.",
+        },
+
+        // Divide & Conquer
+        {
+          name: "Convert Sorted Array to Binary Search Tree",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/",
+          tags: [
+            "array",
+            "divide-and-conquer",
+            "tree",
+            "binary-search-tree",
+            "binary-tree",
+          ],
+          description: "Convert sorted array to height-balanced BST.",
+        },
+        {
+          name: "Sort List",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/sort-list/",
+          tags: [
+            "linked-list",
+            "two-pointers",
+            "divide-and-conquer",
+            "sorting",
+            "merge-sort",
+          ],
+          description: "Sort linked list in O(n log n) time.",
+        },
+        {
+          name: "Merge k Sorted Lists",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/merge-k-sorted-lists/",
+          tags: [
+            "linked-list",
+            "divide-and-conquer",
+            "heap-priority-queue",
+            "merge-sort",
+          ],
+          description: "Merge k sorted linked lists.",
+        },
+
+        // Kadane's Algorithm
+        {
+          name: "Maximum Subarray",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/maximum-subarray/",
+          tags: ["array", "divide-and-conquer", "dynamic-programming"],
+          description: "Find maximum sum subarray.",
+        },
+        {
+          name: "Maximum Sum Circular Subarray",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/maximum-sum-circular-subarray/",
+          tags: [
+            "array",
+            "divide-and-conquer",
+            "dynamic-programming",
+            "queue",
+            "monotonic-queue",
+          ],
+          description: "Find maximum sum of circular subarray.",
+        },
+
+        // Binary Search
+        {
+          name: "Search Insert Position",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/search-insert-position/",
+          tags: ["array", "binary-search"],
+          description: "Find position to insert target in sorted array.",
+        },
+        {
+          name: "Search a 2D Matrix",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/search-a-2d-matrix/",
+          tags: ["array", "binary-search", "matrix"],
+          description: "Search for target in 2D matrix.",
+        },
+        {
+          name: "Find Peak Element",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/find-peak-element/",
+          tags: ["array", "binary-search"],
+          description: "Find peak element in array.",
+        },
+        {
+          name: "Search in Rotated Sorted Array",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+          tags: ["array", "binary-search"],
+          description: "Search in rotated sorted array.",
+        },
+        {
+          name: "Find First and Last Position of Element in Sorted Array",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/",
+          tags: ["array", "binary-search"],
+          description: "Find first and last position of target.",
+        },
+        {
+          name: "Find Minimum in Rotated Sorted Array",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+          tags: ["array", "binary-search"],
+          description: "Find minimum in rotated sorted array.",
+        },
+        {
+          name: "Median of Two Sorted Arrays",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/median-of-two-sorted-arrays/",
+          tags: ["array", "binary-search", "divide-and-conquer"],
+          description: "Find median of two sorted arrays.",
+        },
+
+        // Heap
+        {
+          name: "Kth Largest Element in an Array",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+          tags: [
+            "array",
+            "divide-and-conquer",
+            "sorting",
+            "heap-priority-queue",
+            "quickselect",
+          ],
+          description: "Find kth largest element in array.",
+        },
+        {
+          name: "IPO",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/ipo/",
+          tags: ["array", "greedy", "sorting", "heap-priority-queue"],
+          description: "Maximize capital for IPO.",
+        },
+        {
+          name: "Find K Pairs with Smallest Sums",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/find-k-pairs-with-smallest-sums/",
+          tags: ["array", "heap-priority-queue"],
+          description: "Find k pairs with smallest sums.",
+        },
+        {
+          name: "Find Median from Data Stream",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/find-median-from-data-stream/",
+          tags: [
+            "two-pointers",
+            "design",
+            "sorting",
+            "heap-priority-queue",
+            "data-stream",
+          ],
+          description: "Find median from data stream.",
+        },
+
+        // Bit Manipulation
+        {
+          name: "Add Binary",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/add-binary/",
+          tags: ["math", "string", "bit-manipulation", "simulation"],
+          description: "Add two binary strings.",
+        },
+        {
+          name: "Reverse Bits",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/reverse-bits/",
+          tags: ["divide-and-conquer", "bit-manipulation"],
+          description: "Reverse bits of 32-bit unsigned integer.",
+        },
+        {
+          name: "Number of 1 Bits",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/number-of-1-bits/",
+          tags: ["divide-and-conquer", "bit-manipulation"],
+          description: "Count number of 1 bits.",
+        },
+        {
+          name: "Single Number",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/single-number/",
+          tags: ["array", "bit-manipulation"],
+          description: "Find single number in array.",
+        },
+        {
+          name: "Single Number II",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/single-number-ii/",
+          tags: ["array", "bit-manipulation"],
+          description: "Find single number that appears once.",
+        },
+        {
+          name: "Bitwise AND of Numbers Range",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/bitwise-and-of-numbers-range/",
+          tags: ["bit-manipulation"],
+          description: "Find bitwise AND of range of numbers.",
+        },
+
+        // Math
+        {
+          name: "Palindrome Number",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/palindrome-number/",
+          tags: ["math"],
+          description: "Determine if integer is palindrome.",
+        },
+        {
+          name: "Plus One",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/plus-one/",
+          tags: ["array", "math"],
+          description: "Add one to number represented as array.",
+        },
+        {
+          name: "Factorial Trailing Zeroes",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/factorial-trailing-zeroes/",
+          tags: ["math"],
+          description: "Count trailing zeroes in n factorial.",
+        },
+        {
+          name: "Sqrt(x)",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/sqrtx/",
+          tags: ["math", "binary-search"],
+          description: "Compute and return square root of x.",
+        },
+        {
+          name: "Pow(x, n)",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/powx-n/",
+          tags: ["math", "recursion"],
+          description: "Implement pow(x, n).",
+        },
+        {
+          name: "Max Points on a Line",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/max-points-on-a-line/",
+          tags: ["array", "hash-table", "math", "geometry"],
+          description: "Find maximum points on same line.",
+        },
+
+        // 1D DP
+        {
+          name: "Climbing Stairs",
+          difficulty: "easy",
+          url: "https://leetcode.com/problems/climbing-stairs/",
+          tags: ["math", "dynamic-programming", "memoization"],
+          description: "Count ways to climb stairs.",
+        },
+        {
+          name: "House Robber",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/house-robber/",
+          tags: ["array", "dynamic-programming"],
+          description: "Rob houses without robbing adjacent ones.",
+        },
+        {
+          name: "Word Break",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/word-break/",
+          tags: [
+            "hash-table",
+            "string",
+            "dynamic-programming",
+            "trie",
+            "memoization",
+          ],
+          description: "Check if string can be segmented using dictionary.",
+        },
+        {
+          name: "Coin Change",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/coin-change/",
+          tags: ["array", "dynamic-programming", "breadth-first-search"],
+          description: "Find minimum coins to make amount.",
+        },
+        {
+          name: "Longest Increasing Subsequence",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/longest-increasing-subsequence/",
+          tags: ["array", "binary-search", "dynamic-programming"],
+          description: "Find length of longest increasing subsequence.",
+        },
+
+        // Multidimensional DP
+        {
+          name: "Triangle",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/triangle/",
+          tags: ["array", "dynamic-programming"],
+          description: "Find minimum path sum from top to bottom of triangle.",
+        },
+        {
+          name: "Minimum Path Sum",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/minimum-path-sum/",
+          tags: ["array", "dynamic-programming", "matrix"],
+          description: "Find minimum path sum from top-left to bottom-right.",
+        },
+        {
+          name: "Unique Paths II",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/unique-paths-ii/",
+          tags: ["array", "dynamic-programming", "matrix"],
+          description: "Find unique paths with obstacles.",
+        },
+        {
+          name: "Longest Palindromic Substring",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/longest-palindromic-substring/",
+          tags: ["string", "dynamic-programming"],
+          description: "Find longest palindromic substring.",
+        },
+        {
+          name: "Interleaving String",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/interleaving-string/",
+          tags: ["string", "dynamic-programming"],
+          description: "Check if s3 is interleaving of s1 and s2.",
+        },
+        {
+          name: "Edit Distance",
+          difficulty: "medium",
+          url: "https://leetcode.com/problems/edit-distance/",
+          tags: ["string", "dynamic-programming"],
+          description: "Find minimum operations to convert word1 to word2.",
+        },
+        {
+          name: "Best Time to Buy and Sell Stock III",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/",
+          tags: ["array", "dynamic-programming"],
+          description: "Maximum profit with at most 2 transactions.",
+        },
+        {
+          name: "Best Time to Buy and Sell Stock IV",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/",
+          tags: ["array", "dynamic-programming"],
+          description: "Maximum profit with at most k transactions.",
+        },
+        {
+          name: "Maximal Rectangle",
+          difficulty: "hard",
+          url: "https://leetcode.com/problems/maximal-rectangle/",
+          tags: [
+            "array",
+            "dynamic-programming",
+            "stack",
+            "matrix",
+            "monotonic-stack",
+          ],
+          description: "Find largest rectangle in binary matrix.",
+        },
+      ];
+
+      let problems = [];
+      let filteredProblems = [];
+
+      // Initialize the app
+      document.addEventListener("DOMContentLoaded", function () {
+        loadProblemsFromStorage();
+        renderProblems();
+        updateStats();
+        initializeEventListeners();
+      });
+
+      function loadProblemsFromStorage() {
+        const stored = localStorage.getItem("leetcode150Problems");
+        if (stored) {
+          problems = JSON.parse(stored);
+        } else {
+          loadTop150Problems();
+        }
+        filteredProblems = [...problems];
+      }
+
+      function loadTop150Problems() {
+        problems = top150Problems.map((problem) => ({
+          id: generateId(),
+          name: problem.name,
+          difficulty: problem.difficulty,
+          platform: "LeetCode",
+          url: problem.url,
+          tags: problem.tags,
+          description: problem.description,
+          solved: false,
+          code: "",
+          notes: "",
+          videos: [],
+          dateAdded: new Date().toISOString(),
+          dateSolved: null,
+        }));
+
+        saveProblems();
+        filteredProblems = [...problems];
+        renderProblems();
+        updateStats();
+      }
+
+      function initializeEventListeners() {
+        // Filter buttons
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            document
+              .querySelectorAll(".filter-btn")
+              .forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+            filterProblems(this.dataset.filter);
+          });
+        });
+
+        // Search input
+        document
+          .getElementById("search-input")
+          .addEventListener("input", function () {
+            searchProblems(this.value);
+          });
+
+        // Form submission
+        document
+          .getElementById("addProblemForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            addProblem();
+          });
+
+        // Close modal when clicking outside
+        window.addEventListener("click", function (e) {
+          if (e.target === document.getElementById("addModal")) {
+            closeAddModal();
+          }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener("keydown", function (e) {
+          if (e.ctrlKey || e.metaKey) {
+            switch (e.key) {
+              case "n":
+                e.preventDefault();
+                openAddModal();
+                break;
+              case "f":
+                e.preventDefault();
+                document.getElementById("search-input").focus();
+                break;
+              case "r":
+                e.preventDefault();
+                loadTop150Problems();
+                break;
+            }
+          }
+        });
+      }
+
+      function generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+      }
+
+      function addProblem() {
+        const problem = {
+          id: generateId(),
+          name: document.getElementById("problemName").value,
+          difficulty: document.getElementById("problemDifficulty").value,
+          platform:
+            document.getElementById("problemPlatform").value || "Custom",
+          url: document.getElementById("problemUrl").value,
+          tags: document
+            .getElementById("problemTags")
+            .value.split(",")
+            .map((tag) => tag.trim())
+            .filter((tag) => tag),
+          description: document.getElementById("problemDescription").value,
+          solved: false,
+          code: "",
+          notes: "",
+          videos: [],
+          dateAdded: new Date().toISOString(),
+          dateSolved: null,
+        };
+
+        problems.push(problem);
+        saveProblems();
+        filterProblems(
+          document.querySelector(".filter-btn.active").dataset.filter
+        );
+        updateStats();
+        closeAddModal();
+
+        // Reset form
+        document.getElementById("addProblemForm").reset();
+
+        // Show success message
+        showNotification("Problem added successfully!", "success");
+      }
+
+      function saveProblems() {
+        localStorage.setItem("leetcode150Problems", JSON.stringify(problems));
+      }
+
+      function deleteProblem(id) {
+        if (confirm("Are you sure you want to delete this problem?")) {
+          problems = problems.filter((p) => p.id !== id);
+          saveProblems();
+          filterProblems(
+            document.querySelector(".filter-btn.active").dataset.filter
+          );
+          updateStats();
+          showNotification("Problem deleted successfully!", "info");
+        }
+      }
+
+      function toggleSolved(id) {
+        const problem = problems.find((p) => p.id === id);
+        if (problem) {
+          problem.solved = !problem.solved;
+          problem.dateSolved = problem.solved ? new Date().toISOString() : null;
+          saveProblems();
+          filterProblems(
+            document.querySelector(".filter-btn.active").dataset.filter
+          );
+          updateStats();
+
+          const message = problem.solved
+            ? "Problem marked as solved! 🎉"
+            : "Problem marked as unsolved";
+          const type = problem.solved ? "success" : "info";
+          showNotification(message, type);
+        }
+      }
+
+      function expandCard(id) {
+        const expandedContent = document.getElementById(`expanded-${id}`);
+        const expandBtn = document.getElementById(`expand-btn-${id}`);
+
+        if (
+          expandedContent.style.display === "none" ||
+          !expandedContent.style.display
+        ) {
+          expandedContent.style.display = "block";
+          expandedContent.classList.add("show");
+          expandBtn.innerHTML = "▼";
+          expandBtn.title = "Collapse";
+        } else {
+          expandedContent.style.display = "none";
+          expandedContent.classList.remove("show");
+          expandBtn.innerHTML = "▶";
+          expandBtn.title = "Expand";
+        }
+      }
+
+      function saveCode(id) {
+        const codeEditor = document.getElementById(`code-${id}`);
+        const problem = problems.find((p) => p.id === id);
+        if (problem) {
+          problem.code = codeEditor.value;
+          saveProblems();
+          showSaveConfirmation(codeEditor.nextElementSibling);
+        }
+      }
+
+      function saveNotes(id) {
+        const notesTextarea = document.getElementById(`notes-${id}`);
+        const problem = problems.find((p) => p.id === id);
+        if (problem) {
+          problem.notes = notesTextarea.value;
+          saveProblems();
+          showSaveConfirmation(notesTextarea.nextElementSibling);
+        }
+      }
+
+      function showSaveConfirmation(button) {
+        const originalText = button.textContent;
+        const originalColor = button.style.background;
+        button.textContent = "Saved!";
+        button.style.background = "#28a745";
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.style.background = originalColor;
+        }, 2000);
+      }
+
+      function addVideo(id) {
+        const urlInput = document.getElementById(`video-url-${id}`);
+        const url = urlInput.value.trim();
+
+        if (!url) {
+          showNotification("Please enter a video URL", "warning");
+          return;
+        }
+
+        const problem = problems.find((p) => p.id === id);
+        if (problem) {
+          let videoId = "";
+
+          // Extract YouTube video ID
+          const youtubeRegex =
+            /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+          const match = url.match(youtubeRegex);
+
+          if (match) {
+            videoId = match[1];
+            problem.videos.push({
+              id: generateId(),
+              url: url,
+              embedUrl: `https://www.youtube.com/embed/${videoId}`,
+              type: "youtube",
+            });
+            saveProblems();
+            renderVideoSection(id, problem);
+            urlInput.value = "";
+            showNotification("Video added successfully!", "success");
+          } else {
+            showNotification("Please enter a valid YouTube URL", "error");
+          }
+        }
+      }
+
+      function removeVideo(problemId, videoId) {
+        const problem = problems.find((p) => p.id === problemId);
+        if (problem) {
+          problem.videos = problem.videos.filter((v) => v.id !== videoId);
+          saveProblems();
+          renderVideoSection(problemId, problem);
+          showNotification("Video removed successfully!", "info");
+        }
+      }
+
+      function renderVideoSection(problemId, problem) {
+        const videoContainer = document.getElementById(`videos-${problemId}`);
+        videoContainer.innerHTML = problem.videos
+          .map(
+            (video) => `
+                <div class="video-container">
+                    <iframe src="${video.embedUrl}" frameborder="0" allowfullscreen></iframe>
+                    <button onclick="removeVideo('${problemId}', '${video.id}')" 
+                            style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;"
+                            onmouseover="this.style.background='rgba(220,53,69,0.9)'; this.style.color='white'"
+                            onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.color='black'">×</button>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function filterProblems(filter) {
+        switch (filter) {
+          case "solved":
+            filteredProblems = problems.filter((p) => p.solved);
+            break;
+          case "unsolved":
+            filteredProblems = problems.filter((p) => !p.solved);
+            break;
+          case "easy":
+            filteredProblems = problems.filter((p) => p.difficulty === "easy");
+            break;
+          case "medium":
+            filteredProblems = problems.filter(
+              (p) => p.difficulty === "medium"
+            );
+            break;
+          case "hard":
+            filteredProblems = problems.filter((p) => p.difficulty === "hard");
+            break;
+          default:
+            filteredProblems = [...problems];
+        }
+        renderProblems();
+      }
+
+      function searchProblems(query) {
+        if (!query.trim()) {
+          filterProblems(
+            document.querySelector(".filter-btn.active").dataset.filter
+          );
+          return;
+        }
+
+        const searchTerm = query.toLowerCase();
+        filteredProblems = problems.filter(
+          (p) =>
+            p.name.toLowerCase().includes(searchTerm) ||
+            p.platform.toLowerCase().includes(searchTerm) ||
+            p.tags.some((tag) => tag.toLowerCase().includes(searchTerm)) ||
+            p.description.toLowerCase().includes(searchTerm)
+        );
+        renderProblems();
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return "Not set";
+        return new Date(dateString).toLocaleDateString();
+      }
+
+      function createProblemCard(problem) {
+        const tagsHTML = problem.tags
+          .map(
+            (tag) =>
+              `<span style="background: #e9ecef; padding: 2px 8px; border-radius: 12px; font-size: 0.8em; margin-right: 5px;">${tag}</span>`
+          )
+          .join("");
+
+        return `
+                <div class="problem-card ${
+                  problem.solved ? "solved" : "unsolved"
+                }">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <input type="checkbox" class="problem-checkbox" ${
+                              problem.solved ? "checked" : ""
+                            } 
+                                   onchange="toggleSolved('${problem.id}')">
+                            <span class="problem-name">${problem.name}</span>
+                            <span class="difficulty-badge difficulty-${
+                              problem.difficulty
+                            }">${problem.difficulty}</span>
+                        </div>
+                        <div class="problem-meta">
+                            <div class="meta-item">
+                                <span>🏢</span>
+                                <span>${problem.platform}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span>📅</span>
+                                <span>Added: ${formatDate(
+                                  problem.dateAdded
+                                )}</span>
+                            </div>
+                            ${
+                              problem.solved
+                                ? `
+                                <div class="meta-item">
+                                    <span>✅</span>
+                                    <span>Solved: ${formatDate(
+                                      problem.dateSolved
+                                    )}</span>
+                                </div>
+                            `
+                                : ""
+                            }
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="problem-actions">
+                            ${
+                              problem.url
+                                ? `<a href="${problem.url}" target="_blank" class="action-btn btn-primary">🔗 View Problem</a>`
+                                : ""
+                            }
+                            <button class="action-btn btn-secondary" onclick="deleteProblem('${
+                              problem.id
+                            }')">🗑️ Delete</button>
+                            <button class="expand-btn" id="expand-btn-${
+                              problem.id
+                            }" onclick="expandCard('${
+          problem.id
+        }')" title="Expand">▶</button>
+                        </div>
+                        ${
+                          problem.description
+                            ? `<p style="margin-bottom: 15px; color: #6c757d;">${problem.description}</p>`
+                            : ""
+                        }
+                        ${
+                          tagsHTML
+                            ? `<div style="margin-bottom: 15px;">${tagsHTML}</div>`
+                            : ""
+                        }
+                        
+                        <div class="expanded-content" id="expanded-${
+                          problem.id
+                        }">
+                            <div class="code-section">
+                                <div class="section-title">
+                                    💻 Solution Code
+                                </div>
+                                <textarea class="code-editor" id="code-${
+                                  problem.id
+                                }" placeholder="Write your solution here...">${
+          problem.code || ""
+        }</textarea>
+                                <button class="save-notes-btn" onclick="saveCode('${
+                                  problem.id
+                                }')">Save Code</button>
+                            </div>
+                            
+                            <div class="video-section">
+                                <div class="section-title">
+                                    🎥 Tutorial Videos
+                                </div>
+                                <div class="video-input">
+                                    <input type="url" class="video-url-input" id="video-url-${
+                                      problem.id
+                                    }" placeholder="Paste YouTube URL here...">
+                                    <button class="video-add-btn" onclick="addVideo('${
+                                      problem.id
+                                    }')">Add Video</button>
+                                </div>
+                                <div id="videos-${problem.id}">
+                                    ${problem.videos
+                                      .map(
+                                        (video) => `
+                                        <div class="video-container">
+                                            <iframe src="${video.embedUrl}" frameborder="0" allowfullscreen></iframe>
+                                            <button onclick="removeVideo('${problem.id}', '${video.id}')" 
+                                                    style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;"
+                                                    onmouseover="this.style.background='rgba(220,53,69,0.9)'; this.style.color='white'"
+                                                    onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.color='black'">×</button>
+                                        </div>
+                                    `
+                                      )
+                                      .join("")}
+                                </div>
+                            </div>
+                            
+                            <div class="notes-section">
+                                <div class="section-title">
+                                    📝 Notes & Approach
+                                </div>
+                                <textarea class="notes-textarea" id="notes-${
+                                  problem.id
+                                }" placeholder="Write your notes, approach, time complexity, etc...">${
+          problem.notes || ""
+        }</textarea>
+                                <button class="save-notes-btn" onclick="saveNotes('${
+                                  problem.id
+                                }')">Save Notes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+      }
+
+      function renderProblems() {
+        const grid = document.getElementById("problems-grid");
+        const emptyState = document.getElementById("empty-state");
+
+        if (filteredProblems.length === 0) {
+          grid.style.display = "none";
+          emptyState.style.display = "block";
+        } else {
+          grid.style.display = "grid";
+          emptyState.style.display = "none";
+          grid.innerHTML = filteredProblems.map(createProblemCard).join("");
+        }
+      }
+
+      function updateStats() {
+        const total = problems.length;
+        const solved = problems.filter((p) => p.solved).length;
+        const successRate = total > 0 ? Math.round((solved / total) * 100) : 0;
+
+        // Calculate streak (consecutive solved problems from the end)
+        let streak = 0;
+        const sortedProblems = [...problems].sort(
+          (a, b) => new Date(b.dateSolved || 0) - new Date(a.dateSolved || 0)
+        );
+        for (let problem of sortedProblems) {
+          if (problem.solved) streak++;
+          else break;
+        }
+
+        document.getElementById("total-problems").textContent = total;
+        document.getElementById("solved-problems").textContent = solved;
+        document.getElementById("success-rate").textContent = `${successRate}%`;
+        document.getElementById("streak-count").textContent = streak;
+
+        // Update progress bar
+        const progressFill = document.getElementById("progress-fill");
+        const progressText = document.getElementById("progress-text");
+        progressFill.style.width = `${successRate}%`;
+        progressText.textContent = `${solved} of ${total} problems solved (${successRate}%)`;
+      }
+
+      function openAddModal() {
+        document.getElementById("addModal").style.display = "block";
+      }
+
+      function closeAddModal() {
+        document.getElementById("addModal").style.display = "none";
+      }
+
+      function showNotification(message, type = "info") {
+        // Remove existing notifications
+        const existingNotifications =
+          document.querySelectorAll(".notification");
+        existingNotifications.forEach((n) => n.remove());
+
+        const notification = document.createElement("div");
+        notification.className = `notification notification-${type}`;
+        notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${getNotificationColor(type)};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                max-width: 300px;
+                font-weight: 500;
+            `;
+
+        notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span>${getNotificationIcon(type)}</span>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" 
+                            style="background: none; border: none; color: white; font-size: 18px; cursor: pointer; margin-left: auto;">×</button>
+                </div>
+            `;
+
+        document.body.appendChild(notification);
+
+        // Auto remove after 4 seconds
+        setTimeout(() => {
+          if (notification.parentElement) {
+            notification.style.animation = "slideOutRight 0.3s ease";
+            setTimeout(() => notification.remove(), 300);
+          }
+        }, 4000);
+      }
+
+      function getNotificationColor(type) {
+        switch (type) {
+          case "success":
+            return "#28a745";
+          case "error":
+            return "#dc3545";
+          case "warning":
+            return "#ffc107";
+          default:
+            return "#17a2b8";
+        }
+      }
+
+      function getNotificationIcon(type) {
+        switch (type) {
+          case "success":
+            return "✅";
+          case "error":
+            return "❌";
+          case "warning":
+            return "⚠️";
+          default:
+            return "ℹ️";
+        }
+      }
+
+      // Add CSS animations for notifications
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Export/Import functionality
+      function exportProblems() {
+        const dataStr = JSON.stringify(problems, null, 2);
+        const dataBlob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `leetcode-150-problems-backup-${
+          new Date().toISOString().split("T")[0]
+        }.json`;
+        link.click();
+        showNotification("Problems exported successfully!", "success");
+      }
+
+      function importProblems(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            try {
+              const importedProblems = JSON.parse(e.target.result);
+              if (
+                confirm(
+                  "This will replace all your current problems. Continue?"
+                )
+              ) {
+                problems = importedProblems;
+                saveProblems();
+                filterProblems("all");
+                updateStats();
+                showNotification("Problems imported successfully!", "success");
+              }
+            } catch (error) {
+              showNotification("Invalid file format!", "error");
+            }
+          };
+          reader.readAsText(file);
+        }
+      }
+
+      // Add export/import buttons (you can add these to your UI if needed)
+      function addExportImportButtons() {
+        const controlsRight = document.querySelector(
+          ".controls > div:last-child"
+        );
+        if (controlsRight) {
+          controlsRight.innerHTML += `
+                    <button class="add-problem-btn" onclick="exportProblems()" style="background: linear-gradient(135deg, #6f42c1, #6610f2);">
+                        📥 Export
+                    </button>
+                    <input type="file" id="import-file" accept=".json" onchange="importProblems(event)" style="display: none;">
+                    <button class="add-problem-btn" onclick="document.getElementById('import-file').click()" style="background: linear-gradient(135deg, #fd7e14, #e83e8c);">
+                        📤 Import
+                    </button>
+                `;
+        }
+      }
+
+    </script>
+  </body>
+</html>

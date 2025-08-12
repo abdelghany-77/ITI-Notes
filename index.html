@@ -229,6 +229,10 @@
         background: linear-gradient(180deg, #27ae60, #2ecc71);
       }
 
+      .course-card.javascript::before {
+        background: linear-gradient(180deg, #f39c12, #e67e22);
+      }
+
       .course-icon-section {
         flex: 0 0 120px;
         display: flex;
@@ -290,6 +294,9 @@
       }
       .course-card.git .course-icon {
         color: #27ae60;
+      }
+      .course-card.javascript .course-icon {
+        color: #f39c12;
       }
 
       .course-title {
@@ -403,6 +410,10 @@
 
       .course-card.git .course-link {
         background: linear-gradient(135deg, #27ae60, #2ecc71);
+      }
+
+      .course-card.javascript .course-link {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
       }
 
       .course-link:hover {
@@ -872,8 +883,89 @@
           <a href="Notes/git-version-control-study.html" class="quick-link"
             >📝 Git & Version Control</a
           >
+          <a href="Notes/javascript-comprehensive-guide.html" class="quick-link"
+            >⚡ JavaScript Guide</a
+          >
         </div>
       </div>
+
+      <!-- Special Tools Section -->
+      <section
+        class="special-tools"
+        id="special-tools"
+        style="margin-bottom: 40px"
+      >
+        <h2
+          style="
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-size: 2em;
+          "
+        >
+          🛠️ Special Tools & Trackers
+        </h2>
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+          "
+        >
+          <div
+            style="
+              background: linear-gradient(135deg, #667eea, #764ba2);
+              color: white;
+              padding: 30px;
+              border-radius: 20px;
+              text-align: center;
+              min-width: 300px;
+              box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+              transition: all 0.3s ease;
+              cursor: pointer;
+              position: relative;
+              overflow: hidden;
+            "
+            onclick="window.location.href='Notes/problem-solving-tracker.html'"
+            onmouseover="this.style.transform='translateY(-10px)'"
+            onmouseout="this.style.transform='translateY(0)'"
+          >
+            <div
+              style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(255, 255, 255, 0.1);
+                opacity: 0.3;
+              "
+            ></div>
+            <div style="position: relative; z-index: 1">
+              <div style="font-size: 4em; margin-bottom: 15px">🧠</div>
+              <h3 style="font-size: 1.5em; margin-bottom: 10px">
+                Problem Solving Tracker
+              </h3>
+              <p style="opacity: 0.9; margin-bottom: 20px">
+                Track your coding challenges, LeetCode problems, and algorithm
+                practice
+              </p>
+              <div
+                style="
+                  background: rgba(255, 255, 255, 0.2);
+                  padding: 10px 20px;
+                  border-radius: 15px;
+                  font-weight: 600;
+                  backdrop-filter: blur(10px);
+                "
+              >
+                🚀 Launch Tracker
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section id="courses">
         <h2
@@ -1108,6 +1200,39 @@
               </a>
             </div>
           </div>
+
+          <div
+            class="course-card javascript"
+            data-category="development"
+            data-keywords="javascript js programming web development frontend backend node.js es6 dom api"
+          >
+            <div class="course-tags">
+              <span class="course-tag">Development</span>
+              <span class="course-tag">Programming</span>
+            </div>
+            <div class="course-icon-section">
+              <span class="course-icon">⚡</span>
+            </div>
+            <div class="course-main-content">
+              <div class="course-header">
+                <h3 class="course-title">JavaScript Comprehensive Guide</h3>
+                <p class="course-subtitle">Modern Web Development Essentials</p>
+              </div>
+              <div class="course-stats">
+                <span class="course-stat">📚 JS Concepts</span>
+                <span class="course-stat">⏱️ Programming</span>
+                <span class="course-stat">🎯 Web Dev</span>
+              </div>
+            </div>
+            <div class="course-action-section">
+              <a
+                href="Notes/javascript-comprehensive-guide.html"
+                class="course-link"
+              >
+                Access Notes
+              </a>
+            </div>
+          </div>
         </div>
 
         <!-- No Results Message -->
@@ -1118,29 +1243,6 @@
       </section>
 
       <div class="footer">
-        <div class="footer-links">
-          <a href="Notes/os-course-notes.html" class="footer-link"
-            >Operating Systems</a
-          >
-          <a href="Notes/sqa-course-notes.html" class="footer-link"
-            >Software Quality Assurance</a
-          >
-          <a href="Notes/network-cybersecurity-notes.html" class="footer-link"
-            >Network & Cyber Security</a
-          >
-          <a href="Notes/complete-linux-commands-guide.html" class="footer-link"
-            >Complete Linux Commands</a
-          >
-          <a href="Notes/database-course-notes.html" class="footer-link"
-            >Database Management</a
-          >
-          <a href="Notes/agile-course-notes.html" class="footer-link"
-            >Agile Fundamentals</a
-          >
-          <a href="Notes/git-version-control-study.html" class="footer-link"
-            >Git & Version Control</a
-          >
-        </div>
         <p style="opacity: 0.8; margin-top: 10px">Created By: Abdelghany</p>
       </div>
     </div>
