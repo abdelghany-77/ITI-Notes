@@ -3268,7 +3268,7 @@ Heap         | O(n log n)| O(n log n)| O(n log n)| O(<span class="number">1</spa
                 <pre><code><span class="comment">// Bubble Sort Implementation with Optimization</span>
 <span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">BubbleSort</span> {
     
-    <span class="keyword">public</span> <span class="type">void</span> <span class="function">bubbleSort</span>(<span class="type">int</span>[] arr) {
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function">bubbleSort</span>(<span class="type">int</span>[] arr) {until
         <span class="type">int</span> n = arr.length;
         
         <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) {
@@ -3753,432 +3753,1145 @@ Heap         | O(n log n)| O(n log n)| O(n log n)| O(<span class="number">1</spa
         </div>
 
         <!-- Searching Algorithms -->
-        <div class="topic-section" id="searching">
-            <div class="topic-header" onclick="toggleContent('searching')">
-                <h2>� Searching Algorithms</h2>
-                <div>
-                    <span class="complexity-badge easy">Easy</span>
-                    <button class="toggle-btn" id="searching-btn">▼</button>
-                </div>
+        <div class="content-section" id="searching">
+            <h1>🔍 Searching Algorithms</h1>
+            <p>
+                Searching algorithms find specific elements within data structures. Understanding different search techniques 
+                helps choose the right approach based on data organization, size constraints, and performance requirements.
+            </p>
+
+            <div class="highlight-box">
+                <h4>🎯 Search Strategy Categories</h4>
+                <p>Linear searches examine elements sequentially, while logarithmic searches use data structure properties to eliminate large portions of the search space.</p>
             </div>
-            <div class="topic-content" id="searching-content">
-                <div class="subtopic">
-                    <h3>#030 Linear Search (Sequential Search)</h3>
-                    <p>Simple search algorithm that checks every element sequentially until target is found.</p>
-                    
-                    <div class="code-example">// Linear Search Implementation
-public int linearSearch(int[] arr, int target) {
-    for (int i = 0; i < arr.length; i++) {
-        if (arr[i] == target) {
-            return i; // Return index if found
-        }
-    }
-    return -1; // Return -1 if not found
-}
 
-// Recursive Linear Search
-public int linearSearchRecursive(int[] arr, int target, int index) {
-    if (index >= arr.length) return -1;
-    if (arr[index] == target) return index;
-    return linearSearchRecursive(arr, target, index + 1);
-}
+            <h2>📊 Algorithm Comparison</h2>
+            <div class="code-example">
+                <div class="code-language">Performance Analysis</div>
+                <pre><code><span class="comment">// Searching Algorithm Performance Summary</span>
 
-// Time Complexity: O(n)
-// Space Complexity: O(1) iterative, O(n) recursive
-// Best Case: O(1) - element at first position
-// Worst Case: O(n) - element at last position or not present</div>
-                </div>
+<span class="keyword">Algorithm</span>      | <span class="keyword">Time Complexity</span>  | <span class="keyword">Space</span> | <span class="keyword">Prerequisites</span>    | <span class="keyword">Best Use Case</span>
+<span class="operator">-------------</span>+<span class="operator">-----------------</span>+<span class="operator">-------</span>+<span class="operator">----------------</span>+<span class="operator">------------------</span>
+Linear Search   | O(n)            | O(<span class="number">1</span>)   | None           | Unsorted data
+Binary Search   | O(log n)        | O(<span class="number">1</span>)   | Sorted array   | Large sorted datasets
+Hash Table      | O(<span class="number">1</span>) average    | O(n)   | Hash function  | Key-based lookups
+Binary Trees    | O(log n)        | O(n)   | Balanced tree  | Dynamic datasets
 
-                <div class="subtopic">
-                    <h3>#031 Binary Search Algorithm</h3>
-                    <p>Efficient algorithm for searching in sorted arrays by repeatedly dividing search interval in half.</p>
-                    
-                    <div class="code-example">// Binary Search - Iterative Implementation
-public int binarySearch(int[] arr, int target) {
-    int left = 0, right = arr.length - 1;
+<span class="keyword">When to Use:</span>
+• <span class="function">Small datasets</span>: Linear Search (simple, no preprocessing)
+• <span class="function">Large sorted data</span>: Binary Search (logarithmic performance)
+• <span class="function">Frequent searches</span>: Hash Tables (constant average time)
+• <span class="function">Dynamic data</span>: Self-balancing trees (insertion + search)
+• <span class="function">Range queries</span>: Binary Search Trees with modifications</code></pre>
+            </div>
+
+            <h2>🔍 Linear Search (Sequential Search)</h2>
+            <div class="highlight-box">
+                <h4>💡 Algorithm Principle</h4>
+                <p>Examine each element sequentially until the target is found or all elements are checked. Simple but guaranteed to find the element if it exists.</p>
+            </div>
+
+            <div class="code-example">
+                <div class="code-language">Java</div>
+                <pre><code><span class="comment">// Linear Search Implementation</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">LinearSearch</span> {
     
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        
-        if (arr[mid] == target) {
-            return mid;
+    <span class="comment">// Basic Linear Search</span>
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function">linearSearch</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) {
+            <span class="keyword">if</span> (arr[i] == target) {
+                <span class="keyword">return</span> i; <span class="comment">// Return index if found</span>
+            }
         }
-        
-        if (arr[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
+        <span class="keyword">return</span> -<span class="number">1</span>; <span class="comment">// Return -1 if not found</span>
     }
-    return -1;
-}
-
-// Binary Search - Recursive Implementation
-public int binarySearchRecursive(int[] arr, int target, int left, int right) {
-    if (left <= right) {
-        int mid = left + (right - left) / 2;
+    
+    <span class="comment">// Recursive Linear Search</span>
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function">linearSearchRecursive</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target, <span class="type">int</span> index) {
+        <span class="comment">// Base case: reached end of array</span>
+        <span class="keyword">if</span> (index &gt;= arr.length) <span class="keyword">return</span> -<span class="number">1</span>;
         
-        if (arr[mid] == target) return mid;
+        <span class="comment">// Found target at current index</span>
+        <span class="keyword">if</span> (arr[index] == target) <span class="keyword">return</span> index;
         
-        if (arr[mid] > target) {
-            return binarySearchRecursive(arr, target, left, mid - 1);
-        }
-        return binarySearchRecursive(arr, target, mid + 1, right);
+        <span class="comment">// Recursively search remaining elements</span>
+        <span class="keyword">return</span> linearSearchRecursive(arr, target, index + <span class="number">1</span>);
     }
-    return -1;
-}
+    
+    <span class="comment">// Find all occurrences of target</span>
+    <span class="keyword">public</span> <span class="classname">List</span>&lt;<span class="classname">Integer</span>&gt; <span class="function">findAllOccurrences</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+        <span class="classname">List</span>&lt;<span class="classname">Integer</span>&gt; indices = <span class="keyword">new</span> <span class="classname">ArrayList</span>&lt;&gt;();
+        
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) {
+            <span class="keyword">if</span> (arr[i] == target) {
+                indices.add(i);
+            }
+        }
+        
+        <span class="keyword">return</span> indices;
+    }
+    
+    <span class="comment">// Generic linear search for any type</span>
+    <span class="keyword">public</span> &lt;T&gt; <span class="type">int</span> <span class="function">linearSearchGeneric</span>(T[] arr, T target) {
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) {
+            <span class="keyword">if</span> (arr[i] != <span class="keyword">null</span> && arr[i].equals(target)) {
+                <span class="keyword">return</span> i;
+            }
+        }
+        <span class="keyword">return</span> -<span class="number">1</span>;
+    }
+}</code></pre>
+            </div>
 
-// Time Complexity: O(log n)
-// Space Complexity: O(1) iterative, O(log n) recursive
-// Prerequisite: Array must be sorted</code>
-                </div>
-                
-                <div class="practice-section">
-                    <h4>🏋️ Searching Problems</h4>
-                    <div class="practice-links">
-                        <a href="#" class="practice-link">Search Insert Position</a>
-                        <a href="#" class="practice-link">Find First and Last Position</a>
-                        <a href="#" class="practice-link">Search in Rotated Array</a>
-                        <a href="#" class="practice-link">Find Peak Element</a>
-                    </div>
+            <h2>🎯 Binary Search</h2>
+            <div class="highlight-box">
+                <h4>📖 Divide and Conquer Approach</h4>
+                <p>Repeatedly divide the search interval in half by comparing the target with the middle element. Requires sorted data but achieves logarithmic performance.</p>
+            </div>
+
+            <div class="code-example">
+                <div class="code-language">Java</div>
+                <pre><code><span class="comment">// Binary Search Implementation</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">BinarySearch</span> {
+    
+    <span class="comment">// Iterative Binary Search</span>
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function">binarySearch</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+        <span class="type">int</span> left = <span class="number">0</span>;
+        <span class="type">int</span> right = arr.length - <span class="number">1</span>;
+        
+        <span class="keyword">while</span> (left &lt;= right) {
+            <span class="comment">// Avoid integer overflow</span>
+            <span class="type">int</span> mid = left + (right - left) / <span class="number">2</span>;
+            
+            <span class="keyword">if</span> (arr[mid] == target) {
+                <span class="keyword">return</span> mid;
+            }
+            
+            <span class="keyword">if</span> (arr[mid] &lt; target) {
+                left = mid + <span class="number">1</span>; <span class="comment">// Search right half</span>
+            } <span class="keyword">else</span> {
+                right = mid - <span class="number">1</span>; <span class="comment">// Search left half</span>
+            }
+        }
+        
+        <span class="keyword">return</span> -<span class="number">1</span>; <span class="comment">// Target not found</span>
+    }
+    
+    <span class="comment">// Recursive Binary Search</span>
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function">binarySearchRecursive</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target, <span class="type">int</span> left, <span class="type">int</span> right) {
+        <span class="keyword">if</span> (left &lt;= right) {
+            <span class="type">int</span> mid = left + (right - left) / <span class="number">2</span>;
+            
+            <span class="comment">// Found target</span>
+            <span class="keyword">if</span> (arr[mid] == target) {
+                <span class="keyword">return</span> mid;
+            }
+            
+            <span class="comment">// Target is in left half</span>
+            <span class="keyword">if</span> (arr[mid] &gt; target) {
+                <span class="keyword">return</span> binarySearchRecursive(arr, target, left, mid - <span class="number">1</span>);
+            }
+            
+            <span class="comment">// Target is in right half</span>
+            <span class="keyword">return</span> binarySearchRecursive(arr, target, mid + <span class="number">1</span>, right);
+        }
+        
+        <span class="keyword">return</span> -<span class="number">1</span>;
+    }
+    
+    <span class="comment">// Find first occurrence of target</span>
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function">findFirstOccurrence</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+        <span class="type">int</span> left = <span class="number">0</span>, right = arr.length - <span class="number">1</span>;
+        <span class="type">int</span> result = -<span class="number">1</span>;
+        
+        <span class="keyword">while</span> (left &lt;= right) {
+            <span class="type">int</span> mid = left + (right - left) / <span class="number">2</span>;
+            
+            <span class="keyword">if</span> (arr[mid] == target) {
+                result = mid;
+                right = mid - <span class="number">1</span>; <span class="comment">// Continue searching left</span>
+            } <span class="keyword">else if</span> (arr[mid] &lt; target) {
+                left = mid + <span class="number">1</span>;
+            } <span class="keyword">else</span> {
+                right = mid - <span class="number">1</span>;
+            }
+        }
+        
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="comment">// Search in rotated sorted array</span>
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function">searchRotatedArray</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+        <span class="type">int</span> left = <span class="number">0</span>, right = arr.length - <span class="number">1</span>;
+        
+        <span class="keyword">while</span> (left &lt;= right) {
+            <span class="type">int</span> mid = left + (right - left) / <span class="number">2</span>;
+            
+            <span class="keyword">if</span> (arr[mid] == target) {
+                <span class="keyword">return</span> mid;
+            }
+            
+            <span class="comment">// Left half is sorted</span>
+            <span class="keyword">if</span> (arr[left] &lt;= arr[mid]) {
+                <span class="keyword">if</span> (target &gt;= arr[left] && target &lt; arr[mid]) {
+                    right = mid - <span class="number">1</span>;
+                } <span class="keyword">else</span> {
+                    left = mid + <span class="number">1</span>;
+                }
+            } 
+            <span class="comment">// Right half is sorted</span>
+            <span class="keyword">else</span> {
+                <span class="keyword">if</span> (target &gt; arr[mid] && target &lt;= arr[right]) {
+                    left = mid + <span class="number">1</span>;
+                } <span class="keyword">else</span> {
+                    right = mid - <span class="number">1</span>;
+                }
+            }
+        }
+        
+        <span class="keyword">return</span> -<span class="number">1</span>;
+    }
+}</code></pre>
+            </div>
+
+            <h2>📊 Real-World Applications</h2>
+            <div class="highlight-box">
+                <h4>🎯 Practical Use Cases</h4>
+                <ul>
+                    <li><strong>Database Indexing:</strong> B-tree search for efficient record retrieval</li>
+                    <li><strong>Web Search Engines:</strong> Inverted index searching for keyword matching</li>
+                    <li><strong>File Systems:</strong> Directory traversal and file location</li>
+                    <li><strong>Gaming:</strong> Collision detection and spatial partitioning</li>
+                    <li><strong>Network Routing:</strong> Path finding in network topology</li>
+                </ul>
+            </div>
+
+            <div class="practice-section">
+                <h4>🏋️ Practice Problems</h4>
+                <div class="practice-links">
+                    <a href="#" class="practice-link">Search Insert Position</a>
+                    <a href="#" class="practice-link">Find First and Last Position</a>
+                    <a href="#" class="practice-link">Search in Rotated Array</a>
+                    <a href="#" class="practice-link">Find Peak Element</a>
+                    <a href="#" class="practice-link">Search 2D Matrix</a>
+                    <a href="#" class="practice-link">Find Minimum in Rotated Array</a>
                 </div>
             </div>
         </div>
 
         <!-- Hash Tables -->
-        <div class="topic-section" id="hash-tables">
-            <div class="topic-header" onclick="toggleContent('hashtables')">
-                <h2>🗂️ Hashing (Hash Table)</h2>
-                <div>
-                    <span class="difficulty intermediate">Intermediate</span>
-                    <button class="toggle-btn" id="hashtables-btn">▼</button>
-                </div>
+        <div class="content-section" id="hash-tables">
+            <h1>🗂️ Hash Tables (Hashing)</h1>
+            <p>
+                Hash tables use hash functions to map keys to array indices, providing average O(1) time complexity for 
+                insertion, deletion, and search operations. They're fundamental to many algorithms and data structures.
+            </p>
+
+            <div class="highlight-box">
+                <h4>🎯 Hashing Core Concept</h4>
+                <p>Transform keys into array indices using a hash function, then handle collisions when multiple keys map to the same index.</p>
             </div>
-            <div class="topic-content" id="hashtables-content">
-                <div class="subtopic">
-                    <h3>#032 Hashing (Hash Table)</h3>
-                    <p>Hash tables use hash functions to map keys to array indices, providing average O(1) time complexity for basic operations.</p>
-                    
-                    <div class="code-example">// Hash Table Implementation with Chaining
-import java.util.*;
 
-class HashTable {
-    private int size;
-    private LinkedList<Entry>[] table;
+            <h2>📊 Hash Table Performance</h2>
+            <div class="code-example">
+                <div class="code-language">Performance Analysis</div>
+                <pre><code><span class="comment">// Hash Table Operations Complexity</span>
+
+<span class="keyword">Operation</span>     | <span class="keyword">Average Case</span> | <span class="keyword">Worst Case</span> | <span class="keyword">Best Case</span>
+<span class="operator">-----------</span>+<span class="operator">--------------</span>+<span class="operator">-----------</span>+<span class="operator">----------</span>
+Search        | O(<span class="number">1</span>)        | O(n)       | O(<span class="number">1</span>)
+Insertion     | O(<span class="number">1</span>)        | O(n)       | O(<span class="number">1</span>)
+Deletion      | O(<span class="number">1</span>)        | O(n)       | O(<span class="number">1</span>)
+
+<span class="keyword">Collision Resolution Methods:</span>
+• <span class="function">Chaining</span>: Store colliding elements in linked lists
+• <span class="function">Open Addressing</span>: Find alternative slots within table
+  - Linear Probing: h(k, i) = (h'(k) + i) mod m
+  - Quadratic Probing: h(k, i) = (h'(k) + c₁i + c₂i²) mod m
+  - Double Hashing: h(k, i) = (h₁(k) + i·h₂(k)) mod m
+
+<span class="keyword">Load Factor</span> α = n/m (n = elements, m = table size)
+• <span class="function">Optimal range</span>: α ≤ <span class="number">0.75</span> for good performance</• <span class="function">Dynamic resizing</span>: Resize when α exceeds threshold</code></pre>
+            </div>
+
+            <h2>🏗️ Hash Table Implementation</h2>
+            <div class="highlight-box">
+                <h4>🔧 Chaining Collision Resolution</h4>
+                <p>Store multiple elements that hash to the same index in a linked list at that position. Simple and handles high load factors well.</p>
+            </div>
+
+            <div class="code-example">
+                <div class="code-language">Java</div>
+                <pre><code><span class="comment">// Hash Table Implementation with Chaining</span>
+<span class="keyword">import</span> java.util.*;
+
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">HashTable</span>&lt;K, V&gt; {
+    <span class="keyword">private</span> <span class="type">int</span> size;
+    <span class="keyword">private</span> <span class="type">int</span> capacity;
+    <span class="keyword">private</span> <span class="classname">LinkedList</span>&lt;<span class="classname">Entry</span>&gt;[] table;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">double</span> LOAD_FACTOR_THRESHOLD = <span class="number">0.75</span>;
     
-    class Entry {
-        String key;
-        int value;
+    <span class="keyword">class</span> <span class="classname">Entry</span> {
+        K key;
+        V value;
         
-        Entry(String key, int value) {
-            this.key = key;
-            this.value = value;
+        <span class="classname">Entry</span>(K key, V value) {
+            <span class="keyword">this</span>.key = key;
+            <span class="keyword">this</span>.value = value;
         }
     }
     
-    public HashTable(int capacity) {
-        size = capacity;
-        table = new LinkedList[size];
-        for (int i = 0; i < size; i++) {
-            table[i] = new LinkedList<>();
+    <span class="keyword">public</span> <span class="classname">HashTable</span>() {
+        <span class="keyword">this</span>(<span class="number">16</span>); <span class="comment">// Default capacity</span>
+    }
+    
+    <span class="keyword">public</span> <span class="classname">HashTable</span>(<span class="type">int</span> capacity) {
+        <span class="keyword">this</span>.capacity = capacity;
+        <span class="keyword">this</span>.size = <span class="number">0</span>;
+        table = <span class="keyword">new</span> <span class="classname">LinkedList</span>[capacity];
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; capacity; i++) {
+            table[i] = <span class="keyword">new</span> <span class="classname">LinkedList</span>&lt;&gt;();
         }
     }
     
-    // Hash function
-    private int hash(String key) {
-        return Math.abs(key.hashCode()) % size;
+    <span class="comment">// Hash function using built-in hashCode()</span>
+    <span class="keyword">private</span> <span class="type">int</span> <span class="function">hash</span>(K key) {
+        <span class="keyword">if</span> (key == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="number">0</span>;
+        <span class="keyword">return</span> <span class="classname">Math</span>.abs(key.hashCode()) % capacity;
     }
     
-    // Insert operation
-    public void put(String key, int value) {
-        int index = hash(key);
-        LinkedList<Entry> bucket = table[index];
+    <span class="comment">// Insert or update key-value pair</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function">put</span>(K key, V value) {
+        <span class="type">int</span> index = hash(key);
+        <span class="classname">LinkedList</span>&lt;<span class="classname">Entry</span>&gt; bucket = table[index];
         
-        for (Entry entry : bucket) {
-            if (entry.key.equals(key)) {
-                entry.value = value; // Update existing
-                return;
+        <span class="comment">// Update existing key</span>
+        <span class="keyword">for</span> (<span class="classname">Entry</span> entry : bucket) {
+            <span class="keyword">if</span> (entry.key != <span class="keyword">null</span> && entry.key.equals(key)) {
+                entry.value = value;
+                <span class="keyword">return</span>;
             }
         }
         
-        bucket.add(new Entry(key, value));
+        <span class="comment">// Add new entry</span>
+        bucket.add(<span class="keyword">new</span> <span class="classname">Entry</span>(key, value));
+        size++;
+        
+        <span class="comment">// Check if resize is needed</span>
+        <span class="keyword">if</span> ((<span class="type">double</span>) size / capacity &gt; LOAD_FACTOR_THRESHOLD) {
+            resize();
+        }
     }
     
-    // Search operation
-    public int get(String key) {
-        int index = hash(key);
-        LinkedList<Entry> bucket = table[index];
+    <span class="comment">// Retrieve value by key</span>
+    <span class="keyword">public</span> V <span class="function">get</span>(K key) {
+        <span class="type">int</span> index = hash(key);
+        <span class="classname">LinkedList</span>&lt;<span class="classname">Entry</span>&gt; bucket = table[index];
         
-        for (Entry entry : bucket) {
-            if (entry.key.equals(key)) {
-                return entry.value;
+        <span class="keyword">for</span> (<span class="classname">Entry</span> entry : bucket) {
+            <span class="keyword">if</span> (entry.key != <span class="keyword">null</span> && entry.key.equals(key)) {
+                <span class="keyword">return</span> entry.value;
             }
         }
-        return -1; // Not found
+        
+        <span class="keyword">return</span> <span class="keyword">null</span>; <span class="comment">// Key not found</span>
     }
     
-    // Delete operation
-    public boolean remove(String key) {
-        int index = hash(key);
-        LinkedList<Entry> bucket = table[index];
+    <span class="comment">// Remove key-value pair</span>
+    <span class="keyword">public</span> <span class="type">boolean</span> <span class="function">remove</span>(K key) {
+        <span class="type">int</span> index = hash(key);
+        <span class="classname">LinkedList</span>&lt;<span class="classname">Entry</span>&gt; bucket = table[index];
         
-        return bucket.removeIf(entry -> entry.key.equals(key));
+        <span class="type">boolean</span> removed = bucket.removeIf(entry -> 
+            entry.key != <span class="keyword">null</span> && entry.key.equals(key));
+        
+        <span class="keyword">if</span> (removed) {
+            size--;
+        }
+        
+        <span class="keyword">return</span> removed;
     }
-}</code>
+    
+    <span class="comment">// Check if key exists</span>
+    <span class="keyword">public</span> <span class="type">boolean</span> <span class="function">containsKey</span>(K key) {
+        <span class="keyword">return</span> get(key) != <span class="keyword">null</span>;
+    }
+    
+    <span class="comment">// Dynamic resize when load factor exceeds threshold</span>
+    <span class="keyword">private</span> <span class="type">void</span> <span class="function">resize</span>() {
+        <span class="classname">LinkedList</span>&lt;<span class="classname">Entry</span>&gt;[] oldTable = table;
+        <span class="type">int</span> oldCapacity = capacity;
+        
+        capacity *= <span class="number">2</span>;
+        size = <span class="number">0</span>;
+        table = <span class="keyword">new</span> <span class="classname">LinkedList</span>[capacity];
+        
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; capacity; i++) {
+            table[i] = <span class="keyword">new</span> <span class="classname">LinkedList</span>&lt;&gt;();
+        }
+        
+        <span class="comment">// Rehash all existing entries</span>
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; oldCapacity; i++) {
+            <span class="keyword">for</span> (<span class="classname">Entry</span> entry : oldTable[i]) {
+                put(entry.key, entry.value);
+            }
+        }
+    }
+    
+    <span class="comment">// Get current size</span>
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function">size</span>() {
+        <span class="keyword">return</span> size;
+    }
+    
+    <span class="comment">// Check if empty</span>
+    <span class="keyword">public</span> <span class="type">boolean</span> <span class="function">isEmpty</span>() {
+        <span class="keyword">return</span> size == <span class="number">0</span>;
+    }
+}</code></pre>
+            </div>
 
-                    <div class="algorithm-steps">
-                        <h4>Hash Function Properties:</h4>
-                        <ol>
-                            <li>Deterministic: Same input always produces same output</li>
-                            <li>Uniform Distribution: Keys distributed evenly across table</li>
-                            <li>Fast Computation: Hash function should be efficient</li>
-                            <li>Avalanche Effect: Small input change causes large output change</li>
-                        </ol>
-                    </div>
+            <h2>🔧 Open Addressing Implementation</h2>
+            <div class="highlight-box">
+                <h4>🎯 Linear Probing Strategy</h4>
+                <p>When a collision occurs, search linearly for the next available slot. Simple but can cause clustering problems.</p>
+            </div>
 
-                    <div class="use-cases">
-                        <h4>🎯 Collision Resolution Techniques</h4>
-                        <ul>
-                            <li><strong>Chaining:</strong> Store colliding elements in linked lists</li>
-                            <li><strong>Linear Probing:</strong> Find next available slot linearly</li>
-                            <li><strong>Quadratic Probing:</strong> Use quadratic function for probing</li>
-                            <li><strong>Double Hashing:</strong> Use secondary hash function</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="practice-section">
-                    <h4>🏋️ Hash Table Problems</h4>
-                    <div class="practice-links">
-                        <a href="#" class="practice-link">Two Sum</a>
-                        <a href="#" class="practice-link">Group Anagrams</a>
-                        <a href="#" class="practice-link">First Non-repeating Character</a>
-                        <a href="#" class="practice-link">Design HashMap</a>
-                    </div>
+            <div class="code-example">
+                <div class="code-language">Java</div>
+                <pre><code><span class="comment">// Hash Table with Linear Probing</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">LinearProbingHashTable</span>&lt;K, V&gt; {
+    <span class="keyword">private</span> K[] keys;
+    <span class="keyword">private</span> V[] values;
+    <span class="keyword">private</span> <span class="type">boolean</span>[] deleted; <span class="comment">// For lazy deletion</span>
+    <span class="keyword">private</span> <span class="type">int</span> size;
+    <span class="keyword">private</span> <span class="type">int</span> capacity;
+    
+    <span class="keyword">public</span> <span class="classname">LinearProbingHashTable</span>(<span class="type">int</span> capacity) {
+        <span class="keyword">this</span>.capacity = capacity;
+        <span class="keyword">this</span>.size = <span class="number">0</span>;
+        keys = (K[]) <span class="keyword">new</span> <span class="classname">Object</span>[capacity];
+        values = (V[]) <span class="keyword">new</span> <span class="classname">Object</span>[capacity];
+        deleted = <span class="keyword">new</span> <span class="type">boolean</span>[capacity];
+    }
+    
+    <span class="keyword">private</span> <span class="type">int</span> <span class="function">hash</span>(K key) {
+        <span class="keyword">return</span> <span class="classname">Math</span>.abs(key.hashCode()) % capacity;
+    }
+    
+    <span class="comment">// Find slot for key (for insertion or search)</span>
+    <span class="keyword">private</span> <span class="type">int</span> <span class="function">findSlot</span>(K key, <span class="type">boolean</span> forInsertion) {
+        <span class="type">int</span> index = hash(key);
+        <span class="type">int</span> originalIndex = index;
+        
+        <span class="keyword">do</span> {
+            <span class="keyword">if</span> (keys[index] == <span class="keyword">null</span> || 
+                (forInsertion && deleted[index]) ||
+                (keys[index] != <span class="keyword">null</span> && keys[index].equals(key))) {
+                <span class="keyword">return</span> index;
+            }
+            
+            index = (index + <span class="number">1</span>) % capacity; <span class="comment">// Linear probing</span>
+        } <span class="keyword">while</span> (index != originalIndex);
+        
+        <span class="keyword">return</span> -<span class="number">1</span>; <span class="comment">// Table full or not found</span>
+    }
+    
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function">put</span>(K key, V value) {
+        <span class="keyword">if</span> (size &gt;= capacity * <span class="number">0.75</span>) {
+            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="classname">RuntimeException</span>(<span class="string">"Hash table is full"</span>);
+        }
+        
+        <span class="type">int</span> index = findSlot(key, <span class="keyword">true</span>);
+        <span class="keyword">if</span> (index == -<span class="number">1</span>) {
+            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="classname">RuntimeException</span>(<span class="string">"Cannot insert - table full"</span>);
+        }
+        
+        <span class="keyword">if</span> (keys[index] == <span class="keyword">null</span> || deleted[index]) {
+            size++;
+        }
+        
+        keys[index] = key;
+        values[index] = value;
+        deleted[index] = <span class="keyword">false</span>;
+    }
+    
+    <span class="keyword">public</span> V <span class="function">get</span>(K key) {
+        <span class="type">int</span> index = findSlot(key, <span class="keyword">false</span>);
+        
+        <span class="keyword">if</span> (index != -<span class="number">1</span> && keys[index] != <span class="keyword">null</span> && 
+            !deleted[index] && keys[index].equals(key)) {
+            <span class="keyword">return</span> values[index];
+        }
+        
+        <span class="keyword">return</span> <span class="keyword">null</span>;
+    }
+    
+    <span class="keyword">public</span> <span class="type">boolean</span> <span class="function">remove</span>(K key) {
+        <span class="type">int</span> index = findSlot(key, <span class="keyword">false</span>);
+        
+        <span class="keyword">if</span> (index != -<span class="number">1</span> && keys[index] != <span class="keyword">null</span> && 
+            !deleted[index] && keys[index].equals(key)) {
+            deleted[index] = <span class="keyword">true</span>; <span class="comment">// Lazy deletion</span>
+            size--;
+            <span class="keyword">return</span> <span class="keyword">true</span>;
+        }
+        
+        <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+}</code></pre>
+            </div>
+
+            <h2>🔐 Hash Function Design</h2>
+            <div class="highlight-box">
+                <h4>🎲 Good Hash Function Properties</h4>
+                <ul>
+                    <li><strong>Deterministic:</strong> Same input always produces same output</li>
+                    <li><strong>Uniform Distribution:</strong> Keys distributed evenly across table</li>
+                    <li><strong>Fast Computation:</strong> Hash function should be efficient to compute</li>
+                    <li><strong>Avalanche Effect:</strong> Small input changes cause large output changes</li>
+                </ul>
+            </div>
+
+            <h3>Example: Custom Hash Functions</h3>
+            <div class="code-example">
+                <div class="code-language">Java</div>
+                <pre><code><span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">HashFunctions</span> {
+    
+    <span class="comment">// Simple string hash (djb2 algorithm)</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="function">stringHash</span>(<span class="classname">String</span> str) {
+        <span class="type">long</span> hash = <span class="number">5381</span>;
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; str.length(); i++) {
+            hash = ((hash &lt;&lt; <span class="number">5</span>) + hash) + str.charAt(i);
+        }
+        <span class="keyword">return</span> <span class="classname">Math</span>.abs((<span class="type">int</span>) hash);
+    }
+    
+    <span class="comment">// Polynomial rolling hash</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="function">polynomialHash</span>(<span class="classname">String</span> str, <span class="type">int</span> prime) {
+        <span class="type">long</span> hash = <span class="number">0</span>;
+        <span class="type">long</span> powerOfPrime = <span class="number">1</span>;
+        
+        <span class="keyword">for</span> (<span class="type">char</span> c : str.toCharArray()) {
+            hash = (hash + (c - <span class="string">'a'</span> + <span class="number">1</span>) * powerOfPrime) % <span class="classname">Integer</span>.MAX_VALUE;
+            powerOfPrime = (powerOfPrime * prime) % <span class="classname">Integer</span>.MAX_VALUE;
+        }
+        
+        <span class="keyword">return</span> (<span class="type">int</span>) hash;
+    }
+    
+    <span class="comment">// Universal hash function family</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="classname">UniversalHash</span> {
+        <span class="keyword">private</span> <span class="type">int</span> a, b, p, m;
+        <span class="keyword">private</span> <span class="classname">Random</span> random;
+        
+        <span class="keyword">public</span> <span class="classname">UniversalHash</span>(<span class="type">int</span> tableSize) {
+            <span class="keyword">this</span>.m = tableSize;
+            <span class="keyword">this</span>.p = <span class="number">982451653</span>; <span class="comment">// Large prime</span>
+            <span class="keyword">this</span>.random = <span class="keyword">new</span> <span class="classname">Random</span>();
+            generateParameters();
+        }
+        
+        <span class="keyword">private</span> <span class="type">void</span> <span class="function">generateParameters</span>() {
+            a = random.nextInt(p - <span class="number">1</span>) + <span class="number">1</span>; <span class="comment">// 1 <= a < p</span>
+            b = random.nextInt(p);                      <span class="comment">// 0 <= b < p</span>
+        }
+        
+        <span class="keyword">public</span> <span class="type">int</span> <span class="function">hash</span>(<span class="type">int</span> key) {
+            <span class="keyword">return</span> <span class="classname">Math</span>.abs(((a * key + b) % p) % m);
+        }
+    }
+    
+    <span class="comment">// Consistent hashing (for distributed systems)</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="classname">ConsistentHash</span> {
+        <span class="keyword">private</span> <span class="classname">TreeMap</span>&lt;<span class="classname">Integer</span>, <span class="classname">String</span>&gt; ring;
+        <span class="keyword">private</span> <span class="type">int</span> virtualNodes;
+        
+        <span class="keyword">public</span> <span class="classname">ConsistentHash</span>(<span class="type">int</span> virtualNodes) {
+            <span class="keyword">this</span>.virtualNodes = virtualNodes;
+            <span class="keyword">this</span>.ring = <span class="keyword">new</span> <span class="classname">TreeMap</span>&lt;&gt;();
+        }
+        
+        <span class="keyword">public</span> <span class="type">void</span> <span class="function">addNode</span>(<span class="classname">String</span> node) {
+            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; virtualNodes; i++) {
+                <span class="type">int</span> hash = stringHash(node + i);
+                ring.put(hash, node);
+            }
+        }
+        
+        <span class="keyword">public</span> <span class="classname">String</span> <span class="function">getNode</span>(<span class="classname">String</span> key) {
+            <span class="keyword">if</span> (ring.isEmpty()) <span class="keyword">return</span> <span class="keyword">null</span>;
+            
+            <span class="type">int</span> hash = stringHash(key);
+            <span class="classname">Integer</span> nodeKey = ring.ceilingKey(hash);
+            
+            <span class="keyword">if</span> (nodeKey == <span class="keyword">null</span>) {
+                nodeKey = ring.firstKey(); <span class="comment">// Wrap around</span>
+            }
+            
+            <span class="keyword">return</span> ring.get(nodeKey);
+        }
+    }
+}</code></pre>
+            </div>
+
+            <h2>🚀 Real-World Applications</h2>
+            <div class="highlight-box">
+                <h4>🎯 Hash Table Use Cases</h4>
+                <ul>
+                    <li><strong>Database Indexing:</strong> Fast record lookup by primary key</li>
+                    <li><strong>Caching Systems:</strong> LRU cache, Redis, Memcached</li>
+                    <li><strong>Compilers:</strong> Symbol tables for variable names</li>
+                    <li><strong>Network Routing:</strong> IP address to MAC address mapping</li>
+                    <li><strong>Distributed Systems:</strong> Consistent hashing for load balancing</li>
+                    <li><strong>Cryptography:</strong> Hash-based message authentication codes (HMAC)</li>
+                </ul>
+            </div>
+
+            <div class="practice-section">
+                <h4>🏋️ Practice Problems</h4>
+                <div class="practice-links">
+                    <a href="#" class="practice-link">Two Sum</a>
+                    <a href="#" class="practice-link">Group Anagrams</a>
+                    <a href="#" class="practice-link">First Non-repeating Character</a>
+                    <a href="#" class="practice-link">Design HashMap</a>
+                    <a href="#" class="practice-link">LRU Cache</a>
+                    <a href="#" class="practice-link">Valid Anagram</a>
                 </div>
             </div>
         </div>
 
         <!-- Graphs -->
-        <div class="topic-section" id="graphs">
-            <div class="topic-header" onclick="toggleContent('graphs')">
-                <h2>🕸️ Graphs</h2>
-                <div>
-                    <span class="difficulty advanced">Advanced</span>
-                    <button class="toggle-btn" id="graphs-btn">▼</button>
-                </div>
+        <div class="content-section" id="graphs">
+            <h1>🕸️ Graphs</h1>
+            <p>
+                Graphs are fundamental data structures consisting of vertices (nodes) connected by edges. They model relationships 
+                and connections in networks, making them essential for algorithms in social networks, routing, and optimization.
+            </p>
+
+            <div class="highlight-box">
+                <h4>🎯 Graph Theory Foundation</h4>
+                <p>Graphs represent pairwise relationships between objects. Understanding different types and representations helps choose the right approach for specific problems.</p>
             </div>
-            <div class="topic-content" id="graphs-content">
-                <div class="subtopic">
-                    <h3>#033 Introduction to Graph, Types and Representation</h3>
-                    <p>Graphs consist of vertices (nodes) connected by edges. Learn about different types and representation methods.</p>
-                    
-                    <div class="code-example">// Graph Representations
 
-// 1. Adjacency Matrix
-class GraphMatrix {
-    private int[][] adjMatrix;
-    private int numVertices;
+            <h2>📊 Graph Classifications</h2>
+            <div class="code-example">
+                <div class="code-language">Graph Types Overview</div>
+                <pre><code><span class="comment">// Graph Classification and Properties</span>
+
+<span class="keyword">Graph Types:</span>
+• <span class="function">Directed (Digraph)</span>: Edges have direction (A → B ≠ B → A)
+• <span class="function">Undirected</span>: Edges have no direction (A — B = B — A)
+• <span class="function">Weighted</span>: Edges have weights/costs
+• <span class="function">Unweighted</span>: All edges have equal weight
+• <span class="function">Connected</span>: Path exists between every pair of vertices
+• <span class="function">Disconnected</span>: Some vertices not reachable from others
+
+<span class="keyword">Graph Properties:</span>
+• <span class="function">Vertices (V)</span>: Number of nodes
+• <span class="function">Edges (E)</span>: Number of connections
+• <span class="function">Degree</span>: Number of edges connected to a vertex
+• <span class="function">Path</span>: Sequence of vertices connected by edges
+• <span class="function">Cycle</span>: Path that starts and ends at same vertex
+
+<span class="keyword">Representation Comparison:</span>
+                    | <span class="keyword">Space</span>     | <span class="keyword">Edge Check</span> | <span class="keyword">Add Edge</span> | <span class="keyword">Neighbors</span>
+<span class="operator">Adjacency Matrix</span>  | O(V²)    | O(<span class="number">1</span>)       | O(<span class="number">1</span>)      | O(V)
+<span class="operator">Adjacency List</span>    | O(V + E) | O(degree)   | O(<span class="number">1</span>)      | O(degree)</code></pre>
+            </div>
+
+            <h2>🏗️ Graph Representations</h2>
+            <div class="highlight-box">
+                <h4>📋 Adjacency Matrix vs Adjacency List</h4>
+                <p>Matrix representation uses O(V²) space but provides O(1) edge lookups. List representation uses O(V+E) space and is better for sparse graphs.</p>
+            </div>
+
+            <div class="code-example">
+                <div class="code-language">Java</div>
+                <pre><code><span class="comment">// Graph Implementations</span>
+
+<span class="comment">// 1. Adjacency Matrix Implementation</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">GraphMatrix</span> {
+    <span class="keyword">private</span> <span class="type">int</span>[][] adjMatrix;
+    <span class="keyword">private</span> <span class="type">int</span> numVertices;
+    <span class="keyword">private</span> <span class="type">boolean</span> isDirected;
     
-    public GraphMatrix(int numVertices) {
-        this.numVertices = numVertices;
-        adjMatrix = new int[numVertices][numVertices];
+    <span class="keyword">public</span> <span class="classname">GraphMatrix</span>(<span class="type">int</span> numVertices, <span class="type">boolean</span> isDirected) {
+        <span class="keyword">this</span>.numVertices = numVertices;
+        <span class="keyword">this</span>.isDirected = isDirected;
+        adjMatrix = <span class="keyword">new</span> <span class="type">int</span>[numVertices][numVertices];
     }
     
-    public void addEdge(int src, int dest) {
-        adjMatrix[src][dest] = 1;
-        adjMatrix[dest][src] = 1; // For undirected graph
-    }
-}
-
-// 2. Adjacency List
-class GraphList {
-    private int vertices;
-    private LinkedList<Integer>[] adjacencyList;
-    
-    public GraphList(int v) {
-        vertices = v;
-        adjacencyList = new LinkedList[v];
-        for (int i = 0; i < v; i++) {
-            adjacencyList[i] = new LinkedList();
-        }
-    }
-    
-    public void addEdge(int src, int dest) {
-        adjacencyList[src].add(dest);
-        adjacencyList[dest].add(src); // For undirected graph
-    }
-}</div>
-
-                    <div class="algorithm-steps">
-                        <h4>Graph Types:</h4>
-                        <ol>
-                            <li><strong>Directed Graph (Digraph):</strong> Edges have direction</li>
-                            <li><strong>Undirected Graph:</strong> Edges have no direction</li>
-                            <li><strong>Weighted Graph:</strong> Edges have weights/costs</li>
-                            <li><strong>Unweighted Graph:</strong> Edges have no weights</li>
-                            <li><strong>Connected Graph:</strong> Path exists between every pair of vertices</li>
-                            <li><strong>Disconnected Graph:</strong> Some vertices not reachable from others</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <div class="subtopic">
-                    <h3>#034 Breadth First Search Algorithm (BFS)</h3>
-                    <p>Graph traversal algorithm that explores vertices level by level using a queue.</p>
-                    
-                    <div class="code-example">// BFS Implementation
-import java.util.*;
-
-public void BFS(int startVertex) {
-    boolean[] visited = new boolean[vertices];
-    Queue<Integer> queue = new LinkedList<>();
-    
-    visited[startVertex] = true;
-    queue.offer(startVertex);
-    
-    System.out.print("BFS Traversal: ");
-    
-    while (!queue.isEmpty()) {
-        int vertex = queue.poll();
-        System.out.print(vertex + " ");
-        
-        // Visit all unvisited neighbors
-        for (int neighbor : adjacencyList[vertex]) {
-            if (!visited[neighbor]) {
-                visited[neighbor] = true;
-                queue.offer(neighbor);
+    <span class="comment">// Add edge with optional weight</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function">addEdge</span>(<span class="type">int</span> src, <span class="type">int</span> dest, <span class="type">int</span> weight) {
+        <span class="keyword">if</span> (src &gt;= <span class="number">0</span> && src &lt; numVertices && dest &gt;= <span class="number">0</span> && dest &lt; numVertices) {
+            adjMatrix[src][dest] = weight;
+            <span class="keyword">if</span> (!isDirected) {
+                adjMatrix[dest][src] = weight;
             }
         }
     }
-}
-
-// Time Complexity: O(V + E)
-// Space Complexity: O(V)</div>
-                </div>
-
-                <div class="subtopic">
-                    <h3>#035 Depth First Search Algorithm (DFS)</h3>
-                    <p>Graph traversal algorithm that explores as far as possible along each branch before backtracking.</p>
-                    
-                    <div class="code-example">// DFS Implementation - Recursive
-public void DFS(int vertex, boolean[] visited) {
-    visited[vertex] = true;
-    System.out.print(vertex + " ");
     
-    for (int neighbor : adjacencyList[vertex]) {
-        if (!visited[neighbor]) {
-            DFS(neighbor, visited);
+    <span class="comment">// Check if edge exists</span>
+    <span class="keyword">public</span> <span class="type">boolean</span> <span class="function">hasEdge</span>(<span class="type">int</span> src, <span class="type">int</span> dest) {
+        <span class="keyword">if</span> (src &gt;= <span class="number">0</span> && src &lt; numVertices && dest &gt;= <span class="number">0</span> && dest &lt; numVertices) {
+            <span class="keyword">return</span> adjMatrix[src][dest] != <span class="number">0</span>;
+        }
+        <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+    
+    <span class="comment">// Get edge weight</span>
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function">getWeight</span>(<span class="type">int</span> src, <span class="type">int</span> dest) {
+        <span class="keyword">if</span> (hasEdge(src, dest)) {
+            <span class="keyword">return</span> adjMatrix[src][dest];
+        }
+        <span class="keyword">return</span> -<span class="number">1</span>; <span class="comment">// No edge</span>
+    }
+    
+    <span class="comment">// Get all neighbors of a vertex</span>
+    <span class="keyword">public</span> <span class="classname">List</span>&lt;<span class="classname">Integer</span>&gt; <span class="function">getNeighbors</span>(<span class="type">int</span> vertex) {
+        <span class="classname">List</span>&lt;<span class="classname">Integer</span>&gt; neighbors = <span class="keyword">new</span> <span class="classname">ArrayList</span>&lt;&gt;();
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; numVertices; i++) {
+            <span class="keyword">if</span> (adjMatrix[vertex][i] != <span class="number">0</span>) {
+                neighbors.add(i);
+            }
+        }
+        <span class="keyword">return</span> neighbors;
+    }
+    
+    <span class="comment">// Print graph representation</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function">printGraph</span>() {
+        <span class="classname">System</span>.out.println(<span class="string">"Adjacency Matrix:"</span>);
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; numVertices; i++) {
+            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; numVertices; j++) {
+                <span class="classname">System</span>.out.print(adjMatrix[i][j] + <span class="string">" "</span>);
+            }
+            <span class="classname">System</span>.out.println();
         }
     }
 }
 
-// DFS Implementation - Iterative using Stack
-public void DFSIterative(int startVertex) {
-    boolean[] visited = new boolean[vertices];
-    Stack<Integer> stack = new Stack<>();
+<span class="comment">// 2. Adjacency List Implementation</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">GraphList</span> {
+    <span class="keyword">private</span> <span class="type">int</span> vertices;
+    <span class="keyword">private</span> <span class="classname">List</span>&lt;<span class="classname">List</span>&lt;<span class="classname">Edge</span>&gt;&gt; adjacencyList;
+    <span class="keyword">private</span> <span class="type">boolean</span> isDirected;
     
-    stack.push(startVertex);
-    
-    while (!stack.isEmpty()) {
-        int vertex = stack.pop();
+    <span class="keyword">class</span> <span class="classname">Edge</span> {
+        <span class="type">int</span> destination;
+        <span class="type">int</span> weight;
         
-        if (!visited[vertex]) {
-            visited[vertex] = true;
-            System.out.print(vertex + " ");
+        <span class="classname">Edge</span>(<span class="type">int</span> destination, <span class="type">int</span> weight) {
+            <span class="keyword">this</span>.destination = destination;
+            <span class="keyword">this</span>.weight = weight;
+        }
+    }
+    
+    <span class="keyword">public</span> <span class="classname">GraphList</span>(<span class="type">int</span> vertices, <span class="type">boolean</span> isDirected) {
+        <span class="keyword">this</span>.vertices = vertices;
+        <span class="keyword">this</span>.isDirected = isDirected;
+        adjacencyList = <span class="keyword">new</span> <span class="classname">ArrayList</span>&lt;&gt;();
+        
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; vertices; i++) {
+            adjacencyList.add(<span class="keyword">new</span> <span class="classname">ArrayList</span>&lt;&gt;());
+        }
+    }
+    
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function">addEdge</span>(<span class="type">int</span> src, <span class="type">int</span> dest, <span class="type">int</span> weight) {
+        adjacencyList.get(src).add(<span class="keyword">new</span> <span class="classname">Edge</span>(dest, weight));
+        <span class="keyword">if</span> (!isDirected) {
+            adjacencyList.get(dest).add(<span class="keyword">new</span> <span class="classname">Edge</span>(src, weight));
+        }
+    }
+    
+    <span class="keyword">public</span> <span class="classname">List</span>&lt;<span class="classname">Edge</span>&gt; <span class="function">getNeighbors</span>(<span class="type">int</span> vertex) {
+        <span class="keyword">return</span> adjacencyList.get(vertex);
+    }
+}</code></pre>
+            </div>
+
+            <h2>🔍 Breadth-First Search (BFS)</h2>
+            <div class="highlight-box">
+                <h4>🌊 Level-by-Level Exploration</h4>
+                <p>BFS explores vertices level by level using a queue. Perfect for finding shortest paths in unweighted graphs and exploring immediate neighbors first.</p>
+            </div>
+
+            <div class="code-example">
+                <div class="code-language">Java</div>
+                <pre><code><span class="comment">// BFS Implementation with Multiple Applications</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">BreadthFirstSearch</span> {
+    
+    <span class="comment">// Basic BFS traversal</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function">BFS</span>(<span class="classname">GraphList</span> graph, <span class="type">int</span> startVertex) {
+        <span class="type">boolean</span>[] visited = <span class="keyword">new</span> <span class="type">boolean</span>[graph.vertices];
+        <span class="classname">Queue</span>&lt;<span class="classname">Integer</span>&gt; queue = <span class="keyword">new</span> <span class="classname">LinkedList</span>&lt;&gt;();
+        
+        visited[startVertex] = <span class="keyword">true</span>;
+        queue.offer(startVertex);
+        
+        <span class="classname">System</span>.out.print(<span class="string">"BFS Traversal: "</span>);
+        
+        <span class="keyword">while</span> (!queue.isEmpty()) {
+            <span class="type">int</span> vertex = queue.poll();
+            <span class="classname">System</span>.out.print(vertex + <span class="string">" "</span>);
             
-            for (int neighbor : adjacencyList[vertex]) {
-                if (!visited[neighbor]) {
-                    stack.push(neighbor);
+            <span class="comment">// Visit all unvisited neighbors</span>
+            <span class="keyword">for</span> (<span class="classname">GraphList</span>.<span class="classname">Edge</span> edge : graph.getNeighbors(vertex)) {
+                <span class="keyword">if</span> (!visited[edge.destination]) {
+                    visited[edge.destination] = <span class="keyword">true</span>;
+                    queue.offer(edge.destination);
                 }
             }
         }
-    }
-}
-
-// Time Complexity: O(V + E)
-// Space Complexity: O(V)</div>
-                </div>
-
-                <div class="subtopic">
-                    <h3>#036 Dijkstra's Algorithm (Shortest Path)</h3>
-                    <p>Find shortest path from source vertex to all other vertices in weighted graph with non-negative weights.</p>
-                    
-                    <div class="code-example">// Dijkstra's Algorithm Implementation
-import java.util.*;
-
-class Edge {
-    int destination, weight;
-    Edge(int destination, int weight) {
-        this.destination = destination;
-        this.weight = weight;
-    }
-}
-
-class Node implements Comparable<Node> {
-    int vertex, distance;
-    Node(int vertex, int distance) {
-        this.vertex = vertex;
-        this.distance = distance;
+        <span class="classname">System</span>.out.println();
     }
     
-    public int compareTo(Node other) {
-        return Integer.compare(this.distance, other.distance);
-    }
-}
-
-public int[] dijkstra(int source) {
-    int[] distance = new int[vertices];
-    boolean[] visited = new boolean[vertices];
-    PriorityQueue<Node> pq = new PriorityQueue<>();
-    
-    Arrays.fill(distance, Integer.MAX_VALUE);
-    distance[source] = 0;
-    pq.offer(new Node(source, 0));
-    
-    while (!pq.isEmpty()) {
-        Node current = pq.poll();
-        int u = current.vertex;
+    <span class="comment">// BFS for shortest path in unweighted graph</span>
+    <span class="keyword">public</span> <span class="type">int</span>[] <span class="function">shortestPath</span>(<span class="classname">GraphList</span> graph, <span class="type">int</span> source) {
+        <span class="type">int</span>[] distance = <span class="keyword">new</span> <span class="type">int</span>[graph.vertices];
+        <span class="type">boolean</span>[] visited = <span class="keyword">new</span> <span class="type">boolean</span>[graph.vertices];
+        <span class="classname">Queue</span>&lt;<span class="classname">Integer</span>&gt; queue = <span class="keyword">new</span> <span class="classname">LinkedList</span>&lt;&gt;();
         
-        if (visited[u]) continue;
-        visited[u] = true;
+        <span class="classname">Arrays</span>.fill(distance, -<span class="number">1</span>);
+        distance[source] = <span class="number">0</span>;
+        visited[source] = <span class="keyword">true</span>;
+        queue.offer(source);
         
-        for (Edge edge : adjacencyList.get(u)) {
-            int v = edge.destination;
-            int weight = edge.weight;
+        <span class="keyword">while</span> (!queue.isEmpty()) {
+            <span class="type">int</span> vertex = queue.poll();
             
-            if (!visited[v] && distance[u] + weight < distance[v]) {
-                distance[v] = distance[u] + weight;
-                pq.offer(new Node(v, distance[v]));
+            <span class="keyword">for</span> (<span class="classname">GraphList</span>.<span class="classname">Edge</span> edge : graph.getNeighbors(vertex)) {
+                <span class="keyword">if</span> (!visited[edge.destination]) {
+                    visited[edge.destination] = <span class="keyword">true</span>;
+                    distance[edge.destination] = distance[vertex] + <span class="number">1</span>;
+                    queue.offer(edge.destination);
+                }
+            }
+        }
+        
+        <span class="keyword">return</span> distance;
+    }
+    
+    <span class="comment">// Check if graph is connected</span>
+    <span class="keyword">public</span> <span class="type">boolean</span> <span class="function">isConnected</span>(<span class="classname">GraphList</span> graph) {
+        <span class="type">boolean</span>[] visited = <span class="keyword">new</span> <span class="type">boolean</span>[graph.vertices];
+        <span class="classname">Queue</span>&lt;<span class="classname">Integer</span>&gt; queue = <span class="keyword">new</span> <span class="classname">LinkedList</span>&lt;&gt;();
+        
+        queue.offer(<span class="number">0</span>);
+        visited[<span class="number">0</span>] = <span class="keyword">true</span>;
+        <span class="type">int</span> visitedCount = <span class="number">1</span>;
+        
+        <span class="keyword">while</span> (!queue.isEmpty()) {
+            <span class="type">int</span> vertex = queue.poll();
+            
+            <span class="keyword">for</span> (<span class="classname">GraphList</span>.<span class="classname">Edge</span> edge : graph.getNeighbors(vertex)) {
+                <span class="keyword">if</span> (!visited[edge.destination]) {
+                    visited[edge.destination] = <span class="keyword">true</span>;
+                    visitedCount++;
+                    queue.offer(edge.destination);
+                }
+            }
+        }
+        
+        <span class="keyword">return</span> visitedCount == graph.vertices;
+    }
+}</code></pre>
+            </div>
+
+            <h2>🏃 Depth-First Search (DFS)</h2>
+            <div class="highlight-box">
+                <h4>🌳 Deep Exploration Strategy</h4>
+                <p>DFS explores as far as possible along each branch before backtracking. Excellent for detecting cycles, topological sorting, and finding connected components.</p>
+            </div>
+
+            <div class="code-example">
+                <div class="code-language">Java</div>
+                <pre><code><span class="comment">// DFS Implementation with Applications</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">DepthFirstSearch</span> {
+    
+    <span class="comment">// Recursive DFS traversal</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function">DFS</span>(<span class="classname">GraphList</span> graph, <span class="type">int</span> vertex, <span class="type">boolean</span>[] visited) {
+        visited[vertex] = <span class="keyword">true</span>;
+        <span class="classname">System</span>.out.print(vertex + <span class="string">" "</span>);
+        
+        <span class="keyword">for</span> (<span class="classname">GraphList</span>.<span class="classname">Edge</span> edge : graph.getNeighbors(vertex)) {
+            <span class="keyword">if</span> (!visited[edge.destination]) {
+                DFS(graph, edge.destination, visited);
             }
         }
     }
-    return distance;
-}
-
-// Time Complexity: O((V + E) log V)</div>
-                </div>
-
-                <div class="use-cases">
-                    <h4>🎯 Graph Applications</h4>
-                    <ul>
-                        <li>Social Networks (friendship relationships)</li>
-                        <li>GPS Navigation (shortest path between locations)</li>
-                        <li>Network Routing (internet packet routing)</li>
-                        <li>Web Page Ranking (PageRank algorithm)</li>
-                        <li>Dependency Resolution (build systems)</li>
-                        <li>Game Theory (decision trees)</li>
-                    </ul>
-                </div>
+    
+    <span class="comment">// Iterative DFS using Stack</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function">DFSIterative</span>(<span class="classname">GraphList</span> graph, <span class="type">int</span> startVertex) {
+        <span class="type">boolean</span>[] visited = <span class="keyword">new</span> <span class="type">boolean</span>[graph.vertices];
+        <span class="classname">Stack</span>&lt;<span class="classname">Integer</span>&gt; stack = <span class="keyword">new</span> <span class="classname">Stack</span>&lt;&gt;();
+        
+        stack.push(startVertex);
+        
+        <span class="classname">System</span>.out.print(<span class="string">"DFS Traversal: "</span>);
+        
+        <span class="keyword">while</span> (!stack.isEmpty()) {
+            <span class="type">int</span> vertex = stack.pop();
+            
+            <span class="keyword">if</span> (!visited[vertex]) {
+                visited[vertex] = <span class="keyword">true</span>;
+                <span class="classname">System</span>.out.print(vertex + <span class="string">" "</span>);
                 
-                <div class="practice-section">
-                    <h4>🏋️ Graph Problems</h4>
-                    <div class="practice-links">
-                        <a href="#" class="practice-link">Number of Islands</a>
-                        <a href="#" class="practice-link">Course Schedule</a>
-                        <a href="#" class="practice-link">Network Delay Time</a>
-                        <a href="#" class="practice-link">Clone Graph</a>
-                    </div>
+                <span class="comment">// Add neighbors to stack (reverse order for consistent traversal)</span>
+                <span class="classname">List</span>&lt;<span class="classname">GraphList</span>.<span class="classname">Edge</span>&gt; neighbors = graph.getNeighbors(vertex);
+                <span class="keyword">for</span> (<span class="type">int</span> i = neighbors.size() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) {
+                    <span class="type">int</span> neighbor = neighbors.get(i).destination;
+                    <span class="keyword">if</span> (!visited[neighbor]) {
+                        stack.push(neighbor);
+                    }
+                }
+            }
+        }
+        <span class="classname">System</span>.out.println();
+    }
+    
+    <span class="comment">// Detect cycle in directed graph</span>
+    <span class="keyword">public</span> <span class="type">boolean</span> <span class="function">hasCycle</span>(<span class="classname">GraphList</span> graph) {
+        <span class="type">int</span>[] color = <span class="keyword">new</span> <span class="type">int</span>[graph.vertices]; <span class="comment">// 0: White, 1: Gray, 2: Black</span>
+        
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; graph.vertices; i++) {
+            <span class="keyword">if</span> (color[i] == <span class="number">0</span> && hasCycleDFS(graph, i, color)) {
+                <span class="keyword">return</span> <span class="keyword">true</span>;
+            }
+        }
+        
+        <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+    
+    <span class="keyword">private</span> <span class="type">boolean</span> <span class="function">hasCycleDFS</span>(<span class="classname">GraphList</span> graph, <span class="type">int</span> vertex, <span class="type">int</span>[] color) {
+        color[vertex] = <span class="number">1</span>; <span class="comment">// Mark as gray (visiting)</span>
+        
+        <span class="keyword">for</span> (<span class="classname">GraphList</span>.<span class="classname">Edge</span> edge : graph.getNeighbors(vertex)) {
+            <span class="keyword">if</span> (color[edge.destination] == <span class="number">1</span>) {
+                <span class="keyword">return</span> <span class="keyword">true</span>; <span class="comment">// Back edge found - cycle detected</span>
+            }
+            <span class="keyword">if</span> (color[edge.destination] == <span class="number">0</span> && hasCycleDFS(graph, edge.destination, color)) {
+                <span class="keyword">return</span> <span class="keyword">true</span>;
+            }
+        }
+        
+        color[vertex] = <span class="number">2</span>; <span class="comment">// Mark as black (processed)</span>
+        <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+    
+    <span class="comment">// Find connected components</span>
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function">countConnectedComponents</span>(<span class="classname">GraphList</span> graph) {
+        <span class="type">boolean</span>[] visited = <span class="keyword">new</span> <span class="type">boolean</span>[graph.vertices];
+        <span class="type">int</span> components = <span class="number">0</span>;
+        
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; graph.vertices; i++) {
+            <span class="keyword">if</span> (!visited[i]) {
+                DFS(graph, i, visited);
+                components++;
+            }
+        }
+        
+        <span class="keyword">return</span> components;
+    }
+}</code></pre>
+            </div>
+
+            <h2>🛣️ Dijkstra's Shortest Path Algorithm</h2>
+            <div class="highlight-box">
+                <h4>🎯 Weighted Graph Navigation</h4>
+                <p>Dijkstra's algorithm finds shortest paths from a source vertex to all other vertices in weighted graphs with non-negative weights.</p>
+            </div>
+
+            <div class="code-example">
+                <div class="code-language">Java</div>
+                <pre><code><span class="comment">// Dijkstra's Algorithm Implementation</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">DijkstraAlgorithm</span> {
+    
+    <span class="keyword">class</span> <span class="classname">Node</span> <span class="keyword">implements</span> <span class="classname">Comparable</span>&lt;<span class="classname">Node</span>&gt; {
+        <span class="type">int</span> vertex;
+        <span class="type">int</span> distance;
+        
+        <span class="classname">Node</span>(<span class="type">int</span> vertex, <span class="type">int</span> distance) {
+            <span class="keyword">this</span>.vertex = vertex;
+            <span class="keyword">this</span>.distance = distance;
+        }
+        
+        <span class="keyword">public</span> <span class="type">int</span> <span class="function">compareTo</span>(<span class="classname">Node</span> other) {
+            <span class="keyword">return</span> <span class="classname">Integer</span>.compare(<span class="keyword">this</span>.distance, other.distance);
+        }
+    }
+    
+    <span class="keyword">public</span> <span class="type">int</span>[] <span class="function">dijkstra</span>(<span class="classname">GraphList</span> graph, <span class="type">int</span> source) {
+        <span class="type">int</span>[] distance = <span class="keyword">new</span> <span class="type">int</span>[graph.vertices];
+        <span class="type">boolean</span>[] visited = <span class="keyword">new</span> <span class="type">boolean</span>[graph.vertices];
+        <span class="classname">PriorityQueue</span>&lt;<span class="classname">Node</span>&gt; pq = <span class="keyword">new</span> <span class="classname">PriorityQueue</span>&lt;&gt;();
+        
+        <span class="comment">// Initialize distances to infinity</span>
+        <span class="classname">Arrays</span>.fill(distance, <span class="classname">Integer</span>.MAX_VALUE);
+        distance[source] = <span class="number">0</span>;
+        pq.offer(<span class="keyword">new</span> <span class="classname">Node</span>(source, <span class="number">0</span>));
+        
+        <span class="keyword">while</span> (!pq.isEmpty()) {
+            <span class="classname">Node</span> current = pq.poll();
+            <span class="type">int</span> u = current.vertex;
+            
+            <span class="keyword">if</span> (visited[u]) <span class="keyword">continue</span>;
+            visited[u] = <span class="keyword">true</span>;
+            
+            <span class="comment">// Relax all neighbors</span>
+            <span class="keyword">for</span> (<span class="classname">GraphList</span>.<span class="classname">Edge</span> edge : graph.getNeighbors(u)) {
+                <span class="type">int</span> v = edge.destination;
+                <span class="type">int</span> weight = edge.weight;
+                
+                <span class="keyword">if</span> (!visited[v] && distance[u] + weight &lt; distance[v]) {
+                    distance[v] = distance[u] + weight;
+                    pq.offer(<span class="keyword">new</span> <span class="classname">Node</span>(v, distance[v]));
+                }
+            }
+        }
+        
+        <span class="keyword">return</span> distance;
+    }
+    
+    <span class="comment">// Find shortest path with path reconstruction</span>
+    <span class="keyword">public</span> <span class="classname">PathResult</span> <span class="function">shortestPathWithPath</span>(<span class="classname">GraphList</span> graph, <span class="type">int</span> source, <span class="type">int</span> target) {
+        <span class="type">int</span>[] distance = <span class="keyword">new</span> <span class="type">int</span>[graph.vertices];
+        <span class="type">int</span>[] parent = <span class="keyword">new</span> <span class="type">int</span>[graph.vertices];
+        <span class="type">boolean</span>[] visited = <span class="keyword">new</span> <span class="type">boolean</span>[graph.vertices];
+        <span class="classname">PriorityQueue</span>&lt;<span class="classname">Node</span>&gt; pq = <span class="keyword">new</span> <span class="classname">PriorityQueue</span>&lt;&gt;();
+        
+        <span class="classname">Arrays</span>.fill(distance, <span class="classname">Integer</span>.MAX_VALUE);
+        <span class="classname">Arrays</span>.fill(parent, -<span class="number">1</span>);
+        
+        distance[source] = <span class="number">0</span>;
+        pq.offer(<span class="keyword">new</span> <span class="classname">Node</span>(source, <span class="number">0</span>));
+        
+        <span class="keyword">while</span> (!pq.isEmpty()) {
+            <span class="classname">Node</span> current = pq.poll();
+            <span class="type">int</span> u = current.vertex;
+            
+            <span class="keyword">if</span> (u == target) <span class="keyword">break</span>; <span class="comment">// Early termination</span>
+            <span class="keyword">if</span> (visited[u]) <span class="keyword">continue</span>;
+            
+            visited[u] = <span class="keyword">true</span>;
+            
+            <span class="keyword">for</span> (<span class="classname">GraphList</span>.<span class="classname">Edge</span> edge : graph.getNeighbors(u)) {
+                <span class="type">int</span> v = edge.destination;
+                <span class="type">int</span> weight = edge.weight;
+                
+                <span class="keyword">if</span> (!visited[v] && distance[u] + weight &lt; distance[v]) {
+                    distance[v] = distance[u] + weight;
+                    parent[v] = u;
+                    pq.offer(<span class="keyword">new</span> <span class="classname">Node</span>(v, distance[v]));
+                }
+            }
+        }
+        
+        <span class="comment">// Reconstruct path</span>
+        <span class="classname">List</span>&lt;<span class="classname">Integer</span>&gt; path = reconstructPath(parent, source, target);
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="classname">PathResult</span>(distance[target], path);
+    }
+    
+    <span class="keyword">private</span> <span class="classname">List</span>&lt;<span class="classname">Integer</span>&gt; <span class="function">reconstructPath</span>(<span class="type">int</span>[] parent, <span class="type">int</span> source, <span class="type">int</span> target) {
+        <span class="classname">List</span>&lt;<span class="classname">Integer</span>&gt; path = <span class="keyword">new</span> <span class="classname">ArrayList</span>&lt;&gt;();
+        <span class="type">int</span> current = target;
+        
+        <span class="keyword">while</span> (current != -<span class="number">1</span>) {
+            path.add(current);
+            current = parent[current];
+        }
+        
+        <span class="classname">Collections</span>.reverse(path);
+        <span class="keyword">return</span> path.get(<span class="number">0</span>) == source ? path : <span class="keyword">new</span> <span class="classname">ArrayList</span>&lt;&gt;();
+    }
+    
+    <span class="keyword">class</span> <span class="classname">PathResult</span> {
+        <span class="type">int</span> distance;
+        <span class="classname">List</span>&lt;<span class="classname">Integer</span>&gt; path;
+        
+        <span class="classname">PathResult</span>(<span class="type">int</span> distance, <span class="classname">List</span>&lt;<span class="classname">Integer</span>&gt; path) {
+            <span class="keyword">this</span>.distance = distance;
+            <span class="keyword">this</span>.path = path;
+        }
+    }
+}</code></pre>
+            </div>
+
+            <h2>🚀 Real-World Applications</h2>
+            <div class="highlight-box">
+                <h4>🌍 Graph Applications in Practice</h4>
+                <ul>
+                    <li><strong>Social Networks:</strong> Friend recommendations, influence propagation</li>
+                    <li><strong>GPS Navigation:</strong> Shortest route calculation, traffic optimization</li>
+                    <li><strong>Network Routing:</strong> Internet packet routing, network topology</li>
+                    <li><strong>Web Search:</strong> PageRank algorithm, web crawling</li>
+                    <li><strong>Dependency Resolution:</strong> Build systems, package managers</li>
+                    <li><strong>Game Development:</strong> Pathfinding AI, decision trees</li>
+                    <li><strong>Bioinformatics:</strong> Gene networks, protein interactions</li>
+                </ul>
+            </div>
+
+            <h3>Example: Social Network Analysis</h3>
+            <div class="code-example">
+                <div class="code-language">Java</div>
+                <pre><code><span class="keyword">public</span> <span class="keyword">class</span> <span class="classname">SocialNetworkAnalyzer</span> {
+    
+    <span class="comment">// Find mutual friends between two users</span>
+    <span class="keyword">public</span> <span class="classname">Set</span>&lt;<span class="classname">Integer</span>&gt; <span class="function">findMutualFriends</span>(<span class="classname">GraphList</span> network, <span class="type">int</span> user1, <span class="type">int</span> user2) {
+        <span class="classname">Set</span>&lt;<span class="classname">Integer</span>&gt; friends1 = <span class="keyword">new</span> <span class="classname">HashSet</span>&lt;&gt;();
+        <span class="classname">Set</span>&lt;<span class="classname">Integer</span>&gt; friends2 = <span class="keyword">new</span> <span class="classname">HashSet</span>&lt;&gt;();
+        
+        <span class="keyword">for</span> (<span class="classname">GraphList</span>.<span class="classname">Edge</span> edge : network.getNeighbors(user1)) {
+            friends1.add(edge.destination);
+        }
+        
+        <span class="keyword">for</span> (<span class="classname">GraphList</span>.<span class="classname">Edge</span> edge : network.getNeighbors(user2)) {
+            friends2.add(edge.destination);
+        }
+        
+        friends1.retainAll(friends2); <span class="comment">// Intersection</span>
+        <span class="keyword">return</span> friends1;
+    }
+    
+    <span class="comment">// Calculate influence score (simplified PageRank)</span>
+    <span class="keyword">public</span> <span class="type">double</span>[] <span class="function">calculateInfluence</span>(<span class="classname">GraphList</span> network, <span class="type">double</span> dampingFactor) {
+        <span class="type">int</span> n = network.vertices;
+        <span class="type">double</span>[] influence = <span class="keyword">new</span> <span class="type">double</span>[n];
+        <span class="type">double</span>[] newInfluence = <span class="keyword">new</span> <span class="type">double</span>[n];
+        
+        <span class="comment">// Initialize with equal influence</span>
+        <span class="classname">Arrays</span>.fill(influence, <span class="number">1.0</span> / n);
+        
+        <span class="comment">// Iterate until convergence</span>
+        <span class="keyword">for</span> (<span class="type">int</span> iteration = <span class="number">0</span>; iteration &lt; <span class="number">100</span>; iteration++) {
+            <span class="classname">Arrays</span>.fill(newInfluence, (<span class="number">1.0</span> - dampingFactor) / n);
+            
+            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) {
+                <span class="type">int</span> outDegree = network.getNeighbors(i).size();
+                <span class="keyword">if</span> (outDegree &gt; <span class="number">0</span>) {
+                    <span class="type">double</span> contribution = dampingFactor * influence[i] / outDegree;
+                    <span class="keyword">for</span> (<span class="classname">GraphList</span>.<span class="classname">Edge</span> edge : network.getNeighbors(i)) {
+                        newInfluence[edge.destination] += contribution;
+                    }
+                }
+            }
+            
+            influence = newInfluence.clone();
+        }
+        
+        <span class="keyword">return</span> influence;
+    }
+}</code></pre>
+            </div>
+
+            <div class="practice-section">
+                <h4>🏋️ Practice Problems</h4>
+                <div class="practice-links">
+                    <a href="#" class="practice-link">Number of Islands</a>
+                    <a href="#" class="practice-link">Course Schedule</a>
+                    <a href="#" class="practice-link">Network Delay Time</a>
+                    <a href="#" class="practice-link">Clone Graph</a>
+                    <a href="#" class="practice-link">Word Ladder</a>
+                    <a href="#" class="practice-link">Minimum Spanning Tree</a>
                 </div>
             </div>
         </div>
