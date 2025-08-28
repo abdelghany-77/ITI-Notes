@@ -11,6 +11,20 @@
         box-sizing: border-box;
       }
 
+      :root {
+        --vh: 1vh;
+        --header-height: 120px;
+        --toc-width: 300px;
+        --mobile-padding: 10px;
+        --touch-target: 44px;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+
       body {
         font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         line-height: 1.8;
@@ -22,8 +36,13 @@
           #667eea 100%
         );
         min-height: 100vh;
+        min-height: calc(var(--vh, 1vh) * 100);
         display: flex;
         font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        touch-action: manipulation;
+        overflow-x: hidden;
       }
 
       /* Layout Container */
@@ -47,133 +66,178 @@
         border: 1px solid rgba(255, 255, 255, 0.2);
       }
 
-      /* Sidebar Navigation */
-      .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 350px;
-        height: 100vh;
-        background: linear-gradient(135deg, #2c3e50, #3498db);
-        backdrop-filter: blur(15px);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
-        z-index: 1001;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        overflow-y: auto;
-        color: white;
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .sidebar.active {
-        transform: translateX(0);
-      }
-
-      .sidebar-header {
-        background: linear-gradient(135deg, #f1c40f, #f39c12);
-        color: white;
-        padding: 20px;
-        text-align: center;
-        position: sticky;
-        top: 0;
-        z-index: 1002;
-      }
-
-      .sidebar-header h3 {
-        font-size: 1.3rem;
-        margin-bottom: 5px;
-        font-weight: 700;
-      }
-
-      .sidebar-header p {
-        font-size: 0.9rem;
-        opacity: 0.9;
-      }
-
-      .sidebar-content {
-        padding: 20px;
-      }
-
-      .sidebar-toggle {
+      /* Table of Contents Styles (Enhanced) */
+      .toc-container {
         position: fixed;
         top: 20px;
+        left: -320px;
+        width: 300px;
+        height: calc(100vh - 40px);
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 20px;
+        box-shadow: 
+          0 20px 50px rgba(0, 0, 0, 0.3),
+          0 10px 20px rgba(0, 0, 0, 0.2);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        overflow: hidden;
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      .toc-container.active {
         left: 20px;
-        background: linear-gradient(135deg, #f1c40f, #f39c12);
-        color: white;
-        border: none;
-        padding: 12px 15px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1.1rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-        z-index: 1003;
+        transform: translateY(0);
       }
 
-      .sidebar-toggle:hover {
-        background: linear-gradient(135deg, #f39c12, #f1c40f);
-        transform: translateY(-2px);
-      }
-
-      .sidebar-overlay {
+      /* Add backdrop overlay */
+      .toc-backdrop {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
+        width: 100vw;
         height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(2px);
+        z-index: 999;
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
-        z-index: 1000;
       }
 
-      .sidebar-overlay.active {
+      .toc-backdrop.active {
         opacity: 1;
         visibility: visible;
       }
-
-      .sidebar ul {
+      
+      .toc-header {
+        padding: 25px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 20px 20px 0 0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      
+      .toc-header h3 {
+        margin: 0;
+        font-size: 1.3em;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
+      
+      .toc-list {
+        padding: 20px;
+        height: calc(100% - 80px);
+        overflow-y: auto;
+      }
+      
+      .toc-list ul {
         list-style: none;
+        margin: 0;
+        padding: 0;
       }
-
-      .sidebar ul li {
-        margin-bottom: 8px;
+      
+      .toc-list li {
+        margin: 8px 0;
       }
-
-      .sidebar ul li a {
-        color: #ffffff;
-        text-decoration: none;
+      
+      .toc-list a {
         display: block;
-        padding: 12px 15px;
+        padding: 8px 12px;
+        color: #2c3e50;
+        text-decoration: none;
         border-radius: 8px;
         transition: all 0.3s ease;
-        font-weight: 500;
-        border-left: 4px solid transparent;
         font-size: 0.9em;
       }
-
-      .sidebar ul li a:hover,
-      .sidebar ul li a.active {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateX(5px);
-        border-left-color: #f1c40f;
+      
+      .toc-list a:hover {
+        background: #3498db;
         color: white;
+        transform: translateX(5px);
+      }
+      
+      .toc-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px 18px;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 1001;
+        font-size: 20px;
+        font-weight: bold;
+        box-shadow: 
+          0 8px 25px rgba(102, 126, 234, 0.4),
+          0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
       }
 
-      .sidebar ul li ul {
-        margin-left: 15px;
-        margin-top: 5px;
+      .toc-toggle:hover {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        transform: scale(1.15) rotate(90deg);
+        box-shadow: 
+          0 12px 35px rgba(118, 75, 162, 0.5),
+          0 6px 15px rgba(0, 0, 0, 0.3);
       }
 
-      .sidebar ul li ul li a {
-        font-size: 0.8em;
-        color: #bdc3c7;
-        padding: 8px 12px;
+      .toc-toggle:active {
+        transform: scale(1.05) rotate(90deg);
+      }
+
+      .toc-toggle:focus {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+      }
+
+      /* Touch-friendly improvements */
+      .toc-list a,
+      .demo-button,
+      .back-button {
+        min-height: var(--touch-target);
+        display: flex;
+        align-items: center;
+        position: relative;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+      }
+
+      .toc-list a:focus,
+      .demo-button:focus,
+      .back-button:focus {
+        outline: 2px solid #3498db;
+        outline-offset: 2px;
+      }
+
+      /* Improved button states */
+      .demo-button:active,
+      .back-button:active {
+        transform: translateY(1px);
+      }
+
+      /* Better code block scrolling on mobile */
+      .code-example pre {
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+      }
+
+      /* Reading progress enhancement */
+      .reading-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        z-index: 9999;
+        transition: width 0.25s ease;
       }
 
       .main-content {
@@ -353,34 +417,107 @@
         color: #667eea;
       }
 
-      .command-box {
-        background: #1e1e1e;
+      .command-box,
+      .code-example {
+        background: linear-gradient(145deg, #1e1e1e 0%, #252526 100%);
         color: #d4d4d4;
-        padding: 20px 25px;
-        border-radius: 8px;
-        font-family: "Cascadia Code", "Fira Code", "Consolas", "Monaco", "Courier New", monospace;
-        margin: 20px 0;
-        border: 1px solid #3c3c3c;
+        padding: 25px;
+        border-radius: 12px;
         overflow-x: auto;
+        margin: 20px 0;
+        font-family: "Fira Code", "Consolas", "Monaco", "Courier New", monospace;
         font-size: 14px;
         line-height: 1.6;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        border: 1px solid #3c3c3c;
         position: relative;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
         white-space: pre;
         tab-size: 2;
       }
 
-      .command-box::before {
-        content: "VS Code";
+      .command-box::before,
+      .code-example::before {
+        content: "";
         position: absolute;
-        top: 8px;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #007acc, #00d4ff);
+        border-radius: 12px 12px 0 0;
+      }
+
+      .command,
+      .code-language {
+        position: absolute;
+        top: 10px;
         right: 15px;
-        font-size: 10px;
-        color: #666;
-        font-family: "Segoe UI", sans-serif;
+        background: rgba(0, 122, 204, 0.8);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        backdrop-filter: blur(10px);
+        z-index: 10;
+      }
+
+      .command-box pre,
+      .code-example pre {
+        background: none;
+        margin: 0;
+        padding: 20px 0 0 0;
+        border: none;
+        box-shadow: none;
+      }
+
+      .command-box code,
+      .code-example code {
+        background: none;
+        color: inherit;
+        padding: 0;
+        font-size: inherit;
+        font-family: inherit;
+      }
+
+      /* Code scrollbar styling */
+      .command-box::-webkit-scrollbar,
+      .code-example::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      .command-box::-webkit-scrollbar-track,
+      .code-example::-webkit-scrollbar-track {
         background: #2d2d30;
-        padding: 2px 6px;
-        border-radius: 3px;
+        border-radius: 4px;
+      }
+
+      .command-box::-webkit-scrollbar-thumb,
+      .code-example::-webkit-scrollbar-thumb {
+        background: #424242;
+        border-radius: 4px;
+      }
+
+      .command-box::-webkit-scrollbar-thumb:hover,
+      .code-example::-webkit-scrollbar-thumb:hover {
+        background: #4f4f4f;
+      }
+
+      /* Inline code styling */
+      code {
+        background: linear-gradient(135deg, #2d2d30 0%, #1e1e1e 100%);
+        color: #ce9178;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-family: "Fira Code", "Consolas", "Monaco", "Courier New", monospace;
+        font-size: 0.85em;
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
       .command {
@@ -710,7 +847,7 @@
 
       /* Print Styles */
       @media print {
-        .sidebar, .sidebar-toggle, .scroll-to-top, .back-button {
+        .toc-container, .toc-toggle, .scroll-to-top, .back-button {
           display: none !important;
         }
         
@@ -734,6 +871,19 @@
         }
       }
 
+      /* Enhanced Responsive Design */
+      @media (max-width: 1200px) {
+        .container {
+          max-width: 95%;
+          margin: 15px auto;
+          padding: 20px;
+        }
+
+        .layout-container {
+          padding: 0 10px;
+        }
+      }
+
       @media (max-width: 1024px) {
         .container {
           margin: 10px;
@@ -741,63 +891,363 @@
           flex-direction: column;
         }
 
-        .sidebar {
+        .toc-container {
           position: fixed;
           top: 0;
-          left: 0;
-          width: 100%;
+          left: -100%;
+          width: 85%;
           height: 100vh;
           border-radius: 0;
           max-height: 100vh;
-          transform: translateX(-100%);
+          box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .toc-container.active {
+          left: 0;
         }
 
         .main-content {
           width: 100%;
         }
 
-        .header h1 {
-          font-size: 2em;
+        .header {
+          padding: 30px 20px;
         }
 
-        .user-info {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 10px;
+        .header h1 {
+          font-size: 2.2em;
+        }
+
+        .header p {
+          font-size: 1.1em;
+        }
+
+        .toc-toggle {
+          top: 15px;
+          left: 15px;
+          padding: 12px 15px;
+          font-size: 18px;
+        }
+
+        .scroll-to-top {
+          bottom: 25px;
+          right: 25px;
+          padding: 12px;
+        }
+
+        /* Code examples responsive */
+        .code-example {
+          margin: 15px 0;
+        }
+
+        .code-example pre {
+          font-size: 13px;
+          padding: 15px;
+          overflow-x: auto;
+        }
+
+        .topic-grid {
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 15px;
+        }
+
+        .example-demo {
+          margin: 15px 0;
+        }
+      }
+
+      /* Tablet Portrait */
+      @media (max-width: 768px) {
+        .container {
+          margin: 8px;
+          padding: 12px;
+          border-radius: 15px;
+        }
+
+        .toc-container {
+          width: 90%;
+        }
+
+        .header {
+          padding: 25px 15px;
+          border-radius: 15px 15px 0 0;
+        }
+
+        .header h1 {
+          font-size: 1.9em;
+          margin-bottom: 10px;
+        }
+
+        .header p {
+          font-size: 1em;
+        }
+
+        .section {
+          margin-bottom: 25px;
+        }
+
+        .day-title {
+          font-size: 1.8em;
+          padding: 20px 15px;
+          margin-bottom: 20px;
+        }
+
+        .subsection-title {
+          font-size: 1.4em;
+          margin-bottom: 15px;
+        }
+
+        .concept-box, .topic-card {
+          padding: 15px;
+          margin-bottom: 15px;
+        }
+
+        .code-example {
+          border-radius: 12px;
+        }
+
+        .code-header {
+          padding: 12px 15px;
+        }
+
+        .code-example pre {
+          font-size: 12px;
+          padding: 12px;
+          line-height: 1.4;
+        }
+
+        .topic-grid {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+
+        .toc-toggle {
+          top: 12px;
+          left: 12px;
+          padding: 10px 12px;
+          font-size: 16px;
         }
 
         .scroll-to-top {
           bottom: 20px;
           right: 20px;
-          width: 50px;
-          height: 50px;
-          font-size: 1.2em;
+          padding: 10px;
+          font-size: 16px;
         }
 
-        .sidebar-toggle {
-          top: 10px;
-          left: 10px;
-          width: 50px;
-          height: 50px;
-          font-size: 1.2em;
+        /* Table responsive */
+        .table-container {
+          overflow-x: auto;
+          margin: 15px 0;
+        }
+
+        .permissions-table {
+          font-size: 13px;
+        }
+
+        .permissions-table th,
+        .permissions-table td {
+          padding: 8px 10px;
         }
       }
 
+      /* Mobile Landscape */
+      @media (max-width: 640px) and (orientation: landscape) {
+        .toc-container {
+          width: 70%;
+        }
+
+        .header h1 {
+          font-size: 1.7em;
+        }
+
+        .code-example pre {
+          font-size: 11px;
+        }
+      }
+
+      /* Mobile Portrait */
       @media (max-width: 600px) {
         .content {
-          padding: 0 15px 15px;
+          padding: 0 10px 15px;
+        }
+
+        .container {
+          margin: 5px;
+          padding: 10px;
+          border-radius: 12px;
+        }
+
+        .toc-container {
+          width: 95%;
+          border-radius: 0;
+        }
+
+        .toc-header {
+          padding: 20px;
+        }
+
+        .toc-header h3 {
+          font-size: 1.1em;
+        }
+
+        .toc-list {
+          padding: 15px;
+        }
+
+        .toc-list a {
+          padding: 10px 12px;
+          font-size: 0.85em;
+        }
+
+        .header {
+          padding: 20px 12px;
+          border-radius: 12px 12px 0 0;
+        }
+
+        .header h1 {
+          font-size: 1.6em;
+          line-height: 1.2;
+        }
+
+        .header p {
+          font-size: 0.9em;
+        }
+
+        .day-title {
+          font-size: 1.5em;
+          padding: 15px 10px;
+          margin-bottom: 15px;
         }
 
         .section-title {
-          font-size: 1.6em;
+          font-size: 1.4em;
         }
 
         .subsection-title {
-          font-size: 1.3em;
+          font-size: 1.2em;
+          margin-bottom: 12px;
         }
 
-        .topic-grid {
-          grid-template-columns: 1fr;
+        .concept-box, .topic-card {
+          padding: 12px;
+          margin-bottom: 12px;
+        }
+
+        .concept-box h4, .topic-card h5 {
+          font-size: 1.1em;
+          margin-bottom: 8px;
+        }
+
+        .code-example {
+          border-radius: 10px;
+          margin: 12px 0;
+        }
+
+        .code-header {
+          padding: 10px 12px;
+          border-radius: 10px 10px 0 0;
+        }
+
+        .code-title {
+          font-size: 0.85em;
+        }
+
+        .language-label {
+          font-size: 0.7em;
+          padding: 3px 8px;
+        }
+
+        .code-example pre {
+          font-size: 11px;
+          padding: 10px;
+          line-height: 1.3;
+          overflow-x: auto;
+        }
+
+        .demo-button {
+          padding: 8px 15px;
+          font-size: 0.8em;
+          margin-top: 10px;
+        }
+
+        .toc-toggle {
+          top: 8px;
+          left: 8px;
+          padding: 8px 10px;
+          font-size: 14px;
+          border-radius: 8px;
+        }
+
+        .scroll-to-top {
+          bottom: 15px;
+          right: 15px;
+          padding: 8px;
+          font-size: 14px;
+          border-radius: 8px;
+        }
+
+        .back-button {
+          padding: 8px 15px;
+          font-size: 0.8em;
+          margin: 10px 0;
+        }
+
+        /* List styling for mobile */
+        ul, ol {
+          padding-left: 20px;
+        }
+
+        li {
+          margin-bottom: 6px;
+          font-size: 0.9em;
+        }
+
+        /* Table extra responsive */
+        .table-container {
+          margin: 10px -10px;
+          border-radius: 8px;
+        }
+
+        .permissions-table {
+          font-size: 11px;
+          border-radius: 8px;
+        }
+
+        .permissions-table th,
+        .permissions-table td {
+          padding: 6px 8px;
+        }
+      }
+
+      /* Extra Small Mobile */
+      @media (max-width: 400px) {
+        .container {
+          margin: 3px;
+          padding: 8px;
+        }
+
+        .header h1 {
+          font-size: 1.4em;
+        }
+
+        .day-title {
+          font-size: 1.3em;
+          padding: 12px 8px;
+        }
+
+        .code-example pre {
+          font-size: 10px;
+          padding: 8px;
+        }
+
+        .toc-toggle, .scroll-to-top {
+          padding: 6px 8px;
+          font-size: 13px;
+        }
+
+        .concept-box, .topic-card {
+          padding: 10px;
         }
       }
 
@@ -839,267 +1289,106 @@
     <div class="reading-progress" id="reading-progress"></div>
     
     <div class="layout-container">
-      <!-- Sidebar Toggle Button -->
-      <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+      <!-- TOC Toggle Button -->
+      <button class="toc-toggle" onclick="toggleTOC()">☰</button>
 
-      <!-- Sidebar Overlay -->
-      <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+      <!-- TOC Backdrop -->
+      <div class="toc-backdrop" onclick="closeTOC()"></div>
 
       <!-- Sidebar Navigation -->
-      <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
+      <nav class="toc-container" id="toc">
+        <div class="toc-header">
           <h3>� Study Guide</h3>
-          <p>JavaScript Programming</p>
+
         </div>
-        <div class="sidebar-content">
+        <div class="toc-list">
           <ul>
           <li>
             <a href="#introduction" onclick="setActive(this)"
               >🌟 Day 1: Introduction & Basics</a
             >
-            <ul>
-              <li>
-                <a href="#js-intro" onclick="setActive(this)"
-                  >What is JavaScript?</a
-                >
-              </li>
-              <li>
-                <a href="#roles" onclick="setActive(this)"
-                  >HTML, CSS, JS Roles</a
-                >
-              </li>
-              <li>
-                <a href="#comparison" onclick="setActive(this)"
-                  >JavaScript vs Java</a
-                >
-              </li>
-              <li>
-                <a href="#history" onclick="setActive(this)"
-                  >History & Evolution</a
-                >
-              </li>
-              <li>
-                <a href="#embedding" onclick="setActive(this)"
-                  >Embedding JavaScript</a
-                >
-              </li>
-            </ul>
+          </li>
+          <li>
+            <a href="#js-intro" onclick="setActive(this)"
+              >What is JavaScript?</a
+            >
+          </li>
+          <li>
+            <a href="#roles" onclick="setActive(this)"
+              >HTML, CSS, JS Roles</a
+            >
+          </li>
+          <li>
+            <a href="#comparison" onclick="setActive(this)"
+              >JavaScript vs Java</a
+            >
+          </li>
+          <li>
+            <a href="#history" onclick="setActive(this)"
+              >History & Evolution</a
+            >
+          </li>
+          <li>
+            <a href="#embedding" onclick="setActive(this)"
+              >Embedding JavaScript</a
+            >
           </li>
           <li>
             <a href="#variables" onclick="setActive(this)"
               >📦 Day 2: Variables & Data Types</a
             >
-            <ul>
-              <li>
-                <a href="#variable-naming" onclick="setActive(this)"
-                  >Variable Declaration</a
-                >
-              </li>
-              <li>
-                <a href="#data-types" onclick="setActive(this)">Data Types</a>
-              </li>
-              <li>
-                <a href="#scope" onclick="setActive(this)"
-                  >Scope & Hoisting</a
-                >
-              </li>
-            </ul>
+          </li>
+          <li>
+            <a href="#variable-naming" onclick="setActive(this)"
+              >Variable Declaration</a
+            >
+          </li>
+          <li>
+            <a href="#data-types" onclick="setActive(this)">Data Types</a>
+          </li>
+          <li>
+            <a href="#scope" onclick="setActive(this)"
+              >Scope & Hoisting</a
+            >
           </li>
           <li>
             <a href="#operators" onclick="setActive(this)">⚡ Operators</a>
-            <ul>
-              <li>
-                <a href="#operators" onclick="setActive(this)"
-                  >Arithmetic Operators</a
-                >
-              </li>
-              <li>
-                <a href="#operators" onclick="setActive(this)"
-                  >Assignment Operators</a
-                >
-              </li>
-              <li>
-                <a href="#operators" onclick="setActive(this)"
-                  >Comparison Operators</a
-                >
-              </li>
-              <li>
-                <a href="#operators" onclick="setActive(this)"
-                  >Logical Operators</a
-                >
-              </li>
-              <li>
-                <a href="#operators" onclick="setActive(this)"
-                  >Special Operators</a
-                >
-              </li>
-            </ul>
           </li>
           <li>
             <a href="#control-statements" onclick="setActive(this)"
               >🔄 Control Statements</a
             >
-            <ul>
-              <li>
-                <a href="#control-statements" onclick="setActive(this)"
-                  >Conditionals</a
-                >
-              </li>
-              <li>
-                <a href="#control-statements" onclick="setActive(this)"
-                  >Loops</a
-                >
-              </li>
-              <li>
-                <a href="#control-statements" onclick="setActive(this)"
-                  >Break & Continue</a
-                >
-              </li>
-            </ul>
           </li>
           <li>
             <a href="#functions" onclick="setActive(this)">🎯 Functions</a>
-            <ul>
-              <li>
-                <a href="#functions" onclick="setActive(this)"
-                  >Built-in Functions</a
-                >
-              </li>
-              <li>
-                <a href="#functions" onclick="setActive(this)"
-                  >User-defined Functions</a
-                >
-              </li>
-              <li>
-                <a href="#functions" onclick="setActive(this)"
-                  >Function Parameters</a
-                >
-              </li>
-              <li>
-                <a href="#functions" onclick="setActive(this)">Debugging</a>
-              </li>
-            </ul>
           </li>
           <li>
             <a href="#objects" onclick="setActive(this)">🏗️ Built-in Objects</a>
-            <ul>
-              <li>
-                <a href="#objects" onclick="setActive(this)">String Object</a>
-              </li>
-              <li>
-                <a href="#objects" onclick="setActive(this)">Math Object</a>
-              </li>
-              <li>
-                <a href="#objects" onclick="setActive(this)">Array Object</a>
-              </li>
-              <li>
-                <a href="#objects" onclick="setActive(this)">Date Object</a>
-              </li>
-              <li>
-                <a href="#objects" onclick="setActive(this)">RegExp Object</a>
-              </li>
-            </ul>
           </li>
           <li>
             <a href="#json" onclick="setActive(this)">📄 JSON</a>
-            <ul>
-              <li>
-                <a href="#json" onclick="setActive(this)">JSON Structure</a>
-              </li>
-              <li><a href="#json" onclick="setActive(this)">JSON vs XML</a></li>
-              <li>
-                <a href="#json" onclick="setActive(this)">Parsing JSON</a>
-              </li>
-            </ul>
           </li>
           <li>
             <a href="#ajax" onclick="setActive(this)"
               >🌐 AJAX & XMLHttpRequest</a
             >
-            <ul>
-              <li>
-                <a href="#ajax" onclick="setActive(this)">What is AJAX?</a>
-              </li>
-              <li>
-                <a href="#ajax" onclick="setActive(this)"
-                  >XMLHttpRequest Object</a
-                >
-              </li>
-              <li>
-                <a href="#ajax" onclick="setActive(this)">AJAX Communication</a>
-              </li>
-            </ul>
           </li>
           <li>
             <a href="#error-handling" onclick="setActive(this)"
               >🚨 Error Handling</a
             >
-            <ul>
-              <li>
-                <a href="#error-handling" onclick="setActive(this)"
-                  >Error Object</a
-                >
-              </li>
-              <li>
-                <a href="#error-handling" onclick="setActive(this)"
-                  >try...catch</a
-                >
-              </li>
-              <li>
-                <a href="#error-handling" onclick="setActive(this)"
-                  >throw Statement</a
-                >
-              </li>
-            </ul>
           </li>
           <li>
             <a href="#dom" onclick="setActive(this)"
               >📋 Document Object Model</a
             >
-            <ul>
-              <li><a href="#dom" onclick="setActive(this)">What is DOM?</a></li>
-              <li>
-                <a href="#dom" onclick="setActive(this)">window Object</a>
-              </li>
-              <li>
-                <a href="#dom" onclick="setActive(this)">document Object</a>
-              </li>
-              <li>
-                <a href="#dom" onclick="setActive(this)">Event Handling</a>
-              </li>
-              <li>
-                <a href="#dom" onclick="setActive(this)">Form Elements</a>
-              </li>
-            </ul>
           </li>
           <li>
             <a href="#dynamic-styles" onclick="setActive(this)"
               >🎨 Dynamic Styles</a
             >
-            <ul>
-              <li>
-                <a href="#dynamic-styles" onclick="setActive(this)"
-                  >Style Object</a
-                >
-              </li>
-              <li>
-                <a href="#dynamic-styles" onclick="setActive(this)"
-                  >CSS Box Model</a
-                >
-              </li>
-              <li>
-                <a href="#dynamic-styles" onclick="setActive(this)"
-                  >Positioning</a
-                >
-              </li>
-              <li>
-                <a href="#dynamic-styles" onclick="setActive(this)"
-                  >Dynamic Content</a
-                >
-              </li>
-            </ul>
           </li>
-        </div>
+          </ul>
       </nav>
 
       <main class="main-content">
@@ -1146,15 +1435,18 @@
 
               <div class="example-demo">
                 <h5>🚀 Your First JavaScript Program</h5>
-                <div class="command-box">
-                  <div class="command">// Basic JavaScript Examples</div>
-<span class="comment">// Simple console output</span>
-<span class="variable">console</span><span class="operator">.</span><span class="method">log</span><span class="bracket">(</span><span class="string">"Hello, World!"</span><span class="bracket">)</span><span class="punctuation">;</span>
+                <div class="code-example">
+                  <div class="code-header">
+                    <span class="code-title">Your First JavaScript Program</span>
+                    <span class="language-label">JavaScript</span>
+                  </div>
+                  <pre><code><span class="comment">// Simple console output</span>
+<span class="function">console</span><span class="punctuation">.</span><span class="method">log</span><span class="punctuation">(</span><span class="string">"Hello, World!"</span><span class="punctuation">);</span>
 
 <span class="comment">// Interactive user input</span>
-<span class="method">alert</span><span class="bracket">(</span><span class="string">"Welcome to JavaScript!"</span><span class="bracket">)</span><span class="punctuation">;</span>
-<span class="keyword">let</span> <span class="variable">userName</span> <span class="operator">=</span> <span class="method">prompt</span><span class="bracket">(</span><span class="string">"What's your name?"</span><span class="bracket">)</span><span class="punctuation">;</span>
-<span class="variable">document</span><span class="operator">.</span><span class="method">write</span><span class="bracket">(</span><span class="string">"Hello, "</span> <span class="operator">+</span> <span class="variable">userName</span> <span class="operator">+</span> <span class="string">"!"</span><span class="bracket">)</span><span class="punctuation">;</span>
+<span class="method">alert</span><span class="punctuation">(</span><span class="string">"Welcome to JavaScript!"</span><span class="punctuation">);</span>
+<span class="keyword">let</span> <span class="variable">userName</span> <span class="operator">=</span> <span class="method">prompt</span><span class="punctuation">(</span><span class="string">"What's your name?"</span><span class="punctuation">);</span>
+<span class="property">document</span><span class="punctuation">.</span><span class="method">write</span><span class="punctuation">(</span><span class="string">"Hello, "</span> <span class="operator">+</span> <span class="variable">userName</span> <span class="operator">+</span> <span class="string">"!"</span><span class="punctuation">);</span></code></pre>
                 </div>
                 <button class="demo-button" onclick="runFirstExample()">
                   Run Example
@@ -1171,18 +1463,21 @@
                     The markup language for specifying web documents and their
                     structure. Defines content and semantic meaning.
                   </p>
-                  <div class="command-box">
-                    <div class="command">// Basic HTML Structure</div>
-<span class="operator">&lt;</span><span class="keyword">!DOCTYPE</span> <span class="property">html</span><span class="operator">&gt;</span>
-<span class="operator">&lt;</span><span class="keyword">html</span><span class="operator">&gt;</span>
-  <span class="operator">&lt;</span><span class="keyword">head</span><span class="operator">&gt;</span>
-    <span class="operator">&lt;</span><span class="keyword">title</span><span class="operator">&gt;</span>My Page<span class="operator">&lt;/</span><span class="keyword">title</span><span class="operator">&gt;</span>
-  <span class="operator">&lt;/</span><span class="keyword">head</span><span class="operator">&gt;</span>
-  <span class="operator">&lt;</span><span class="keyword">body</span><span class="operator">&gt;</span>
-    <span class="operator">&lt;</span><span class="keyword">h1</span><span class="operator">&gt;</span>Welcome<span class="operator">&lt;/</span><span class="keyword">h1</span><span class="operator">&gt;</span>
-    <span class="operator">&lt;</span><span class="keyword">p</span><span class="operator">&gt;</span>This is content<span class="operator">&lt;/</span><span class="keyword">p</span><span class="operator">&gt;</span>
-  <span class="operator">&lt;/</span><span class="keyword">body</span><span class="operator">&gt;</span>
-<span class="operator">&lt;/</span><span class="keyword">html</span><span class="operator">&gt;</span>
+                  <div class="code-example">
+                    <div class="code-header">
+                      <span class="code-title">Basic HTML Structure</span>
+                      <span class="language-label">HTML</span>
+                    </div>
+                    <pre><code><span class="punctuation">&lt;</span><span class="tag">!DOCTYPE</span> <span class="attribute">html</span><span class="punctuation">&gt;</span>
+<span class="punctuation">&lt;</span><span class="tag">html</span><span class="punctuation">&gt;</span>
+  <span class="punctuation">&lt;</span><span class="tag">head</span><span class="punctuation">&gt;</span>
+    <span class="punctuation">&lt;</span><span class="tag">title</span><span class="punctuation">&gt;</span>My Page<span class="punctuation">&lt;/</span><span class="tag">title</span><span class="punctuation">&gt;</span>
+  <span class="punctuation">&lt;/</span><span class="tag">head</span><span class="punctuation">&gt;</span>
+  <span class="punctuation">&lt;</span><span class="tag">body</span><span class="punctuation">&gt;</span>
+    <span class="punctuation">&lt;</span><span class="tag">h1</span><span class="punctuation">&gt;</span>Welcome<span class="punctuation">&lt;/</span><span class="tag">h1</span><span class="punctuation">&gt;</span>
+    <span class="punctuation">&lt;</span><span class="tag">p</span><span class="punctuation">&gt;</span>This is content<span class="punctuation">&lt;/</span><span class="tag">p</span><span class="punctuation">&gt;</span>
+  <span class="punctuation">&lt;/</span><span class="tag">body</span><span class="punctuation">&gt;</span>
+<span class="punctuation">&lt;/</span><span class="tag">html</span><span class="punctuation">&gt;</span></code></pre>
                   </div>
                 </div>
                 <div class="topic-card">
@@ -1191,18 +1486,21 @@
                     Used for styling and presentation of web pages. Controls how
                     HTML elements look.
                   </p>
-                  <div class="command-box">
-                    <div class="command">/* CSS Styling */</div>
-<span class="keyword">h1</span> <span class="bracket">{</span>
-  <span class="property">color</span><span class="operator">:</span> <span class="constant">blue</span><span class="punctuation">;</span>
-  <span class="property">font-size</span><span class="operator">:</span> <span class="number">24px</span><span class="punctuation">;</span>
-  <span class="property">text-align</span><span class="operator">:</span> <span class="constant">center</span><span class="punctuation">;</span>
-<span class="bracket">}</span>
+                  <div class="code-example">
+                    <div class="code-header">
+                      <span class="code-title">CSS Styling</span>
+                      <span class="language-label">CSS</span>
+                    </div>
+                    <pre><code><span class="selector">h1</span> <span class="punctuation">{</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">blue</span><span class="punctuation">;</span>
+  <span class="property">font-size</span><span class="punctuation">:</span> <span class="number">24px</span><span class="punctuation">;</span>
+  <span class="property">text-align</span><span class="punctuation">:</span> <span class="value">center</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
 
-<span class="keyword">p</span> <span class="bracket">{</span>
-  <span class="property">margin</span><span class="operator">:</span> <span class="number">10px</span><span class="punctuation">;</span>
-  <span class="property">line-height</span><span class="operator">:</span> <span class="number">1.6</span><span class="punctuation">;</span>
-<span class="bracket">}</span>
+<span class="selector">p</span> <span class="punctuation">{</span>
+  <span class="property">margin</span><span class="punctuation">:</span> <span class="number">10px</span><span class="punctuation">;</span>
+  <span class="property">line-height</span><span class="punctuation">:</span> <span class="number">1.6</span><span class="punctuation">;</span>
+<span class="punctuation">}</span></code></pre>
                   </div>
                 </div>
                 <div class="topic-card">
@@ -1211,17 +1509,20 @@
                     Adds interactivity and dynamic behavior to HTML pages. Makes
                     pages responsive to user actions.
                   </p>
-                  <div class="command-box">
-                    <div class="command">// JavaScript Behavior</div>
-<span class="comment">// Event handling</span>
-<span class="variable">document</span><span class="operator">.</span><span class="method">getElementById</span><span class="bracket">(</span><span class="string">"myButton"</span><span class="bracket">)</span>
-  <span class="operator">.</span><span class="method">addEventListener</span><span class="bracket">(</span><span class="string">"click"</span><span class="operator">,</span> <span class="keyword">function</span><span class="bracket">()</span> <span class="bracket">{</span>
-    <span class="method">alert</span><span class="bracket">(</span><span class="string">"Button clicked!"</span><span class="bracket">)</span><span class="punctuation">;</span>
-  <span class="bracket">}</span><span class="bracket">)</span><span class="punctuation">;</span>
+                  <div class="code-example">
+                    <div class="code-header">
+                      <span class="code-title">JavaScript Behavior</span>
+                      <span class="language-label">JavaScript</span>
+                    </div>
+                    <pre><code><span class="comment">// Event handling</span>
+<span class="property">document</span><span class="punctuation">.</span><span class="method">getElementById</span><span class="punctuation">(</span><span class="string">"myButton"</span><span class="punctuation">)</span>
+  <span class="punctuation">.</span><span class="method">addEventListener</span><span class="punctuation">(</span><span class="string">"click"</span><span class="punctuation">,</span> <span class="keyword">function</span><span class="punctuation">()</span> <span class="punctuation">{</span>
+    <span class="method">alert</span><span class="punctuation">(</span><span class="string">"Button clicked!"</span><span class="punctuation">);</span>
+  <span class="punctuation">}</span><span class="punctuation">);</span>
 
 <span class="comment">// Dynamic content</span>
-<span class="variable">document</span><span class="operator">.</span><span class="method">getElementById</span><span class="bracket">(</span><span class="string">"demo"</span><span class="bracket">)</span><span class="operator">.</span><span class="property">innerHTML</span>
-  <span class="operator">=</span> <span class="string">"Current time: "</span> <span class="operator">+</span> <span class="keyword">new</span> <span class="type">Date</span><span class="bracket">()</span><span class="punctuation">;</span>
+<span class="property">document</span><span class="punctuation">.</span><span class="method">getElementById</span><span class="punctuation">(</span><span class="string">"demo"</span><span class="punctuation">)</span><span class="punctuation">.</span><span class="property">innerHTML</span>
+  <span class="operator">=</span> <span class="string">"Current time: "</span> <span class="operator">+</span> <span class="keyword">new</span> <span class="class">Date</span><span class="punctuation">();</span></code></pre>
                   </div>
                 </div>
               </div>
@@ -1315,26 +1616,30 @@
 
               <div class="example-demo">
                 <h5>🔄 JavaScript Evolution Example</h5>
-                <div class="command-box">
-                  <div class="command">// Old JavaScript (ES5 and before)</div>
+                <div class="code-example">
+                  <div class="code-header">
+                    <span class="code-title">JavaScript Evolution Example</span>
+                    <span class="language-label">JavaScript</span>
+                  </div>
+                  <pre><code><span class="comment">// Old JavaScript (ES5 and before)</span>
 <span class="keyword">var</span> <span class="variable">name</span> <span class="operator">=</span> <span class="string">"John"</span><span class="punctuation">;</span>
 <span class="keyword">var</span> <span class="variable">age</span> <span class="operator">=</span> <span class="number">25</span><span class="punctuation">;</span>
 <span class="keyword">var</span> <span class="variable">greeting</span> <span class="operator">=</span> <span class="string">"Hello, my name is "</span> <span class="operator">+</span> <span class="variable">name</span> <span class="operator">+</span> <span class="string">" and I'm "</span> <span class="operator">+</span> <span class="variable">age</span><span class="punctuation">;</span>
 
-<span class="keyword">function</span> <span class="function">calculateArea</span><span class="bracket">(</span><span class="variable">radius</span><span class="bracket">)</span> <span class="bracket">{</span>
-  <span class="keyword">return</span> <span class="variable">Math</span><span class="operator">.</span><span class="constant">PI</span> <span class="operator">*</span> <span class="variable">radius</span> <span class="operator">*</span> <span class="variable">radius</span><span class="punctuation">;</span>
-<span class="bracket">}</span>
+<span class="keyword">function</span> <span class="function">calculateArea</span><span class="punctuation">(</span><span class="variable">radius</span><span class="punctuation">)</span> <span class="punctuation">{</span>
+  <span class="keyword">return</span> <span class="property">Math</span><span class="punctuation">.</span><span class="property">PI</span> <span class="operator">*</span> <span class="variable">radius</span> <span class="operator">*</span> <span class="variable">radius</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
 
 <span class="comment">// Modern JavaScript (ES6+)</span>
 <span class="keyword">const</span> <span class="variable">name</span> <span class="operator">=</span> <span class="string">"John"</span><span class="punctuation">;</span>
 <span class="keyword">const</span> <span class="variable">age</span> <span class="operator">=</span> <span class="number">25</span><span class="punctuation">;</span>
 <span class="keyword">const</span> <span class="variable">greeting</span> <span class="operator">=</span> <span class="string">`Hello, my name is ${</span><span class="variable">name</span><span class="string">} and I'm ${</span><span class="variable">age</span><span class="string">}`</span><span class="punctuation">;</span>
 
-<span class="keyword">const</span> <span class="function">calculateArea</span> <span class="operator">=</span> <span class="bracket">(</span><span class="variable">radius</span><span class="bracket">)</span> <span class="operator">=></span> <span class="variable">Math</span><span class="operator">.</span><span class="constant">PI</span> <span class="operator">*</span> <span class="variable">radius</span> <span class="operator">**</span> <span class="number">2</span><span class="punctuation">;</span>
+<span class="keyword">const</span> <span class="function">calculateArea</span> <span class="operator">=</span> <span class="punctuation">(</span><span class="variable">radius</span><span class="punctuation">)</span> <span class="operator">=></span> <span class="property">Math</span><span class="punctuation">.</span><span class="property">PI</span> <span class="operator">*</span> <span class="variable">radius</span> <span class="operator">**</span> <span class="number">2</span><span class="punctuation">;</span>
 
 <span class="comment">// ES6+ Features</span>
-<span class="keyword">const</span> <span class="variable">person</span> <span class="operator">=</span> <span class="bracket">{</span> <span class="variable">name</span><span class="operator">,</span> <span class="variable">age</span> <span class="bracket">}</span><span class="punctuation">;</span> <span class="comment">// Property shorthand</span>
-<span class="keyword">const</span> <span class="bracket">{</span> <span class="variable">name</span><span class="operator">:</span> <span class="variable">personName</span> <span class="bracket">}</span> <span class="operator">=</span> <span class="variable">person</span><span class="punctuation">;</span> <span class="comment">// Destructuring</span>
+<span class="keyword">const</span> <span class="variable">person</span> <span class="operator">=</span> <span class="punctuation">{</span> <span class="variable">name</span><span class="punctuation">,</span> <span class="variable">age</span> <span class="punctuation">}</span><span class="punctuation">;</span> <span class="comment">// Property shorthand</span>
+<span class="keyword">const</span> <span class="punctuation">{</span> <span class="variable">name</span><span class="punctuation">:</span> <span class="variable">personName</span> <span class="punctuation">}</span> <span class="operator">=</span> <span class="variable">person</span><span class="punctuation">;</span> <span class="comment">// Destructuring</span></code></pre>
                 </div>
               </div>
 
@@ -1344,60 +1649,70 @@
               <div class="topic-grid">
                 <div class="topic-card">
                   <h5>📝 Inline HTML</h5>
-                  <div class="command-box">
-                    <div class="command">// Inline JavaScript in HTML</div>
-<span class="operator">&lt;</span><span class="keyword">!DOCTYPE</span> <span class="property">html</span><span class="operator">&gt;</span>
-<span class="operator">&lt;</span><span class="keyword">html</span><span class="operator">&gt;</span>
-  <span class="operator">&lt;</span><span class="keyword">head</span><span class="operator">&gt;</span>
-    <span class="operator">&lt;</span><span class="keyword">script</span><span class="operator">&gt;</span>
-      <span class="keyword">function</span> <span class="function">showAlert</span><span class="bracket">()</span> <span class="bracket">{</span>
-        <span class="method">alert</span><span class="bracket">(</span><span class="string">"Hello from inline script!"</span><span class="bracket">)</span><span class="punctuation">;</span>
-      <span class="bracket">}</span>
-    <span class="operator">&lt;/</span><span class="keyword">script</span><span class="operator">&gt;</span>
-  <span class="operator">&lt;/</span><span class="keyword">head</span><span class="operator">&gt;</span>
-  <span class="operator">&lt;</span><span class="keyword">body</span><span class="operator">&gt;</span>
-    <span class="operator">&lt;</span><span class="keyword">h1</span><span class="operator">&gt;</span>My Page<span class="operator">&lt;/</span><span class="keyword">h1</span><span class="operator">&gt;</span>
-    <span class="operator">&lt;</span><span class="keyword">script</span><span class="operator">&gt;</span>
-      <span class="variable">document</span><span class="operator">.</span><span class="method">write</span><span class="bracket">(</span><span class="string">"&lt;p&gt;Generated by JS&lt;/p&gt;"</span><span class="bracket">)</span><span class="punctuation">;</span>
-    <span class="operator">&lt;/</span><span class="keyword">script</span><span class="operator">&gt;</span>
-  <span class="operator">&lt;/</span><span class="keyword">body</span><span class="operator">&gt;</span>
-<span class="operator">&lt;/</span><span class="keyword">html</span><span class="operator">&gt;</span>
+                  <div class="code-example">
+                    <div class="code-header">
+                      <span class="code-title">Inline JavaScript in HTML</span>
+                      <span class="language-label">HTML</span>
+                    </div>
+                    <pre><code><span class="punctuation">&lt;</span><span class="tag">!DOCTYPE</span> <span class="attribute">html</span><span class="punctuation">&gt;</span>
+<span class="punctuation">&lt;</span><span class="tag">html</span><span class="punctuation">&gt;</span>
+  <span class="punctuation">&lt;</span><span class="tag">head</span><span class="punctuation">&gt;</span>
+    <span class="punctuation">&lt;</span><span class="tag">script</span><span class="punctuation">&gt;</span>
+      <span class="keyword">function</span> <span class="function">showAlert</span><span class="punctuation">()</span> <span class="punctuation">{</span>
+        <span class="method">alert</span><span class="punctuation">(</span><span class="string">"Hello from inline script!"</span><span class="punctuation">);</span>
+      <span class="punctuation">}</span>
+    <span class="punctuation">&lt;/</span><span class="tag">script</span><span class="punctuation">&gt;</span>
+  <span class="punctuation">&lt;/</span><span class="tag">head</span><span class="punctuation">&gt;</span>
+  <span class="punctuation">&lt;</span><span class="tag">body</span><span class="punctuation">&gt;</span>
+    <span class="punctuation">&lt;</span><span class="tag">h1</span><span class="punctuation">&gt;</span>My Page<span class="punctuation">&lt;/</span><span class="tag">h1</span><span class="punctuation">&gt;</span>
+    <span class="punctuation">&lt;</span><span class="tag">script</span><span class="punctuation">&gt;</span>
+      <span class="property">document</span><span class="punctuation">.</span><span class="method">write</span><span class="punctuation">(</span><span class="string">"&lt;p&gt;Generated by JS&lt;/p&gt;"</span><span class="punctuation">);</span>
+    <span class="punctuation">&lt;/</span><span class="tag">script</span><span class="punctuation">&gt;</span>
+  <span class="punctuation">&lt;/</span><span class="tag">body</span><span class="punctuation">&gt;</span>
+<span class="punctuation">&lt;/</span><span class="tag">html</span><span class="punctuation">&gt;</span></code></pre>
                   </div>
                 </div>
                 <div class="topic-card">
                   <h5>🎯 Event Handler Attributes</h5>
-                  <div class="command-box">
-                    <div class="command">// Event handlers in HTML attributes</div>
-<span class="comment">&lt;!-- Event handler in HTML attribute --&gt;</span>
-<span class="operator">&lt;</span><span class="keyword">button</span> <span class="property">onclick</span><span class="operator">=</span><span class="string">"alert('Button clicked!')"</span><span class="operator">&gt;</span>
+                  <div class="code-example">
+                    <div class="code-header">
+                      <span class="code-title">Event Handlers in HTML Attributes</span>
+                      <span class="language-label">HTML</span>
+                    </div>
+                    <pre><code><span class="comment">&lt;!-- Event handler in HTML attribute --&gt;</span>
+<span class="punctuation">&lt;</span><span class="tag">button</span> <span class="attribute">onclick</span><span class="operator">=</span><span class="string">"alert('Button clicked!')"</span><span class="punctuation">&gt;</span>
   Click Me
-<span class="operator">&lt;/</span><span class="keyword">button</span><span class="operator">&gt;</span>
+<span class="punctuation">&lt;/</span><span class="tag">button</span><span class="punctuation">&gt;</span>
 
-<span class="operator">&lt;</span><span class="keyword">input</span> <span class="property">type</span><span class="operator">=</span><span class="string">"text"</span>
-  <span class="property">onchange</span><span class="operator">=</span><span class="string">"console.log(this.value)"</span><span class="operator">&gt;</span>
+<span class="punctuation">&lt;</span><span class="tag">input</span> <span class="attribute">type</span><span class="operator">=</span><span class="string">"text"</span>
+  <span class="attribute">onchange</span><span class="operator">=</span><span class="string">"console.log(this.value)"</span><span class="punctuation">&gt;</span>
 
-<span class="operator">&lt;</span><span class="keyword">img</span> <span class="property">src</span><span class="operator">=</span><span class="string">"image.jpg"</span>
-  <span class="property">onload</span><span class="operator">=</span><span class="string">"console.log('Image loaded')"</span><span class="operator">&gt;</span>
+<span class="punctuation">&lt;</span><span class="tag">img</span> <span class="attribute">src</span><span class="operator">=</span><span class="string">"image.jpg"</span>
+  <span class="attribute">onload</span><span class="operator">=</span><span class="string">"console.log('Image loaded')"</span><span class="punctuation">&gt;</span></code></pre>
                   </div>
                 </div>
                 <div class="topic-card">
                   <h5>📄 External File</h5>
-                  <div class="command-box">
-                    <div class="command">// HTML file</div>
-<span class="operator">&lt;</span><span class="keyword">script</span> <span class="property">src</span><span class="operator">=</span><span class="string">"scripts/main.js"</span><span class="operator">&gt;&lt;/</span><span class="keyword">script</span><span class="operator">&gt;</span>
-<span class="operator">&lt;</span><span class="keyword">script</span> <span class="property">src</span><span class="operator">=</span><span class="string">"https://cdn.example.com/library.js"</span><span class="operator">&gt;&lt;/</span><span class="keyword">script</span><span class="operator">&gt;</span>
+                  <div class="code-example">
+                    <div class="code-header">
+                      <span class="code-title">External JavaScript Files</span>
+                      <span class="language-label">Mixed</span>
+                    </div>
+                    <pre><code><span class="comment">// HTML file</span>
+<span class="punctuation">&lt;</span><span class="tag">script</span> <span class="attribute">src</span><span class="operator">=</span><span class="string">"scripts/main.js"</span><span class="punctuation">&gt;&lt;/</span><span class="tag">script</span><span class="punctuation">&gt;</span>
+<span class="punctuation">&lt;</span><span class="tag">script</span> <span class="attribute">src</span><span class="operator">=</span><span class="string">"https://cdn.example.com/library.js"</span><span class="punctuation">&gt;&lt;/</span><span class="tag">script</span><span class="punctuation">&gt;</span>
 
 <span class="comment">// main.js file</span>
-<span class="variable">console</span><span class="operator">.</span><span class="method">log</span><span class="bracket">(</span><span class="string">"External script loaded"</span><span class="bracket">)</span><span class="punctuation">;</span>
+<span class="function">console</span><span class="punctuation">.</span><span class="method">log</span><span class="punctuation">(</span><span class="string">"External script loaded"</span><span class="punctuation">);</span>
 
-<span class="keyword">function</span> <span class="function">init</span><span class="bracket">()</span> <span class="bracket">{</span>
-  <span class="variable">document</span><span class="operator">.</span><span class="method">addEventListener</span><span class="bracket">(</span><span class="string">'DOMContentLoaded'</span><span class="operator">,</span> <span class="keyword">function</span><span class="bracket">()</span> <span class="bracket">{</span>
-    <span class="variable">console</span><span class="operator">.</span><span class="method">log</span><span class="bracket">(</span><span class="string">"Page ready!"</span><span class="bracket">)</span><span class="punctuation">;</span>
+<span class="keyword">function</span> <span class="function">init</span><span class="punctuation">()</span> <span class="punctuation">{</span>
+  <span class="property">document</span><span class="punctuation">.</span><span class="method">addEventListener</span><span class="punctuation">(</span><span class="string">'DOMContentLoaded'</span><span class="punctuation">,</span> <span class="keyword">function</span><span class="punctuation">()</span> <span class="punctuation">{</span>
+    <span class="function">console</span><span class="punctuation">.</span><span class="method">log</span><span class="punctuation">(</span><span class="string">"Page ready!"</span><span class="punctuation">);</span>
     <span class="comment">// Initialize your application here</span>
-  <span class="bracket">}</span><span class="bracket">)</span><span class="punctuation">;</span>
-<span class="bracket">}</span>
+  <span class="punctuation">}</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>
 
-<span class="function">init</span><span class="bracket">()</span><span class="punctuation">;</span>
+<span class="function">init</span><span class="punctuation">();</span></code></pre>
                   </div>
                 </div>
               </div>
@@ -6445,38 +6760,33 @@
     </button>
 
     <script>
-      function toggleSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.querySelector(".sidebar-overlay");
+      function toggleTOC() {
+        const toc = document.getElementById("toc");
+        const backdrop = document.querySelector(".toc-backdrop");
 
-        sidebar.classList.toggle("open");
-        overlay.classList.toggle("active");
-
-        if (window.innerWidth <= 768) {
-          sidebar.classList.toggle("active");
-        }
+        toc.classList.toggle("active");
+        backdrop.classList.toggle("active");
       }
 
-      function closeSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.querySelector(".sidebar-overlay");
+      function closeTOC() {
+        const toc = document.getElementById("toc");
+        const backdrop = document.querySelector(".toc-backdrop");
 
-        sidebar.classList.remove("open");
-        overlay.classList.remove("active");
-        sidebar.classList.remove("active");
+        toc.classList.remove("active");
+        backdrop.classList.remove("active");
       }
 
       function setActive(element) {
         // Remove active class from all links
-        document.querySelectorAll(".sidebar a").forEach((link) => {
+        document.querySelectorAll(".toc-list a").forEach((link) => {
           link.classList.remove("active");
         });
 
         // Add active class to clicked link
         element.classList.add("active");
 
-        // Close sidebar after clicking a link
-        closeSidebar();
+        // Close TOC after clicking a link
+        closeTOC();
       }
 
       function scrollToTop() {
@@ -6505,11 +6815,11 @@
           const id = section.getAttribute("id");
 
           if (scrollPos >= top && scrollPos <= bottom && id) {
-            document.querySelectorAll(".sidebar a").forEach((link) => {
+            document.querySelectorAll(".toc-list a").forEach((link) => {
               link.classList.remove("active");
             });
             const activeLink = document.querySelector(
-              `.sidebar a[href="#${id}"]`
+              `.toc-list a[href="#${id}"]`
             );
             if (activeLink) {
               activeLink.classList.add("active");
@@ -6532,20 +6842,145 @@
         });
       });
 
-      // Close sidebar when clicking outside
+      // Close TOC when clicking outside
       document.addEventListener("click", function (e) {
-        const sidebar = document.getElementById("sidebar");
-        const toggle = document.querySelector(".sidebar-toggle");
+        const toc = document.getElementById("toc");
+        const toggle = document.querySelector(".toc-toggle");
 
         if (
-          window.innerWidth <= 768 &&
-          !sidebar.contains(e.target) &&
+          !toc.contains(e.target) &&
           !toggle.contains(e.target) &&
-          sidebar.classList.contains("active")
+          toc.classList.contains("active")
         ) {
-          closeSidebar();
+          closeTOC();
         }
       });
+
+      // Mobile Touch and Swipe Support
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let isSwiping = false;
+
+      // Touch events for mobile swiping
+      document.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isSwiping = false;
+      });
+
+      document.addEventListener('touchmove', function(e) {
+        if (!touchStartX || !touchStartY) return;
+
+        const touchEndX = e.touches[0].clientX;
+        const touchEndY = e.touches[0].clientY;
+        const diffX = touchStartX - touchEndX;
+        const diffY = touchStartY - touchEndY;
+
+        // Check if horizontal swipe is more significant than vertical
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+          isSwiping = true;
+          
+          // Swipe right to open TOC
+          if (diffX < -100) {
+            const toc = document.getElementById("toc");
+            if (!toc.classList.contains("active")) {
+              toggleTOC();
+            }
+          }
+          // Swipe left to close TOC
+          else if (diffX > 100) {
+            const toc = document.getElementById("toc");
+            if (toc.classList.contains("active")) {
+              closeTOC();
+            }
+          }
+        }
+      });
+
+      document.addEventListener('touchend', function(e) {
+        touchStartX = 0;
+        touchStartY = 0;
+        isSwiping = false;
+      });
+
+      // Enhanced mobile navigation
+      function setupMobileNavigation() {
+        // Add touch-friendly button sizes on mobile
+        if (window.innerWidth <= 768) {
+          const tocToggle = document.querySelector('.toc-toggle');
+          const scrollTop = document.querySelector('.scroll-to-top');
+          
+          if (tocToggle) {
+            tocToggle.style.minHeight = '44px';
+            tocToggle.style.minWidth = '44px';
+          }
+          
+          if (scrollTop) {
+            scrollTop.style.minHeight = '44px';
+            scrollTop.style.minWidth = '44px';
+          }
+        }
+      }
+
+      // Enhanced keyboard navigation
+      document.addEventListener('keydown', function(e) {
+        // ESC key closes TOC
+        if (e.key === 'Escape') {
+          const toc = document.getElementById("toc");
+          if (toc && toc.classList.contains("active")) {
+            closeTOC();
+          }
+        }
+        
+        // Space or Enter on toggle button
+        if ((e.key === ' ' || e.key === 'Enter') && e.target.classList.contains('toc-toggle')) {
+          e.preventDefault();
+          toggleTOC();
+        }
+      });
+
+      // Viewport height fix for mobile browsers
+      function setViewportHeight() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+      }
+
+      // Orientation change handler
+      function handleOrientationChange() {
+        setTimeout(() => {
+          setViewportHeight();
+          setupMobileNavigation();
+          
+          // Close TOC on orientation change for better UX
+          const toc = document.getElementById("toc");
+          if (toc && toc.classList.contains("active")) {
+            closeTOC();
+          }
+        }, 100);
+      }
+
+      // Initialize mobile features
+      window.addEventListener('load', function() {
+        setViewportHeight();
+        setupMobileNavigation();
+      });
+
+      window.addEventListener('resize', function() {
+        setViewportHeight();
+        setupMobileNavigation();
+      });
+
+      window.addEventListener('orientationchange', handleOrientationChange);
+
+      // Prevent zoom on double tap for better mobile experience
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', function(e) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+          e.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
 
       // Demo functions
       function runFirstExample() {

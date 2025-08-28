@@ -483,18 +483,23 @@
         position: fixed;
         bottom: 30px;
         right: 30px;
-        background: #3498db;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
+        width: 55px;
+        height: 55px;
         font-size: 20px;
+        font-weight: bold;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         opacity: 0;
         visibility: hidden;
         z-index: 1000;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4),
+          0 4px 10px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
       }
 
       .back-to-top.visible {
@@ -503,8 +508,14 @@
       }
 
       .back-to-top:hover {
-        background: #2980b9;
-        transform: scale(1.1);
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        transform: scale(1.15);
+        box-shadow: 0 12px 35px rgba(118, 75, 162, 0.5),
+          0 6px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .back-to-top:active {
+        transform: scale(1.05);
       }
 
       /* Responsive Design */
@@ -523,6 +534,58 @@
 
         .principles-grid {
           grid-template-columns: 1fr;
+        }
+
+        .back-to-top {
+          bottom: 20px;
+          right: 20px;
+          width: 50px;
+          height: 50px;
+          font-size: 18px;
+        }
+
+        .toc-container {
+          width: 280px;
+        }
+
+        .toc-container.active {
+          left: 10px;
+        }
+
+        .toc-toggle {
+          top: 15px;
+          left: 15px;
+          padding: 12px 15px;
+          font-size: 18px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 10px;
+        }
+
+        .back-to-top {
+          bottom: 15px;
+          right: 15px;
+          width: 45px;
+          height: 45px;
+          font-size: 16px;
+        }
+
+        .toc-container {
+          width: 260px;
+        }
+
+        .toc-container.active {
+          left: 5px;
+        }
+
+        .toc-toggle {
+          top: 10px;
+          left: 10px;
+          padding: 10px 12px;
+          font-size: 16px;
         }
       }
     </style>
@@ -626,27 +689,36 @@
         <h1>💻 Basic Syntax</h1>
 
         <h3>Defining a Class</h3>
-        <pre><code>class ClassName {
-    // Properties
-    public $property1;
-    private $property2;
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">ClassName</span> {
+    <span class="comment">// Properties</span>
+    <span class="keyword">public</span> <span class="variable">$property1</span>;
+    <span class="keyword">private</span> <span class="variable">$property2</span>;
     
-    // Methods
-    public function method1() {
-        // Code
+    <span class="comment">// Methods</span>
+    <span class="keyword">public function</span> <span class="function">method1</span>() {
+        <span class="comment">// Code</span>
     }
     
-    private function method2() {
-        // Code
+    <span class="keyword">private function</span> <span class="function">method2</span>() {
+        <span class="comment">// Code</span>
     }
 }</code></pre>
+        </div>
 
         <h3>Creating an Object</h3>
-        <pre><code>$object = new ClassName();</code></pre>
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="variable">$object</span> = <span class="keyword">new</span> <span class="classname">ClassName</span>();</code></pre>
+        </div>
 
         <h3>Accessing Properties and Methods</h3>
-        <pre><code>$object->property1 = "value";
-$object->method1();</code></pre>
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="variable">$object</span>-><span class="property">property1</span> = <span class="string">"value"</span>;
+<span class="variable">$object</span>-><span class="function">method1</span>();</code></pre>
+        </div>
       </div>
 
       <!-- Properties and Methods -->
@@ -664,19 +736,22 @@ $object->method1();</code></pre>
         </ul>
 
         <h4>Example:</h4>
-        <pre><code>class Car {
-    public $model;
-    private $mileage;
-    protected $color;
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
+    <span class="keyword">public</span> <span class="variable">$model</span>;
+    <span class="keyword">private</span> <span class="variable">$mileage</span>;
+    <span class="keyword">protected</span> <span class="variable">$color</span>;
 
-    public function setMileage($mileage) {
-        $this->mileage = $mileage;
+    <span class="keyword">public function</span> <span class="function">setMileage</span>(<span class="variable">$mileage</span>) {
+        <span class="variable">$this</span>-><span class="property">mileage</span> = <span class="variable">$mileage</span>;
     }
 
-    public function getMileage() {
-        return $this->mileage;
+    <span class="keyword">public function</span> <span class="function">getMileage</span>() {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="property">mileage</span>;
     }
 }</code></pre>
+        </div>
 
         <h3>Static Properties and Methods</h3>
         <ul>
@@ -685,16 +760,19 @@ $object->method1();</code></pre>
         </ul>
 
         <h4>Example:</h4>
-        <pre><code>class Math {
-    public static $pi = 3.14;
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">Math</span> {
+    <span class="keyword">public static</span> <span class="variable">$pi</span> = <span class="number">3.14</span>;
 
-    public static function square($num) {
-        return $num * $num;
+    <span class="keyword">public static function</span> <span class="function">square</span>(<span class="variable">$num</span>) {
+        <span class="keyword">return</span> <span class="variable">$num</span> * <span class="variable">$num</span>;
     }
 }
 
-echo Math::$pi; // 3.14
-echo Math::square(5); // 25</code></pre>
+<span class="keyword">echo</span> <span class="classname">Math</span>::<span class="variable">$pi</span>; <span class="comment">// 3.14</span>
+<span class="keyword">echo</span> <span class="classname">Math</span>::<span class="function">square</span>(<span class="number">5</span>); <span class="comment">// 25</span></code></pre>
+        </div>
       </div>
 
       <!-- Constructor and Destructor -->
@@ -708,16 +786,19 @@ echo Math::square(5); // 25</code></pre>
         </ul>
 
         <h4>Example:</h4>
-        <pre><code>class Car {
-    public $model;
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
+    <span class="keyword">public</span> <span class="variable">$model</span>;
 
-    public function __construct($model) {
-        $this->model = $model;
+    <span class="keyword">public function</span> <span class="function">__construct</span>(<span class="variable">$model</span>) {
+        <span class="variable">$this</span>-><span class="property">model</span> = <span class="variable">$model</span>;
     }
 }
 
-$car = new Car("Toyota");
-echo $car->model; // Toyota</code></pre>
+<span class="variable">$car</span> = <span class="keyword">new</span> <span class="classname">Car</span>(<span class="string">"Toyota"</span>);
+<span class="keyword">echo</span> <span class="variable">$car</span>-><span class="property">model</span>; <span class="comment">// Toyota</span></code></pre>
+        </div>
 
         <h3>Destructor</h3>
         <ul>
@@ -726,14 +807,17 @@ echo $car->model; // Toyota</code></pre>
         </ul>
 
         <h4>Example:</h4>
-        <pre><code>class Car {
-    public function __destruct() {
-        echo "Car object destroyed.";
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
+    <span class="keyword">public function</span> <span class="function">__destruct</span>() {
+        <span class="keyword">echo</span> <span class="string">"Car object destroyed."</span>;
     }
 }
 
-$car = new Car();
-unset($car); // Car object destroyed.</code></pre>
+<span class="variable">$car</span> = <span class="keyword">new</span> <span class="classname">Car</span>();
+<span class="function">unset</span>(<span class="variable">$car</span>); <span class="comment">// Car object destroyed.</span></code></pre>
+        </div>
       </div>
 
       <!-- Inheritance -->
@@ -747,24 +831,27 @@ unset($car); // Car object destroyed.</code></pre>
         </ul>
 
         <h4>Example:</h4>
-        <pre><code>class Vehicle {
-    public $brand;
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">Vehicle</span> {
+    <span class="keyword">public</span> <span class="variable">$brand</span>;
 
-    public function honk() {
-        return "Honk!";
+    <span class="keyword">public function</span> <span class="function">honk</span>() {
+        <span class="keyword">return</span> <span class="string">"Honk!"</span>;
     }
 }
 
-class Car extends Vehicle {
-    public function drive() {
-        return "Driving a $this->brand car.";
+<span class="keyword">class</span> <span class="classname">Car</span> <span class="keyword">extends</span> <span class="classname">Vehicle</span> {
+    <span class="keyword">public function</span> <span class="function">drive</span>() {
+        <span class="keyword">return</span> <span class="string">"Driving a </span><span class="variable">$this</span>-><span class="property">brand</span><span class="string"> car."</span>;
     }
 }
 
-$car = new Car();
-$car->brand = "Toyota";
-echo $car->honk(); // Honk!
-echo $car->drive(); // Driving a Toyota car.</code></pre>
+<span class="variable">$car</span> = <span class="keyword">new</span> <span class="classname">Car</span>();
+<span class="variable">$car</span>-><span class="property">brand</span> = <span class="string">"Toyota"</span>;
+<span class="keyword">echo</span> <span class="variable">$car</span>-><span class="function">honk</span>(); <span class="comment">// Honk!</span>
+<span class="keyword">echo</span> <span class="variable">$car</span>-><span class="function">drive</span>(); <span class="comment">// Driving a Toyota car.</span></code></pre>
+        </div>
       </div>
 
       <!-- Method Overriding -->
@@ -773,20 +860,23 @@ echo $car->drive(); // Driving a Toyota car.</code></pre>
         <p>A subclass can override a method from its parent class.</p>
 
         <h4>Example:</h4>
-        <pre><code>class Vehicle {
-    public function honk() {
-        return "Honk!";
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">Vehicle</span> {
+    <span class="keyword">public function</span> <span class="function">honk</span>() {
+        <span class="keyword">return</span> <span class="string">"Honk!"</span>;
     }
 }
 
-class Car extends Vehicle {
-    public function honk() {
-        return "Beep!";
+<span class="keyword">class</span> <span class="classname">Car</span> <span class="keyword">extends</span> <span class="classname">Vehicle</span> {
+    <span class="keyword">public function</span> <span class="function">honk</span>() {
+        <span class="keyword">return</span> <span class="string">"Beep!"</span>;
     }
 }
 
-$car = new Car();
-echo $car->honk(); // Beep!</code></pre>
+<span class="variable">$car</span> = <span class="keyword">new</span> <span class="classname">Car</span>();
+<span class="keyword">echo</span> <span class="variable">$car</span>-><span class="function">honk</span>(); <span class="comment">// Beep!</span></code></pre>
+        </div>
       </div>
 
       <!-- Abstract Classes -->
@@ -799,18 +889,21 @@ echo $car->honk(); // Beep!</code></pre>
         </ul>
 
         <h4>Example:</h4>
-        <pre><code>abstract class Animal {
-    abstract public function makeSound();
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">abstract class</span> <span class="classname">Animal</span> {
+    <span class="keyword">abstract public function</span> <span class="function">makeSound</span>();
 }
 
-class Dog extends Animal {
-    public function makeSound() {
-        return "Woof!";
+<span class="keyword">class</span> <span class="classname">Dog</span> <span class="keyword">extends</span> <span class="classname">Animal</span> {
+    <span class="keyword">public function</span> <span class="function">makeSound</span>() {
+        <span class="keyword">return</span> <span class="string">"Woof!"</span>;
     }
 }
 
-$dog = new Dog();
-echo $dog->makeSound(); // Woof!</code></pre>
+<span class="variable">$dog</span> = <span class="keyword">new</span> <span class="classname">Dog</span>();
+<span class="keyword">echo</span> <span class="variable">$dog</span>-><span class="function">makeSound</span>(); <span class="comment">// Woof!</span></code></pre>
+        </div>
       </div>
 
       <!-- Interfaces -->
@@ -822,18 +915,21 @@ echo $dog->makeSound(); // Woof!</code></pre>
         </ul>
 
         <h4>Example:</h4>
-        <pre><code>interface Sound {
-    public function makeSound();
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">interface</span> <span class="classname">Sound</span> {
+    <span class="keyword">public function</span> <span class="function">makeSound</span>();
 }
 
-class Dog implements Sound {
-    public function makeSound() {
-        return "Woof!";
+<span class="keyword">class</span> <span class="classname">Dog</span> <span class="keyword">implements</span> <span class="classname">Sound</span> {
+    <span class="keyword">public function</span> <span class="function">makeSound</span>() {
+        <span class="keyword">return</span> <span class="string">"Woof!"</span>;
     }
 }
 
-$dog = new Dog();
-echo $dog->makeSound(); // Woof!</code></pre>
+<span class="variable">$dog</span> = <span class="keyword">new</span> <span class="classname">Dog</span>();
+<span class="keyword">echo</span> <span class="variable">$dog</span>-><span class="function">makeSound</span>(); <span class="comment">// Woof!</span></code></pre>
+        </div>
       </div>
 
       <!-- Traits -->
@@ -845,22 +941,25 @@ echo $dog->makeSound(); // Woof!</code></pre>
         </ul>
 
         <h4>Example:</h4>
-        <pre><code>trait Loggable {
-    public function log($message) {
-        echo "Log: $message";
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">trait</span> <span class="classname">Loggable</span> {
+    <span class="keyword">public function</span> <span class="function">log</span>(<span class="variable">$message</span>) {
+        <span class="keyword">echo</span> <span class="string">"Log: </span><span class="variable">$message</span><span class="string">"</span>;
     }
 }
 
-class User {
-    use Loggable;
+<span class="keyword">class</span> <span class="classname">User</span> {
+    <span class="keyword">use</span> <span class="classname">Loggable</span>;
 
-    public function save() {
-        $this->log("User saved.");
+    <span class="keyword">public function</span> <span class="function">save</span>() {
+        <span class="variable">$this</span>-><span class="function">log</span>(<span class="string">"User saved."</span>);
     }
 }
 
-$user = new User();
-$user->save(); // Log: User saved.</code></pre>
+<span class="variable">$user</span> = <span class="keyword">new</span> <span class="classname">User</span>();
+<span class="variable">$user</span>-><span class="function">save</span>(); <span class="comment">// Log: User saved.</span></code></pre>
+        </div>
       </div>
 
       <!-- Magic Methods -->
@@ -876,26 +975,29 @@ $user->save(); // Log: User saved.</code></pre>
         </ul>
 
         <h4>Example:</h4>
-        <pre><code>class Car {
-    private $data = [];
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
+    <span class="keyword">private</span> <span class="variable">$data</span> = [];
 
-    public function __set($name, $value) {
-        $this->data[$name] = $value;
+    <span class="keyword">public function</span> <span class="function">__set</span>(<span class="variable">$name</span>, <span class="variable">$value</span>) {
+        <span class="variable">$this</span>-><span class="property">data</span>[<span class="variable">$name</span>] = <span class="variable">$value</span>;
     }
 
-    public function __get($name) {
-        return $this->data[$name];
+    <span class="keyword">public function</span> <span class="function">__get</span>(<span class="variable">$name</span>) {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="property">data</span>[<span class="variable">$name</span>];
     }
 
-    public function __toString() {
-        return "This is a car object.";
+    <span class="keyword">public function</span> <span class="function">__toString</span>() {
+        <span class="keyword">return</span> <span class="string">"This is a car object."</span>;
     }
 }
 
-$car = new Car();
-$car->model = "Toyota";
-echo $car->model; // Toyota
-echo $car; // This is a car object.</code></pre>
+<span class="variable">$car</span> = <span class="keyword">new</span> <span class="classname">Car</span>();
+<span class="variable">$car</span>-><span class="property">model</span> = <span class="string">"Toyota"</span>;
+<span class="keyword">echo</span> <span class="variable">$car</span>-><span class="property">model</span>; <span class="comment">// Toyota</span>
+<span class="keyword">echo</span> <span class="variable">$car</span>; <span class="comment">// This is a car object.</span></code></pre>
+        </div>
       </div>
 
       <!-- Namespaces -->
@@ -907,16 +1009,19 @@ echo $car; // This is a car object.</code></pre>
         </ul>
 
         <h4>Example:</h4>
-        <pre><code>namespace App;
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">namespace</span> <span class="classname">App</span>;
 
-class User {
-    public function greet() {
-        return "Hello!";
+<span class="keyword">class</span> <span class="classname">User</span> {
+    <span class="keyword">public function</span> <span class="function">greet</span>() {
+        <span class="keyword">return</span> <span class="string">"Hello!"</span>;
     }
 }
 
-$user = new \App\User();
-echo $user->greet(); // Hello!</code></pre>
+<span class="variable">$user</span> = <span class="keyword">new</span> \<span class="classname">App</span>\<span class="classname">User</span>();
+<span class="keyword">echo</span> <span class="variable">$user</span>-><span class="function">greet</span>(); <span class="comment">// Hello!</span></code></pre>
+        </div>
       </div>
 
       <!-- Autoloading -->
@@ -931,41 +1036,53 @@ echo $user->greet(); // Hello!</code></pre>
         </ul>
 
         <h4>Example:</h4>
-        <pre><code>spl_autoload_register(function ($class) {
-    include 'classes/' . $class . '.php';
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="function">spl_autoload_register</span>(<span class="keyword">function</span> (<span class="variable">$class</span>) {
+    <span class="function">include</span> <span class="string">'classes/'</span> . <span class="variable">$class</span> . <span class="string">'.php'</span>;
 });
 
-$user = new User();</code></pre>
+<span class="variable">$user</span> = <span class="keyword">new</span> <span class="classname">User</span>();</code></pre>
+        </div>
 
         <div class="highlight-box">
           <h4>📝 Complete OOP Workflow Example</h4>
           <p><strong>1. Define a Class:</strong></p>
-          <pre><code>class User {
-    private $name;
+          <div class="code-example">
+            <div class="code-language">PHP</div>
+            <pre><code><span class="keyword">class</span> <span class="classname">User</span> {
+    <span class="keyword">private</span> <span class="variable">$name</span>;
 
-    public function __construct($name) {
-        $this->name = $name;
+    <span class="keyword">public function</span> <span class="function">__construct</span>(<span class="variable">$name</span>) {
+        <span class="variable">$this</span>-><span class="property">name</span> = <span class="variable">$name</span>;
     }
 
-    public function greet() {
-        return "Hello, $this->name!";
+    <span class="keyword">public function</span> <span class="function">greet</span>() {
+        <span class="keyword">return</span> <span class="string">"Hello, </span><span class="variable">$this</span>-><span class="property">name</span><span class="string">!"</span>;
     }
 }</code></pre>
+          </div>
 
           <p><strong>2. Create an Object:</strong></p>
-          <pre><code>$user = new User("John");
-echo $user->greet(); // Hello, John!</code></pre>
+          <div class="code-example">
+            <div class="code-language">PHP</div>
+            <pre><code><span class="variable">$user</span> = <span class="keyword">new</span> <span class="classname">User</span>(<span class="string">"John"</span>);
+<span class="keyword">echo</span> <span class="variable">$user</span>-><span class="function">greet</span>(); <span class="comment">// Hello, John!</span></code></pre>
+          </div>
 
           <p><strong>3. Extend a Class:</strong></p>
-          <pre><code>class Admin extends User {
-    public function promote() {
-        return "$this->name has been promoted to admin.";
+          <div class="code-example">
+            <div class="code-language">PHP</div>
+            <pre><code><span class="keyword">class</span> <span class="classname">Admin</span> <span class="keyword">extends</span> <span class="classname">User</span> {
+    <span class="keyword">public function</span> <span class="function">promote</span>() {
+        <span class="keyword">return</span> <span class="string">"</span><span class="variable">$this</span>-><span class="property">name</span><span class="string"> has been promoted to admin."</span>;
     }
 }
 
-$admin = new Admin("Jane");
-echo $admin->greet(); // Hello, Jane!
-echo $admin->promote(); // Jane has been promoted to admin.</code></pre>
+<span class="variable">$admin</span> = <span class="keyword">new</span> <span class="classname">Admin</span>(<span class="string">"Jane"</span>);
+<span class="keyword">echo</span> <span class="variable">$admin</span>-><span class="function">greet</span>(); <span class="comment">// Hello, Jane!</span>
+<span class="keyword">echo</span> <span class="variable">$admin</span>-><span class="function">promote</span>(); <span class="comment">// Jane has been promoted to admin.</span></code></pre>
+          </div>
         </div>
       </div>
 
@@ -993,28 +1110,34 @@ echo $admin->promote(); // Jane has been promoted to admin.</code></pre>
         </ul>
 
         <h4>Violation Example:</h4>
-        <pre><code>class User {
-    public function authenticate($username, $password) {
-        // Authentication logic
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">User</span> {
+    <span class="keyword">public function</span> <span class="function">authenticate</span>(<span class="variable">$username</span>, <span class="variable">$password</span>) {
+        <span class="comment">// Authentication logic</span>
     }
 
-    public function logError($error) {
-        // Logging logic
+    <span class="keyword">public function</span> <span class="function">logError</span>(<span class="variable">$error</span>) {
+        <span class="comment">// Logging logic</span>
     }
 }</code></pre>
+        </div>
 
         <h4>Solution:</h4>
-        <pre><code>class User {
-    public function authenticate($username, $password) {
-        // Authentication logic
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">User</span> {
+    <span class="keyword">public function</span> <span class="function">authenticate</span>(<span class="variable">$username</span>, <span class="variable">$password</span>) {
+        <span class="comment">// Authentication logic</span>
     }
 }
 
-class Logger {
-    public function logError($error) {
-        // Logging logic
+<span class="keyword">class</span> <span class="classname">Logger</span> {
+    <span class="keyword">public function</span> <span class="function">logError</span>(<span class="variable">$error</span>) {
+        <span class="comment">// Logging logic</span>
     }
 }</code></pre>
+        </div>
 
         <h2>2. Open/Closed Principle (OCP)</h2>
         <h4>Definition:</h4>
@@ -1030,42 +1153,48 @@ class Logger {
         </ul>
 
         <h4>Violation Example:</h4>
-        <pre><code>class AreaCalculator {
-    public function calculate($shape) {
-        if ($shape instanceof Circle) {
-            return pi() * $shape->radius ** 2;
-        } elseif ($shape instanceof Square) {
-            return $shape->side ** 2;
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">AreaCalculator</span> {
+    <span class="keyword">public function</span> <span class="function">calculate</span>(<span class="variable">$shape</span>) {
+        <span class="keyword">if</span> (<span class="variable">$shape</span> <span class="keyword">instanceof</span> <span class="classname">Circle</span>) {
+            <span class="keyword">return</span> <span class="function">pi</span>() * <span class="variable">$shape</span>-><span class="property">radius</span> ** <span class="number">2</span>;
+        } <span class="keyword">elseif</span> (<span class="variable">$shape</span> <span class="keyword">instanceof</span> <span class="classname">Square</span>) {
+            <span class="keyword">return</span> <span class="variable">$shape</span>-><span class="property">side</span> ** <span class="number">2</span>;
         }
     }
 }</code></pre>
+        </div>
 
         <h4>Solution:</h4>
-        <pre><code>interface Shape {
-    public function area();
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">interface</span> <span class="classname">Shape</span> {
+    <span class="keyword">public function</span> <span class="function">area</span>();
 }
 
-class Circle implements Shape {
-    public $radius;
+<span class="keyword">class</span> <span class="classname">Circle</span> <span class="keyword">implements</span> <span class="classname">Shape</span> {
+    <span class="keyword">public</span> <span class="variable">$radius</span>;
 
-    public function area() {
-        return pi() * $this->radius ** 2;
+    <span class="keyword">public function</span> <span class="function">area</span>() {
+        <span class="keyword">return</span> <span class="function">pi</span>() * <span class="variable">$this</span>-><span class="property">radius</span> ** <span class="number">2</span>;
     }
 }
 
-class Square implements Shape {
-    public $side;
+<span class="keyword">class</span> <span class="classname">Square</span> <span class="keyword">implements</span> <span class="classname">Shape</span> {
+    <span class="keyword">public</span> <span class="variable">$side</span>;
 
-    public function area() {
-        return $this->side ** 2;
+    <span class="keyword">public function</span> <span class="function">area</span>() {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="property">side</span> ** <span class="number">2</span>;
     }
 }
 
-class AreaCalculator {
-    public function calculate(Shape $shape) {
-        return $shape->area();
+<span class="keyword">class</span> <span class="classname">AreaCalculator</span> {
+    <span class="keyword">public function</span> <span class="function">calculate</span>(<span class="classname">Shape</span> <span class="variable">$shape</span>) {
+        <span class="keyword">return</span> <span class="variable">$shape</span>-><span class="function">area</span>();
     }
 }</code></pre>
+        </div>
 
         <h2>3. Liskov Substitution Principle (LSP)</h2>
         <h4>Definition:</h4>
@@ -1084,32 +1213,38 @@ class AreaCalculator {
         </ul>
 
         <h4>Violation Example:</h4>
-        <pre><code>class Bird {
-    public function fly() {
-        // Fly logic
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">Bird</span> {
+    <span class="keyword">public function</span> <span class="function">fly</span>() {
+        <span class="comment">// Fly logic</span>
     }
 }
 
-class Ostrich extends Bird {
-    public function fly() {
-        throw new Exception("Can't fly");
+<span class="keyword">class</span> <span class="classname">Ostrich</span> <span class="keyword">extends</span> <span class="classname">Bird</span> {
+    <span class="keyword">public function</span> <span class="function">fly</span>() {
+        <span class="keyword">throw new</span> <span class="classname">Exception</span>(<span class="string">"Can't fly"</span>);
     }
 }</code></pre>
+        </div>
 
         <h4>Solution:</h4>
-        <pre><code>class Bird {
-    // Common bird methods
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">Bird</span> {
+    <span class="comment">// Common bird methods</span>
 }
 
-class FlyingBird extends Bird {
-    public function fly() {
-        // Fly logic
+<span class="keyword">class</span> <span class="classname">FlyingBird</span> <span class="keyword">extends</span> <span class="classname">Bird</span> {
+    <span class="keyword">public function</span> <span class="function">fly</span>() {
+        <span class="comment">// Fly logic</span>
     }
 }
 
-class Ostrich extends Bird {
-    // Ostrich-specific methods
+<span class="keyword">class</span> <span class="classname">Ostrich</span> <span class="keyword">extends</span> <span class="classname">Bird</span> {
+    <span class="comment">// Ostrich-specific methods</span>
 }</code></pre>
+        </div>
 
         <h2>4. Interface Segregation Principle (ISP)</h2>
         <h4>Definition:</h4>
@@ -1125,55 +1260,61 @@ class Ostrich extends Bird {
         </ul>
 
         <h4>Violation Example:</h4>
-        <pre><code>interface Worker {
-    public function work();
-    public function eat();
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">interface</span> <span class="classname">Worker</span> {
+    <span class="keyword">public function</span> <span class="function">work</span>();
+    <span class="keyword">public function</span> <span class="function">eat</span>();
 }
 
-class Human implements Worker {
-    public function work() {
-        // Work logic
+<span class="keyword">class</span> <span class="classname">Human</span> <span class="keyword">implements</span> <span class="classname">Worker</span> {
+    <span class="keyword">public function</span> <span class="function">work</span>() {
+        <span class="comment">// Work logic</span>
     }
 
-    public function eat() {
-        // Eat logic
+    <span class="keyword">public function</span> <span class="function">eat</span>() {
+        <span class="comment">// Eat logic</span>
     }
 }
 
-class Robot implements Worker {
-    public function work() {
-        // Work logic
+<span class="keyword">class</span> <span class="classname">Robot</span> <span class="keyword">implements</span> <span class="classname">Worker</span> {
+    <span class="keyword">public function</span> <span class="function">work</span>() {
+        <span class="comment">// Work logic</span>
     }
 
-    public function eat() {
-        // Robots don't eat!
+    <span class="keyword">public function</span> <span class="function">eat</span>() {
+        <span class="comment">// Robots don't eat!</span>
     }
 }</code></pre>
+        </div>
 
         <h4>Solution:</h4>
-        <pre><code>interface Workable {
-    public function work();
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">interface</span> <span class="classname">Workable</span> {
+    <span class="keyword">public function</span> <span class="function">work</span>();
 }
 
-interface Eatable {
-    public function eat();
+<span class="keyword">interface</span> <span class="classname">Eatable</span> {
+    <span class="keyword">public function</span> <span class="function">eat</span>();
 }
 
-class Human implements Workable, Eatable {
-    public function work() {
-        // Work logic
+<span class="keyword">class</span> <span class="classname">Human</span> <span class="keyword">implements</span> <span class="classname">Workable</span>, <span class="classname">Eatable</span> {
+    <span class="keyword">public function</span> <span class="function">work</span>() {
+        <span class="comment">// Work logic</span>
     }
 
-    public function eat() {
-        // Eat logic
+    <span class="keyword">public function</span> <span class="function">eat</span>() {
+        <span class="comment">// Eat logic</span>
     }
 }
 
-class Robot implements Workable {
-    public function work() {
-        // Work logic
+<span class="keyword">class</span> <span class="classname">Robot</span> <span class="keyword">implements</span> <span class="classname">Workable</span> {
+    <span class="keyword">public function</span> <span class="function">work</span>() {
+        <span class="comment">// Work logic</span>
     }
 }</code></pre>
+        </div>
 
         <h2>5. Dependency Inversion Principle (DIP)</h2>
         <h4>Definition:</h4>
@@ -1190,38 +1331,44 @@ class Robot implements Workable {
         </ul>
 
         <h4>Violation Example:</h4>
-        <pre><code>class MySQLConnection {
-    public function connect() {
-        // MySQL connection logic
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">MySQLConnection</span> {
+    <span class="keyword">public function</span> <span class="function">connect</span>() {
+        <span class="comment">// MySQL connection logic</span>
     }
 }
 
-class User {
-    private $dbConnection;
+<span class="keyword">class</span> <span class="classname">User</span> {
+    <span class="keyword">private</span> <span class="variable">$dbConnection</span>;
 
-    public function __construct() {
-        $this->dbConnection = new MySQLConnection();
+    <span class="keyword">public function</span> <span class="function">__construct</span>() {
+        <span class="variable">$this</span>-><span class="property">dbConnection</span> = <span class="keyword">new</span> <span class="classname">MySQLConnection</span>();
     }
 }</code></pre>
+        </div>
 
         <h4>Solution:</h4>
-        <pre><code>interface DBConnection {
-    public function connect();
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">interface</span> <span class="classname">DBConnection</span> {
+    <span class="keyword">public function</span> <span class="function">connect</span>();
 }
 
-class MySQLConnection implements DBConnection {
-    public function connect() {
-        // MySQL connection logic
+<span class="keyword">class</span> <span class="classname">MySQLConnection</span> <span class="keyword">implements</span> <span class="classname">DBConnection</span> {
+    <span class="keyword">public function</span> <span class="function">connect</span>() {
+        <span class="comment">// MySQL connection logic</span>
     }
 }
 
-class User {
-    private $dbConnection;
+<span class="keyword">class</span> <span class="classname">User</span> {
+    <span class="keyword">private</span> <span class="variable">$dbConnection</span>;
 
-    public function __construct(DBConnection $dbConnection) {
-        $this->dbConnection = $dbConnection;
+    <span class="keyword">public function</span> <span class="function">__construct</span>(<span class="classname">DBConnection</span> <span class="variable">$dbConnection</span>) {
+        <span class="variable">$this</span>-><span class="property">dbConnection</span> = <span class="variable">$dbConnection</span>;
     }
 }</code></pre>
+        </div>
 
         <h3>Summary of SOLID Principles</h3>
         <table>
