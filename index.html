@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ITI-Courses Notes Hub</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIEJhY2tncm91bmQgZ3JhZGllbnQgY2lyY2xlIC0tPgogIDxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjE2IiBmaWxsPSJ1cmwoI2dyYWQxKSIvPgogIAogIDwhLS0gQm9vay9Lbm93bGVkZ2Ugc3ltYm9sIC0tPgogIDxyZWN0IHg9IjgiIHk9IjEwIiB3aWR0aD0iMTYiIGhlaWdodD0iMTIiIHJ4PSIxIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSI5IiB5PSIxMSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjEiIGZpbGw9IiM2NjdlZWEiLz4KICA8cmVjdCB4PSI5IiB5PSIxMyIgd2lkdGg9IjE0IiBoZWlnaHQ9IjEiIGZpbGw9IiM2NjdlZWEiLz4KICA8cmVjdCB4PSI5IiB5PSIxNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjEiIGZpbGw9IiM2NjdlZWEiLz4KICA8cmVjdCB4PSI5IiB5PSIxNyIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEiIGZpbGw9IiM3NjRiYTIiLz4KICA8cmVjdCB4PSI5IiB5PSIxOSIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEiIGZpbGw9IiM3NjRiYTIiLz4KICAKICA8IS0tIElUSSBMZXR0ZXJzIC0tPgogIDx0ZXh0IHg9IjE2IiB5PSI4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmZmZmIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNiIgZm9udC13ZWlnaHQ9ImJvbGQiPklUSTwvdGV4dD4KICAKICA8IS0tIFRlY2ggc3ltYm9sIChjaXJjdWl0IHBhdHRlcm4pIC0tPgogIDxjaXJjbGUgY3g9IjIwIiBjeT0iMjUiIHI9IjEuNSIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iMTIiIGN5PSIyNSIgcj0iMS41IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjgiLz4KICA8bGluZSB4MT0iMTIiIHkxPSIyNSIgeDI9IjIwIiB5Mj0iMjUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuOCIvPgogIDxsaW5lIHgxPSIxNiIgeTE9IjI1IiB4Mj0iMTYiIHkyPSIyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjAuNSIgb3BhY2l0eT0iMC44Ii8+CiAgCiAgPCEtLSBHcmFkaWVudCBkZWZpbml0aW9uIC0tPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkMSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2NjdlZWEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI1MCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM3NjRiYTIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojZjA5M2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KPC9zdmc+"
+    />
+    <link rel="shortcut icon" href="favicon.svg" />
+
     <style>
       * {
         margin: 0;
@@ -233,6 +244,18 @@
         background: linear-gradient(180deg, #f39c12, #e67e22);
       }
 
+      .course-card.oop::before {
+        background: linear-gradient(180deg, #9b59b6, #8e44ad);
+      }
+
+      .course-card.datastructures::before {
+        background: linear-gradient(180deg, #3498db, #2980b9);
+      }
+
+      .course-card.algorithms::before {
+        background: linear-gradient(180deg, #e74c3c, #c0392b);
+      }
+
       .course-icon-section {
         flex: 0 0 120px;
         display: flex;
@@ -297,6 +320,15 @@
       }
       .course-card.javascript .course-icon {
         color: #f39c12;
+      }
+      .course-card.oop .course-icon {
+        color: #9b59b6;
+      }
+      .course-card.datastructures .course-icon {
+        color: #3498db;
+      }
+      .course-card.algorithms .course-icon {
+        color: #e74c3c;
       }
 
       .course-title {
@@ -414,6 +446,18 @@
 
       .course-card.javascript .course-link {
         background: linear-gradient(135deg, #f39c12, #e67e22);
+      }
+
+      .course-card.oop .course-link {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      }
+
+      .course-card.datastructures .course-link {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+      }
+
+      .course-card.algorithms .course-link {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
       }
 
       .course-link:hover {
@@ -835,7 +879,7 @@
   <body>
     <div class="container">
       <div class="header">
-        <h1>📚 ITI Courses Notes Hub</h1>
+        <h1>ITI Courses Notes Hub</h1>
       </div>
 
       <!-- Search Section -->
@@ -885,6 +929,15 @@
           >
           <a href="Notes/javascript-comprehensive-guide.html" class="quick-link"
             >⚡ JavaScript Guide</a
+          >
+          <a href="Notes/oop-guide.html" class="quick-link"
+            >🏗️ Object-Oriented Programming</a
+          >
+          <a href="Notes/data-structures-guide.html" class="quick-link"
+            >📊 Data Structures</a
+          >
+          <a href="Notes/algorithms-guide.html" class="quick-link"
+            >🧮 Algorithms</a
           >
         </div>
       </div>
@@ -1229,6 +1282,98 @@
                 href="Notes/javascript-comprehensive-guide.html"
                 class="course-link"
               >
+                Access Notes
+              </a>
+            </div>
+          </div>
+
+          <div
+            class="course-card oop"
+            data-category="development"
+            data-keywords="object oriented programming oop classes objects inheritance polymorphism encapsulation abstraction cpp c++ constructor destructor"
+          >
+            <div class="course-tags">
+              <span class="course-tag">Development</span>
+              <span class="course-tag">Programming</span>
+            </div>
+            <div class="course-icon-section">
+              <span class="course-icon">🏗️</span>
+            </div>
+            <div class="course-main-content">
+              <div class="course-header">
+                <h3 class="course-title">Object-Oriented Programming</h3>
+                <p class="course-subtitle">Master OOP Concepts with C++</p>
+              </div>
+              <div class="course-stats">
+                <span class="course-stat">📚 OOP Principles</span>
+                <span class="course-stat">⏱️ C++ Programming</span>
+                <span class="course-stat">🎯 Design Patterns</span>
+              </div>
+            </div>
+            <div class="course-action-section">
+              <a href="Notes/oop-guide.html" class="course-link">
+                Access Notes
+              </a>
+            </div>
+          </div>
+
+          <div
+            class="course-card datastructures"
+            data-category="development"
+            data-keywords="data structures stack queue array linked list tree graph hash table binary search sorting algorithms"
+          >
+            <div class="course-tags">
+              <span class="course-tag">Development</span>
+              <span class="course-tag">Computer Science</span>
+            </div>
+            <div class="course-icon-section">
+              <span class="course-icon">📊</span>
+            </div>
+            <div class="course-main-content">
+              <div class="course-header">
+                <h3 class="course-title">Data Structures</h3>
+                <p class="course-subtitle">
+                  Essential Data Organization Concepts
+                </p>
+              </div>
+              <div class="course-stats">
+                <span class="course-stat">📚 DS Concepts</span>
+                <span class="course-stat">⏱️ Implementation</span>
+                <span class="course-stat">🎯 Problem Solving</span>
+              </div>
+            </div>
+            <div class="course-action-section">
+              <a href="Notes/data-structures-guide.html" class="course-link">
+                Access Notes
+              </a>
+            </div>
+          </div>
+
+          <div
+            class="course-card algorithms"
+            data-category="development"
+            data-keywords="algorithms sorting searching dynamic programming recursion complexity analysis big o time space complexity graph algorithms"
+          >
+            <div class="course-tags">
+              <span class="course-tag">Development</span>
+              <span class="course-tag">Computer Science</span>
+            </div>
+            <div class="course-icon-section">
+              <span class="course-icon">🧮</span>
+            </div>
+            <div class="course-main-content">
+              <div class="course-header">
+                <h3 class="course-title">Algorithms</h3>
+                <p class="course-subtitle">Problem-Solving & Optimization</p>
+              </div>
+              <div class="course-stats">
+                <span class="course-stat">📚 Algorithm Types</span>
+                <span class="course-stat">⏱️ Complexity</span>
+                <span class="course-stat">🎯 Optimization</span>
+              </div>
+            </div>
+            <div class="course-action-section">
+              <a href="Notes/algorithms-guide.html" class="course-link">
                 Access Notes
               </a>
             </div>

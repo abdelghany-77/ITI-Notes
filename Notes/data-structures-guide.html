@@ -1,0 +1,3102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Structures Study Guide</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="shortcut icon" href="../favicon.svg">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Table of Contents Styles */
+        .toc-container {
+            position: fixed;
+            top: 20px;
+            left: -300px;
+            width: 280px;
+            height: calc(100vh - 40px);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+        
+        .toc-container.active {
+            left: 20px;
+        }
+        
+        .toc-header {
+            padding: 20px;
+            background: #3498db;
+            color: white;
+            border-radius: 15px 15px 0 0;
+            position: sticky;
+            top: 0;
+        }
+        
+        .toc-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        
+        .toc-list {
+            padding: 15px;
+        }
+        
+        .toc-list ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .toc-list li {
+            margin: 8px 0;
+        }
+        
+        .toc-list a {
+            display: block;
+            padding: 8px 12px;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+        
+        .toc-list a:hover {
+            background: #3498db;
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .toc-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .toc-toggle:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .nav-links a {
+            display: inline-block;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .nav-links a:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .topic-section {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .topic-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 0;
+            border-bottom: 2px solid #ecf0f1;
+            margin-bottom: 20px;
+        }
+        
+        .topic-header h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+        }
+        
+        .difficulty {
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .beginner { background: #27ae60; }
+        .intermediate { background: #f39c12; }
+        .advanced { background: #e74c3c; }
+        
+        .topic-content {
+            display: block;
+        }
+        
+        .topic-content.hidden {
+            display: none;
+        }
+        
+        .subtopic {
+            background: #f8f9fa;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .subtopic h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .video-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .video-section video {
+            width: 100%;
+            height: 500px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            background: #000;
+            object-fit: contain;
+        }
+        
+        /* Style for video error messages */
+        .video-error {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .video-error h4 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .video-error ul {
+            text-align: left;
+            display: inline-block;
+            max-width: 600px;
+        }
+        
+        .video-error li {
+            padding: 5px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .video-placeholder {
+            background: #bdc3c7;
+            height: 200px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .video-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .video-link {
+            padding: 8px 15px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+        }
+        
+        .video-link:hover {
+            background: #2980b9;
+        }
+        
+        .code-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 30px;
+            border-radius: 12px;
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 25px 0;
+            line-height: 1.8;
+            border: 1px solid #3c3c3c;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            font-size: 18px;
+            tab-size: 2;
+            white-space: pre;
+        }
+        
+        .code-example::before {
+            content: 'VS Code';
+            position: absolute;
+            top: 12px;
+            right: 20px;
+            font-size: 10px;
+            color: #666;
+            font-family: 'Segoe UI', sans-serif;
+            background: #2d2d30;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .code-example::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff5f56;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27ca3f;
+        }
+        
+        .code-example code {
+            display: block;
+            margin-top: 25px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        /* Enhanced VS Code Dark Theme Syntax Highlighting */
+        .code-example .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+        
+        .code-example .keyword {
+            color: #569cd6;
+            font-weight: bold;
+        }
+        
+        .code-example .string {
+            color: #ce9178;
+        }
+        
+        .code-example .number {
+            color: #b5cea8;
+        }
+        
+        .code-example .function {
+            color: #dcdcaa;
+        }
+        
+        .code-example .type {
+            color: #4ec9b0;
+        }
+        
+        .code-example .operator {
+            color: #d4d4d4;
+        }
+        
+        /* Make code more readable with better spacing */
+        .code-example {
+            line-height: 2;
+        }
+        
+        /* Add subtle selection highlighting */
+        .code-example::selection {
+            background: rgba(52, 152, 219, 0.3);
+        }
+        
+        .code-example::-moz-selection {
+            background: rgba(52, 152, 219, 0.3);
+        }
+        
+        .code-example .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+        
+        .code-example .keyword {
+            color: #569cd6;
+            font-weight: 400;
+        }
+        
+        .code-example .string {
+            color: #ce9178;
+        }
+        
+        .code-example .number {
+            color: #b5cea8;
+        }
+        
+        .code-example .function {
+            color: #dcdcaa;
+            font-weight: 400;
+        }
+        
+        .code-example .type {
+            color: #4ec9b0;
+        }
+        
+        .code-example .variable {
+            color: #9cdcfe;
+        }
+        
+        .code-example .property {
+            color: #9cdcfe;
+        }
+        
+        .code-example .operator {
+            color: #d4d4d4;
+        }
+        
+        .code-example .punctuation {
+            color: #d4d4d4;
+        }
+        
+        .code-example .bracket {
+            color: #ffd700;
+        }
+        
+        .implementation-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .implementation-list li {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .toggle-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #3498db;
+            transition: transform 0.3s ease;
+        }
+        
+        .toggle-btn.rotated {
+            transform: rotate(180deg);
+        }
+        
+        .practice-section {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+            margin-top: 20px;
+        }
+        
+        .practice-section h4 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .practice-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .practice-link {
+            padding: 10px 15px;
+            background: #ffc107;
+            color: #856404;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .practice-link:hover {
+            background: #e0a800;
+            color: #fff;
+        }
+        /* ------------------ Custom Video Player Styles ------------------ */
+        .player {
+            position: relative;
+            max-width: 100%;
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: visible;
+        }
+
+        .player video {
+            width: 100%;
+            height: 500px;
+            display: block;
+            border-radius: 12px;
+            background: #000;
+            outline: none;
+        }
+
+        .player .big-play {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.55);
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+            transition: opacity 180ms ease, transform 180ms ease;
+            opacity: 0;
+            z-index: 6;
+        }
+
+        .player.paused .big-play {
+            opacity: 1;
+        }
+
+        .player .controls {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.5));
+            border-radius: 12px;
+            z-index: 8;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+        }
+
+        .player .control-btn {
+            background: rgba(255,255,255,0.05);
+            border: 0;
+            color: #fff;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            transition: transform 120ms ease, background 120ms ease;
+        }
+
+        .player .control-btn:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); }
+
+        .player .progress {
+            position: relative;
+            height: 6px; /* thinner track */
+            background: rgba(255,255,255,0.08);
+            border-radius: 999px;
+            overflow: visible;
+            cursor: pointer;
+            margin: 0 6px;
+        }
+
+        .player .progress .buffer {
+            position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+            background: rgba(255,255,255,0.12);
+            border-radius: 999px;
+        }
+
+        .player .progress .bar {
+            position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+            background: linear-gradient(90deg,#6dd3ff,#7b61ff);
+            border-radius: 999px;
+            box-shadow: 0 2px 8px rgba(123,97,255,0.25) inset;
+        }
+
+        .player .progress .knob {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+            transition: transform 120ms ease;
+        }
+
+        .player .time {
+            color: #fff;
+            font-size: 13px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .player input[type="range"].volume {
+            width: 100px;
+            accent-color: #7b61ff;
+        }
+
+        .player select.playback-rate {
+            background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6));
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            -webkit-appearance: none;
+            appearance: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+        .player select.playback-rate option {
+            background: #111;
+            color: #fff;
+        }
+
+        .player .download-link {
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255,255,255,0.06);
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        /* make controls responsive */
+        @media (max-width: 640px) {
+            .player .controls { gap: 6px; padding: 6px; }
+            .player input[type="range"].volume { width: 70px; }
+            .player .time { min-width: 64px; font-size: 12px; }
+            .player .progress .knob { width: 12px; height: 12px; }
+        }
+        /* Fullscreen styles */
+        .player:fullscreen, .player:-webkit-full-screen {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 99999 !important;
+            border-radius: 0 !important;
+            background: #000;
+        }
+
+        .player:fullscreen video, .player:-webkit-full-screen video {
+            width: 100vw !important;
+            height: 100vh !important;
+            object-fit: contain !important; /* use 'cover' if you prefer filling/cropping */
+        }
+
+        .player:fullscreen .controls, .player:-webkit-full-screen .controls {
+            left: 20px !important;
+            right: 20px !important;
+            bottom: 20px !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Table of Contents Toggle Button -->
+    <button class="toc-toggle" onclick="toggleTOC()">☰</button>
+    
+    <!-- Table of Contents -->
+    <div class="toc-container" id="tocContainer">
+        <div class="toc-header">
+            <h3>📋 Table of Contents</h3>
+        </div>
+        <div class="toc-list">
+            <ul>
+                <li><a href="#introduction">🎯 Introduction to Data Structures</a></li>
+                <li><a href="#stacks">📚 Stacks</a></li>
+                <li><a href="#queues">🚶 Queues</a></li>
+                <li><a href="#array-lists">📋 Array-Based Lists</a></li>
+                <li><a href="#linked-lists">🔗 Linked Lists</a></li>
+                <li><a href="#trees">🌳 Trees</a></li>
+                <li><a href="#huffman">📊 Huffman Coding</a></li>
+                <li><a href="#sorting">🔄 Sorting Algorithms</a></li>
+                <li><a href="#searching">🔍 Searching Algorithms</a></li>
+                <li><a href="#hash-tables">🗂️ Hash Tables</a></li>
+                <li><a href="#graphs">🕸️ Graphs</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+
+    <div class="container">
+        <div class="header">
+            <h1>📊 Data Structures Study Guide</h1>
+            <p>Master the fundamental building blocks of programming - from basic to advanced</p>
+        </div>
+        
+        <div class="nav-links">
+            <a href="../index.html">🏠 Home</a>
+        </div>
+
+        <!-- Introduction -->
+        <div class="topic-section" id="introduction">
+            <div class="topic-header" onclick="toggleContent('introduction')">
+                <h2>🎯 Introduction to Data Structures</h2>
+                <div>
+                    <span class="difficulty beginner">Beginner</span>
+                    <button class="toggle-btn" id="introduction-btn">▼</button>
+                </div>
+            </div>
+            <div class="topic-content" id="introduction-content">
+                <div class="subtopic">
+                    <h3>#00 Data Structures Introduction</h3>
+                    <p>Understanding what data structures are, why they matter, and how they form the foundation of efficient programming and problem-solving.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/01-Introduction.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// What are Data Structures?
+/*
+Data Structures are ways of organizing and storing data
+so that they can be accessed and worked with efficiently.
+
+Types of Data Structures:
+1. Linear: Arrays, Linked Lists, Stacks, Queues
+2. Non-Linear: Trees, Graphs
+3. Homogeneous: All elements of same type
+4. Heterogeneous: Elements of different types
+*/</div>
+                </div>
+                
+                <div class="subtopic">
+                    <h3>#01 Complexity Analysis</h3>
+                    <p>Learn about Big O notation, time complexity, and space complexity to analyze algorithm efficiency.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/02.Complexity.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Time Complexity Examples
+// O(1) - Constant Time
+int getFirstElement(int[] arr) { return arr[0]; }
+
+// O(n) - Linear Time  
+int findMax(int[] arr) {
+    int max = arr[0];
+    for(int i = 1; i < arr.length; i++) {
+        if(arr[i] > max) max = arr[i];
+    }
+    return max;
+}
+
+// O(n²) - Quadratic Time
+void bubbleSort(int[] arr) {
+    for(int i = 0; i < arr.length; i++) {
+        for(int j = 0; j < arr.length-1; j++) {
+            if(arr[j] > arr[j+1]) {
+                // swap
+            }
+        }
+    }
+}</div>
+                </div>
+                
+                <div class="practice-section">
+                    <h4>🏋️ Key Concepts</h4>
+                    <div class="practice-links">
+                        <a href="#" class="practice-link">Big O Notation</a>
+                        <a href="#" class="practice-link">Time Complexity</a>
+                        <a href="#" class="practice-link">Space Complexity</a>
+                        <a href="#" class="practice-link">Algorithm Analysis</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stacks -->
+        <div class="topic-section" id="stacks">
+            <div class="topic-header" onclick="toggleContent('stacks')">
+                <h2>� Stacks</h2>
+                <div>
+                    <span class="difficulty beginner">Beginner</span>
+                    <button class="toggle-btn" id="stacks-btn">▼</button>
+                </div>
+            </div>
+            <div class="topic-content" id="stacks-content">
+                <div class="subtopic">
+                    <h3>#02 Introduction to Stack</h3>
+                    <p>Stacks follow the Last-In-First-Out (LIFO) principle. Elements are added and removed from the same end called the "top".</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/03.Introduction To Stack.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Stack Basic Operations
+/*
+Stack Operations:
+1. Push - Add element to top
+2. Pop - Remove element from top  
+3. Peek/Top - View top element without removing
+4. isEmpty - Check if stack is empty
+5. isFull - Check if stack is full (array implementation)
+*/</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#03 Stack Implementation</h3>
+                    <p>Learn how to implement stack using arrays with all basic operations.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/04. Stack Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Stack implementation using array
+class Stack {
+    private int[] arr;
+    private int top;
+    private int capacity;
+    
+    public Stack(int size) {
+        arr = new int[size];
+        capacity = size;
+        top = -1;
+    }
+    
+    public void push(int x) {
+        if (top == capacity - 1) {
+            System.out.println("Stack Overflow");
+            return;
+        }
+        arr[++top] = x;
+    }
+    
+    public int pop() {
+        if (top == -1) {
+            System.out.println("Stack Underflow");
+            return -1;
+        }
+        return arr[top--];
+    }
+    
+    public int peek() {
+        return (top == -1) ? -1 : arr[top];
+    }
+    
+    public boolean isEmpty() {
+        return top == -1;
+    }
+}</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#04 & #05 Stack Using Linked List</h3>
+                    <p>Implement stack using linked list for dynamic memory allocation.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/05. Stack Using Linked List(Linked Stack)-Part 1.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/06. Stack Using Linked List Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Stack implementation using linked list
+class LinkedStack {
+    private Node top;
+    
+    class Node {
+        int data;
+        Node next;
+        Node(int data) { this.data = data; }
+    }
+    
+    public void push(int data) {
+        Node newNode = new Node(data);
+        newNode.next = top;
+        top = newNode;
+    }
+    
+    public int pop() {
+        if (top == null) {
+            System.out.println("Stack is empty");
+            return -1;
+        }
+        int data = top.data;
+        top = top.next;
+        return data;
+    }
+    
+    public int peek() {
+        return (top == null) ? -1 : top.data;
+    }
+}</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#06 Balanced Parentheses Using Stack</h3>
+                    <p>Use stack to check if parentheses, brackets, and braces are properly balanced.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/07. Balanced Parentheses Using Stack {([ ])}.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Balanced Parentheses Check
+public boolean isBalanced(String expr) {
+    Stack<Character> stack = new Stack<>();
+    
+    for (char c : expr.toCharArray()) {
+        if (c == '(' || c == '[' || c == '{') {
+            stack.push(c);
+        } else if (c == ')' || c == ']' || c == '}') {
+            if (stack.isEmpty()) return false;
+            
+            char top = stack.pop();
+            if ((c == ')' && top != '(') ||
+                (c == ']' && top != '[') ||
+                (c == '}' && top != '{')) {
+                return false;
+            }
+        }
+    }
+    return stack.isEmpty();
+}</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#07 Expression Evaluation Using Stack</h3>
+                    <p>Evaluate mathematical expressions using stack data structure.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/08.Expression Evaluation Using Stack.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#08 Infix to Postfix Using Stack</h3>
+                    <p>Convert infix expressions to postfix notation using stack.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/09. Infix To Postfix Using Stack.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Infix to Postfix Conversion
+public String infixToPostfix(String infix) {
+    Stack<Character> stack = new Stack<>();
+    StringBuilder result = new StringBuilder();
+    
+    for (char c : infix.toCharArray()) {
+        if (Character.isLetterOrDigit(c)) {
+            result.append(c);
+        } else if (c == '(') {
+            stack.push(c);
+        } else if (c == ')') {
+            while (!stack.isEmpty() && stack.peek() != '(') {
+                result.append(stack.pop());
+            }
+            stack.pop(); // Remove '('
+        } else { // Operator
+            while (!stack.isEmpty() && precedence(c) <= precedence(stack.peek())) {
+                result.append(stack.pop());
+            }
+            stack.push(c);
+        }
+    }
+    
+    while (!stack.isEmpty()) {
+        result.append(stack.pop());
+    }
+    
+    return result.toString();
+}</div>
+                </div>
+                
+                <div class="practice-section">
+                    <h4>🏋️ Stack Applications</h4>
+                    <div class="practice-links">
+                        <a href="#" class="practice-link">Valid Parentheses</a>
+                        <a href="#" class="practice-link">Min Stack</a>
+                        <a href="#" class="practice-link">Evaluate RPN</a>
+                        <a href="#" class="practice-link">Daily Temperatures</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Queues -->
+        <div class="topic-section" id="queues">
+            <div class="topic-header" onclick="toggleContent('queues')">
+                <h2>🚶‍♂️ Queues</h2>
+                <div>
+                    <span class="difficulty beginner">Beginner</span>
+                    <button class="toggle-btn" id="queues-btn">▼</button>
+                </div>
+            </div>
+            <div class="topic-content" id="queues-content">
+                <div class="subtopic">
+                    <h3>#09 Queue Introduction (Simple vs Circular Queue)</h3>
+                    <p>Queues follow the First-In-First-Out (FIFO) principle. Learn about simple queue and circular queue implementations.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/10. Queue Introduction(Simple Queue vs Circular Queue Using Array).mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Simple Queue Problems
+/*
+Simple Queue Issues:
+1. Memory wastage after dequeue operations
+2. Queue becomes "full" even with available slots
+
+Solution: Circular Queue
+- Front and rear pointers wrap around
+- Better memory utilization
+- More efficient operations
+*/
+
+// Simple Queue Basic Structure
+class SimpleQueue {
+    int[] arr;
+    int front, rear, size, capacity;
+    
+    public SimpleQueue(int cap) {
+        capacity = cap;
+        arr = new int[capacity];
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+}</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#010 Queue Implementation Using Circular Array</h3>
+                    <p>Complete implementation of circular queue to overcome limitations of simple queue.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/11. Queue Implementation Using Circular Array.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Circular Queue Implementation
+class CircularQueue {
+    private int[] arr;
+    private int front, rear, size, capacity;
+    
+    public CircularQueue(int cap) {
+        capacity = cap;
+        arr = new int[capacity];
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+    
+    public void enqueue(int item) {
+        if (size == capacity) {
+            System.out.println("Queue is full");
+            return;
+        }
+        rear = (rear + 1) % capacity;
+        arr[rear] = item;
+        size++;
+    }
+    
+    public int dequeue() {
+        if (size == 0) {
+            System.out.println("Queue is empty");
+            return -1;
+        }
+        int item = arr[front];
+        front = (front + 1) % capacity;
+        size--;
+        return item;
+    }
+    
+    public int peek() {
+        return (size == 0) ? -1 : arr[front];
+    }
+    
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
+    public boolean isFull() {
+        return size == capacity;
+    }
+}</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#011 Queue Using Linked List</h3>
+                    <p>Implement queue using linked list for dynamic memory allocation.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/12. Queue Using Linked List With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Queue using Linked List
+class LinkedQueue {
+    private Node front, rear;
+    
+    class Node {
+        int data;
+        Node next;
+        Node(int data) { this.data = data; }
+    }
+    
+    public void enqueue(int data) {
+        Node newNode = new Node(data);
+        if (rear == null) {
+            front = rear = newNode;
+        } else {
+            rear.next = newNode;
+            rear = newNode;
+        }
+    }
+    
+    public int dequeue() {
+        if (front == null) {
+            System.out.println("Queue is empty");
+            return -1;
+        }
+        int data = front.data;
+        front = front.next;
+        if (front == null) {
+            rear = null;
+        }
+        return data;
+    }
+    
+    public boolean isEmpty() {
+        return front == null;
+    }
+}</div>
+                </div>
+                
+                <div class="practice-section">
+                    <h4>🏋️ Queue Applications</h4>
+                    <div class="practice-links">
+                        <a href="#" class="practice-link">Implement Queue using Stacks</a>
+                        <a href="#" class="practice-link">Sliding Window Maximum</a>
+                        <a href="#" class="practice-link">Design Circular Queue</a>
+                        <a href="#" class="practice-link">BFS Traversal</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Array-Based List -->
+        <div class="topic-section" id="array-lists">
+            <div class="topic-header" onclick="toggleContent('array-list')">
+                <h2>📋 Array-Based List</h2>
+                <div>
+                    <span class="difficulty beginner">Beginner</span>
+                    <button class="toggle-btn" id="array-list-btn">▼</button>
+                </div>
+            </div>
+            <div class="topic-content" id="array-list-content">
+                <div class="subtopic">
+                    <h3>#012 Array Based List with Implementation</h3>
+                    <p>Dynamic arrays that can grow and shrink, implementing list abstract data type using arrays.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/13. Array Based List With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Array Based List Implementation
+class ArrayList {
+    private int[] arr;
+    private int size;
+    private int capacity;
+    
+    public ArrayList() {
+        capacity = 10;
+        arr = new int[capacity];
+        size = 0;
+    }
+    
+    public void add(int element) {
+        if (size == capacity) {
+            resize();
+        }
+        arr[size++] = element;
+    }
+    
+    public void insert(int index, int element) {
+        if (size == capacity) resize();
+        
+        for (int i = size; i > index; i--) {
+            arr[i] = arr[i - 1];
+        }
+        arr[index] = element;
+        size++;
+    }
+    
+    public int remove(int index) {
+        if (index < 0 || index >= size) return -1;
+        
+        int element = arr[index];
+        for (int i = index; i < size - 1; i++) {
+            arr[i] = arr[i + 1];
+        }
+        size--;
+        return element;
+    }
+    
+    private void resize() {
+        capacity *= 2;
+        int[] newArr = new int[capacity];
+        System.arraycopy(arr, 0, newArr, 0, size);
+        arr = newArr;
+    }
+}</code>
+                </div>
+                
+                <div class="practice-section">
+                    <h4>🏋️ Array List Operations</h4>
+                    <div class="practice-links">
+                        <a href="#" class="practice-link">Dynamic Array Resize</a>
+                        <a href="#" class="practice-link">Insert at Position</a>
+                        <a href="#" class="practice-link">Remove Element</a>
+                        <a href="#" class="practice-link">Search in List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Linked Lists -->
+        <div class="topic-section" id="linked-lists">
+            <div class="topic-header" onclick="toggleContent('linkedlist')">
+                <h2>🔗 Linked Lists</h2>
+                <div>
+                    <span class="difficulty intermediate">Intermediate</span>
+                    <button class="toggle-btn" id="linkedlist-btn">▼</button>
+                </div>
+            </div>
+            <div class="topic-content" id="linkedlist-content">
+                <div class="subtopic">
+                    <h3>#013 Introduction to Linked List</h3>
+                    <p>Linear data structure where elements are stored in nodes, each containing data and reference to the next node.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/14.Introduction To Linked List.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Basic Node structure
+class ListNode {
+    int data;
+    ListNode next;
+    
+    ListNode(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+// Linked List advantages vs Arrays:
+/*
+Advantages:
+- Dynamic size
+- Efficient insertion/deletion
+- Memory allocated as needed
+
+Disadvantages:
+- No random access
+- Extra memory for pointers
+- Not cache friendly
+*/</div>
+                </div>
+                
+                <div class="subtopic">
+                    <h3>#014 Linked List Insert Operations</h3>
+                    <p>Learn insert-first, insert-last, and insert-at-position operations with complete implementation.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/15.Linked List Insert-First Insert-Last Insert-At-Position With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Linked List Insert Operations
+class LinkedList {
+    private ListNode head;
+    
+    // Insert at beginning
+    public void insertFirst(int data) {
+        ListNode newNode = new ListNode(data);
+        newNode.next = head;
+        head = newNode;
+    }
+    
+    // Insert at end
+    public void insertLast(int data) {
+        ListNode newNode = new ListNode(data);
+        if (head == null) {
+            head = newNode;
+            return;
+        }
+        
+        ListNode current = head;
+        while (current.next != null) {
+            current = current.next;
+        }
+        current.next = newNode;
+    }
+    
+    // Insert at specific position
+    public void insertAt(int position, int data) {
+        if (position == 0) {
+            insertFirst(data);
+            return;
+        }
+        
+        ListNode newNode = new ListNode(data);
+        ListNode current = head;
+        
+        for (int i = 0; i < position - 1 && current != null; i++) {
+            current = current.next;
+        }
+        
+        if (current != null) {
+            newNode.next = current.next;
+            current.next = newNode;
+        }
+    }
+}</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#015 Linked List Remove Operations</h3>
+                    <p>Implementation of remove-first, remove-last, and remove-by-key operations.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/16. Linked List Remove-First Remove-Last Remove-Key With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Linked List Remove Operations
+    // Remove first node
+    public int removeFirst() {
+        if (head == null) return -1;
+        
+        int data = head.data;
+        head = head.next;
+        return data;
+    }
+    
+    // Remove last node
+    public int removeLast() {
+        if (head == null) return -1;
+        if (head.next == null) {
+            int data = head.data;
+            head = null;
+            return data;
+        }
+        
+        ListNode current = head;
+        while (current.next.next != null) {
+            current = current.next;
+        }
+        
+        int data = current.next.data;
+        current.next = null;
+        return data;
+    }
+    
+    // Remove by key
+    public boolean removeKey(int key) {
+        if (head == null) return false;
+        
+        if (head.data == key) {
+            head = head.next;
+            return true;
+        }
+        
+        ListNode current = head;
+        while (current.next != null && current.next.data != key) {
+            current = current.next;
+        }
+        
+        if (current.next != null) {
+            current.next = current.next.next;
+            return true;
+        }
+        return false;
+    }</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#016 Linked List Reverse & Search</h3>
+                    <p>Learn how to reverse a linked list and implement search operations.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/17.Linked List Reverse,Search.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Reverse Linked List
+    public void reverse() {
+        ListNode prev = null;
+        ListNode current = head;
+        ListNode next;
+        
+        while (current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        head = prev;
+    }
+    
+    // Search for element
+    public boolean search(int key) {
+        ListNode current = head;
+        while (current != null) {
+            if (current.data == key) {
+                return true;
+            }
+            current = current.next;
+        }
+        return false;
+    }
+    
+    // Get position of element
+    public int indexOf(int key) {
+        ListNode current = head;
+        int index = 0;
+        
+        while (current != null) {
+            if (current.data == key) {
+                return index;
+            }
+            current = current.next;
+            index++;
+        }
+        return -1;
+    }</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#017 Doubly Linked List</h3>
+                    <p>Implementation of doubly linked list with insert and remove operations at different positions.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/18. Doubly Linked List Insert(First-Last-At),Remove(First-Last-At).mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Doubly Linked List Node
+class DoublyListNode {
+    int data;
+    DoublyListNode next;
+    DoublyListNode prev;
+    
+    DoublyListNode(int data) {
+        this.data = data;
+        this.next = null;
+        this.prev = null;
+    }
+}
+
+// Doubly Linked List
+class DoublyLinkedList {
+    private DoublyListNode head;
+    private DoublyListNode tail;
+    
+    // Insert at beginning
+    public void insertFirst(int data) {
+        DoublyListNode newNode = new DoublyListNode(data);
+        if (head == null) {
+            head = tail = newNode;
+        } else {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        }
+    }
+    
+    // Insert at end
+    public void insertLast(int data) {
+        DoublyListNode newNode = new DoublyListNode(data);
+        if (tail == null) {
+            head = tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+    }
+}</div>
+                </div>
+                
+                <div class="practice-section">
+                    <h4>🏋️ Linked List Problems</h4>
+                    <div class="practice-links">
+                        <a href="#" class="practice-link">Reverse Linked List</a>
+                        <a href="#" class="practice-link">Merge Two Lists</a>
+                        <a href="#" class="practice-link">Detect Cycle</a>
+                        <a href="#" class="practice-link">Remove Nth Node</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trees -->
+        <div class="topic-section" id="trees">
+            <div class="topic-header" onclick="toggleContent('trees')">
+                <h2>🌳 Trees</h2>
+                <div>
+                    <span class="difficulty advanced">Advanced</span>
+                    <button class="toggle-btn" id="trees-btn">▼</button>
+                </div>
+            </div>
+            <div class="topic-content" id="trees-content">
+                <div class="subtopic">
+                    <h3>#018 Introduction to Trees</h3>
+                    <p>Hierarchical data structure with root node and child nodes forming parent-child relationships.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/19.Introduction To Trees.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Tree Terminology
+/*
+Root: Top node of the tree
+Parent: Node that has children
+Child: Node that has a parent
+Leaf: Node with no children
+Height: Length of longest path from root to leaf
+Depth: Length of path from root to node
+Level: All nodes at same depth
+
+Tree Types:
+- Binary Tree: Each node has at most 2 children
+- Binary Search Tree: Left < Root < Right
+- AVL Tree: Self-balancing BST
+- Red-Black Tree: Balanced BST with color property
+*/
+
+// Basic Tree Node
+class TreeNode {
+    int data;
+    TreeNode left;
+    TreeNode right;
+    
+    TreeNode(int data) {
+        this.data = data;
+        this.left = null;
+        this.right = null;
+    }
+}</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#019 Binary Tree Types</h3>
+                    <p>Learn about Full, Complete, Perfect, Balanced, and Degenerate Binary Trees.</p>
+                    
+                    <div class="video-section">
+                        <video controls width="100%">
+                            <source src="../Adel Nasim DS/20.Binary Tree,Types Of Binary Tree-Full,Complete,Perfect,Balanced,Adegenerate.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Binary Tree Types
+/*
+1. Full Binary Tree: 
+   - Every node has 0 or 2 children
+   - No node has only 1 child
+
+2. Complete Binary Tree:
+   - All levels filled except possibly last
+   - Last level filled from left to right
+
+3. Perfect Binary Tree:
+   - All internal nodes have 2 children
+   - All leaves at same level
+
+4. Balanced Binary Tree:
+   - Height of left and right subtrees differ by at most 1
+
+5. Degenerate Binary Tree:
+   - Each parent has only one child
+   - Essentially a linked list
+*/
+
+// Check if tree is complete
+public boolean isComplete(TreeNode root) {
+    if (root == null) return true;
+    
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    boolean nullSeen = false;
+    
+    while (!queue.isEmpty()) {
+        TreeNode node = queue.poll();
+        
+        if (node == null) {
+            nullSeen = true;
+        } else {
+            if (nullSeen) return false;
+            queue.offer(node.left);
+            queue.offer(node.right);
+        }
+    }
+    return true;
+}</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#020 Binary Tree Traversal</h3>
+                    <p>Pre-order, In-order, Post-order, and Level-order traversal with implementation.</p>
+                    
+                    <div class="video-section">
+                        <video controls width="100%" style="max-width: 800px;">
+                            <source src="../Adel Nasim DS/21. Binary Tree Traversal(Pre-In-Post-Level Order) With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Tree Traversal Methods
+class BinaryTree {
+    TreeNode root;
+    
+    // Pre-order: Root -> Left -> Right
+    public void preorder(TreeNode node) {
+        if (node != null) {
+            System.out.print(node.data + " ");
+            preorder(node.left);
+            preorder(node.right);
+        }
+    }
+    
+    // In-order: Left -> Root -> Right
+    public void inorder(TreeNode node) {
+        if (node != null) {
+            inorder(node.left);
+            System.out.print(node.data + " ");
+            inorder(node.right);
+        }
+    }
+    
+    // Post-order: Left -> Right -> Root
+    public void postorder(TreeNode node) {
+        if (node != null) {
+            postorder(node.left);
+            postorder(node.right);
+            System.out.print(node.data + " ");
+        }
+    }
+    
+    // Level-order: Level by level
+    public void levelOrder() {
+        if (root == null) return;
+        
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            System.out.print(node.data + " ");
+            
+            if (node.left != null) queue.offer(node.left);
+            if (node.right != null) queue.offer(node.right);
+        }
+    }
+}</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#021 Binary Search Tree (BST)</h3>
+                    <p>Insert, Delete, Search operations and finding Successor, Predecessor, Max, Min in BST.</p>
+                    
+                    <div class="video-section">
+                        <video controls width="100%" style="max-width: 800px;">
+                            <source src="../Adel Nasim DS/22.Binary Search Tree(Insert-Delete-Search),Find-Successor-Predecessor-Max-Min.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Binary Search Tree Implementation
+class BST {
+    TreeNode root;
+    
+    // Insert operation
+    public TreeNode insert(TreeNode root, int data) {
+        if (root == null) {
+            return new TreeNode(data);
+        }
+        
+        if (data < root.data) {
+            root.left = insert(root.left, data);
+        } else if (data > root.data) {
+            root.right = insert(root.right, data);
+        }
+        return root;
+    }
+    
+    // Search operation
+    public boolean search(TreeNode root, int key) {
+        if (root == null) return false;
+        if (root.data == key) return true;
+        
+        return key < root.data ? 
+               search(root.left, key) : 
+               search(root.right, key);
+    }
+    
+    // Find minimum value
+    public TreeNode findMin(TreeNode root) {
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root;
+    }
+    
+    // Find maximum value
+    public TreeNode findMax(TreeNode root) {
+        while (root.right != null) {
+            root = root.right;
+        }
+        return root;
+    }
+    
+    // Delete operation
+    public TreeNode delete(TreeNode root, int key) {
+        if (root == null) return null;
+        
+        if (key < root.data) {
+            root.left = delete(root.left, key);
+        } else if (key > root.data) {
+            root.right = delete(root.right, key);
+        } else {
+            // Node to delete found
+            if (root.left == null) return root.right;
+            if (root.right == null) return root.left;
+            
+            // Node has two children
+            TreeNode minRight = findMin(root.right);
+            root.data = minRight.data;
+            root.right = delete(root.right, minRight.data);
+        }
+        return root;
+    }
+}</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#022 AVL Trees (Height Balanced Trees)</h3>
+                    <p>Self-balancing binary search tree with insertion and rotation operations (LL, RR, LR, RL).</p>
+                    
+                    <div class="video-section">
+                        <video controls width="100%" style="max-width: 800px;">
+                            <source src="../Adel Nasim DS/23. AVL Trees (Hieght Balanced Tree)- Insertion , Rotation(LL,RR,LR,RL).mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// AVL Tree Node with height
+class AVLNode {
+    int data;
+    AVLNode left, right;
+    int height;
+    
+    AVLNode(int data) {
+        this.data = data;
+        this.height = 1;
+    }
+}
+
+class AVLTree {
+    // Get height of node
+    int height(AVLNode node) {
+        return (node == null) ? 0 : node.height;
+    }
+    
+    // Get balance factor
+    int getBalance(AVLNode node) {
+        return (node == null) ? 0 : height(node.left) - height(node.right);
+    }
+    
+    // Right rotate (LL case)
+    AVLNode rightRotate(AVLNode y) {
+        AVLNode x = y.left;
+        AVLNode T2 = x.right;
+        
+        x.right = y;
+        y.left = T2;
+        
+        y.height = Math.max(height(y.left), height(y.right)) + 1;
+        x.height = Math.max(height(x.left), height(x.right)) + 1;
+        
+        return x;
+    }
+    
+    // Left rotate (RR case)
+    AVLNode leftRotate(AVLNode x) {
+        AVLNode y = x.right;
+        AVLNode T2 = y.left;
+        
+        y.left = x;
+        x.right = T2;
+        
+        x.height = Math.max(height(x.left), height(x.right)) + 1;
+        y.height = Math.max(height(y.left), height(y.right)) + 1;
+        
+        return y;
+    }
+}</div>
+                </div>
+                
+                <div class="practice-section">
+                    <h4>🏋️ Tree Problems</h4>
+                    <div class="practice-links">
+                        <a href="#" class="practice-link">Maximum Depth of Binary Tree</a>
+                        <a href="#" class="practice-link">Validate Binary Search Tree</a>
+                        <a href="#" class="practice-link">Lowest Common Ancestor</a>
+                        <a href="#" class="practice-link">Binary Tree Level Order Traversal</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Huffman Coding -->
+        <div class="topic-section" id="huffman">
+            <div class="topic-header" onclick="toggleContent('huffman')">
+                <h2>�️ Huffman Coding Algorithm</h2>
+                <div>
+                    <span class="difficulty advanced">Advanced</span>
+                    <button class="toggle-btn" id="huffman-btn">▼</button>
+                </div>
+            </div>
+            <div class="topic-content" id="huffman-content">
+                <div class="subtopic">
+                    <h3>#023 Huffman Coding Algorithm</h3>
+                    <p>Greedy algorithm for optimal data compression using variable-length prefix codes.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/24.Huffman Coding Algorithm.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Huffman Coding Implementation
+class HuffmanNode implements Comparable<HuffmanNode> {
+    int frequency;
+    char character;
+    HuffmanNode left, right;
+    
+    public int compareTo(HuffmanNode node) {
+        return this.frequency - node.frequency;
+    }
+}
+
+class HuffmanCoding {
+    public HuffmanNode buildHuffmanTree(char[] chars, int[] freq) {
+        PriorityQueue<HuffmanNode> pq = new PriorityQueue<>();
+        
+        // Create leaf nodes
+        for (int i = 0; i < chars.length; i++) {
+            HuffmanNode node = new HuffmanNode();
+            node.character = chars[i];
+            node.frequency = freq[i];
+            pq.offer(node);
+        }
+        
+        // Build tree
+        while (pq.size() > 1) {
+            HuffmanNode left = pq.poll();
+            HuffmanNode right = pq.poll();
+            
+            HuffmanNode merged = new HuffmanNode();
+            merged.frequency = left.frequency + right.frequency;
+            merged.left = left;
+            merged.right = right;
+            
+            pq.offer(merged);
+        }
+        
+        return pq.poll();
+    }
+    
+    public void generateCodes(HuffmanNode root, String code, 
+                            Map<Character, String> codes) {
+        if (root == null) return;
+        
+        if (root.left == null && root.right == null) {
+            codes.put(root.character, code);
+            return;
+        }
+        
+        generateCodes(root.left, code + "0", codes);
+        generateCodes(root.right, code + "1", codes);
+    }
+}</div>
+                </div>
+                
+                <div class="practice-section">
+                    <h4>🏋️ Huffman Coding Applications</h4>
+                    <div class="practice-links">
+                        <a href="#" class="practice-link">File Compression</a>
+                        <a href="#" class="practice-link">Data Transmission</a>
+                        <a href="#" class="practice-link">Image Compression</a>
+                        <a href="#" class="practice-link">Network Protocols</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sorting Algorithms -->
+        <div class="topic-section" id="sorting">
+            <div class="topic-header" onclick="toggleContent('sorting')">
+                <h2>🔄 Sorting Algorithms</h2>
+                <div>
+                    <span class="complexity-badge medium">Medium</span>
+                    <button class="toggle-btn" id="sorting-btn">▼</button>
+                </div>
+            </div>
+            <div class="topic-content" id="sorting-content">
+                <div class="subtopic">
+                    <h3>#024 Selection Sort Algorithm</h3>
+                    <p>Simple sorting algorithm that repeatedly finds minimum element and places it at the beginning.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/25.Selection Sort Algorithm With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Selection Sort Implementation
+public void selectionSort(int[] arr) {
+    int n = arr.length;
+    
+    for (int i = 0; i < n - 1; i++) {
+        int minIndex = i;
+        
+        // Find minimum element in remaining array
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[minIndex]) {
+                minIndex = j;
+            }
+        }
+        
+        // Swap minimum element with first element
+        int temp = arr[minIndex];
+        arr[minIndex] = arr[i];
+        arr[i] = temp;
+    }
+}
+
+// Time Complexity: O(n²)
+// Space Complexity: O(1)</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#025 Bubble Sort Algorithm</h3>
+                    <p>Simple sorting algorithm that repeatedly compares adjacent elements and swaps them if in wrong order.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/26.Bubble Sort Algorithm With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Bubble Sort Implementation
+public void bubbleSort(int[] arr) {
+    int n = arr.length;
+    
+    for (int i = 0; i < n - 1; i++) {
+        boolean swapped = false;
+        
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                // Swap elements
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+                swapped = true;
+            }
+        }
+        
+        // If no swapping occurred, array is sorted
+        if (!swapped) break;
+    }
+}
+
+// Time Complexity: O(n²) worst/average, O(n) best
+// Space Complexity: O(1)</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#026 Insertion Sort Algorithm</h3>
+                    <p>Simple sorting algorithm that builds final sorted array one element at a time.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" height="500" controls preload="none" style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+                            <source src="../Adel Nasim DS/27.Insertion Sort Algorithm With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Insertion Sort Implementation
+public void insertionSort(int[] arr) {
+    int n = arr.length;
+    
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        
+        // Move elements greater than key one position ahead
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        
+        arr[j + 1] = key;
+    }
+}
+
+// Time Complexity: O(n²) worst/average, O(n) best
+// Space Complexity: O(1)
+// Good for small datasets and nearly sorted arrays</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#027 Merge Sort Algorithm</h3>
+                    <p>Divide-and-conquer algorithm that divides array into halves, sorts them, and merges back.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" controls>
+                            <source src="../Adel Nasim DS/28.Merge Sort Algorithm With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Merge Sort Implementation
+public void mergeSort(int[] arr, int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+}
+
+public void merge(int[] arr, int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+    
+    int[] leftArr = new int[n1];
+    int[] rightArr = new int[n2];
+    
+    System.arraycopy(arr, left, leftArr, 0, n1);
+    System.arraycopy(arr, mid + 1, rightArr, 0, n2);
+    
+    int i = 0, j = 0, k = left;
+    
+    while (i < n1 && j < n2) {
+        if (leftArr[i] <= rightArr[j]) {
+            arr[k] = leftArr[i];
+            i++;
+        } else {
+            arr[k] = rightArr[j];
+            j++;
+        }
+        k++;
+    }
+    
+    while (i < n1) arr[k++] = leftArr[i++];
+    while (j < n2) arr[k++] = rightArr[j++];
+}
+
+// Time Complexity: O(n log n) in all cases
+// Space Complexity: O(n)</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#028 Quick Sort Algorithm</h3>
+                    <p>Efficient divide-and-conquer algorithm using pivot element to partition array.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" controls>
+                            <source src="../Adel Nasim DS/29. Quick Sort Algorithm With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Quick Sort Implementation
+public void quickSort(int[] arr, int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+public int partition(int[] arr, int low, int high) {
+    int pivot = arr[high];
+    int i = (low - 1);
+    
+    for (int j = low; j < high; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swap(arr, i, j);
+        }
+    }
+    
+    swap(arr, i + 1, high);
+    return i + 1;
+}
+
+private void swap(int[] arr, int i, int j) {
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+// Time Complexity: O(n log n) average, O(n²) worst
+// Space Complexity: O(log n)</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#029 Heap Sort Algorithm</h3>
+                    <p>Comparison-based sorting using binary heap data structure with heapify operations.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" controls>
+                            <source src="../Adel Nasim DS/30. Heap Sort Algorithm(Heapify,Build heap,Max-Min heap) With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Heap Sort Implementation
+public void heapSort(int[] arr) {
+    int n = arr.length;
+    
+    // Build max heap
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+    
+    // Extract elements from heap one by one
+    for (int i = n - 1; i > 0; i--) {
+        swap(arr, 0, i);
+        heapify(arr, i, 0);
+    }
+}
+
+public void heapify(int[] arr, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    
+    if (left < n && arr[left] > arr[largest]) {
+        largest = left;
+    }
+    
+    if (right < n && arr[right] > arr[largest]) {
+        largest = right;
+    }
+    
+    if (largest != i) {
+        swap(arr, i, largest);
+        heapify(arr, n, largest);
+    }
+}
+
+// Time Complexity: O(n log n)
+// Space Complexity: O(1)</div>
+                </div>
+                
+                <div class="practice-section">
+                    <h4>🏋️ Sorting Problems</h4>
+                    <div class="practice-links">
+                        <a href="#" class="practice-link">Sort Colors</a>
+                        <a href="#" class="practice-link">Merge Intervals</a>
+                        <a href="#" class="practice-link">Largest Number</a>
+                        <a href="#" class="practice-link">Sort List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Searching Algorithms -->
+        <div class="topic-section" id="searching">
+            <div class="topic-header" onclick="toggleContent('searching')">
+                <h2>� Searching Algorithms</h2>
+                <div>
+                    <span class="complexity-badge easy">Easy</span>
+                    <button class="toggle-btn" id="searching-btn">▼</button>
+                </div>
+            </div>
+            <div class="topic-content" id="searching-content">
+                <div class="subtopic">
+                    <h3>#030 Linear Search (Sequential Search)</h3>
+                    <p>Simple search algorithm that checks every element sequentially until target is found.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" controls>
+                            <source src="../Adel Nasim DS/31. Linear Search (Sequential Search) With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Linear Search Implementation
+public int linearSearch(int[] arr, int target) {
+    for (int i = 0; i < arr.length; i++) {
+        if (arr[i] == target) {
+            return i; // Return index if found
+        }
+    }
+    return -1; // Return -1 if not found
+}
+
+// Recursive Linear Search
+public int linearSearchRecursive(int[] arr, int target, int index) {
+    if (index >= arr.length) return -1;
+    if (arr[index] == target) return index;
+    return linearSearchRecursive(arr, target, index + 1);
+}
+
+// Time Complexity: O(n)
+// Space Complexity: O(1) iterative, O(n) recursive
+// Best Case: O(1) - element at first position
+// Worst Case: O(n) - element at last position or not present</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#031 Binary Search Algorithm</h3>
+                    <p>Efficient algorithm for searching in sorted arrays by repeatedly dividing search interval in half.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" controls>
+                            <source src="../Adel Nasim DS/32.Binary Search Algorithm With Implementation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Binary Search - Iterative Implementation
+public int binarySearch(int[] arr, int target) {
+    int left = 0, right = arr.length - 1;
+    
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        
+        if (arr[mid] == target) {
+            return mid;
+        }
+        
+        if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1;
+}
+
+// Binary Search - Recursive Implementation
+public int binarySearchRecursive(int[] arr, int target, int left, int right) {
+    if (left <= right) {
+        int mid = left + (right - left) / 2;
+        
+        if (arr[mid] == target) return mid;
+        
+        if (arr[mid] > target) {
+            return binarySearchRecursive(arr, target, left, mid - 1);
+        }
+        return binarySearchRecursive(arr, target, mid + 1, right);
+    }
+    return -1;
+}
+
+// Time Complexity: O(log n)
+// Space Complexity: O(1) iterative, O(log n) recursive
+// Prerequisite: Array must be sorted</code>
+                </div>
+                
+                <div class="practice-section">
+                    <h4>🏋️ Searching Problems</h4>
+                    <div class="practice-links">
+                        <a href="#" class="practice-link">Search Insert Position</a>
+                        <a href="#" class="practice-link">Find First and Last Position</a>
+                        <a href="#" class="practice-link">Search in Rotated Array</a>
+                        <a href="#" class="practice-link">Find Peak Element</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hash Tables -->
+        <div class="topic-section" id="hash-tables">
+            <div class="topic-header" onclick="toggleContent('hashtables')">
+                <h2>🗂️ Hashing (Hash Table)</h2>
+                <div>
+                    <span class="difficulty intermediate">Intermediate</span>
+                    <button class="toggle-btn" id="hashtables-btn">▼</button>
+                </div>
+            </div>
+            <div class="topic-content" id="hashtables-content">
+                <div class="subtopic">
+                    <h3>#032 Hashing (Hash Table)</h3>
+                    <p>Hash tables use hash functions to map keys to array indices, providing average O(1) time complexity for basic operations.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" controls>
+                            <source src="../Adel Nasim DS/33.Hashing (Hash Table).mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Hash Table Implementation with Chaining
+import java.util.*;
+
+class HashTable {
+    private int size;
+    private LinkedList<Entry>[] table;
+    
+    class Entry {
+        String key;
+        int value;
+        
+        Entry(String key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+    
+    public HashTable(int capacity) {
+        size = capacity;
+        table = new LinkedList[size];
+        for (int i = 0; i < size; i++) {
+            table[i] = new LinkedList<>();
+        }
+    }
+    
+    // Hash function
+    private int hash(String key) {
+        return Math.abs(key.hashCode()) % size;
+    }
+    
+    // Insert operation
+    public void put(String key, int value) {
+        int index = hash(key);
+        LinkedList<Entry> bucket = table[index];
+        
+        for (Entry entry : bucket) {
+            if (entry.key.equals(key)) {
+                entry.value = value; // Update existing
+                return;
+            }
+        }
+        
+        bucket.add(new Entry(key, value));
+    }
+    
+    // Search operation
+    public int get(String key) {
+        int index = hash(key);
+        LinkedList<Entry> bucket = table[index];
+        
+        for (Entry entry : bucket) {
+            if (entry.key.equals(key)) {
+                return entry.value;
+            }
+        }
+        return -1; // Not found
+    }
+    
+    // Delete operation
+    public boolean remove(String key) {
+        int index = hash(key);
+        LinkedList<Entry> bucket = table[index];
+        
+        return bucket.removeIf(entry -> entry.key.equals(key));
+    }
+}</code>
+
+                    <div class="algorithm-steps">
+                        <h4>Hash Function Properties:</h4>
+                        <ol>
+                            <li>Deterministic: Same input always produces same output</li>
+                            <li>Uniform Distribution: Keys distributed evenly across table</li>
+                            <li>Fast Computation: Hash function should be efficient</li>
+                            <li>Avalanche Effect: Small input change causes large output change</li>
+                        </ol>
+                    </div>
+
+                    <div class="use-cases">
+                        <h4>🎯 Collision Resolution Techniques</h4>
+                        <ul>
+                            <li><strong>Chaining:</strong> Store colliding elements in linked lists</li>
+                            <li><strong>Linear Probing:</strong> Find next available slot linearly</li>
+                            <li><strong>Quadratic Probing:</strong> Use quadratic function for probing</li>
+                            <li><strong>Double Hashing:</strong> Use secondary hash function</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="practice-section">
+                    <h4>🏋️ Hash Table Problems</h4>
+                    <div class="practice-links">
+                        <a href="#" class="practice-link">Two Sum</a>
+                        <a href="#" class="practice-link">Group Anagrams</a>
+                        <a href="#" class="practice-link">First Non-repeating Character</a>
+                        <a href="#" class="practice-link">Design HashMap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graphs -->
+        <div class="topic-section" id="graphs">
+            <div class="topic-header" onclick="toggleContent('graphs')">
+                <h2>🕸️ Graphs</h2>
+                <div>
+                    <span class="difficulty advanced">Advanced</span>
+                    <button class="toggle-btn" id="graphs-btn">▼</button>
+                </div>
+            </div>
+            <div class="topic-content" id="graphs-content">
+                <div class="subtopic">
+                    <h3>#033 Introduction to Graph, Types and Representation</h3>
+                    <p>Graphs consist of vertices (nodes) connected by edges. Learn about different types and representation methods.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" controls>
+                            <source src="../Adel Nasim DS/34.Introduction To Graph,Types Of Graph and Representation.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Graph Representations
+
+// 1. Adjacency Matrix
+class GraphMatrix {
+    private int[][] adjMatrix;
+    private int numVertices;
+    
+    public GraphMatrix(int numVertices) {
+        this.numVertices = numVertices;
+        adjMatrix = new int[numVertices][numVertices];
+    }
+    
+    public void addEdge(int src, int dest) {
+        adjMatrix[src][dest] = 1;
+        adjMatrix[dest][src] = 1; // For undirected graph
+    }
+}
+
+// 2. Adjacency List
+class GraphList {
+    private int vertices;
+    private LinkedList<Integer>[] adjacencyList;
+    
+    public GraphList(int v) {
+        vertices = v;
+        adjacencyList = new LinkedList[v];
+        for (int i = 0; i < v; i++) {
+            adjacencyList[i] = new LinkedList();
+        }
+    }
+    
+    public void addEdge(int src, int dest) {
+        adjacencyList[src].add(dest);
+        adjacencyList[dest].add(src); // For undirected graph
+    }
+}</div>
+
+                    <div class="algorithm-steps">
+                        <h4>Graph Types:</h4>
+                        <ol>
+                            <li><strong>Directed Graph (Digraph):</strong> Edges have direction</li>
+                            <li><strong>Undirected Graph:</strong> Edges have no direction</li>
+                            <li><strong>Weighted Graph:</strong> Edges have weights/costs</li>
+                            <li><strong>Unweighted Graph:</strong> Edges have no weights</li>
+                            <li><strong>Connected Graph:</strong> Path exists between every pair of vertices</li>
+                            <li><strong>Disconnected Graph:</strong> Some vertices not reachable from others</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#034 Breadth First Search Algorithm (BFS)</h3>
+                    <p>Graph traversal algorithm that explores vertices level by level using a queue.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" controls>
+                            <source src="../Adel Nasim DS/35.Breadth First Search Algorithm (BFS).mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// BFS Implementation
+import java.util.*;
+
+public void BFS(int startVertex) {
+    boolean[] visited = new boolean[vertices];
+    Queue<Integer> queue = new LinkedList<>();
+    
+    visited[startVertex] = true;
+    queue.offer(startVertex);
+    
+    System.out.print("BFS Traversal: ");
+    
+    while (!queue.isEmpty()) {
+        int vertex = queue.poll();
+        System.out.print(vertex + " ");
+        
+        // Visit all unvisited neighbors
+        for (int neighbor : adjacencyList[vertex]) {
+            if (!visited[neighbor]) {
+                visited[neighbor] = true;
+                queue.offer(neighbor);
+            }
+        }
+    }
+}
+
+// Time Complexity: O(V + E)
+// Space Complexity: O(V)</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#035 Depth First Search Algorithm (DFS)</h3>
+                    <p>Graph traversal algorithm that explores as far as possible along each branch before backtracking.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" controls>
+                            <source src="../Adel Nasim DS/36.Depth First Search Algorithm (DFS).mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// DFS Implementation - Recursive
+public void DFS(int vertex, boolean[] visited) {
+    visited[vertex] = true;
+    System.out.print(vertex + " ");
+    
+    for (int neighbor : adjacencyList[vertex]) {
+        if (!visited[neighbor]) {
+            DFS(neighbor, visited);
+        }
+    }
+}
+
+// DFS Implementation - Iterative using Stack
+public void DFSIterative(int startVertex) {
+    boolean[] visited = new boolean[vertices];
+    Stack<Integer> stack = new Stack<>();
+    
+    stack.push(startVertex);
+    
+    while (!stack.isEmpty()) {
+        int vertex = stack.pop();
+        
+        if (!visited[vertex]) {
+            visited[vertex] = true;
+            System.out.print(vertex + " ");
+            
+            for (int neighbor : adjacencyList[vertex]) {
+                if (!visited[neighbor]) {
+                    stack.push(neighbor);
+                }
+            }
+        }
+    }
+}
+
+// Time Complexity: O(V + E)
+// Space Complexity: O(V)</div>
+                </div>
+
+                <div class="subtopic">
+                    <h3>#036 Dijkstra's Algorithm (Shortest Path)</h3>
+                    <p>Find shortest path from source vertex to all other vertices in weighted graph with non-negative weights.</p>
+                    
+                    <div class="video-section">
+                        <video width="100%" controls>
+                            <source src="../Adel Nasim DS/37.Dijkstra's(Shortest Path Algorithm).mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="code-example">// Dijkstra's Algorithm Implementation
+import java.util.*;
+
+class Edge {
+    int destination, weight;
+    Edge(int destination, int weight) {
+        this.destination = destination;
+        this.weight = weight;
+    }
+}
+
+class Node implements Comparable<Node> {
+    int vertex, distance;
+    Node(int vertex, int distance) {
+        this.vertex = vertex;
+        this.distance = distance;
+    }
+    
+    public int compareTo(Node other) {
+        return Integer.compare(this.distance, other.distance);
+    }
+}
+
+public int[] dijkstra(int source) {
+    int[] distance = new int[vertices];
+    boolean[] visited = new boolean[vertices];
+    PriorityQueue<Node> pq = new PriorityQueue<>();
+    
+    Arrays.fill(distance, Integer.MAX_VALUE);
+    distance[source] = 0;
+    pq.offer(new Node(source, 0));
+    
+    while (!pq.isEmpty()) {
+        Node current = pq.poll();
+        int u = current.vertex;
+        
+        if (visited[u]) continue;
+        visited[u] = true;
+        
+        for (Edge edge : adjacencyList.get(u)) {
+            int v = edge.destination;
+            int weight = edge.weight;
+            
+            if (!visited[v] && distance[u] + weight < distance[v]) {
+                distance[v] = distance[u] + weight;
+                pq.offer(new Node(v, distance[v]));
+            }
+        }
+    }
+    return distance;
+}
+
+// Time Complexity: O((V + E) log V)</div>
+                </div>
+
+                <div class="use-cases">
+                    <h4>🎯 Graph Applications</h4>
+                    <ul>
+                        <li>Social Networks (friendship relationships)</li>
+                        <li>GPS Navigation (shortest path between locations)</li>
+                        <li>Network Routing (internet packet routing)</li>
+                        <li>Web Page Ranking (PageRank algorithm)</li>
+                        <li>Dependency Resolution (build systems)</li>
+                        <li>Game Theory (decision trees)</li>
+                    </ul>
+                </div>
+                
+                <div class="practice-section">
+                    <h4>🏋️ Graph Problems</h4>
+                    <div class="practice-links">
+                        <a href="#" class="practice-link">Number of Islands</a>
+                        <a href="#" class="practice-link">Course Schedule</a>
+                        <a href="#" class="practice-link">Network Delay Time</a>
+                        <a href="#" class="practice-link">Clone Graph</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ------------------ Custom Video Player Initialization ------------------ */
+        (function() {
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return '00:00';
+                const hrs = Math.floor(seconds / 3600);
+                const mins = Math.floor((seconds % 3600) / 60);
+                const secs = Math.floor(seconds % 60);
+                return (hrs ? String(hrs).padStart(2,'0') + ':' : '') +
+                    String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
+            }
+
+            function createPlayer(video) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'player paused';
+
+                // Move video into wrapper
+                const parent = video.parentNode;
+                parent.replaceChild(wrapper, video);
+                wrapper.appendChild(video);
+
+                // Disable native browser controls to avoid duplicate UI
+                try {
+                    video.removeAttribute('controls');
+                    video.controls = false;
+                } catch (e) {}
+                // allow inline playback on mobile
+                try { video.setAttribute('playsinline', ''); video.setAttribute('webkit-playsinline', ''); } catch (e) {}
+
+                // Big play button
+                const bigPlay = document.createElement('button');
+                bigPlay.className = 'big-play';
+                bigPlay.innerHTML = '►';
+                wrapper.appendChild(bigPlay);
+
+                // Controls container
+                const controls = document.createElement('div');
+                controls.className = 'controls';
+
+                // Play/Pause
+                const playBtn = document.createElement('button');
+                playBtn.className = 'control-btn play';
+                playBtn.innerHTML = 'Play';
+                controls.appendChild(playBtn);
+
+                // Progress (with knob)
+                const progress = document.createElement('div');
+                progress.className = 'progress';
+                progress.style.flex = '1';
+                const buffer = document.createElement('div'); buffer.className = 'buffer';
+                const bar = document.createElement('div'); bar.className = 'bar';
+                const knob = document.createElement('div'); knob.className = 'knob';
+                progress.appendChild(buffer); progress.appendChild(bar); progress.appendChild(knob);
+                controls.appendChild(progress);
+
+                // Time
+                const time = document.createElement('div');
+                time.className = 'time';
+                time.textContent = '00:00 / 00:00';
+                controls.appendChild(time);
+
+                // Volume
+                const vol = document.createElement('input');
+                vol.type = 'range'; vol.min = 0; vol.max = 1; vol.step = 0.01; vol.value = video.volume;
+                vol.className = 'volume';
+                controls.appendChild(vol);
+
+                // Speed
+                const rate = document.createElement('select');
+                rate.className = 'playback-rate';
+                [0.5,0.75,1,1.25,1.5,1.75,2].forEach(r => {
+                    const o = document.createElement('option'); o.value = r; o.text = r + 'x';
+                    if (r === 1) o.selected = true;
+                    rate.appendChild(o);
+                });
+                controls.appendChild(rate);
+
+                // Fullscreen
+                const fs = document.createElement('button'); fs.className = 'control-btn fs'; fs.textContent = '⤢';
+                controls.appendChild(fs);
+
+                // Download
+                const src = video.querySelector('source')?.src || video.currentSrc || '';
+                const dl = document.createElement('a'); dl.className = 'download-link'; dl.href = src; dl.download = ''; dl.textContent = '⤓';
+                controls.appendChild(dl);
+
+                wrapper.appendChild(controls);
+
+                // Events
+                function updateUI() {
+                    const pct = (video.currentTime / Math.max(video.duration || 1, 1));
+                    bar.style.width = (pct * 100) + '%';
+                    // position knob
+                    const rect = progress.getBoundingClientRect();
+                    const knobX = (rect.width * pct);
+                    knob.style.left = (knobX) + 'px';
+                    time.textContent = formatTime(video.currentTime) + ' / ' + (isFinite(video.duration) ? formatTime(video.duration) : '00:00');
+                }
+
+                video.addEventListener('timeupdate', updateUI);
+                video.addEventListener('durationchange', updateUI);
+                video.addEventListener('progress', function() {
+                    try {
+                        const buffered = video.buffered;
+                        if (buffered.length) {
+                            const end = buffered.end(buffered.length - 1);
+                            buffer.style.width = (end / Math.max(video.duration || 1, 1) * 100) + '%';
+                        }
+                    } catch (e) {}
+                });
+
+                function setPlayingState(playing) {
+                    if (playing) {
+                        wrapper.classList.remove('paused');
+                        playBtn.textContent = 'Pause';
+                        bigPlay.style.opacity = 0;
+                    } else {
+                        wrapper.classList.add('paused');
+                        playBtn.textContent = 'Play';
+                        bigPlay.style.opacity = 1;
+                    }
+                }
+
+                playBtn.addEventListener('click', function() {
+                    if (video.paused) video.play(); else video.pause();
+                });
+
+                bigPlay.addEventListener('click', function() { if (video.paused) video.play(); else video.pause(); });
+
+                // Click on video area toggles play/pause (like YouTube).
+                // Ignore clicks that originate from the control bar so interacting with controls doesn't toggle playback.
+                video.addEventListener('click', function(e) {
+                    // If user clicked on controls (or their children), don't toggle
+                    if (e.target.closest && e.target.closest('.controls')) return;
+                    // If currently dragging the progress, don't toggle
+                    if (typeof dragging !== 'undefined' && dragging) return;
+                    if (video.paused) video.play(); else video.pause();
+                });
+
+                video.addEventListener('play', function() { setPlayingState(true); });
+                video.addEventListener('pause', function() { setPlayingState(false); });
+
+                // Seek on progress click
+                progress.addEventListener('click', function(e) {
+                    const rect = progress.getBoundingClientRect();
+                    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                    video.currentTime = pct * (video.duration || 0);
+                });
+
+                // Dragging
+                let dragging = false;
+                progress.addEventListener('mousedown', function(e) { dragging = true; });
+                window.addEventListener('mouseup', function(e) { if (dragging) dragging = false; });
+                window.addEventListener('mousemove', function(e) { if (!dragging) return; const rect = progress.getBoundingClientRect(); const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)); video.currentTime = pct * (video.duration || 0); });
+
+                // Volume
+                vol.addEventListener('input', function() { video.volume = parseFloat(vol.value); });
+
+                // Playback rate
+                rate.addEventListener('change', function() { video.playbackRate = parseFloat(rate.value); });
+
+                // Fullscreen
+                fs.addEventListener('click', function() {
+                    const isFs = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+                    if (!isFs) {
+                        // request fullscreen with vendor fallbacks
+                        if (wrapper.requestFullscreen) wrapper.requestFullscreen();
+                        else if (wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen();
+                        else if (wrapper.mozRequestFullScreen) wrapper.mozRequestFullScreen();
+                        else if (wrapper.msRequestFullscreen) wrapper.msRequestFullscreen();
+                        wrapper.classList.add('is-fullscreen');
+                    } else {
+                        if (document.exitFullscreen) document.exitFullscreen();
+                        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                        else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+                        else if (document.msExitFullscreen) document.msExitFullscreen();
+                        wrapper.classList.remove('is-fullscreen');
+                    }
+                });
+
+                // Listen for fullscreen change events to ensure class sync
+                ['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange'].forEach(evt => {
+                    document.addEventListener(evt, function() {
+                        const isFs = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+                        if (!isFs) wrapper.classList.remove('is-fullscreen');
+                        else wrapper.classList.add('is-fullscreen');
+                    });
+                });
+
+                // Update download link if source changes
+                const updateDownloadHref = () => {
+                    const s = video.querySelector('source')?.src || video.currentSrc || '';
+                    dl.href = s;
+                };
+                updateDownloadHref();
+
+                // Make keyboard accessible: Space toggles play when focused
+                wrapper.tabIndex = 0;
+                wrapper.addEventListener('keydown', function(e) {
+                    if (e.code === 'Space') { e.preventDefault(); if (video.paused) video.play(); else video.pause(); }
+                });
+
+                // Initial UI state
+                setPlayingState(video.paused);
+                updateUI();
+            }
+
+            // Replace plain video tags with custom player wrappers
+            document.addEventListener('DOMContentLoaded', function() {
+                const videos = Array.from(document.querySelectorAll('.video-section video'));
+                videos.forEach(v => {
+                    try { createPlayer(v); } catch (e) { console.error('Failed to enhance video player', e); }
+                });
+            });
+        })();
+
+        function toggleContent(topicId) {
+            const content = document.getElementById(topicId + '-content');
+            const button = document.getElementById(topicId + '-btn');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                button.textContent = '▼';
+                button.classList.remove('rotated');
+            } else {
+                content.style.display = 'none';
+                button.textContent = '▶';
+                button.classList.add('rotated');
+            }
+        }
+        
+        // Initialize all content as visible
+        document.addEventListener('DOMContentLoaded', function() {
+            const contents = document.querySelectorAll('.topic-content');
+            contents.forEach(content => {
+                content.style.display = 'block';
+            });
+        });
+        
+        // Table of Contents functionality
+        function toggleTOC() {
+            const tocContainer = document.getElementById('tocContainer');
+            tocContainer.classList.toggle('active');
+        }
+        
+        // Back to top functionality
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Show/hide back to top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+        
+        // Close TOC when clicking on a link
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            tocLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const tocContainer = document.getElementById('tocContainer');
+                    tocContainer.classList.remove('active');
+                });
+            });
+        });
+        
+        // Close TOC when clicking outside
+        document.addEventListener('click', function(event) {
+            const tocContainer = document.getElementById('tocContainer');
+            const tocToggle = document.querySelector('.toc-toggle');
+            
+            if (!tocContainer.contains(event.target) && !tocToggle.contains(event.target)) {
+                tocContainer.classList.remove('active');
+            }
+        });
+        
+        // Video error handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                video.addEventListener('error', function(e) {
+                    console.log('Video loading error:', e);
+                    const videoSection = video.closest('.video-section');
+                    const source = video.querySelector('source');
+                    const videoPath = source?.src || 'Unknown';
+                    
+                    if (videoSection) {
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'video-error';
+                        errorDiv.style.cssText = `
+                            background: linear-gradient(45deg, #e74c3c, #c0392b);
+                            color: white;
+                            padding: 40px 20px;
+                            text-align: center;
+                            border-radius: 12px;
+                            margin: 20px 0;
+                            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+                        `;
+                        
+                        // Extract just the filename from the path
+                        const filename = videoPath.split('/').pop();
+                        
+                        errorDiv.innerHTML = `
+                            <h4>📹 Video Not Found</h4>
+                            <p>The video file could not be loaded.</p>
+                            <div style="margin: 15px 0; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                <strong>File:</strong> ${filename}<br>
+                                <strong>Path:</strong> <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 3px; font-size: 0.9em;">${videoPath}</code>
+                            </div>
+                            <p style="font-size: 0.9em; margin-top: 15px;">
+                                💡 <strong>Tip:</strong> Try opening the file directly from the file explorer:<br>
+                                <code style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 4px; display: inline-block; margin-top: 5px;">
+                                    ${videoPath.replace('../', 'e:\\Materials\\Skills\\ITI\\summary\\')}
+                                </code>
+                            </p>
+                        `;
+                        
+                        video.style.display = 'none';
+                        videoSection.appendChild(errorDiv);
+                    }
+                });
+                
+                video.addEventListener('loadstart', function() {
+                    console.log('Video loading started:', video.querySelector('source')?.src);
+                });
+                
+                video.addEventListener('canplay', function() {
+                    console.log('Video ready to play:', video.querySelector('source')?.src);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

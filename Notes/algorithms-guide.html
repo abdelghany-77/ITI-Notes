@@ -1,0 +1,2347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algorithms Study Guide - Complete Course</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    /* Table of Contents Styles */
+    .toc-container {
+      position: fixed;
+      top: 20px;
+      left: -300px;
+      width: 280px;
+      height: calc(100vh - 40px);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transition: left 0.3s ease;
+      z-index: 1000;
+      overflow-y: auto;
+      backdrop-filter: blur(10px);
+    }
+    
+    .toc-container.active {
+      left: 20px;
+    }
+    
+    .toc-header {
+      padding: 20px;
+      background: #3498db;
+      color: white;
+      border-radius: 15px 15px 0 0;
+      position: sticky;
+      top: 0;
+    }
+    
+    .toc-header h3 {
+      margin: 0;
+      font-size: 1.2em;
+    }
+    
+    .toc-list {
+      padding: 15px;
+    }
+    
+    .toc-list ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .toc-list li {
+      margin: 8px 0;
+    }
+    
+    .toc-list a {
+      display: block;
+      padding: 8px 12px;
+      color: #2c3e50;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-size: 0.9em;
+    }
+    
+    .toc-list a:hover {
+      background: #3498db;
+      color: white;
+      transform: translateX(5px);
+    }
+    
+    .toc-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1001;
+      font-size: 18px;
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .toc-toggle:hover {
+      background: #2980b9;
+      transform: scale(1.1);
+    }
+    
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1000;
+      font-size: 18px;
+      box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+      transition: all 0.3s ease;
+      opacity: 0;
+      visibility: hidden;
+    }
+    
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .back-to-top:hover {
+      background: #c0392b;
+      transform: scale(1.1);
+    }
+
+    
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header h1 {
+      color: #2c3e50;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      color: #7f8c8d;
+      font-size: 1.1em;
+    }
+    
+    .nav-links {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .nav-links a {
+      display: inline-block;
+      padding: 12px 25px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #2c3e50;
+      text-decoration: none;
+      border-radius: 25px;
+      margin: 0 10px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+    
+    .nav-links a:hover {
+      background: #3498db;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+
+    
+    .topic-section {
+      background: rgba(255, 255, 255, 0.95);
+      margin: 20px 0;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .topic-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px 0;
+      border-bottom: 2px solid #ecf0f1;
+      margin-bottom: 20px;
+    }
+    
+    .topic-header h2 {
+      color: #2c3e50;
+      font-size: 1.8em;
+    }
+    
+    .difficulty {
+      padding: 8px 15px;
+      border-radius: 20px;
+      color: white;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+    
+    .beginner { background: #27ae60; }
+    .intermediate { background: #f39c12; }
+    .advanced { background: #e74c3c; }
+    
+    .topic-content {
+      display: block;
+    }
+    
+    .topic-content.hidden {
+      display: none;
+    }
+    
+    .subtopic {
+      background: #f8f9fa;
+      margin: 15px 0;
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #3498db;
+    }
+    
+    .subtopic h3 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+
+    .algorithm-box {
+      background: linear-gradient(135deg, #e8f4f8, #d1ecf1);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 5px solid #667eea;
+      margin: 20px 0;
+    }
+
+    .algorithm-box h4 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+
+    .complexity-box {
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #f39c12;
+      margin: 15px 0;
+    }
+
+    .complexity-box h5 {
+      color: #e67e22;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+
+    
+    .code-example {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 12px;
+      font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+      margin: 20px 0;
+      border-left: 4px solid #3498db;
+      overflow-x: auto;
+      position: relative;
+      font-size: 14px;
+      line-height: 1.6;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .code-example::before {
+      content: 'Algorithm';
+      position: absolute;
+      top: 8px;
+      right: 15px;
+      background: #3498db;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75em;
+      font-weight: 600;
+    }
+
+    .code-example::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(135deg, #2d2d30, #252526);
+      border-radius: 12px 12px 0 0;
+      z-index: 0;
+    }
+
+    .code-example code {
+      position: relative;
+      z-index: 1;
+      display: block;
+      margin-top: 20px;
+    }
+
+    /* Enhanced VS Code Dark Theme Syntax Highlighting */
+    .code-example .comment {
+      color: #6a9955;
+      font-style: italic;
+    }
+
+    .code-example .keyword {
+      color: #569cd6;
+      font-weight: bold;
+    }
+
+    .code-example .string {
+      color: #ce9178;
+    }
+
+    .code-example .number {
+      color: #b5cea8;
+    }
+
+    .code-example .function {
+      color: #dcdcaa;
+      font-weight: 500;
+    }
+
+    .code-example .type {
+      color: #4ec9b0;
+    }
+
+    .code-example .variable {
+      color: #9cdcfe;
+    }
+
+    .code-example .property {
+      color: #9cdcfe;
+    }
+
+    .code-example .operator {
+      color: #d4d4d4;
+    }
+
+    .code-example .punctuation {
+      color: #d4d4d4;
+    }
+
+    .code-example .bracket {
+      color: #ffd700;
+    }
+
+    /* Make code more readable with better spacing */
+    .code-example {
+      -moz-tab-size: 4;
+      -o-tab-size: 4;
+      tab-size: 4;
+      white-space: pre-wrap;
+    }
+
+    /* Add subtle selection highlighting */
+    .code-example::selection {
+      background: rgba(173, 214, 255, 0.15);
+    }
+
+    .code-example::-moz-selection {
+      background: rgba(173, 214, 255, 0.15);
+    }
+    
+    .algorithm-box {
+      background: linear-gradient(135deg, #e8f4f8, #d1ecf1);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 5px solid #667eea;
+      margin: 20px 0;
+    }
+
+    .algorithm-box h4 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+
+    .complexity-box {
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #f39c12;
+      margin: 15px 0;
+    }
+
+    .complexity-box h5 {
+      color: #e67e22;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+
+    .theorem-box {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 5px solid #2196f3;
+      margin: 15px 0;
+    }
+
+    .theorem-box h4 {
+      color: #1976d2;
+      margin-bottom: 10px;
+    }
+
+    .warning-box {
+      background: linear-gradient(135deg, #ffebee, #ffcdd2);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 5px solid #f44336;
+      margin: 15px 0;
+    }
+
+    .warning-box h4 {
+      color: #d32f2f;
+      margin-bottom: 10px;
+    }
+
+    .formula {
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1em;
+    }
+
+    .math {
+      font-family: 'Times New Roman', serif;
+      font-style: italic;
+    }
+
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .topic-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-top: 4px solid #667eea;
+      transition: transform 0.3s ease;
+    }
+
+    .topic-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .topic-card h5 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .comparison-table th {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 15px;
+      text-align: left;
+    }
+
+    .comparison-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .comparison-table tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        margin: 10px;
+        padding: 15px;
+      }
+
+      .header h1 {
+        font-size: 2em;
+      }
+
+      .topics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topic-section {
+        padding: 15px;
+      }
+
+      .topic-header h2 {
+        font-size: 1.6em;
+      }
+
+      .subtopic h3 {
+        font-size: 1.2em;
+      }
+    }
+
+    .theorem-box {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 5px solid #2196f3;
+      margin: 15px 0;
+    }
+
+    .theorem-box h4 {
+      color: #1976d2;
+      margin-bottom: 10px;
+    }
+
+    .warning-box {
+      background: linear-gradient(135deg, #ffebee, #ffcdd2);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 5px solid #f44336;
+      margin: 15px 0;
+    }
+
+    .warning-box h4 {
+      color: #d32f2f;
+      margin-bottom: 10px;
+    }
+
+    .formula {
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1em;
+    }
+
+    .lecture-card {
+      background: white;
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      padding: 25px;
+      margin: 20px 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .lecture-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .lecture-number {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .topic-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-top: 4px solid #667eea;
+      transition: transform 0.3s ease;
+    }
+
+    .topic-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .topic-card h5 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .comparison-table th {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 15px;
+      text-align: left;
+    }
+
+    .comparison-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .comparison-table tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        margin: 10px;
+        padding: 15px;
+        flex-direction: column;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        max-height: 100vh;
+        transform: translateX(-100%);
+      }
+
+      .main-content {
+        width: 100%;
+      }
+
+      .header h1 {
+        font-size: 2em;
+      }
+
+
+      .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2em;
+      }
+
+      .sidebar-toggle {
+        top: 10px;
+        left: 10px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2em;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .content {
+        padding: 0 15px 15px;
+      }
+
+      .section-title {
+        font-size: 1.6em;
+      }
+
+      .subsection-title {
+        font-size: 1.3em;
+      }
+
+      .topics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px;
+      background: linear-gradient(135deg, #2c3e50, #34495e);
+      color: white;
+      border-radius: 12px;
+      margin: 30px;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .math {
+      font-family: 'Times New Roman', serif;
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Table of Contents Toggle Button -->
+  <button class="toc-toggle" onclick="toggleTOC()">☰</button>
+  
+  <!-- Table of Contents -->
+  <div class="toc-container" id="tocContainer">
+    <div class="toc-header">
+      <h3>📚 Algorithm Study Guide</h3>
+    </div>
+    <div class="toc-list">
+      <ul>
+        <li><a href="#lecture1">📊 Analysis & Sorting</a></li>
+        <li><a href="#lecture2">🎯 Asymptotic Notation</a></li>
+        <li><a href="#lecture3">🔍 Order Statistics</a></li>
+        <li><a href="#lecture4">#️⃣ Hashing</a></li>
+        <li><a href="#lecture5">📈 Linear Sorting</a></li>
+        <li><a href="#lecture10">💎 Dynamic Programming</a></li>
+        <li><a href="#lecture13">🎯 Greedy Algorithms</a></li>
+        <li><a href="#lecture15">🌐 Graph Algorithms</a></li>
+        <li><a href="#lecture18">🔗 Advanced Graphs</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+
+  <div class="container">
+    <div class="header">
+      <h1>📊 Algorithms Study Guide</h1>
+      <p>Complete Course on Algorithm Analysis and Design</p>
+    </div>
+    
+    <div class="nav-links">
+      <a href="../index.html">← Back to Main Page</a>
+    </div>
+
+        <!-- Analysis & Sorting -->
+        <div class="topic-section" id="lecture1">
+          <div class="topic-header">
+            <h2>📊 Analysis of Algorithms & Sorting</h2>
+            <div class="difficulty beginner">Beginner</div>
+          </div>
+          <div class="topic-content">
+            <div class="subtopic">
+              <h3>🎯 What is Algorithm Analysis?</h3>
+              <p>Algorithm analysis is the theoretical study of a computer program's performance and resource usage.
+                While performance is important, other factors like correctness, simplicity, and reliability are also
+                critical.</p>
+              <p>Studying algorithms helps us understand <strong>scalability</strong>, and performance often
+                distinguishes between what's feasible and what's impossible.</p>
+              
+              <div class="code-example">
+// Time Complexity Examples
+// O(1) - Constant Time
+<span class="function">getFirstElement</span>(<span class="type">int</span>[] arr) { 
+    <span class="keyword">return</span> arr[<span class="number">0</span>]; 
+}
+
+// O(n) - Linear Time  
+<span class="type">int</span> <span class="function">findMax</span>(<span class="type">int</span>[] arr) {
+    <span class="type">int</span> max = arr[<span class="number">0</span>];
+    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i < arr.length; i++) {
+        <span class="keyword">if</span>(arr[i] > max) max = arr[i];
+    }
+    <span class="keyword">return</span> max;
+}
+
+// O(n²) - Quadratic Time
+<span class="keyword">void</span> <span class="function">bubbleSort</span>(<span class="type">int</span>[] arr) {
+    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i < arr.length; i++) {
+        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j < arr.length<span class="operator">-</span><span class="number">1</span>; j++) {
+            <span class="comment">// Comparison and swap logic</span>
+        }
+    }
+}
+</div>
+            </div>
+
+            <div class="subtopic">
+              <h3>🔄 Insertion Sort</h3>
+              <p>The algorithm iterates through an array, taking each element and inserting it into its correct
+                position within the already sorted part of the array.</p>
+
+              <div class="code-example">
+<span class="comment">// Insertion Sort Implementation</span>
+<span class="function">INSERTION-SORT</span>(A, n) <span class="comment">// A[1..n]</span>
+    <span class="keyword">for</span> j ← <span class="number">2</span> <span class="keyword">to</span> n
+        <span class="keyword">do</span> key ← A[j]
+        i ← j <span class="operator">-</span> <span class="number">1</span>
+        <span class="keyword">while</span> i > <span class="number">0</span> <span class="keyword">and</span> A[i] > key
+            <span class="keyword">do</span> A[i<span class="operator">+</span><span class="number">1</span>] ← A[i]
+            i ← i<span class="operator">-</span><span class="number">1</span>
+        A[i<span class="operator">+</span><span class="number">1</span>] = key
+</div>
+              
+              <div class="complexity-box">
+                <h5>⏱️ Time Complexity Analysis</h5>
+                <ul>
+                  <li><strong>Worst-case:</strong> When the input is reverse-sorted → <span class="math">Θ(n²)</span>
+                  </li>
+                  <li><strong>Average-case:</strong> <span class="math">Θ(n²)</span></li>
+                  <li><strong>Best-case:</strong> When input is already sorted → <span class="math">Θ(n)</span></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <h3>🌟 Merge Sort</h3>
+              <p>A <strong>divide-and-conquer</strong> algorithm that efficiently sorts large arrays.</p>
+
+              <div class="code-example">
+<span class="comment">// Merge Sort - Divide and Conquer</span>
+<span class="function">MERGE-SORT</span>(A, p, r)
+    <span class="keyword">if</span> p < r
+        q = ⌊(p + r) / <span class="number">2</span>⌋
+        <span class="function">MERGE-SORT</span>(A, p, q)
+        <span class="function">MERGE-SORT</span>(A, q + <span class="number">1</span>, r)
+        <span class="function">MERGE</span>(A, p, q, r)
+
+<span class="function">MERGE</span>(A, p, q, r)
+    <span class="comment">// Merge two sorted subarrays A[p..q] and A[q+1..r]</span>
+    <span class="comment">// Takes Θ(n) time</span>
+</div>
+              
+              <div class="complexity-box">
+                <h5>🚀 Performance</h5>
+                <p>The recurrence for merge sort solves to a running time of <span class="math">Θ(n lg n)</span>,
+                  which is asymptotically more efficient than insertion sort.</p>
+                <p><strong>In practice:</strong> Merge sort beats insertion sort for n ≥ 30.</p>
+              </div>
+            </div>
+          </div>
+        >
+        </div>
+
+        <!-- Asymptotic Notation -->
+        <div class="topic-section" id="lecture2">
+          <div class="topic-header">
+            <h2>🎯 Asymptotic Notation & Recurrences</h2>
+            <div class="difficulty intermediate">Intermediate</div>
+          </div>
+          <div class="topic-content">
+            <div class="subtopic">
+              <h3>🎯 Asymptotic Notation</h3>
+              <p>To analyze the growth rate of an algorithm's running time as the input size (n) approaches infinity,
+                while ignoring machine-dependent constants.</p>
+              
+              <div class="code-example">
+<span class="comment">// Big-O Examples</span>
+<span class="comment">// Drop low-order terms and ignore leading constants</span>
+<span class="number">3</span>n³ + <span class="number">90</span>n² - <span class="number">5</span>n + <span class="number">6046</span> = <span class="function">Θ</span>(n³)
+
+<span class="comment">// Time Complexity Comparison</span>
+<span class="function">O</span>(<span class="number">1</span>)     <span class="comment">// Constant - Array access</span>
+<span class="function">O</span>(log n) <span class="comment">// Logarithmic - Binary search</span>
+<span class="function">O</span>(n)     <span class="comment">// Linear - Linear search</span>
+<span class="function">O</span>(n log n) <span class="comment">// N-Log-N - Merge sort</span>
+<span class="function">O</span>(n²)    <span class="comment">// Quadratic - Insertion sort</span>
+<span class="function">O</span>(<span class="number">2</span>ⁿ)    <span class="comment">// Exponential - Naive Fibonacci</span>
+</div>
+            </div>
+
+            <div class="subtopic">
+              <h3>🔧 Divide-and-Conquer Recurrences</h3>
+              <p>Methods for solving recurrences: Iteration, Substitution, Recursion Tree, and Master Method.</p>
+              
+              <div class="code-example">
+<span class="comment">// Master Method Template</span>
+<span class="function">T</span>(n) = a<span class="function">T</span>(n/b) + f(n)
+
+<span class="comment">// Examples:</span>
+<span class="comment">// Binary Search: T(n) = 1T(n/2) + Θ(1) → Θ(lg n)</span>
+<span class="comment">// Merge Sort: T(n) = 2T(n/2) + Θ(n) → Θ(n lg n)</span>
+<span class="comment">// Strassen's: T(n) = 7T(n/2) + Θ(n²) → Θ(n^lg7)</span>
+</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Statistics & Quicksort -->
+        <div class="topic-section" id="lecture3">
+          <div class="topic-header">
+            <h2>🔍 Order Statistics & Quicksort</h2>
+            <div class="difficulty advanced">Advanced</div>
+          </div>
+          <div class="topic-content">
+            <div class="subtopic">
+              <h3>🎯 Selection Problem</h3>
+              <p><strong>Goal:</strong> Select the i-th smallest of n elements (element with rank i)</p>
+              
+              <div class="code-example">
+<span class="comment">// Randomized Selection Algorithm</span>
+<span class="function">RAND-SELECT</span>(A, p, r, i)
+    <span class="keyword">if</span> p == r
+        <span class="keyword">return</span> A[p]
+    q = <span class="function">RANDOMIZED-PARTITION</span>(A, p, r)
+    k = q - p + <span class="number">1</span>
+    <span class="keyword">if</span> i == k
+        <span class="keyword">return</span> A[q]
+    <span class="keyword">else if</span> i < k
+        <span class="keyword">return</span> <span class="function">RAND-SELECT</span>(A, p, q<span class="operator">-</span><span class="number">1</span>, i)
+    <span class="keyword">else</span>
+        <span class="keyword">return</span> <span class="function">RAND-SELECT</span>(A, q+<span class="number">1</span>, r, i<span class="operator">-</span>k)
+
+<span class="comment">// Expected Time: Θ(n) - excellent in practice!</span>
+</div>
+            </div>
+
+            <div class="subtopic">
+              <h3>⚡ Quicksort Algorithm</h3>
+              <p>Proposed by C.A.R. Hoare in 1962. A divide-and-conquer algorithm that sorts "in place".</p>
+              
+              <div class="code-example">
+<span class="comment">// Quicksort Implementation</span>
+<span class="function">QUICKSORT</span>(A, p, r)
+    <span class="keyword">if</span> p < r
+        q = <span class="function">PARTITION</span>(A, p, r)
+        <span class="function">QUICKSORT</span>(A, p, q<span class="operator">-</span><span class="number">1</span>)
+        <span class="function">QUICKSORT</span>(A, q+<span class="number">1</span>, r)
+
+<span class="function">PARTITION</span>(A, p, r)
+    x = A[r] <span class="comment">// Pivot is the last element</span>
+    i = p <span class="operator">-</span> <span class="number">1</span>
+    <span class="keyword">for</span> j = p <span class="keyword">to</span> r<span class="operator">-</span><span class="number">1</span>
+        <span class="keyword">if</span> A[j] ≤ x
+            i = i + <span class="number">1</span>
+            <span class="function">exchange</span> A[i] ↔ A[j]
+    <span class="function">exchange</span> A[i+<span class="number">1</span>] ↔ A[r]
+    <span class="keyword">return</span> i+<span class="number">1</span>
+
+<span class="comment">// Best-case: Θ(n lg n), Worst-case: Θ(n²)</span>
+<span class="comment">// Expected (randomized): Θ(n lg n)</span>
+</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Continue with rest of sections... -->
+        <div class="topic-section" id="lecture4">
+          <div class="topic-header">
+            <h2>#️⃣ Hashing & Amortized Analysis</h2>
+            <div class="difficulty intermediate">Intermediate</div>
+          </div>
+          <div class="topic-content">
+            <div class="subtopic">
+              <h3>🔑 Hash Tables</h3>
+              <p>Hashing provides a way to store and retrieve data with average-case constant time operations.</p>
+              
+              <div class="code-example">
+<span class="comment">// Hash Table with Chaining</span>
+<span class="keyword">class</span> <span class="type">HashTable</span> {
+    <span class="keyword">private</span> <span class="type">LinkedList</span><span class="operator"><</span><span class="type">Entry</span><span class="operator">></span>[] table;
+    <span class="keyword">private</span> <span class="type">int</span> size;
+    
+    <span class="comment">// Hash function</span>
+    <span class="keyword">private</span> <span class="type">int</span> <span class="function">hash</span>(<span class="type">String</span> key) {
+        <span class="keyword">return</span> <span class="function">Math.abs</span>(key.<span class="function">hashCode</span>()) % size;
+    }
+    
+    <span class="comment">// Insert operation - O(1) average case</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">put</span>(<span class="type">String</span> key, <span class="type">int</span> value) {
+        <span class="type">int</span> index = <span class="function">hash</span>(key);
+        <span class="comment">// Handle collision with chaining</span>
+        table[index].<span class="function">add</span>(<span class="keyword">new</span> <span class="function">Entry</span>(key, value));
+    }
+}
+
+<span class="comment">// Load factor α = n/m should be kept low</span>
+<span class="comment">// Expected search time: O(1 + α)</span>
+</div>
+            </div>
+          </div>
+        >
+                <p>A data structure that uses a special hash function to map a key to a particular value for faster
+                  access. The efficiency depends on the hash function's quality.</p>
+
+                <div class="complexity-box">
+                  <h5>⏱️ Time Complexity</h5>
+                  <ul>
+                    <li><strong>Best/Average Case:</strong> O(1)</li>
+                    <li><strong>Worst Case:</strong> O(n)</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="topics-grid">
+                <div class="topic-card">
+                  <h5>🎯 Hash Functions</h5>
+                  <div class="algorithm-box">
+                    <h4>Division Method</h4>
+                    <div class="formula">h(k) = k mod n</div>
+                    <p>Best when n is prime for uniform distribution</p>
+
+                    <h4>Multiplication Method</h4>
+                    <div class="formula">h(k) = ⌊n(kA mod 1)⌋</div>
+                    <p>Value of n is not critical</p>
+
+                    <h4>Mid-Square Method</h4>
+                    <p>Square the key and extract middle digits</p>
+
+                    <h4>Folding Method</h4>
+                    <p>Partition key into parts and add them</p>
+                  </div>
+                </div>
+
+                <div class="topic-card">
+                  <h5>🔗 Separate Chaining</h5>
+                  <p><strong>Open Hashing:</strong> Use linked lists to store multiple entries that hash to the same
+                    index</p>
+                  <div class="complexity-box">
+                    <h5>Performance</h5>
+                    <ul>
+                      <li><strong>Load Factor:</strong> α = n/m</li>
+                      <li><strong>Expected Time:</strong> O(1 + α)</li>
+                      <li><strong>Worst-case:</strong> O(n) - all elements in one chain</li>
+                    </ul>
+                  </div>
+                  <div class="theorem-box">
+                    <h4>🌳 Extended Techniques</h4>
+                    <ul>
+                      <li><strong>BST chains:</strong> O(lg n) search time</li>
+                      <li><strong>AVL trees:</strong> Guaranteed O(lg n) operations</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="topic-card">
+                  <h5>🎯 Open Addressing</h5>
+                  <p><strong>Closed Hashing:</strong> All items stored in hash table itself, one item per slot</p>
+
+                  <div class="algorithm-box">
+                    <h4>Probing Techniques</h4>
+                    <div class="theorem-box">
+                      <h4>Linear Probing</h4>
+                      <div class="formula">h(k,i) = (h'(k) + i) mod m</div>
+                      <p><strong>Problem:</strong> Primary clustering</p>
+
+                      <h4>Quadratic Probing</h4>
+                      <div class="formula">h(k,i) = (h'(k) + i²) mod m</div>
+                      <p><strong>Problem:</strong> Secondary clustering</p>
+
+                      <h4>Double Hashing</h4>
+                      <div class="formula">h(k,i) = (h₁(k) + i·h₂(k)) mod m</div>
+                      <p><strong>Advantage:</strong> No clustering</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Aspect</th>
+                    <th>Separate Chaining</th>
+                    <th>Open Addressing</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Implementation</strong></td>
+                    <td>Simpler to implement</td>
+                    <td>Requires careful handling</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Memory Usage</strong></td>
+                    <td>Extra space for pointers</td>
+                    <td>Better space efficiency</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Cache Performance</strong></td>
+                    <td>Poor due to linked lists</td>
+                    <td>Better cache locality</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Load Factor Sensitivity</strong></td>
+                    <td>Less sensitive</td>
+                    <td>More sensitive</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Deletion</strong></td>
+                    <td>Easy</td>
+                    <td>Difficult (need tombstones)</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="subsection">
+                <h3 class="subsection-title">2. Amortized Analysis</h3>
+
+                <div class="algorithm-box">
+                  <h4>💰 Purpose of Amortized Analysis</h4>
+                  <p>Analyzes a sequence of operations to guarantee a worst-case average time that is lower than the
+                    worst-case time of a single, expensive operation.</p>
+                </div>
+
+                <div class="topics-grid">
+                  <div class="topic-card">
+                    <h5>📊 Aggregate Method</h5>
+                    <p>Find total cost of n operations, averaging expensive operations over the sequence</p>
+                    <div class="algorithm-box">
+                      <h4>Dynamic Array Example</h4>
+                      <ul>
+                        <li>When array fills up, create new table (double size)</li>
+                        <li>Copy contents to new table</li>
+                        <li><strong>Naive analysis:</strong> O(n²) for n insertions</li>
+                        <li><strong>Amortized analysis:</strong> O(n) total → O(1) per insertion</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="topic-card">
+                    <h5>💳 Accounting Method</h5>
+                    <p>Charges a constant amortized cost for each operation, storing unused "credit" to pay for future
+                      expensive operations</p>
+                    <div class="warning-box">
+                      <h4>⚠️ Important Rule</h4>
+                      <p>The bank balance must never be negative!</p>
+                    </div>
+                  </div>
+
+                  <div class="topic-card">
+                    <h5>⚡ Potential Method</h5>
+                    <p>Related to the accounting method, uses a potential function to analyze the amortized cost</p>
+                    <div class="formula">
+                      Amortized Cost = Actual Cost + Δ Potential
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        <!-- Linear Sorting & Cryptographic Hashing -->
+        <div class="topic-section" id="lecture5">
+          <div class="topic-header">
+            <h2>📈 Linear-Time Sorting & Cryptographic Hashing</h2>
+            <div class="difficulty advanced">Advanced</div>
+          </div>
+          <div class="topic-content">
+            <div class="subtopic">
+              <h3>⚖️ Sorting Lower Bounds</h3>
+              <p>Algorithms that only use comparisons to determine the relative order of elements (e.g., insertion
+                sort, merge sort, quicksort).</p>
+              
+              <div class="code-example">
+<span class="comment">// Decision Tree Model</span>
+<span class="comment">// Each internal node represents a comparison between two elements</span>
+<span class="comment">// Each leaf represents a unique sorted permutation of the input</span>
+<span class="comment">// The worst-case running time = height of the decision tree</span>
+
+<span class="comment">// Lower Bound Theorem:</span>
+<span class="comment">// Any decision tree that can sort n elements must have height ≥ Ω(n lg n)</span>
+
+<span class="comment">// Proof: There are n! possible permutations, and a binary tree</span>
+<span class="comment">// of height h can have at most 2^h leaves.</span>
+<span class="comment">// Therefore, n! ≤ 2^h, which implies h ≥ lg(n!) = Ω(n lg n)</span>
+
+<span class="comment">// Conclusion: Merge sort and heapsort are asymptotically optimal!</span>
+</div>
+            </div>
+
+            <div class="subtopic">
+              <h3>📊 Counting Sort</h3>
+              <p>Non-comparison sort for integers in small range [1..k]. Breaking the Θ(n lg n) barrier!</p>
+              
+              <div class="code-example">
+<span class="comment">// Counting Sort Algorithm</span>
+<span class="function">COUNTING-SORT</span>(A, B, k)
+    <span class="comment">// A: input array, B: output array, k: range [1..k]</span>
+    <span class="keyword">let</span> C = <span class="keyword">new</span> <span class="function">Array</span>(k + <span class="number">1</span>).<span class="function">fill</span>(<span class="number">0</span>)
+    
+    <span class="comment">// Step 1: Count occurrences</span>
+    <span class="keyword">for</span> i = <span class="number">1</span> <span class="keyword">to</span> A.length
+        C[A[i]] = C[A[i]] + <span class="number">1</span>
+    
+    <span class="comment">// Step 2: Cumulative counts (positions)</span>
+    <span class="keyword">for</span> i = <span class="number">2</span> <span class="keyword">to</span> k
+        C[i] = C[i] + C[i<span class="operator">-</span><span class="number">1</span>]
+    
+    <span class="comment">// Step 3: Build output array (stable)</span>
+    <span class="keyword">for</span> i = A.length <span class="keyword">downto</span> <span class="number">1</span>
+        B[C[A[i]]] = A[i]
+        C[A[i]] = C[A[i]] <span class="operator">-</span> <span class="number">1</span>
+
+<span class="comment">// Time Complexity: Θ(n + k)</span>
+<span class="comment">// When k = O(n): Θ(n) time!</span>
+<span class="comment">// Space Complexity: Θ(k)</span>
+<span class="comment">// Stability: YES - preserves original order of equal elements</span>
+</div>
+            </div>
+
+            <div class="subtopic">
+              <h3>🎯 Radix Sort</h3>
+              <p>Digit-by-digit sort using stable auxiliary sort. Sort on least-significant digit first!</p>
+              
+              <div class="code-example">
+<span class="comment">// Radix Sort Algorithm</span>
+<span class="function">RADIX-SORT</span>(A, d)
+    <span class="comment">// A: array of d-digit numbers</span>
+    <span class="keyword">for</span> i = <span class="number">1</span> <span class="keyword">to</span> d
+        <span class="comment">// Use stable sort (counting sort) on digit i</span>
+        <span class="function">COUNTING-SORT</span>(A, i)
+
+<span class="comment">// Time Complexity: T(n,b) = Θ(b/r × (n + 2^r))</span>
+<span class="comment">// Where: n = elements, b = bits per word, r = bits per digit</span>
+<span class="comment">// Optimal r = lg n minimizes time to Θ(bn/lg n)</span>
+
+<span class="comment">// Example: Sort 32-bit integers</span>
+<span class="comment">// If n = 10^6, then r = lg(10^6) ≈ 20</span>
+<span class="comment">// Time = Θ(32 × 10^6 / 20) = Θ(1.6 × 10^6)</span>
+</div>
+            </div>
+
+            <div class="subtopic">
+              <h3>🔐 Cryptographic Hashing</h3>
+              <p>A mathematical algorithm that maps data of arbitrary size to a fixed-size bit array (hash value).
+                It's a one-way function that is practically infeasible to invert.</p>
+              
+              <div class="code-example">
+<span class="comment">// Cryptographic Hash Properties</span>
+<span class="comment">// 1. Deterministic: Same message → same hash</span>
+<span class="comment">// 2. Quick to compute: Fast hash computation</span>
+<span class="comment">// 3. Pre-image resistance: Hard to find message for given hash</span>
+<span class="comment">// 4. Second pre-image resistance: Hard to find different input with same hash</span>
+<span class="comment">// 5. Collision resistance: Hard to find two messages with same hash</span>
+<span class="comment">// 6. Avalanche effect: Small input change → big hash change</span>
+
+<span class="comment">// Digital Signature Process</span>
+<span class="comment">// Sender Side:</span>
+<span class="comment">// 1. Hash the message to create digest</span>
+<span class="comment">// 2. Encrypt digest with private key (signature)</span>
+<span class="comment">// 3. Send message + signature</span>
+
+<span class="comment">// Receiver Side:</span>
+<span class="comment">// 1. Hash the received message</span>
+<span class="comment">// 2. Decrypt signature with sender's public key</span>
+<span class="comment">// 3. Compare the two hashes</span>
+<span class="comment">// 4. If match → authentic & unmodified</span>
+
+<span class="comment">// Strengthening Techniques:</span>
+<span class="comment">// - Salted hashes: Add random data before hashing</span>
+<span class="comment">// - HMAC: Keyed hash with cryptographic key</span>
+<span class="comment">// - Adaptive functions: PBKDF2, bcrypt - intentionally slow</span>
+</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Programming -->
+        <div class="topic-section" id="lecture10">
+          <div class="topic-header">
+            <h2>💎 Dynamic Programming</h2>
+            <div class="difficulty advanced">Advanced</div>
+          </div>
+          <div class="topic-content">
+            <div class="subtopic">
+              <h3>🧠 Introduction to Dynamic Programming</h3>
+              <p>A method for designing algorithms that solves problems by breaking them down into simpler, overlapping
+                subproblems. It's typically used for optimization problems.</p>
+              <p><strong>Key idea:</strong> Solve each subproblem only once and store its solution to avoid redundant
+                computations.</p>
+              
+              <div class="code-example">
+<span class="comment">// Two Essential Properties for DP:</span>
+
+<span class="comment">// 1. Optimal Substructure:</span>
+<span class="comment">//    An optimal solution to the overall problem contains</span>
+<span class="comment">//    within it an optimal solution to subproblems</span>
+
+<span class="comment">// 2. Overlapping Subproblems:</span>
+<span class="comment">//    The recursive solution recomputes the same</span>
+<span class="comment">//    subproblems over and over again</span>
+
+<span class="comment">// Two Approaches to Dynamic Programming:</span>
+
+<span class="comment">// Top-Down with Memoization:</span>
+<span class="comment">//   - Recursive algorithm that checks a table first</span>
+<span class="comment">//   - If solution exists, return it</span>
+<span class="comment">//   - Otherwise, compute and store result</span>
+
+<span class="comment">// Bottom-Up Method:</span>
+<span class="comment">//   - Iteratively solve subproblems from smallest to largest</span>
+<span class="comment">//   - Build up solutions using previously computed results</span>
+</div>
+            </div>
+
+            <div class="subtopic">
+              <h3>✂️ Rod Cutting Problem</h3>
+              <p>Given a rod of length n and a table of prices p<sub>i</sub> for each piece length i = 1, 2, ..., n.
+                Find the maximum revenue r<sub>n</sub> by cutting the rod and selling the pieces.</p>
+              
+              <div class="code-example">
+<span class="comment">// Recursive Formula:</span>
+<span class="comment">// r_n = max(p_i + r_{n-i}) for 1 ≤ i ≤ n</span>
+<span class="comment">// Base case: r_0 = 0</span>
+
+<span class="comment">// ❌ Naive Recursive Solution - EXPONENTIAL TIME!</span>
+<span class="function">CUT-ROD</span>(p, n)
+    <span class="keyword">if</span> n == <span class="number">0</span>
+        <span class="keyword">return</span> <span class="number">0</span>
+    q = <span class="operator">-</span>∞
+    <span class="keyword">for</span> i = <span class="number">1</span> <span class="keyword">to</span> n
+        q = <span class="function">max</span>(q, p[i] + <span class="function">CUT-ROD</span>(p, n<span class="operator">-</span>i))
+    <span class="keyword">return</span> q
+
+<span class="comment">// Problem: T(n) = 2^n due to redundant calculations!</span>
+
+<span class="comment">// ✅ Top-Down with Memoization - Θ(n²) time</span>
+<span class="function">MEMOIZED-CUT-ROD</span>(p, n)
+    <span class="keyword">let</span> r[<span class="number">0</span>..n] <span class="keyword">be new array</span>
+    <span class="keyword">for</span> i = <span class="number">0</span> <span class="keyword">to</span> n
+        r[i] = <span class="operator">-</span>∞
+    <span class="keyword">return</span> <span class="function">MEMOIZED-CUT-ROD-AUX</span>(p, n, r)
+
+<span class="function">MEMOIZED-CUT-ROD-AUX</span>(p, n, r)
+    <span class="keyword">if</span> r[n] >= <span class="number">0</span>
+        <span class="keyword">return</span> r[n]  <span class="comment">// Already computed</span>
+    <span class="keyword">if</span> n == <span class="number">0</span>
+        q = <span class="number">0</span>
+    <span class="keyword">else</span>
+        q = <span class="operator">-</span>∞
+        <span class="keyword">for</span> i = <span class="number">1</span> <span class="keyword">to</span> n
+            q = <span class="function">max</span>(q, p[i] + <span class="function">MEMOIZED-CUT-ROD-AUX</span>(p, n<span class="operator">-</span>i, r))
+    r[n] = q  <span class="comment">// Store result</span>
+    <span class="keyword">return</span> q
+
+<span class="comment">// 🏗️ Bottom-Up Method - Θ(n²) time</span>
+<span class="function">BOTTOM-UP-CUT-ROD</span>(p, n)
+    <span class="keyword">let</span> r[<span class="number">0</span>..n] <span class="keyword">be new array</span>
+    r[<span class="number">0</span>] = <span class="number">0</span>
+    <span class="keyword">for</span> j = <span class="number">1</span> <span class="keyword">to</span> n
+        q = <span class="operator">-</span>∞
+        <span class="keyword">for</span> i = <span class="number">1</span> <span class="keyword">to</span> j
+            q = <span class="function">max</span>(q, p[i] + r[j<span class="operator">-</span>i])
+        r[j] = q
+    <span class="keyword">return</span> r[n]
+
+<span class="comment">// Time Complexity: Θ(n²) - much better than exponential!</span>
+<span class="comment">// Space Complexity: Θ(n)</span>
+</div>
+            </div>
+
+            <div class="subtopic">
+              <h3>🧮 Matrix Chain Multiplication</h3>
+            <div class="subtopic">
+              <h3>🧮 Matrix Chain Multiplication</h3>
+              <p>Given a sequence of n matrices A₁, A₂, ..., A<sub>n</sub> with dimensions p₀×p₁, p₁×p₂, ...,
+                p<sub>n-1</sub>×p<sub>n</sub>. Find the optimal parenthesization that minimizes the total number of
+                scalar multiplications to compute A₁A₂...A<sub>n</sub>.</p>
+              
+              <div class="code-example">
+<span class="comment">// Key Insight: Matrix multiplication is associative!</span>
+<span class="comment">// Different parenthesizations can have dramatically different costs</span>
+
+<span class="comment">// Example: A₁: 1×100, A₂: 100×1, A₃: 1×100</span>
+<span class="comment">// ((A₁A₂)A₃): 1×100×1 + 1×1×100 = 200 multiplications</span>
+<span class="comment">// (A₁(A₂A₃)): 100×1×100 + 1×100×100 = 20,000 multiplications</span>
+
+<span class="comment">// Recursive Structure:</span>
+<span class="comment">// To multiply matrices from A_i to A_j, split at point k (i ≤ k < j)</span>
+<span class="comment">// m[i,j] = min(m[i,k] + m[k+1,j] + p_{i-1}*p_k*p_j) for i ≤ k < j</span>
+<span class="comment">// Base case: m[i,i] = 0</span>
+
+<span class="comment">// DP Algorithm</span>
+<span class="function">MATRIX-CHAIN-ORDER</span>(p)
+    n = p.length <span class="operator">-</span> <span class="number">1</span>
+    <span class="keyword">let</span> m[<span class="number">1</span>..n, <span class="number">1</span>..n] <span class="keyword">and</span> s[<span class="number">1</span>..n<span class="operator">-</span><span class="number">1</span>, <span class="number">2</span>..n] <span class="keyword">be new tables</span>
+    
+    <span class="comment">// Initialize diagonal to 0</span>
+    <span class="keyword">for</span> i = <span class="number">1</span> <span class="keyword">to</span> n
+        m[i, i] = <span class="number">0</span>
+    
+    <span class="comment">// Fill table for chain lengths 2 to n</span>
+    <span class="keyword">for</span> l = <span class="number">2</span> <span class="keyword">to</span> n  <span class="comment">// l is chain length</span>
+        <span class="keyword">for</span> i = <span class="number">1</span> <span class="keyword">to</span> n <span class="operator">-</span> l + <span class="number">1</span>
+            j = i + l <span class="operator">-</span> <span class="number">1</span>
+            m[i, j] = ∞
+            <span class="keyword">for</span> k = i <span class="keyword">to</span> j <span class="operator">-</span> <span class="number">1</span>
+                q = m[i, k] + m[k+<span class="number">1</span>, j] + p[i<span class="operator">-</span><span class="number">1</span>]<span class="operator">*</span>p[k]<span class="operator">*</span>p[j]
+                <span class="keyword">if</span> q < m[i, j]
+                    m[i, j] = q
+                    s[i, j] = k  <span class="comment">// Remember split point</span>
+    <span class="keyword">return</span> m <span class="keyword">and</span> s
+
+<span class="comment">// Reconstructing Optimal Solution</span>
+<span class="function">PRINT-OPTIMAL-PARENS</span>(s, i, j)
+    <span class="keyword">if</span> i == j
+        <span class="function">print</span> <span class="string">"A"</span> + i
+    <span class="keyword">else</span>
+        <span class="function">print</span> <span class="string">"("</span>
+        <span class="function">PRINT-OPTIMAL-PARENS</span>(s, i, s[i, j])
+        <span class="function">PRINT-OPTIMAL-PARENS</span>(s, s[i, j] + <span class="number">1</span>, j)
+        <span class="function">print</span> <span class="string">")"</span>
+
+<span class="comment">// Time Complexity: Θ(n³)</span>
+<span class="comment">// Space Complexity: Θ(n²)</span>
+</div>
+            </div>
+
+            <div class="subtopic">
+              <h3>📝 Longest Common Subsequence (LCS)</h3>
+              <p>Given two sequences X = ⟨x₁, x₂, ..., x<sub>m</sub>⟩ and Y = ⟨y₁, y₂, ..., y<sub>n</sub>⟩. Find a
+                longest subsequence common to both X and Y.</p>
+              <p><strong>Note:</strong> A subsequence can be derived by deleting some elements without changing the
+                order of remaining elements.</p>
+              
+              <div class="code-example">
+<span class="comment">// Recursive Structure for LCS length c[i,j]:</span>
+<span class="comment">// If x_i = y_j: c[i,j] = c[i-1,j-1] + 1</span>
+<span class="comment">// If x_i ≠ y_j: c[i,j] = max(c[i-1,j], c[i,j-1])</span>
+<span class="comment">// Base cases: c[i,0] = 0 and c[0,j] = 0</span>
+
+<span class="function">LCS-LENGTH</span>(X, Y)
+    m = X.length
+    n = Y.length
+    <span class="keyword">let</span> b[<span class="number">1</span>..m, <span class="number">1</span>..n] <span class="keyword">and</span> c[<span class="number">0</span>..m, <span class="number">0</span>..n] <span class="keyword">be new tables</span>
+    
+    <span class="comment">// Initialize base cases</span>
+    <span class="keyword">for</span> i = <span class="number">1</span> <span class="keyword">to</span> m
+        c[i, <span class="number">0</span>] = <span class="number">0</span>
+    
+    <span class="comment">// Fill the DP table</span>
+    <span class="keyword">for</span> i = <span class="number">1</span> <span class="keyword">to</span> m
+        <span class="keyword">for</span> j = <span class="number">1</span> <span class="keyword">to</span> n
+            <span class="keyword">if</span> X[i] == Y[j]
+                c[i, j] = c[i<span class="operator">-</span><span class="number">1</span>, j<span class="operator">-</span><span class="number">1</span>] + <span class="number">1</span>
+                b[i, j] = <span class="string">"↖"</span>  <span class="comment">// diagonal</span>
+            <span class="keyword">else if</span> c[i<span class="operator">-</span><span class="number">1</span>, j] >= c[i, j<span class="operator">-</span><span class="number">1</span>]
+                c[i, j] = c[i<span class="operator">-</span><span class="number">1</span>, j]
+                b[i, j] = <span class="string">"↑"</span>   <span class="comment">// up</span>
+            <span class="keyword">else</span>
+                c[i, j] = c[i, j<span class="operator">-</span><span class="number">1</span>]
+                b[i, j] = <span class="string">"←"</span>   <span class="comment">// left</span>
+    <span class="keyword">return</span> c <span class="keyword">and</span> b
+
+<span class="comment">// Reconstructing the LCS</span>
+<span class="function">PRINT-LCS</span>(b, X, i, j)
+    <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">or</span> j == <span class="number">0</span>
+        <span class="keyword">return</span>
+    <span class="keyword">if</span> b[i, j] == <span class="string">"↖"</span>
+        <span class="function">PRINT-LCS</span>(b, X, i<span class="operator">-</span><span class="number">1</span>, j<span class="operator">-</span><span class="number">1</span>)
+        <span class="function">print</span> X[i]
+    <span class="keyword">else if</span> b[i, j] == <span class="string">"↑"</span>
+        <span class="function">PRINT-LCS</span>(b, X, i<span class="operator">-</span><span class="number">1</span>, j)
+    <span class="keyword">else</span>
+        <span class="function">PRINT-LCS</span>(b, X, i, j<span class="operator">-</span><span class="number">1</span>)
+
+<span class="comment">// Example: X = "ABCBDAB", Y = "BDCABA"</span>
+<span class="comment">// LCS = "BCBA" (length = 4)</span>
+
+<span class="comment">// Time Complexity: Θ(mn)</span>
+<span class="comment">// Space Complexity: Θ(mn)</span>
+
+<span class="comment">// Applications:</span>
+<span class="comment">// - DNA sequence comparison</span>
+<span class="comment">// - File differencing (diff utility)</span>
+<span class="comment">// - Version control systems</span>
+<span class="comment">// - Plagiarism detection</span>
+</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Greedy Algorithms -->
+        <div class="topic-section" id="lecture13">
+          <div class="topic-header">
+            <h2>🎯 Greedy Algorithms</h2>
+            <div class="difficulty intermediate">Intermediate</div>
+          </div>
+          <div class="topic-content">
+            <div class="subtopic">
+              <h3>🧠 Introduction to Greedy Algorithms</h3>
+              <p>A greedy algorithm makes a locally optimal choice at each step with the hope that this choice will
+                lead to a globally optimal solution. It doesn't always guarantee an optimal solution, but for some
+                problems, it does.</p>
+              
+              <div class="code-example">
+<span class="comment">// Key Components of Greedy Strategy:</span>
+
+<span class="comment">// 1. Greedy-choice property:</span>
+<span class="comment">//    A global optimal solution can be reached by making</span>
+<span class="comment">//    a local optimal choice</span>
+
+<span class="comment">// 2. Optimal substructure:</span>
+<span class="comment">//    An optimal solution contains within it optimal</span>
+<span class="comment">//    solutions to subproblems</span>
+
+<span class="comment">// Greedy vs Dynamic Programming:</span>
+<span class="comment">// Greedy: Make choice → solve remaining subproblem</span>
+<span class="comment">// DP:     Solve all subproblems → make informed choice</span>
+
+<span class="comment">// Greedy Algorithm Template:</span>
+<span class="function">GREEDY-ALGORITHM</span>(input)
+    solution = ∅
+    <span class="keyword">while</span> <span class="keyword">not</span> <span class="function">done</span>(solution)
+        choice = <span class="function">select</span>(input)  <span class="comment">// Make greedy choice</span>
+        input = input <span class="operator">-</span> choice    <span class="comment">// Remove selected element</span>
+        solution = solution ∪ choice
+    <span class="keyword">return</span> solution
+</div>
+            </div>
+
+            <div class="subtopic">
+              <h3>📅 Activity Selection Problem</h3>
+
+              <div class="algorithm-box">
+                <h4>📅 Problem Statement</h4>
+                <p>Given a set of n activities, each with a start time s<sub>i</sub> and finish time f<sub>i</sub>.
+                  Select the maximum number of mutually compatible activities. Two activities are compatible if their
+                  time intervals do not overlap.</p>
+                <p><strong>Assumption:</strong> Activities are sorted by finish time (f₁ ≤ f₂ ≤ ... ≤ f<sub>n</sub>)</p>
+              </div>
+
+              <div class="topics-grid">
+                <div class="topic-card">
+                  <h5>🎯 Greedy Strategy</h5>
+                  <p><strong>Key insight:</strong> Always choose the activity that finishes earliest among remaining
+                    activities.</p>
+
+                  <div class="algorithm-box">
+                    <h4>Why This Works</h4>
+                    <p>Choosing the earliest-finishing activity leaves the most room for future activities, maximizing
+                      our options.</p>
+                  </div>
+                </div>
+
+                <div class="topic-card">
+                  <h5>💻 Algorithm</h5>
+                  <div class="code-block">
+                    GREEDY-ACTIVITY-SELECTOR(s, f)
+                    n = s.length
+                    A = {a₁} // Select first activity
+                    k = 1
+                    for m = 2 to n
+                    if s[m] >= f[k] // Activity m is compatible
+                    A = A ∪ {a_m}
+                    k = m
+                    return A
+                  </div>
+                  <div class="complexity-box">
+                    <h5>⏱️ Time Complexity</h5>
+                    <p>Θ(n) after activities are sorted by finish time</p>
+                  </div>
+                </div>
+
+                <div class="topic-card">
+                  <h5>✅ Proof of Optimality</h5>
+                  <div class="theorem-box">
+                    <h4>🎯 Greedy Choice Property</h4>
+                    <p>The greedy choice (earliest finish time) is always part of some optimal solution.</p>
+
+                    <p><strong>Proof sketch:</strong> If optimal solution doesn't include earliest-finishing activity,
+                      we can replace the first activity in optimal solution with earliest-finishing activity without
+                      making the solution worse.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="subsection">
+              <h3 class="subsection-title">3. Huffman Codes</h3>
+
+              <div class="algorithm-box">
+                <h4>🗜️ Data Compression Problem</h4>
+                <p>Given a set of characters and their frequencies, find an optimal prefix code to represent them. A
+                  prefix code is a binary code where no codeword is a prefix of another. Goal: minimize total bits
+                  needed to encode a message.</p>
+              </div>
+
+              <div class="theorem-box">
+                <h4>📊 Example: Character Frequencies</h4>
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Character</th>
+                      <th>Frequency</th>
+                      <th>Fixed-length Code</th>
+                      <th>Huffman Code</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>a</td>
+                      <td>45</td>
+                      <td>000</td>
+                      <td>0</td>
+                    </tr>
+                    <tr>
+                      <td>b</td>
+                      <td>13</td>
+                      <td>001</td>
+                      <td>101</td>
+                    </tr>
+                    <tr>
+                      <td>c</td>
+                      <td>12</td>
+                      <td>010</td>
+                      <td>100</td>
+                    </tr>
+                    <tr>
+                      <td>d</td>
+                      <td>16</td>
+                      <td>011</td>
+                      <td>111</td>
+                    </tr>
+                    <tr>
+                      <td>e</td>
+                      <td>9</td>
+                      <td>100</td>
+                      <td>1101</td>
+                    </tr>
+                    <tr>
+                      <td>f</td>
+                      <td>5</td>
+                      <td>101</td>
+                      <td>1100</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="complexity-box">
+                  <h5>💾 Space Savings</h5>
+                  <ul>
+                    <li><strong>Fixed-length:</strong> 3 bits/char × 100 chars = 300 bits</li>
+                    <li><strong>Huffman:</strong> (45×1 + 13×3 + 12×3 + 16×3 + 9×4 + 5×4) = 224 bits</li>
+                    <li><strong>Savings:</strong> 25% compression!</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="topics-grid">
+                <div class="topic-card">
+                  <h5>🌳 Building Huffman Tree</h5>
+                  <div class="algorithm-box">
+                    <h4>Greedy Strategy</h4>
+                    <p>Always merge the two nodes with smallest frequencies first.</p>
+                  </div>
+                </div>
+
+                <div class="topic-card">
+                  <h5>💻 Huffman Algorithm</h5>
+                  <div class="code-block">
+                    HUFFMAN(C)
+                    n = |C|
+                    Q = C // Min-priority queue
+                    for i = 1 to n - 1
+                    allocate a new node z
+                    z.left = x = EXTRACT-MIN(Q)
+                    z.right = y = EXTRACT-MIN(Q)
+                    z.freq = x.freq + y.freq
+                    INSERT(Q, z)
+                    return EXTRACT-MIN(Q) // Root of tree
+                  </div>
+                  <div class="complexity-box">
+                    <h5>⏱️ Time Complexity</h5>
+                    <p>O(n lg n) due to priority queue operations</p>
+                  </div>
+                </div>
+
+                <div class="topic-card">
+                  <h5>✅ Optimality Proof</h5>
+                  <div class="theorem-box">
+                    <h4>🎯 Key Properties</h4>
+                    <ol>
+                      <li>Characters with higher frequency get shorter codes</li>
+                      <li>Two lowest-frequency characters have longest codes</li>
+                      <li>Two lowest-frequency characters have codes differing only in last bit</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="lecture15" class="section">
+          <h2 class="section-title">Graph Algorithms</h2>
+
+          <div class="lecture-card">
+            <div class="lecture-number">Lectures 15-16</div>
+
+            <div class="subsection">
+              <h3 class="subsection-title">1. Graph Representations</h3>
+
+              <div class="algorithm-box">
+                <h4>📊 Graph Definition</h4>
+                <p>A graph G = (V, E) consists of:</p>
+                <ul>
+                  <li><strong>V:</strong> A set of vertices (nodes)</li>
+                  <li><strong>E:</strong> A set of edges (connections between vertices)</li>
+                </ul>
+              </div>
+
+              <div class="topics-grid">
+                <div class="topic-card">
+                  <h5>📋 Adjacency-List Representation</h5>
+                  <div class="algorithm-box">
+                    <h4>Structure</h4>
+                    <p>For each vertex u ∈ V, store a list of vertices adjacent to it.</p>
+
+                    <div class="complexity-box">
+                      <h5>📊 Properties</h5>
+                      <ul>
+                        <li><strong>Space:</strong> Θ(V + E)</li>
+                        <li><strong>Good for:</strong> Sparse graphs (|E| << |V|²)</li>
+                        <li><strong>Edge query:</strong> O(degree(u))</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="topic-card">
+                  <h5>🔲 Adjacency-Matrix Representation</h5>
+                  <div class="algorithm-box">
+                    <h4>Structure</h4>
+                    <p>|V| × |V| matrix A where A[i,j] = 1 if edge (i,j) ∈ E, else 0.</p>
+
+                    <div class="complexity-box">
+                      <h5>📊 Properties</h5>
+                      <ul>
+                        <li><strong>Space:</strong> Θ(V²)</li>
+                        <li><strong>Good for:</strong> Dense graphs (|E| ≈ |V|²)</li>
+                        <li><strong>Edge query:</strong> O(1)</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="topic-card">
+                  <h5>⚖️ Comparison</h5>
+                  <table class="comparison-table">
+                    <thead>
+                      <tr>
+                        <th>Operation</th>
+                        <th>Adj-List</th>
+                        <th>Adj-Matrix</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Space</td>
+                        <td>Θ(V + E)</td>
+                        <td>Θ(V²)</td>
+                      </tr>
+                      <tr>
+                        <td>Edge (u,v)?</td>
+                        <td>O(deg(u))</td>
+                        <td>O(1)</td>
+                      </tr>
+                      <tr>
+                        <td>List neighbors</td>
+                        <td>O(deg(u))</td>
+                        <td>O(V)</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">2. Breadth-First Search (BFS)</h3>
+
+                <div class="algorithm-box">
+                  <h4>🌊 BFS Strategy</h4>
+                  <p>Explores the graph layer by layer, starting from a given source vertex. It discovers all vertices
+                    at distance k before discovering vertices at distance k+1.</p>
+                </div>
+
+                <div class="topics-grid">
+                  <div class="topic-card">
+                    <h5>💻 BFS Algorithm</h5>
+                    <div class="code-block">
+                      BFS(G, s)
+                      for each vertex u ∈ G.V - {s}
+                      u.color = WHITE
+                      u.d = ∞
+                      u.π = NIL
+                      s.color = GRAY
+                      s.d = 0
+                      s.π = NIL
+                      Q = ∅
+                      ENQUEUE(Q, s)
+                      while Q ≠ ∅
+                      u = DEQUEUE(Q)
+                      for each v ∈ G.Adj[u]
+                      if v.color == WHITE
+                      v.color = GRAY
+                      v.d = u.d + 1
+                      v.π = u
+                      ENQUEUE(Q, v)
+                      u.color = BLACK
+                    </div>
+                  </div>
+
+                  <div class="topic-card">
+                    <h5>🎯 BFS Properties</h5>
+                    <div class="theorem-box">
+                      <h4>✅ Key Results</h4>
+                      <ul>
+                        <li>Computes shortest paths in <strong>unweighted</strong> graphs</li>
+                        <li>Predecessor subgraph forms breadth-first tree</li>
+                        <li>Distance d[v] = shortest path from source s</li>
+                        <li>Vertices discovered in non-decreasing order of distance</li>
+                      </ul>
+                    </div>
+
+                    <div class="complexity-box">
+                      <h5>⏱️ Time Complexity</h5>
+                      <p>Θ(V + E) on adjacency-list representation</p>
+                    </div>
+                  </div>
+
+                  <div class="topic-card">
+                    <h5>🔍 Applications</h5>
+                    <div class="algorithm-box">
+                      <h4>Common Uses</h4>
+                      <ul>
+                        <li><strong>Shortest paths</strong> in unweighted graphs</li>
+                        <li><strong>Connected components</strong></li>
+                        <li><strong>Bipartite testing</strong></li>
+                        <li><strong>Web crawling</strong></li>
+                        <li><strong>Social network analysis</strong></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h3 class="subsection-title">3. Depth-First Search (DFS)</h3>
+
+                <div class="algorithm-box">
+                  <h4>🏃 DFS Strategy</h4>
+                  <p>Explores as far as possible along each branch before backtracking. Uses recursion (or stack) to
+                    remember where to backtrack to.</p>
+                </div>
+
+                <div class="topics-grid">
+                  <div class="topic-card">
+                    <h5>💻 DFS Algorithm</h5>
+                    <div class="code-block">
+                      DFS(G)
+                      for each vertex u ∈ G.V
+                      u.color = WHITE
+                      u.π = NIL
+                      time = 0
+                      for each vertex u ∈ G.V
+                      if u.color == WHITE
+                      DFS-VISIT(G, u)
+
+                      DFS-VISIT(G, u)
+                      time = time + 1
+                      u.d = time // Discovery time
+                      u.color = GRAY
+                      for each v ∈ G.Adj[u]
+                      if v.color == WHITE
+                      v.π = u
+                      DFS-VISIT(G, v)
+                      u.color = BLACK
+                      time = time + 1
+                      u.f = time // Finish time
+                    </div>
+                  </div>
+
+                  <div class="topic-card">
+                    <h5>⏰ Timestamps</h5>
+                    <div class="theorem-box">
+                      <h4>🕐 Discovery & Finish Times</h4>
+                      <ul>
+                        <li><strong>u.d:</strong> Discovery time (when first visited)</li>
+                        <li><strong>u.f:</strong> Finish time (when fully processed)</li>
+                        <li><strong>Property:</strong> u.d < u.f for all vertices u</li>
+                      </ul>
+                    </div>
+
+                    <div class="complexity-box">
+                      <h5>⏱️ Time Complexity</h5>
+                      <p>Θ(V + E) on adjacency-list representation</p>
+                    </div>
+                  </div>
+
+                  <div class="topic-card">
+                    <h5>🏷️ Edge Classification</h5>
+                    <div class="algorithm-box">
+                      <h4>Types of Edges</h4>
+                      <ul>
+                        <li><strong>Tree edges:</strong> Part of DFS tree</li>
+                        <li><strong>Back edges:</strong> To ancestor in DFS tree</li>
+                        <li><strong>Forward edges:</strong> To descendant (not tree edge)</li>
+                        <li><strong>Cross edges:</strong> Between different subtrees</li>
+                      </ul>
+
+                      <div class="theorem-box">
+                        <h4>🔍 Cycle Detection</h4>
+                        <p>A directed graph has a cycle ⟺ DFS finds a back edge</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </section>
+
+        <section id="lecture18" class="section">
+          <h2 class="section-title">Advanced Graph Algorithms</h2>
+
+          <div class="lecture-card">
+            <div class="lecture-number">Lectures 18-19</div>
+
+            <div class="subsection">
+              <h3 class="subsection-title">1. Minimum Spanning Trees (MST)</h3>
+
+              <div class="algorithm-box">
+                <h4>🌳 MST Definition</h4>
+                <p>For a connected, undirected, weighted graph G = (V, E), a minimum spanning tree is a subgraph that:
+                </p>
+                <ul>
+                  <li>Is a <strong>tree</strong> (connected and acyclic)</li>
+                  <li><strong>Spans</strong> all vertices (includes every vertex)</li>
+                  <li>Has <strong>minimum total weight</strong> among all spanning trees</li>
+                </ul>
+              </div>
+
+              <div class="theorem-box">
+                <h4>🎯 Generic MST Algorithm</h4>
+                <p>Maintains a set of edges A that is a subset of some MST. At each step, adds a "safe edge" to A.</p>
+
+                <div class="algorithm-box">
+                  <h4>🔑 Safe Edge Property</h4>
+                  <p>An edge (u,v) is safe for subset A if A ∪ {(u,v)} is also a subset of some MST.</p>
+                  <p><strong>Cut respect:</strong> A cut respects A if no edge in A crosses the cut.</p>
+                  <p><strong>Light edge:</strong> Minimum weight edge crossing a cut.</p>
+                </div>
+              </div>
+
+              <div class="topics-grid">
+                <div class="topic-card">
+                  <h5>🏗️ Kruskal's Algorithm</h5>
+                  <div class="algorithm-box">
+                    <h4>Strategy</h4>
+                    <p>Process edges in order of increasing weight. Add edge if it doesn't create a cycle.</p>
+                  </div>
+
+                  <div class="code-block">
+                    MST-KRUSKAL(G, w)
+                    A = ∅
+                    for each vertex v ∈ G.V
+                    MAKE-SET(v)
+                    sort the edges of G.E into nondecreasing order by weight w
+                    for each edge (u, v) ∈ G.E, taken in nondecreasing order by weight
+                    if FIND-SET(u) ≠ FIND-SET(v)
+                    A = A ∪ {(u, v)}
+                    UNION(u, v)
+                    return A
+                  </div>
+
+                  <div class="complexity-box">
+                    <h5>⏱️ Time Complexity</h5>
+                    <p>O(E lg E) - dominated by sorting edges</p>
+                  </div>
+                </div>
+
+                <div class="topic-card">
+                  <h5>📈 Prim's Algorithm</h5>
+                  <div class="algorithm-box">
+                    <h4>Strategy</h4>
+                    <p>Start with arbitrary vertex. Grow MST by repeatedly adding minimum-weight edge connecting MST to
+                      non-MST vertex.</p>
+                  </div>
+
+                  <div class="code-block">
+                    MST-PRIM(G, w, r)
+                    for each u ∈ G.V
+                    u.key = ∞
+                    u.π = NIL
+                    r.key = 0
+                    Q = G.V
+                    while Q ≠ ∅
+                    u = EXTRACT-MIN(Q)
+                    for each v ∈ G.Adj[u]
+                    if v ∈ Q and w(u, v) < v.key v.π=u v.key=w(u, v) </div>
+
+                      <div class="complexity-box">
+                        <h5>⏱️ Time Complexity</h5>
+                        <ul>
+                          <li><strong>Binary heap:</strong> O(E lg V)</li>
+                          <li><strong>Fibonacci heap:</strong> O(E + V lg V)</li>
+                        </ul>
+                      </div>
+                  </div>
+
+                  <div class="topic-card">
+                    <h5>⚖️ Kruskal vs Prim</h5>
+                    <table class="comparison-table">
+                      <thead>
+                        <tr>
+                          <th>Aspect</th>
+                          <th>Kruskal</th>
+                          <th>Prim</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><strong>Strategy</strong></td>
+                          <td>Edge-based</td>
+                          <td>Vertex-based</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Data Structure</strong></td>
+                          <td>Disjoint sets</td>
+                          <td>Priority queue</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Best for</strong></td>
+                          <td>Sparse graphs</td>
+                          <td>Dense graphs</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Time</strong></td>
+                          <td>O(E lg E)</td>
+                          <td>O(E lg V)</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h3 class="subsection-title">2. Single-Source Shortest Paths</h3>
+
+                  <div class="algorithm-box">
+                    <h4>🎯 Problem Definition</h4>
+                    <p>Given a weighted, directed graph G = (V, E) and a source vertex s, find the shortest path from s
+                      to every other vertex in the graph.</p>
+
+                    <div class="theorem-box">
+                      <h4>🔑 Key Concepts</h4>
+                      <ul>
+                        <li><strong>Shortest path weight:</strong> δ(u, v) = minimum weight of path from u to v</li>
+                        <li><strong>Relaxation:</strong> Process of improving shortest-path estimate</li>
+                        <li><strong>Shortest-paths tree:</strong> Tree of shortest paths from source</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="topics-grid">
+                    <div class="topic-card">
+                      <h5>🔧 Edge Relaxation</h5>
+                      <div class="code-block">
+                        INITIALIZE-SINGLE-SOURCE(G, s)
+                        for each vertex v ∈ G.V
+                        v.d = ∞
+                        v.π = NIL
+                        s.d = 0
+
+                        RELAX(u, v, w)
+                        if v.d > u.d + w(u, v)
+                        v.d = u.d + w(u, v)
+                        v.π = u
+                      </div>
+
+                      <div class="algorithm-box">
+                        <h4>💡 Relaxation Intuition</h4>
+                        <p>If we can improve the shortest path to v by going through u, then update v's distance and
+                          predecessor.</p>
+                      </div>
+                    </div>
+
+                    <div class="topic-card">
+                      <h5>⚡ Dijkstra's Algorithm</h5>
+                      <div class="algorithm-box">
+                        <h4>🎯 Requirements</h4>
+                        <p>Works only with <strong>non-negative edge weights</strong>.</p>
+                      </div>
+
+                      <div class="code-block">
+                        DIJKSTRA(G, w, s)
+                        INITIALIZE-SINGLE-SOURCE(G, s)
+                        S = ∅
+                        Q = G.V
+                        while Q ≠ ∅
+                        u = EXTRACT-MIN(Q)
+                        S = S ∪ {u}
+                        for each vertex v ∈ G.Adj[u]
+                        RELAX(u, v, w)
+                      </div>
+
+                      <div class="complexity-box">
+                        <h5>⏱️ Time Complexity</h5>
+                        <ul>
+                          <li><strong>Array:</strong> Θ(V²)</li>
+                          <li><strong>Binary heap:</strong> O(E lg V)</li>
+                          <li><strong>Fibonacci heap:</strong> O(E + V lg V)</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div class="topic-card">
+                      <h5>🔄 Bellman-Ford Algorithm</h5>
+                      <div class="algorithm-box">
+                        <h4>🎯 Features</h4>
+                        <ul>
+                          <li>Handles <strong>negative edge weights</strong></li>
+                          <li>Detects <strong>negative-weight cycles</strong></li>
+                          <li>Returns TRUE if no negative cycles</li>
+                        </ul>
+                      </div>
+
+                      <div class="code-block">
+                        BELLMAN-FORD(G, w, s)
+                        INITIALIZE-SINGLE-SOURCE(G, s)
+                        for i = 1 to |G.V| - 1
+                        for each edge (u, v) ∈ G.E
+                        RELAX(u, v, w)
+                        for each edge (u, v) ∈ G.E
+                        if v.d > u.d + w(u, v)
+                        return FALSE
+                        return TRUE
+                      </div>
+
+                      <div class="complexity-box">
+                        <h5>⏱️ Time Complexity</h5>
+                        <p>O(VE) - slower but more general than Dijkstra</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="theorem-box">
+                    <h4>📊 Algorithm Comparison</h4>
+                    <table class="comparison-table">
+                      <thead>
+                        <tr>
+                          <th>Algorithm</th>
+                          <th>Edge Weights</th>
+                          <th>Time Complexity</th>
+                          <th>Detects Negative Cycles</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><strong>Dijkstra</strong></td>
+                          <td>Non-negative</td>
+                          <td>O(E + V lg V)</td>
+                          <td>No</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Bellman-Ford</strong></td>
+                          <td>Any (including negative)</td>
+                          <td>O(VE)</td>
+                          <td>Yes</td>
+                        </tr>
+                        <tr>
+                          <td><strong>BFS (unweighted)</strong></td>
+                          <td>Uniform (1 or unweighted)</td>
+                          <td>O(V + E)</td>
+                          <td>N/A</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+        </section>
+      </div>
+
+        </div>
+
+        <!-- Add more sections as needed following the same pattern -->
+        <div class="topic-section" id="lecture10">
+          <div class="topic-header">
+            <h2>💎 Dynamic Programming</h2>
+            <div class="difficulty advanced">Advanced</div>
+          </div>
+          <div class="topic-content">
+            <div class="subtopic">
+              <h3>🎯 Dynamic Programming Approach</h3>
+              <p>Solve optimization problems by breaking them down into subproblems and storing results to avoid recomputation.</p>
+              
+              <div class="code-example">
+<span class="comment">// Rod Cutting Problem</span>
+<span class="keyword">function</span> <span class="function">rodCutting</span>(prices, n) {
+    <span class="keyword">let</span> dp = <span class="keyword">new</span> <span class="function">Array</span>(n + <span class="number">1</span>).<span class="function">fill</span>(<span class="number">0</span>);
+    
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i <= n; i++) {
+        <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">1</span>; j <= i; j++) {
+            dp[i] = <span class="function">Math.max</span>(dp[i], prices[j] + dp[i - j]);
+        }
+    }
+    
+    <span class="keyword">return</span> dp[n];
+}
+
+<span class="comment">// Time Complexity: O(n²)</span>
+<span class="comment">// Space Complexity: O(n)</span>
+</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Graph Algorithms -->
+        <div class="topic-section" id="lecture15">
+          <div class="topic-header">
+            <h2>🌐 Graph Algorithms</h2>
+            <div class="difficulty advanced">Advanced</div>
+          </div>
+          <div class="topic-content">
+            <div class="subtopic">
+              <h3>🔍 Graph Search Algorithms</h3>
+              
+              <div class="code-example">
+<span class="comment">// Breadth-First Search (BFS)</span>
+<span class="keyword">function</span> <span class="function">BFS</span>(graph, start) {
+    <span class="keyword">let</span> visited = <span class="keyword">new</span> <span class="function">Set</span>();
+    <span class="keyword">let</span> queue = [start];
+    <span class="keyword">let</span> result = [];
+    
+    <span class="keyword">while</span> (queue.<span class="property">length</span> > <span class="number">0</span>) {
+        <span class="keyword">let</span> vertex = queue.<span class="function">shift</span>();
+        
+        <span class="keyword">if</span> (!visited.<span class="function">has</span>(vertex)) {
+            visited.<span class="function">add</span>(vertex);
+            result.<span class="function">push</span>(vertex);
+            
+            <span class="comment">// Add all neighbors to queue</span>
+            <span class="keyword">for</span> (<span class="keyword">let</span> neighbor <span class="keyword">of</span> graph[vertex]) {
+                <span class="keyword">if</span> (!visited.<span class="function">has</span>(neighbor)) {
+                    queue.<span class="function">push</span>(neighbor);
+                }
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> result;
+}
+
+<span class="comment">// Time Complexity: O(V + E)</span>
+<span class="comment">// Space Complexity: O(V)</span>
+</div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTOC() {
+            const tocContainer = document.getElementById('tocContainer');
+            tocContainer.classList.toggle('active');
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Show/hide back to top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+        
+        // Close TOC when clicking on a link
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            tocLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const tocContainer = document.getElementById('tocContainer');
+                    tocContainer.classList.remove('active');
+                });
+            });
+        });
+        
+        // Close TOC when clicking outside
+        document.addEventListener('click', function(event) {
+            const tocContainer = document.getElementById('tocContainer');
+            const tocToggle = document.querySelector('.toc-toggle');
+            
+            if (!tocContainer.contains(event.target) && !tocToggle.contains(event.target)) {
+                tocContainer.classList.remove('active');
+            }
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

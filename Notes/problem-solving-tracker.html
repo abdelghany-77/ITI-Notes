@@ -242,7 +242,7 @@
 
       .problems-grid {
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
         gap: 20px;
         margin-bottom: 30px;
       }
@@ -663,6 +663,10 @@
 
         .stats-container {
           grid-template-columns: repeat(2, 1fr);
+        }
+
+        .problems-grid {
+          grid-template-columns: 1fr;
         }
 
         .controls {
@@ -2813,6 +2817,7 @@
                 `;
         }
       }
+
     </script>
   </body>
 </html>

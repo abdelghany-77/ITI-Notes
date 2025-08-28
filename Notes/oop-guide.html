@@ -1,0 +1,4050 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Object-Oriented Programming Study Guide</title>
+		
+		<!-- Favicon -->
+		<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+		<link rel="shortcut icon" href="../favicon.svg">
+		
+		<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			line-height: 1.6;
+			color: #333;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			min-height: 100vh;
+		}
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Table of Contents Styles */
+        .toc-container {
+            position: fixed;
+            top: 20px;
+            left: -300px;
+            width: 280px;
+            height: calc(100vh - 40px);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+        
+        .toc-container.active {
+            left: 20px;
+        }
+        
+        .toc-header {
+            padding: 20px;
+            background: #3498db;
+            color: white;
+            border-radius: 15px 15px 0 0;
+            position: sticky;
+            top: 0;
+        }
+        
+        .toc-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        
+        .toc-list {
+            padding: 15px;
+        }
+        
+        .toc-list ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .toc-list li {
+            margin: 8px 0;
+        }
+        
+        .toc-list a {
+            display: block;
+            padding: 8px 12px;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+        
+        .toc-list a:hover {
+            background: #3498db;
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .toc-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .toc-toggle:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .nav-links a {
+            display: inline-block;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .nav-links a:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .topic-section {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .topic-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 0;
+            border-bottom: 2px solid #ecf0f1;
+            margin-bottom: 20px;
+        }
+        
+        .topic-header h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+        }
+        
+        .difficulty {
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .beginner { background: #27ae60; }
+        .intermediate { background: #f39c12; }
+        .advanced { background: #e74c3c; }
+        
+        .topic-content {
+            display: block;
+        }
+        
+        .topic-content.hidden {
+            display: none;
+        }
+        
+        .subtopic {
+            background: #f8f9fa;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+        .subtopic h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .video-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .video-section video {
+            width: 100%;
+            height: 500px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            background: #000;
+            object-fit: contain;
+        }
+        
+        .concept-highlight {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .concept-highlight h4 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            color: #fff;
+        }
+        
+        .concept-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .concept-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .concept-list li:before {
+            content: "▶ ";
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .code-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 30px;
+            border-radius: 12px;
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 25px 0;
+            line-height: 1.8;
+            border: 1px solid #3c3c3c;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            font-size: 16px;
+            tab-size: 4;
+            white-space: pre;
+        }
+        
+        .code-example::before {
+            content: 'C++ Code';
+            position: absolute;
+            top: 12px;
+            right: 20px;
+            font-size: 10px;
+            color: #666;
+            font-family: 'Segoe UI', sans-serif;
+            background: #2d2d30;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .code-example::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff5f56;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27ca3f;
+        }
+        
+        .code-example code {
+            display: block;
+            margin-top: 25px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .code-example .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+        
+        .code-example .keyword {
+            color: #569cd6;
+            font-weight: 400;
+        }
+        
+        .code-example .string {
+            color: #ce9178;
+        }
+        
+        .code-example .number {
+            color: #b5cea8;
+        }
+        
+        .code-example .function {
+            color: #dcdcaa;
+            font-weight: 400;
+        }
+        
+        .code-example .type {
+            color: #4ec9b0;
+        }
+        
+        .code-example .variable {
+            color: #9cdcfe;
+        }
+        
+        .code-example .property {
+            color: #9cdcfe;
+        }
+        
+        .code-example .operator {
+            color: #d4d4d4;
+        }
+        
+        .code-example .punctuation {
+            color: #d4d4d4;
+        }
+        
+        .code-example .bracket {
+            color: #ffd700;
+        }
+        
+        .oop-principles {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+        
+        .oop-principles h4 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .principle-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .principle-card h5 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .toggle-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #3498db;
+            transition: transform 0.3s ease;
+        }
+        
+        .toggle-btn.rotated {
+            transform: rotate(180deg);
+        }
+        
+        .practice-section {
+            background: #d1ecf1;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #0c5460;
+            margin-top: 20px;
+        }
+        
+        .practice-section h4 {
+            color: #0c5460;
+            margin-bottom: 15px;
+        }
+        
+        .practice-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .practice-link {
+            padding: 10px 15px;
+            background: #17a2b8;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .practice-link:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+		/* ------------------ Custom Video Player Styles ------------------ */
+		.player {
+			position: relative;
+			max-width: 100%;
+			margin: 20px 0;
+			border-radius: 12px;
+			overflow: visible;
+		}
+
+		.player video {
+			width: 100%;
+			height: 500px;
+			display: block;
+			border-radius: 12px;
+			background: #000;
+			outline: none;
+		}
+
+		.player .big-play {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			width: 72px;
+			height: 72px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: rgba(0,0,0,0.55);
+			color: #fff;
+			font-size: 28px;
+			cursor: pointer;
+			box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+			transition: opacity 180ms ease, transform 180ms ease;
+			opacity: 0;
+			z-index: 6;
+		}
+
+		.player.paused .big-play {
+			opacity: 1;
+		}
+
+		.player .controls {
+			position: absolute;
+			left: 12px;
+			right: 12px;
+			bottom: 12px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 10px 12px;
+			background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.5));
+			border-radius: 12px;
+			z-index: 8;
+			backdrop-filter: blur(6px);
+			box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+		}
+
+		.player .control-btn {
+			background: rgba(255,255,255,0.05);
+			border: 0;
+			color: #fff;
+			padding: 8px 10px;
+			border-radius: 8px;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 14px;
+			transition: transform 120ms ease, background 120ms ease;
+		}
+
+		.player .control-btn:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); }
+
+		.player .progress {
+			position: relative;
+			height: 6px; /* thinner track */
+			background: rgba(255,255,255,0.08);
+			border-radius: 999px;
+			overflow: visible;
+			cursor: pointer;
+			margin: 0 6px;
+		}
+
+		.player .progress .buffer {
+			position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+			background: rgba(255,255,255,0.12);
+			border-radius: 999px;
+		}
+
+		.player .progress .bar {
+			position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+			background: linear-gradient(90deg,#6dd3ff,#7b61ff);
+			border-radius: 999px;
+			box-shadow: 0 2px 8px rgba(123,97,255,0.25) inset;
+		}
+
+		.player .progress .knob {
+			position: absolute;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			width: 14px;
+			height: 14px;
+			background: #fff;
+			border-radius: 50%;
+			box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+			transition: transform 120ms ease;
+		}
+
+		.player .time {
+			color: #fff;
+			font-size: 13px;
+			min-width: 80px;
+			text-align: center;
+		}
+
+		.player input[type="range"].volume {
+			width: 100px;
+			accent-color: #7b61ff;
+		}
+
+		.player select.playback-rate {
+			background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6));
+			color: #fff;
+			border: 1px solid rgba(255,255,255,0.08);
+			padding: 6px 10px;
+			border-radius: 6px;
+			font-size: 13px;
+			-webkit-appearance: none;
+			appearance: none;
+			box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+		}
+		.player select.playback-rate option {
+			background: #111;
+			color: #fff;
+		}
+
+		.player .download-link {
+			text-decoration: none;
+			color: #fff;
+			background: rgba(255,255,255,0.06);
+			padding: 6px 8px;
+			border-radius: 6px;
+			font-size: 13px;
+		}
+
+		/* make controls responsive */
+		@media (max-width: 640px) {
+			.player .controls { gap: 6px; padding: 6px; }
+			.player input[type="range"].volume { width: 70px; }
+			.player .time { min-width: 64px; font-size: 12px; }
+			.player .progress .knob { width: 12px; height: 12px; }
+		}
+		/* Fullscreen styles */
+		.player:fullscreen, .player:-webkit-full-screen {
+			position: fixed !important;
+			top: 0 !important;
+			left: 0 !important;
+			width: 100vw !important;
+			height: 100vh !important;
+			z-index: 99999 !important;
+			border-radius: 0 !important;
+			background: #000;
+		}
+
+		.player:fullscreen video, .player:-webkit-full-screen video {
+			width: 100vw !important;
+			height: 100vh !important;
+			object-fit: contain !important; /* use 'cover' if you prefer filling/cropping */
+		}
+
+		.player:fullscreen .controls, .player:-webkit-full-screen .controls {
+			left: 20px !important;
+			right: 20px !important;
+			bottom: 20px !important;
+		}
+    </style>
+	</head>
+	<body>
+		<!-- Table of Contents Toggle Button -->
+		<button class="toc-toggle" onclick="toggleTOC()">☰</button>
+
+		<!-- Table of Contents -->
+		<div class="toc-container" id="tocContainer">
+			<div class="toc-header">
+				<h3>📋 Table of Contents</h3>
+			</div>
+			<div class="toc-list">
+				<ul>
+					<li><a href="#introduction">🎯 Introduction to OOP</a></li>
+					<li><a href="#classes-objects">🏗️ Classes & Objects</a></li>
+					<li><a href="#constructors">⚙️ Constructors & Destructors</a></li>
+					<li><a href="#overloading">🔄 Method & Constructor Overloading</a></li>
+					<li><a href="#static-members">📌 Static Members</a></li>
+					<li><a href="#operator-overloading">⚡ Operator Overloading</a></li>
+					<li><a href="#inheritance">🌳 Inheritance</a></li>
+					<li><a href="#polymorphism">🎭 Polymorphism</a></li>
+					<li><a href="#abstract-classes">🔒 Abstract Classes</a></li>
+					<li><a href="#friend-functions">🤝 Friend Functions</a></li>
+					<li><a href="#exception-handling">⚠️ Exception Handling</a></li>
+					<li><a href="#pointers">👉 Pointers in C++</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- Back to Top Button -->
+		<button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+
+		<div class="container">
+			<div class="header">
+				<h1>🎯 Object-Oriented Programming Study Guide</h1>
+				<p>Master the core principles of OOP with C++ - Building robust and
+					maintainable software</p>
+			</div>
+
+			<div class="nav-links">
+				<a href="../index.html">🏠 Home</a>
+			</div>
+
+			<!-- Introduction to OOP -->
+			<div class="topic-section" id="introduction">
+				<div class="topic-header" onclick="toggleContent('introduction')">
+					<h2>🎯 Introduction to Object-Oriented Programming</h2>
+					<div>
+						<span class="difficulty beginner">Beginner</span>
+					</div>
+
+				</div>
+				<div class="topic-content" id="introduction-content">
+					<div class="subtopic">
+						<h3>#00 Object Oriented Programming Introduction</h3>
+						<p>Understanding the fundamental concepts of Object-Oriented Programming
+							and why it revolutionized software development.</p>
+
+						<div class="video-section">
+							<video width="100%" height="500" controls preload="none"
+								style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+								<source
+									src="../ELdesouky oop/01.00 - Object Oriented Programming with C++ - Introduction.mp4"
+									type="video/mp4">
+								Your browser does not support the video tag.
+							</video>
+						</div>
+
+						<div class="concept-highlight">
+							<h4>🎯 Why Object-Oriented Programming?</h4>
+							<ul class="concept-list">
+								<li>Code Reusability - Write once, use many times</li>
+								<li>Modularity - Break complex problems into smaller, manageable
+									pieces</li>
+								<li>Maintainability - Easy to modify and extend existing code</li>
+								<li>Data Security - Hide implementation details from users</li>
+								<li>Real-world Modeling - Represent real-world entities as objects</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="subtopic">
+						<h3>#01 What is Object Oriented Programming - Part 1</h3>
+						<p>Deep dive into OOP concepts, paradigms, and how they differ from
+							procedural programming.</p>
+
+						<div class="video-section">
+							<video width="100%" height="500" controls preload="none"
+								style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+								<source
+									src="../ELdesouky oop/02.01 - C++ - What is object Oriented Programming - - Part 1.mp4"
+									type="video/mp4">
+								Your browser does not support the video tag.
+							</video>
+						</div>
+
+						<div class="oop-principles">
+							<h4>🔑 The Four Pillars of OOP</h4>
+							<div class="principles-grid">
+								<div class="principle-card">
+									<h5>🔒 Encapsulation</h5>
+									<p>Binding data and methods together, hiding internal implementation
+										details.</p>
+								</div>
+								<div class="principle-card">
+									<h5>🌳 Inheritance</h5>
+									<p>Creating new classes based on existing classes, promoting code
+										reuse.</p>
+								</div>
+								<div class="principle-card">
+									<h5>🎭 Polymorphism</h5>
+									<p>One interface, multiple implementations. Objects behave differently
+										based on their type.</p>
+								</div>
+								<div class="principle-card">
+									<h5>🏗️ Abstraction</h5>
+									<p>Hiding complex implementation details while showing only essential
+										features.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="subtopic">
+						<h3>#02 What is Object Oriented Programming - Part 2</h3>
+						<p>Continue exploring OOP concepts with practical examples and
+							comparisons.</p>
+
+						<div class="video-section">
+							<video width="100%" height="500" controls preload="none"
+								style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+								<source
+									src="../ELdesouky oop/03.02 - C++ -  What is Object Oriented Programming - - part 2.mp4"
+									type="video/mp4">
+								Your browser does not support the video tag.
+							</video>
+						</div>
+
+						<div class="code-example">// OOP vs Procedural Programming Comparison
+
+							// Procedural Approach (C-style)
+							struct Student {
+							char name[50];
+							int age;
+							float gpa;
+							};
+
+							void displayStudent(struct Student s) {
+							printf("Name: %s, Age: %d, GPA: %.2f\n", s.name, s.age, s.gpa);
+							}
+
+							// Object-Oriented Approach (C++)
+							class Student {
+							private:
+							string name;
+							int age;
+							float gpa;
+
+							public:
+							// Constructor
+							Student(string n, int a, float g) : name(n), age(a), gpa(g) {}
+
+							// Methods
+							void display() {
+							cout << "Name: " << name << ", Age: " << age << ", GPA: " << gpa << endl;
+							}
+
+							// Getters and Setters
+							string getName() { return name; }
+							void setName(string n) { name = n; }
+							};</div>
+					</div>
+
+					<div class="practice-section">
+						<h4>🏋️ Key OOP Concepts</h4>
+						<div class="practice-links">
+							<a href="#" class="practice-link">Object</a>
+							<a href="#" class="practice-link">Class</a>
+							<a href="#" class="practice-link">Method</a>
+							<a href="#" class="practice-link">Attribute</a>
+							<a href="#" class="practice-link">Instance</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Classes and Objects -->
+			<div class="topic-section" id="classes-objects">
+				<div class="topic-header" onclick="toggleContent('classes-objects')">
+					<h2>🏗️ Classes & Objects</h2>
+					<div>
+						<span class="difficulty beginner">Beginner</span>
+						<button class="toggle-btn" id="classes-objects-btn">▼</button>
+					</div>
+				</div>
+				<div class="topic-content" id="classes-objects-content">
+					<div class="subtopic">
+						<h3>#03 Class and Objects - Why We Need Classes</h3>
+						<p>Understanding the fundamental building blocks of OOP - Classes and
+							Objects, and their importance in software design.</p>
+
+						<div class="video-section">
+							<video width="100%" height="500" controls preload="none"
+								style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+								<source
+									src="../ELdesouky oop/04.03 - C++ - Class and Objects , why we need Classes -.mp4"
+									type="video/mp4">
+								Your browser does not support the video tag.
+							</video>
+						</div>
+
+						<div class="concept-highlight">
+							<h4>🏗️ Class vs Object</h4>
+							<ul class="concept-list">
+								<li>Class: Blueprint or template for creating objects</li>
+								<li>Object: Instance of a class with actual values</li>
+								<li>Class defines: attributes (data) and methods (functions)</li>
+								<li>Object contains: actual data and can perform actions</li>
+								<li>One class can create multiple objects</li>
+							</ul>
+						</div>
+
+						<div class="code-example">// Why We Need Classes - Real World Example
+
+							// Without Classes (Procedural approach)
+							// Managing multiple students becomes messy
+							char student1_name[50] = "Alice";
+							int student1_age = 20;
+							float student1_gpa = 3.8;
+
+							char student2_name[50] = "Bob";
+							int student2_age = 21;
+							float student2_gpa = 3.5;
+
+							// With Classes (Object-Oriented approach)
+							class Student {
+							private:
+							string name;
+							int age;
+							float gpa;
+
+							public:
+							// Constructor
+							Student(string n, int a, float g) {
+							name = n;
+							age = a;
+							gpa = g;
+							}
+
+							// Methods
+							void displayInfo() {
+							cout << "Student: " << name << ", Age: " << age << ", GPA: " << gpa <<
+							endl;
+							}
+
+							bool isHonorStudent() {
+							return gpa >= 3.5;
+							}
+							};
+
+							// Usage
+							Student student1("Alice", 20, 3.8);
+							Student student2("Bob", 21, 3.5);
+
+							student1.displayInfo();
+							student2.displayInfo();</div>
+					</div>
+
+					<div class="subtopic">
+						<h3>#04 Create Your First Class - Part 1</h3>
+						<p>Step-by-step guide to creating your first C++ class with basic
+							structure and components.</p>
+
+						<div class="video-section">
+							<video width="100%" height="500" controls preload="none"
+								style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+								<source
+									src="../ELdesouky oop/05.04 - C++ - Create Your First Class - Part 1.mp4"
+									type="video/mp4">
+								Your browser does not support the video tag.
+							</video>
+						</div>
+
+						<div class="code-example">// Creating Your First Class - Basic Structure
+
+							#include <iostream>
+								#include <string>
+									using namespace std;
+
+									class Car {
+									private: // Private members - cannot be accessed directly from outside
+									string brand;
+									string model;
+									int year;
+									double price;
+
+									public: // Public members - can be accessed from outside
+									// Constructor - special method to initialize objects
+									Car() {
+									brand = "Unknown";
+									model = "Unknown";
+									year = 0;
+									price = 0.0;
+									}
+
+									// Parameterized Constructor
+									Car(string b, string m, int y, double p) {
+									brand = b;
+									model = m;
+									year = y;
+									price = p;
+									}
+
+									// Getter methods (Accessors)
+									string getBrand() { return brand; }
+									string getModel() { return model; }
+									int getYear() { return year; }
+									double getPrice() { return price; }
+
+									// Setter methods (Mutators)
+									void setBrand(string b) { brand = b; }
+									void setModel(string m) { model = m; }
+									void setYear(int y) { year = y; }
+									void setPrice(double p) { price = p; }
+
+									// Other methods
+									void displayInfo() {
+									cout << year << " " << brand << " " << model << " - $" << price <<
+									endl;
+									}
+									};
+
+									// Using the class
+									int main() {
+									// Creating objects
+									Car car1; // Default constructor
+									Car car2("Toyota", "Camry", 2023, 35000.0); // Parameterized
+									constructor
+
+									car1.displayInfo();
+									car2.displayInfo();
+
+									return 0;
+									}</div>
+							</div>
+
+							<div class="subtopic">
+								<h3>#05 Create Your First Class - Part 2</h3>
+								<p>Continue building your class with more advanced features and
+									methods.</p>
+
+								<div class="video-section">
+									<video width="100%" height="500" controls preload="none"
+										style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+										<source
+											src="../ELdesouky oop/06.05 - C++ - Create Your First Class - Part 2.mp4"
+											type="video/mp4">
+										Your browser does not support the video tag.
+									</video>
+								</div>
+							</div>
+
+							<div class="subtopic">
+								<h3>#06 Create Your First Class - Part 3</h3>
+								<p>Complete your class implementation with additional functionality and
+									best practices.</p>
+
+								<div class="video-section">
+									<video width="100%" height="500" controls preload="none"
+										style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+										<source
+											src="../ELdesouky oop/07.06 - C++ - Create Your First Class - Part 3.mp4"
+											type="video/mp4">
+										Your browser does not support the video tag.
+									</video>
+								</div>
+
+								<div class="code-example">// Advanced Class Features
+
+									class BankAccount {
+									private:
+									string accountNumber;
+									string holderName;
+									double balance;
+									static int totalAccounts; // Static member
+
+									public:
+									// Constructor
+									BankAccount(string accNum, string name, double initialBalance = 0.0) {
+									accountNumber = accNum;
+									holderName = name;
+									balance = initialBalance;
+									totalAccounts++; // Increment static member
+									}
+
+									// Methods with validation
+									bool deposit(double amount) {
+									if (amount > 0) {
+									balance += amount;
+									cout << "Deposited $" << amount << ". New balance: $" << balance <<
+									endl;
+									return true;
+									}
+									cout << "Invalid deposit amount!" << endl;
+									return false;
+									}
+
+									bool withdraw(double amount) {
+									if (amount > 0 && amount <= balance) {
+									balance -= amount;
+									cout << "Withdrawn $" << amount << ". New balance: $" << balance <<
+									endl;
+									return true;
+									}
+									cout << "Invalid withdrawal amount or insufficient funds!" << endl;
+									return false;
+									}
+
+									void displayAccountInfo() {
+									cout << "Account: " << accountNumber << ", Holder: " << holderName
+									<< ", Balance: $" << balance << endl;
+									}
+
+									// Static method
+									static int getTotalAccounts() {
+									return totalAccounts;
+									}
+
+									// Destructor
+									~BankAccount() {
+									totalAccounts--;
+									cout << "Account " << accountNumber << " destroyed." << endl;
+									}
+									};
+
+									// Initialize static member
+									int BankAccount::totalAccounts = 0;</div>
+							</div>
+
+							<div class="practice-section">
+								<h4>🏋️ Class Design Concepts</h4>
+								<div class="practice-links">
+									<a href="#" class="practice-link">Access Specifiers</a>
+									<a href="#" class="practice-link">Data Members</a>
+									<a href="#" class="practice-link">Member Functions</a>
+									<a href="#" class="practice-link">Object Creation</a>
+									<a href="#" class="practice-link">Encapsulation</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Constructors and Destructors -->
+					<div class="topic-section" id="constructors">
+						<div class="topic-header" onclick="toggleContent('constructors')">
+							<h2>⚙️ Constructors & Destructors</h2>
+							<div>
+								<span class="difficulty intermediate">Intermediate</span>
+								<button class="toggle-btn" id="constructors-btn">▼</button>
+							</div>
+						</div>
+						<div class="topic-content" id="constructors-content">
+							<div class="subtopic">
+								<h3>#07 Constructor & Destructor - Part 1</h3>
+								<p>Learn about special methods that handle object creation and
+									destruction automatically.</p>
+
+								<div class="video-section">
+									<video width="100%" height="500" controls preload="none"
+										style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+										<source
+											src="../ELdesouky oop/08.07 - C++ - Constructor & Destructor - Part 1.mp4"
+											type="video/mp4">
+										Your browser does not support the video tag.
+									</video>
+								</div>
+
+								<div class="concept-highlight">
+									<h4>⚙️ Constructor Types</h4>
+									<ul class="concept-list">
+										<li>Default Constructor - No parameters, provides default values</li>
+										<li>Parameterized Constructor - Takes parameters to initialize
+											object</li>
+										<li>Copy Constructor - Creates object as copy of another object</li>
+										<li>Move Constructor - Transfers resources from temporary object</li>
+									</ul>
+								</div>
+
+								<div class="code-example">// Constructor and Destructor Examples
+
+									class Rectangle {
+									private:
+									double width, height;
+									int* id; // Dynamic memory example
+
+									public:
+									// Default Constructor
+									Rectangle() {
+									width = 0.0;
+									height = 0.0;
+									id = new int(1);
+									cout << "Default constructor called" << endl;
+									}
+
+									// Parameterized Constructor
+									Rectangle(double w, double h) {
+									width = w;
+									height = h;
+									id = new int(1);
+									cout << "Parameterized constructor called" << endl;
+									}
+
+									// Copy Constructor
+									Rectangle(const Rectangle& other) {
+									width = other.width;
+									height = other.height;
+									id = new int(*(other.id)); // Deep copy
+									cout << "Copy constructor called" << endl;
+									}
+
+									// Destructor
+									~Rectangle() {
+									delete id; // Free dynamic memory
+									cout << "Destructor called for Rectangle(" << width << ", " << height
+									<< ")" << endl;
+									}
+
+									// Methods
+									double getArea() { return width * height; }
+
+									void display() {
+									cout << "Rectangle: " << width << " x " << height
+									<< ", Area: " << getArea() << endl;
+									}
+									};
+
+									// Usage examples
+									void demonstrateConstructors() {
+									Rectangle r1; // Default constructor
+									Rectangle r2(5.0, 3.0); // Parameterized constructor
+									Rectangle r3 = r2; // Copy constructor
+									Rectangle r4(r2); // Copy constructor (explicit)
+
+									r1.display();
+									r2.display();
+									r3.display();
+									r4.display();
+									} // All destructors called automatically when objects go out of
+									scope</div>
+							</div>
+
+							<div class="subtopic">
+								<h3>#08 Constructor & Destructor - Part 2</h3>
+								<p>Advanced constructor techniques, initialization lists, and destructor
+									best practices.</p>
+
+								<div class="video-section">
+									<video width="100%" height="500" controls preload="none"
+										style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+										<source
+											src="../ELdesouky oop/09.08 - C++ - Constructor & Destructor - Part 2.mp4"
+											type="video/mp4">
+										Your browser does not support the video tag.
+									</video>
+								</div>
+
+								<div class="code-example">// Advanced Constructor Techniques
+
+									class Student {
+									private:
+									const int studentId; // Const member must be initialized
+									string name;
+									vector<string> courses;
+
+										public:
+										// Constructor with Initialization List (Best Practice)
+										Student(int id, string n) : studentId(id), name(n) {
+										cout << "Student " << name << " created with ID: " << studentId <<
+										endl;
+										}
+
+										// Constructor with Default Parameters
+										Student(int id, string n, vector<string> c = {}) : studentId(id),
+											name(n), courses(c) {
+											cout << "Student " << name << " created with " << courses.size() <<
+											" courses" << endl;
+											}
+
+											// Delegating Constructor (C++11)
+											Student(string n) : Student(0, n) { // Calls other constructor
+											cout << "Using delegating constructor" << endl;
+											}
+
+											void addCourse(string course) {
+											courses.push_back(course);
+											}
+
+											void displayInfo() {
+											cout << "Student ID: " << studentId << ", Name: " << name << endl;
+											cout << "Courses: ";
+											for (const auto& course : courses) {
+											cout << course << " ";
+											}
+											cout << endl;
+											}
+
+											// Destructor with cleanup
+											~Student() {
+											cout << "Student " << name << " destroyed" << endl;
+											// Vector automatically cleans up its memory
+											// But we could do additional cleanup here if needed
+											}
+											};
+
+											// Resource Management Example
+											class FileHandler {
+											private:
+											string filename;
+											ifstream* file;
+
+											public:
+											FileHandler(string fname) : filename(fname) {
+											file = new ifstream(filename);
+											if (!file->is_open()) {
+											delete file;
+											file = nullptr;
+											throw runtime_error("Could not open file: " + filename);
+											}
+											cout << "File " << filename << " opened successfully" << endl;
+											}
+
+											~FileHandler() {
+											if (file) {
+											file->close();
+											delete file;
+											cout << "File " << filename << " closed and resources freed" << endl;
+											}
+											}
+
+											// Prevent copying to avoid double deletion
+											FileHandler(const FileHandler&) = delete;
+											FileHandler& operator=(const FileHandler&) = delete;
+											};</div>
+									</div>
+
+									<div class="practice-section">
+										<h4>🏋️ Constructor & Destructor Concepts</h4>
+										<div class="practice-links">
+											<a href="#" class="practice-link">Initialization Lists</a>
+											<a href="#" class="practice-link">RAII Pattern</a>
+											<a href="#" class="practice-link">Rule of Three</a>
+											<a href="#" class="practice-link">Deep vs Shallow Copy</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Method and Constructor Overloading -->
+							<div class="topic-section" id="overloading">
+								<div class="topic-header" onclick="toggleContent('overloading')">
+									<h2>🔄 Method & Constructor Overloading</h2>
+									<div>
+										<span class="difficulty intermediate">Intermediate</span>
+										<button class="toggle-btn" id="overloading-btn">▼</button>
+									</div>
+								</div>
+								<div class="topic-content" id="overloading-content">
+									<div class="subtopic">
+										<h3>#09 Method and Constructor Overloading - Part 1</h3>
+										<p>Learn how to create multiple methods with the same name but
+											different parameters.</p>
+
+										<div class="video-section">
+											<video width="100%" height="500" controls preload="none"
+												style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+												<source
+													src="../ELdesouky oop/10.09 - C++ - Method and Constructor Overloading - Part 1.mp4"
+													type="video/mp4">
+												Your browser does not support the video tag.
+											</video>
+										</div>
+
+										<div class="code-example">// Method Overloading Examples
+
+											class Calculator {
+											public:
+											// Method overloading - same name, different parameters
+
+											// Add two integers
+											int add(int a, int b) {
+											cout << "Adding two integers: ";
+											return a + b;
+											}
+
+											// Add three integers
+											int add(int a, int b, int c) {
+											cout << "Adding three integers: ";
+											return a + b + c;
+											}
+
+											// Add two doubles
+											double add(double a, double b) {
+											cout << "Adding two doubles: ";
+											return a + b;
+											}
+
+											// Add integer and double (different parameter types)
+											double add(int a, double b) {
+											cout << "Adding integer and double: ";
+											return a + b;
+											}
+
+											// Multiply methods (overloading with different return types not
+											allowed)
+											int multiply(int a, int b) { return a * b; }
+											double multiply(double a, double b) { return a * b; }
+
+											// Display methods with different signatures
+											void display(int value) {
+											cout << "Integer value: " << value << endl;
+											}
+
+											void display(double value) {
+											cout << "Double value: " << value << endl;
+											}
+
+											void display(string text) {
+											cout << "String value: " << text << endl;
+											}
+											};
+
+											// Constructor Overloading Example
+											class Point {
+											private:
+											double x, y;
+
+											public:
+											// Default constructor
+											Point() : x(0), y(0) {
+											cout << "Point created at origin (0, 0)" << endl;
+											}
+
+											// Constructor with one parameter (square point)
+											Point(double coord) : x(coord), y(coord) {
+											cout << "Point created at (" << x << ", " << y << ")" << endl;
+											}
+
+											// Constructor with two parameters
+											Point(double xCoord, double yCoord) : x(xCoord), y(yCoord) {
+											cout << "Point created at (" << x << ", " << y << ")" << endl;
+											}
+
+											// Constructor with another Point (copy constructor)
+											Point(const Point& other) : x(other.x), y(other.y) {
+											cout << "Point copied at (" << x << ", " << y << ")" << endl;
+											}
+
+											void display() {
+											cout << "Point: (" << x << ", " << y << ")" << endl;
+											}
+											};
+
+											// Usage demonstration
+											void demonstrateOverloading() {
+											Calculator calc;
+
+											cout << calc.add(5, 3) << endl; // Calls add(int, int)
+											cout << calc.add(5, 3, 2) << endl; // Calls add(int, int, int)
+											cout << calc.add(5.5, 3.2) << endl; // Calls add(double, double)
+											cout << calc.add(5, 3.5) << endl; // Calls add(int, double)
+
+											calc.display(42); // Calls display(int)
+											calc.display(3.14); // Calls display(double)
+											calc.display("Hello"); // Calls display(string)
+
+											// Constructor overloading
+											Point p1; // Default constructor
+											Point p2(5); // Single parameter constructor
+											Point p3(3, 4); // Two parameter constructor
+											Point p4(p3); // Copy constructor
+											}</code></div>
+								</div>
+
+								<div class="subtopic">
+									<h3>#10 Method and Constructor Overloading - Part 2</h3>
+									<p>Advanced overloading techniques and best practices for method
+										resolution.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/11.10 - C++ - Method and Constructor Overloading - Part 2.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="concept-highlight">
+										<h4>🔄 Overloading Rules</h4>
+										<ul class="concept-list">
+											<li>Same method name, different parameter list</li>
+											<li>Different parameter types, number, or order</li>
+											<li>Return type alone cannot distinguish overloaded methods</li>
+											<li>Compiler resolves based on best match</li>
+											<li>Avoid ambiguous overloads</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="subtopic">
+									<h3>#11 The Default Copy Constructor</h3>
+									<p>Understanding how C++ automatically provides copy constructors and
+										when you need custom ones.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/12.11 - C++ - The default Copy Constructor.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="code-example">// Default vs Custom Copy Constructor
+
+										class SimpleClass {
+										public:
+										int value;
+										string name;
+
+										SimpleClass(int v, string n) : value(v), name(n) {}
+
+										// No copy constructor defined - compiler provides default
+										// Default copy constructor does memberwise copying (shallow copy)
+										};
+
+										class ComplexClass {
+										private:
+										int* data;
+										int size;
+
+										public:
+										ComplexClass(int s) : size(s) {
+										data = new int[size];
+										for (int i = 0; i < size; i++) {
+										data[i] = i;
+										}
+										cout << "Constructor: allocated memory for " << size << " integers" <<
+										endl;
+										}
+
+										// Custom copy constructor (Deep Copy)
+										ComplexClass(const ComplexClass& other) : size(other.size) {
+										data = new int[size];
+										for (int i = 0; i < size; i++) {
+										data[i] = other.data[i];
+										}
+										cout << "Copy constructor: deep copy created" << endl;
+										}
+
+										// Assignment operator overloading
+										ComplexClass& operator=(const ComplexClass& other) {
+										if (this != &other) { // Self-assignment check
+										delete[] data; // Free existing memory
+										size = other.size;
+										data = new int[size];
+										for (int i = 0; i < size; i++) {
+										data[i] = other.data[i];
+										}
+										cout << "Assignment operator: deep copy created" << endl;
+										}
+										return *this;
+										}
+
+										~ComplexClass() {
+										delete[] data;
+										cout << "Destructor: memory freed" << endl;
+										}
+
+										void display() {
+										cout << "Data: ";
+										for (int i = 0; i < size; i++) {
+										cout << data[i] << " ";
+										}
+										cout << endl;
+										}
+
+										void setValue(int index, int value) {
+										if (index >= 0 && index < size) {
+										data[index] = value;
+										}
+										}
+										};
+
+										void demonstrateCopyConstructor() {
+										// Simple class - default copy constructor works fine
+										SimpleClass s1(42, "Original");
+										SimpleClass s2 = s1; // Default copy constructor
+										s2.value = 100; // Changes don't affect s1
+
+										cout << "s1: " << s1.value << ", " << s1.name << endl;
+										cout << "s2: " << s2.value << ", " << s2.name << endl;
+
+										// Complex class - need custom copy constructor for deep copy
+										ComplexClass c1(5);
+										ComplexClass c2 = c1; // Custom copy constructor
+
+										c1.setValue(0, 999); // Changing c1 doesn't affect c2
+										c1.display();
+										c2.display();
+										}</code></div>
+							</div>
+
+							<div class="practice-section">
+								<h4>🏋️ Overloading Best Practices</h4>
+								<div class="practice-links">
+									<a href="#" class="practice-link">Function Resolution</a>
+									<a href="#" class="practice-link">Ambiguity Resolution</a>
+									<a href="#" class="practice-link">Default Parameters</a>
+									<a href="#" class="practice-link">Copy Semantics</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Passing Objects to Methods -->
+					<div class="topic-section" id="object-passing">
+						<div class="topic-header" onclick="toggleContent('object-passing')">
+							<h2>📦 Passing Objects To Methods</h2>
+							<div>
+								<span class="difficulty intermediate">Intermediate</span>
+								<button class="toggle-btn" id="object-passing-btn">▼</button>
+							</div>
+						</div>
+						<div class="topic-content" id="object-passing-content">
+							<div class="subtopic">
+								<h3>#12 Passing Objects To Methods</h3>
+								<p>Learn different ways to pass objects to functions and their
+									implications for performance and behavior.</p>
+
+								<div class="video-section">
+									<video width="100%" height="500" controls preload="none"
+										style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+										<source
+											src="../ELdesouky oop/13.12 - C++ - Passing objects To Methods.mp4"
+											type="video/mp4">
+										Your browser does not support the video tag.
+									</video>
+								</div>
+
+								<div class="concept-highlight">
+									<h4>📦 Object Passing Methods</h4>
+									<ul class="concept-list">
+										<li>Pass by Value - Creates a copy of the object</li>
+										<li>Pass by Reference - Direct access to original object</li>
+										<li>Pass by Const Reference - Read-only access, efficient</li>
+										<li>Pass by Pointer - Memory address of the object</li>
+									</ul>
+								</div>
+
+								<div class="code-example">// Different Ways to Pass Objects
+
+									class Person {
+									private:
+									string name;
+									int age;
+
+									public:
+									Person(string n, int a) : name(n), age(a) {
+									cout << "Constructor called for " << name << endl;
+									}
+
+									Person(const Person& other) : name(other.name), age(other.age) {
+									cout << "Copy constructor called for " << name << endl;
+									}
+
+									~Person() {
+									cout << "Destructor called for " << name << endl;
+									}
+
+									void setAge(int a) { age = a; }
+									int getAge() const { return age; }
+									string getName() const { return name; }
+
+									void display() const {
+									cout << "Name: " << name << ", Age: " << age << endl;
+									}
+									};
+
+									// 1. Pass by Value - Creates a copy (expensive for large objects)
+									void displayPersonByValue(Person p) {
+									cout << "Inside displayPersonByValue: ";
+									p.display();
+									p.setAge(99); // Changes only the copy, not the original
+									}
+
+									// 2. Pass by Reference - Direct access to original object
+									void displayPersonByReference(Person& p) {
+									cout << "Inside displayPersonByReference: ";
+									p.display();
+									p.setAge(30); // Changes the original object
+									}
+
+									// 3. Pass by Const Reference - Read-only, efficient (RECOMMENDED for
+									read-only operations)
+									void displayPersonByConstReference(const Person& p) {
+									cout << "Inside displayPersonByConstReference: ";
+									p.display();
+									// p.setAge(25); // ERROR: Cannot modify const object
+									}
+
+									// 4. Pass by Pointer - Can be null, manual memory management
+									void displayPersonByPointer(Person* p) {
+									if (p != nullptr) { // Always check for null pointer
+									cout << "Inside displayPersonByPointer: ";
+									p->display();
+									p->setAge(35); // Changes the original object
+									}
+									}
+
+									// 5. Pass by Const Pointer
+									void displayPersonByConstPointer(const Person* p) {
+									if (p != nullptr) {
+									cout << "Inside displayPersonByConstPointer: ";
+									p->display();
+									// p->setAge(40); // ERROR: Cannot modify through const pointer
+									}
+									}
+
+									void demonstrateObjectPassing() {
+									Person alice("Alice", 25);
+									cout << "\n--- Pass by Value ---" << endl;
+									displayPersonByValue(alice); // Copy constructor called
+									alice.display(); // Age is still 25 (unchanged)
+
+									cout << "\n--- Pass by Reference ---" << endl;
+									displayPersonByReference(alice); // No copy constructor
+									alice.display(); // Age changed to 30
+
+									cout << "\n--- Pass by Const Reference ---" << endl;
+									displayPersonByConstReference(alice); // No copy, read-only
+
+									cout << "\n--- Pass by Pointer ---" << endl;
+									displayPersonByPointer(&alice); // Pass address
+									alice.display(); // Age changed to 35
+
+									cout << "\n--- Pass by Const Pointer ---" << endl;
+									displayPersonByConstPointer(&alice); // Read-only through pointer
+									}
+
+									// Best Practices for Object Passing
+									class LargeObject {
+									vector<int> data;
+
+										public:
+										LargeObject(int size) : data(size, 0) {
+										cout << "Created LargeObject with " << size << " elements" << endl;
+										}
+
+										LargeObject(const LargeObject& other) : data(other.data) {
+										cout << "Expensive copy of LargeObject!" << endl;
+										}
+
+										void process() const {
+										cout << "Processing " << data.size() << " elements" << endl;
+										}
+
+										void modify() {
+										cout << "Modifying object" << endl;
+										}
+										};
+
+										// BAD: Expensive copy for read-only operation
+										void processObjectBad(LargeObject obj) {
+										obj.process(); // Copy constructor called unnecessarily
+										}
+
+										// GOOD: Efficient read-only access
+										void processObjectGood(const LargeObject& obj) {
+										obj.process(); // No copy, direct access
+										}
+
+										// GOOD: For modifications
+										void modifyObject(LargeObject& obj) {
+										obj.modify(); // Direct modification of original
+										}</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Static Class Members -->
+						<div class="topic-section" id="static-members">
+							<div class="topic-header" onclick="toggleContent('static-members')">
+								<h2>📌 Static Class Members</h2>
+								<div>
+									<span class="difficulty intermediate">Intermediate</span>
+									<button class="toggle-btn" id="static-members-btn">▼</button>
+								</div>
+							</div>
+							<div class="topic-content" id="static-members-content">
+								<div class="subtopic">
+									<h3>#13 Static Class Members</h3>
+									<p>Understand class-level data and methods that belong to the class
+										rather than individual objects.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source src="../ELdesouky oop/14.13 - C++ - Static Class Members.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="concept-highlight">
+										<h4>📌 Static Members Characteristics</h4>
+										<ul class="concept-list">
+											<li>Belong to the class, not to individual objects</li>
+											<li>Shared among all instances of the class</li>
+											<li>Exist even when no objects are created</li>
+											<li>Static methods can only access static members</li>
+											<li>Must be defined outside the class</li>
+										</ul>
+									</div>
+
+									<div class="code-example">// Static Members Example
+
+										class Counter {
+										private:
+										static int totalObjects; // Static data member - shared by all objects
+										int objectId; // Non-static data member - unique to each object
+
+										public:
+										// Constructor
+										Counter() {
+										totalObjects++; // Increment shared counter
+										objectId = totalObjects; // Assign unique ID to this object
+										cout << "Counter object #" << objectId << " created" << endl;
+										}
+
+										// Destructor
+										~Counter() {
+										cout << "Counter object #" << objectId << " destroyed" << endl;
+										totalObjects--; // Decrement shared counter
+										}
+
+										// Static method - can be called without creating an object
+										static int getTotalObjects() {
+										// Can only access static members, not objectId
+										return totalObjects;
+										}
+
+										// Non-static method - can access both static and non-static members
+										void displayInfo() {
+										cout << "Object ID: " << objectId
+										<< ", Total objects: " << totalObjects << endl;
+										}
+
+										// Static method to reset counter
+										static void resetCounter() {
+										totalObjects = 0;
+										cout << "Counter reset to 0" << endl;
+										}
+										};
+
+										// Static member definition (required outside the class)
+										int Counter::totalObjects = 0;
+
+										// Another example: Utility class with static methods
+										class MathUtils {
+										public:
+										// Static constants
+										static const double PI;
+										static const double E;
+
+										// Static utility methods
+										static double circleArea(double radius) {
+										return PI * radius * radius;
+										}
+
+										static double circleCircumference(double radius) {
+										return 2 * PI * radius;
+										}
+
+										static int factorial(int n) {
+										if (n <= 1) return 1;
+										return n * factorial(n - 1);
+										}
+
+										static double power(double base, int exp) {
+										double result = 1.0;
+										for (int i = 0; i < exp; i++) {
+										result *= base;
+										}
+										return result;
+										}
+										};
+
+										// Static member definitions
+										const double MathUtils::PI = 3.14159265359;
+										const double MathUtils::E = 2.71828182846;
+
+										// Singleton Pattern using static members
+										class Logger {
+										private:
+										static Logger* instance;
+										string logFile;
+
+										// Private constructor prevents direct instantiation
+										Logger(string filename = "log.txt") : logFile(filename) {
+										cout << "Logger initialized with file: " << logFile << endl;
+										}
+
+										public:
+										// Static method to get the single instance
+										static Logger* getInstance() {
+										if (instance == nullptr) {
+										instance = new Logger();
+										}
+										return instance;
+										}
+
+										void log(string message) {
+										cout << "[LOG] " << message << endl;
+										// In real implementation, write to file
+										}
+
+										static void cleanup() {
+										if (instance) {
+										delete instance;
+										instance = nullptr;
+										}
+										}
+										};
+
+										// Static member definition
+										Logger* Logger::instance = nullptr;
+
+										void demonstrateStaticMembers() {
+										cout << "=== Counter Example ===" << endl;
+										cout << "Total objects before creating any: " <<
+										Counter::getTotalObjects() << endl;
+
+										{
+										Counter c1; // totalObjects becomes 1
+										Counter c2; // totalObjects becomes 2
+										Counter c3; // totalObjects becomes 3
+
+										c1.displayInfo();
+										c2.displayInfo();
+										c3.displayInfo();
+
+										cout << "Total objects: " << Counter::getTotalObjects() << endl;
+										} // Destructors called, totalObjects decrements
+
+										cout << "Total objects after scope: " << Counter::getTotalObjects() <<
+										endl;
+
+										cout << "\n=== Math Utils Example ===" << endl;
+										// Call static methods without creating objects
+										cout << "Circle area (radius 5): " << MathUtils::circleArea(5.0) <<
+										endl;
+										cout << "Circle circumference (radius 5): " <<
+										MathUtils::circleCircumference(5.0) << endl;
+										cout << "Factorial of 5: " << MathUtils::factorial(5) << endl;
+										cout << "2^10 = " << MathUtils::power(2, 10) << endl;
+
+										cout << "\n=== Singleton Logger Example ===" << endl;
+										Logger* log1 = Logger::getInstance();
+										Logger* log2 = Logger::getInstance();
+
+										cout << "log1 and log2 point to same object: " << (log1 == log2) <<
+										endl;
+
+										log1->log("First message");
+										log2->log("Second message"); // Same logger instance
+
+										Logger::cleanup();
+										}</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Operator Overloading -->
+						<div class="topic-section" id="operator-overloading">
+							<div class="topic-header"
+								onclick="toggleContent('operator-overloading')">
+								<h2>⚡ Operator Overloading</h2>
+								<div>
+									<span class="difficulty advanced">Advanced</span>
+									<button class="toggle-btn" id="operator-overloading-btn">▼</button>
+								</div>
+							</div>
+							<div class="topic-content" id="operator-overloading-content">
+								<div class="subtopic">
+									<h3>#14 OOP - Operator Overloading</h3>
+									<p>Learn how to define custom behavior for operators when used with
+										your classes.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/15.14 - C++ - OOP - Operator Overloading.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="concept-highlight">
+										<h4>⚡ Overloadable Operators</h4>
+										<ul class="concept-list">
+											<li>Arithmetic: +, -, *, /, %, ++, --</li>
+											<li>Comparison: ==, !=, <, >, <=, >=</li>
+											<li>Assignment: =, +=, -=, *=, /=</li>
+											<li>Stream: <<, >> (insertion, extraction)</li>
+											<li>Subscript: [] and Function call: ()</li>
+										</ul>
+									</div>
+
+									<div class="code-example">// Comprehensive Operator Overloading Example
+
+										class Complex {
+										private:
+										double real, imag;
+
+										public:
+										// Constructor
+										Complex(double r = 0, double i = 0) : real(r), imag(i) {}
+
+										// Copy constructor
+										Complex(const Complex& other) : real(other.real), imag(other.imag) {}
+
+										// Getters
+										double getReal() const { return real; }
+										double getImag() const { return imag; }
+
+										// 1. Arithmetic Operators (Binary)
+										Complex operator+(const Complex& other) const {
+										return Complex(real + other.real, imag + other.imag);
+										}
+
+										Complex operator-(const Complex& other) const {
+										return Complex(real - other.real, imag - other.imag);
+										}
+
+										Complex operator*(const Complex& other) const {
+										return Complex(
+										real * other.real - imag * other.imag,
+										real * other.imag + imag * other.real
+										);
+										}
+
+										// 2. Assignment Operators
+										Complex& operator=(const Complex& other) {
+										if (this != &other) { // Self-assignment check
+										real = other.real;
+										imag = other.imag;
+										}
+										return *this;
+										}
+
+										Complex& operator+=(const Complex& other) {
+										real += other.real;
+										imag += other.imag;
+										return *this;
+										}
+
+										// 3. Unary Operators
+										Complex operator-() const { // Negation
+										return Complex(-real, -imag);
+										}
+
+										// Prefix increment
+										Complex& operator++() {
+										++real;
+										++imag;
+										return *this;
+										}
+
+										// Postfix increment
+										Complex operator++(int) {
+										Complex temp(*this);
+										real++;
+										imag++;
+										return temp;
+										}
+
+										// 4. Comparison Operators
+										bool operator==(const Complex& other) const {
+										return (real == other.real) && (imag == other.imag);
+										}
+
+										bool operator!=(const Complex& other) const {
+										return !(*this == other);
+										}
+
+										// 5. Stream Operators (must be friend functions or global)
+										friend ostream& operator<<(ostream& os, const Complex& c) {
+										os << "(" << c.real;
+										if (c.imag >= 0) os << " + ";
+										else os << " - ";
+										os << abs(c.imag) << "i)";
+										return os;
+										}
+
+										friend istream& operator>>(istream& is, Complex& c) {
+										cout << "Enter real part: ";
+										is >> c.real;
+										cout << "Enter imaginary part: ";
+										is >> c.imag;
+										return is;
+										}
+
+										// 6. Function call operator
+										double operator()() const { // Magnitude
+										return sqrt(real * real + imag * imag);
+										}
+										};
+
+										// Vector class with more operator overloading
+										class Vector3D {
+										private:
+										double x, y, z;
+
+										public:
+										Vector3D(double x = 0, double y = 0, double z = 0) : x(x), y(y), z(z)
+										{}
+
+										// Subscript operator for array-like access
+										double& operator[](int index) {
+										switch (index) {
+										case 0: return x;
+										case 1: return y;
+										case 2: return z;
+										default: throw out_of_range("Index out of range");
+										}
+										}
+
+										const double& operator[](int index) const {
+										switch (index) {
+										case 0: return x;
+										case 1: return y;
+										case 2: return z;
+										default: throw out_of_range("Index out of range");
+										}
+										}
+
+										// Dot product
+										double operator*(const Vector3D& other) const {
+										return x * other.x + y * other.y + z * other.z;
+										}
+
+										// Scalar multiplication
+										Vector3D operator*(double scalar) const {
+										return Vector3D(x * scalar, y * scalar, z * scalar);
+										}
+
+										// Vector addition
+										Vector3D operator+(const Vector3D& other) const {
+										return Vector3D(x + other.x, y + other.y, z + other.z);
+										}
+
+										// Comparison (by magnitude)
+										bool operator<(const Vector3D& other) const {
+										return magnitude() < other.magnitude();
+										}
+
+										double magnitude() const {
+										return sqrt(x * x + y * y + z * z);
+										}
+
+										friend ostream& operator<<(ostream& os, const Vector3D& v) {
+										os << "(" << v.x << ", " << v.y << ", " << v.z << ")";
+										return os;
+										}
+										};
+
+										// Global operator for scalar * vector (left operand is not our class)
+										Vector3D operator*(double scalar, const Vector3D& vec) {
+										return vec * scalar; // Use the member function
+										}
+
+										void demonstrateOperatorOverloading() {
+										cout << "=== Complex Number Operations ===" << endl;
+										Complex c1(3, 4);
+										Complex c2(1, -2);
+
+										cout << "c1 = " << c1 << endl;
+										cout << "c2 = " << c2 << endl;
+
+										Complex c3 = c1 + c2;
+										cout << "c1 + c2 = " << c3 << endl;
+
+										Complex c4 = c1 * c2;
+										cout << "c1 * c2 = " << c4 << endl;
+
+										cout << "Magnitude of c1: " << c1() << endl; // Function call operator
+
+										cout << "c1 == c2: " << (c1 == c2) << endl;
+										cout << "c1 != c2: " << (c1 != c2) << endl;
+
+										c1 += c2;
+										cout << "After c1 += c2: " << c1 << endl;
+
+										cout << "\n=== Vector Operations ===" << endl;
+										Vector3D v1(1, 2, 3);
+										Vector3D v2(4, 5, 6);
+
+										cout << "v1 = " << v1 << endl;
+										cout << "v2 = " << v2 << endl;
+
+										cout << "v1[0] = " << v1[0] << endl; // Subscript operator
+										cout << "v1[1] = " << v1[1] << endl;
+										cout << "v1[2] = " << v1[2] << endl;
+
+										Vector3D v3 = v1 + v2;
+										cout << "v1 + v2 = " << v3 << endl;
+
+										double dot = v1 * v2;
+										cout << "v1 · v2 = " << dot << endl;
+
+										Vector3D v4 = v1 * 2.0;
+										cout << "v1 * 2 = " << v4 << endl;
+
+										Vector3D v5 = 3.0 * v1; // Uses global operator
+										cout << "3 * v1 = " << v5 << endl;
+
+										cout << "v1 < v2: " << (v1 < v2) << endl;
+										}</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Inheritance -->
+						<div class="topic-section" id="inheritance">
+							<div class="topic-header" onclick="toggleContent('inheritance')">
+								<h2>🌳 Inheritance</h2>
+								<div>
+									<span class="difficulty intermediate">Intermediate</span>
+									<button class="toggle-btn" id="inheritance-btn">▼</button>
+								</div>
+							</div>
+							<div class="topic-content" id="inheritance-content">
+								<div class="subtopic">
+									<h3>#15 Inheritance - What Is Inheritance</h3>
+									<p>Learn the fundamental concept of inheritance and how it enables code
+										reuse and hierarchical relationships.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/16.15 - C++ - OOP - Inheritance - What Is Inheritance -.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="concept-highlight">
+										<h4>🌳 Inheritance Concepts</h4>
+										<ul class="concept-list">
+											<li>Base Class (Parent) - Class being inherited from</li>
+											<li>Derived Class (Child) - Class that inherits</li>
+											<li>IS-A Relationship - Derived class IS-A type of base class</li>
+											<li>Code Reuse - Avoid duplicating common functionality</li>
+											<li>Hierarchical Organization - Model real-world relationships</li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="subtopic">
+									<h3>#16 How Inheritance Is Done in C++</h3>
+									<p>Practical implementation of inheritance in C++ with access
+										specifiers and syntax.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/17.16 - C++ - OOP - Inheritance - How Inheritance Is Done in C++ -.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="code-example">// Basic Inheritance Example
+
+										// Base class (Parent)
+										class Animal {
+										protected: // Accessible to derived classes
+										string name;
+										int age;
+
+										private: // Not accessible to derived classes
+										string species;
+
+										public:
+										Animal(string n, int a, string s) : name(n), age(a), species(s) {
+										cout << "Animal constructor called for " << name << endl;
+										}
+
+										void eat() {
+										cout << name << " is eating." << endl;
+										}
+
+										void sleep() {
+										cout << name << " is sleeping." << endl;
+										}
+
+										void displayInfo() {
+										cout << "Name: " << name << ", Age: " << age << ", Species: " <<
+										species << endl;
+										}
+
+										// Virtual function for polymorphism
+										virtual void makeSound() {
+										cout << name << " makes a generic animal sound." << endl;
+										}
+
+										virtual ~Animal() {
+										cout << "Animal destructor called for " << name << endl;
+										}
+										};
+
+										// Derived class (Child) - Public Inheritance
+										class Dog : public Animal {
+										private:
+										string breed;
+
+										public:
+										Dog(string n, int a, string b) : Animal(n, a, "Canine"), breed(b) {
+										cout << "Dog constructor called for " << name << endl;
+										}
+
+										// Dog-specific methods
+										void bark() {
+										cout << name << " is barking: Woof! Woof!" << endl;
+										}
+
+										void wagTail() {
+										cout << name << " is wagging tail happily!" << endl;
+										}
+
+										// Override base class method
+										void makeSound() override {
+										cout << name << " barks: Woof! Woof!" << endl;
+										}
+
+										void displayDogInfo() {
+										displayInfo(); // Call base class method
+										cout << "Breed: " << breed << endl;
+										}
+
+										~Dog() {
+										cout << "Dog destructor called for " << name << endl;
+										}
+										};
+
+										// Another derived class
+										class Cat : public Animal {
+										private:
+										bool isIndoor;
+
+										public:
+										Cat(string n, int a, bool indoor = true) : Animal(n, a, "Feline"),
+										isIndoor(indoor) {
+										cout << "Cat constructor called for " << name << endl;
+										}
+
+										void meow() {
+										cout << name << " is meowing: Meow! Meow!" << endl;
+										}
+
+										void purr() {
+										cout << name << " is purring contentedly." << endl;
+										}
+
+										void makeSound() override {
+										cout << name << " meows: Meow! Meow!" << endl;
+										}
+
+										void displayCatInfo() {
+										displayInfo();
+										cout << "Indoor cat: " << (isIndoor ? "Yes" : "No") << endl;
+										}
+
+										~Cat() {
+										cout << "Cat destructor called for " << name << endl;
+										}
+										};
+
+										// Access Specifier Examples
+										class Vehicle {
+										public:
+										string brand;
+										int year;
+
+										protected:
+										double price; // Accessible to derived classes
+
+										private:
+										string engineNumber; // Only accessible within Vehicle
+
+										public:
+										Vehicle(string b, int y, double p) : brand(b), year(y), price(p) {}
+
+										void displayBasicInfo() {
+										cout << year << " " << brand << endl;
+										}
+										};
+
+										// Public Inheritance - Most common
+										class Car : public Vehicle {
+										public:
+										Car(string b, int y, double p) : Vehicle(b, y, p) {}
+
+										void showCarInfo() {
+										cout << "Brand: " << brand << endl; // public member - accessible
+										cout << "Year: " << year << endl; // public member - accessible
+										cout << "Price: $" << price << endl; // protected member - accessible
+										// cout << engineNumber << endl; // private member - NOT accessible
+										}
+										};
+
+										// Protected Inheritance - Less common
+										class Motorcycle : protected Vehicle {
+										public:
+										Motorcycle(string b, int y, double p) : Vehicle(b, y, p) {}
+
+										void showBikeInfo() {
+										cout << "Brand: " << brand << endl; // becomes protected
+										cout << "Year: " << year << endl; // becomes protected
+										cout << "Price: $" << price << endl; // protected member
+										}
+										};
+
+										// Private Inheritance - Rare, used for "implemented-in-terms-of"
+										relationship
+										class Bicycle : private Vehicle {
+										public:
+										Bicycle(string b, int y, double p) : Vehicle(b, y, p) {}
+
+										void showBicycleInfo() {
+										cout << "Brand: " << brand << endl; // becomes private
+										cout << "Year: " << year << endl; // becomes private
+										cout << "Price: $" << price << endl; // becomes private
+										}
+										};
+
+										void demonstrateInheritance() {
+										cout << "=== Basic Inheritance Example ===" << endl;
+
+										Dog myDog("Buddy", 3, "Golden Retriever");
+										Cat myCat("Whiskers", 2, true);
+
+										// Inherited methods from Animal
+										myDog.eat();
+										myDog.sleep();
+										myCat.eat();
+										myCat.sleep();
+
+										// Dog-specific methods
+										myDog.bark();
+										myDog.wagTail();
+
+										// Cat-specific methods
+										myCat.meow();
+										myCat.purr();
+
+										// Polymorphic behavior
+										myDog.makeSound(); // Calls Dog's version
+										myCat.makeSound(); // Calls Cat's version
+
+										cout << "\n=== Access Specifiers Example ===" << endl;
+										Car myCar("Toyota", 2023, 25000.0);
+										myCar.showCarInfo(); // Can access public and protected members
+										}</div>
+								</div>
+
+								<div class="subtopic">
+									<h3>#17 Calling Base Class Constructors</h3>
+									<p>Learn how to properly initialize base class members through
+										constructor chaining.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/18.17 - C++ - OOP - Inheritance - Calling Base Class Constructors.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+								</div>
+
+								<div class="subtopic">
+									<h3>#18 Function Overriding</h3>
+									<p>Understand how derived classes can provide their own implementation
+										of base class methods.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/19.18 - C++ - OOP - Inheritance - Function Overriding.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="code-example">// Function Overriding and Constructor
+										Chaining
+
+										class Shape {
+										protected:
+										string color;
+										double x, y; // Position
+
+										public:
+										// Base class constructor
+										Shape(string c, double posX, double posY) : color(c), x(posX), y(posY)
+										{
+										cout << "Shape constructor called - Color: " << color << endl;
+										}
+
+										// Virtual functions for overriding
+										virtual double getArea() {
+										cout << "Shape::getArea() called" << endl;
+										return 0.0;
+										}
+
+										virtual double getPerimeter() {
+										cout << "Shape::getPerimeter() called" << endl;
+										return 0.0;
+										}
+
+										virtual void draw() {
+										cout << "Drawing a generic shape at (" << x << ", " << y << ")" <<
+										endl;
+										}
+
+										// Non-virtual function
+										void displayPosition() {
+										cout << "Position: (" << x << ", " << y << ")" << endl;
+										}
+
+										virtual ~Shape() {
+										cout << "Shape destructor called" << endl;
+										}
+										};
+
+										class Rectangle : public Shape {
+										private:
+										double width, height;
+
+										public:
+										// Constructor calls base class constructor
+										Rectangle(string c, double x, double y, double w, double h)
+										: Shape(c, x, y), width(w), height(h) {
+										cout << "Rectangle constructor called - " << width << "x" << height <<
+										endl;
+										}
+
+										// Override virtual functions
+										double getArea() override {
+										cout << "Rectangle::getArea() called" << endl;
+										return width * height;
+										}
+
+										double getPerimeter() override {
+										cout << "Rectangle::getPerimeter() called" << endl;
+										return 2 * (width + height);
+										}
+
+										void draw() override {
+										cout << "Drawing a " << color << " rectangle " << width << "x" <<
+										height
+										<< " at (" << x << ", " << y << ")" << endl;
+										}
+
+										// Rectangle-specific method
+										bool isSquare() {
+										return width == height;
+										}
+
+										~Rectangle() {
+										cout << "Rectangle destructor called" << endl;
+										}
+										};
+
+										class Circle : public Shape {
+										private:
+										double radius;
+
+										public:
+										Circle(string c, double x, double y, double r)
+										: Shape(c, x, y), radius(r) {
+										cout << "Circle constructor called - radius: " << radius << endl;
+										}
+
+										double getArea() override {
+										cout << "Circle::getArea() called" << endl;
+										return 3.14159 * radius * radius;
+										}
+
+										double getPerimeter() override {
+										cout << "Circle::getPerimeter() called" << endl;
+										return 2 * 3.14159 * radius;
+										}
+
+										void draw() override {
+										cout << "Drawing a " << color << " circle with radius " << radius
+										<< " at (" << x << ", " << y << ")" << endl;
+										}
+
+										~Circle() {
+										cout << "Circle destructor called" << endl;
+										}
+										};
+
+										// Multiple levels of inheritance
+										class ColoredRectangle : public Rectangle {
+										private:
+										string borderColor;
+
+										public:
+										ColoredRectangle(string fillColor, string border, double x, double y,
+										double w, double h)
+										: Rectangle(fillColor, x, y, w, h), borderColor(border) {
+										cout << "ColoredRectangle constructor called - border: " <<
+										borderColor << endl;
+										}
+
+										void draw() override {
+										cout << "Drawing a " << color << " rectangle with " << borderColor
+										<< " border at (" << x << ", " << y << ")" << endl;
+										}
+
+										~ColoredRectangle() {
+										cout << "ColoredRectangle destructor called" << endl;
+										}
+										};
+
+										void demonstrateFunctionOverriding() {
+										cout << "=== Function Overriding Example ===" << endl;
+
+										Rectangle rect("Blue", 10, 20, 5, 3);
+										Circle circle("Red", 0, 0, 4);
+										ColoredRectangle colorRect("Green", "Black", 5, 5, 6, 6);
+
+										cout << "\n--- Calling overridden methods ---" << endl;
+										rect.draw();
+										circle.draw();
+										colorRect.draw();
+
+										cout << "\n--- Area calculations ---" << endl;
+										cout << "Rectangle area: " << rect.getArea() << endl;
+										cout << "Circle area: " << circle.getArea() << endl;
+										cout << "Colored rectangle area: " << colorRect.getArea() << endl;
+
+										cout << "\n--- Polymorphic behavior ---" << endl;
+										Shape* shapes[] = {&rect, &circle, &colorRect};
+
+										for (int i = 0; i < 3; i++) {
+										shapes[i]->draw(); // Calls appropriate overridden method
+										cout << "Area: " << shapes[i]->getArea() << endl;
+										cout << "Perimeter: " << shapes[i]->getPerimeter() << endl;
+										shapes[i]->displayPosition(); // Non-virtual method
+										cout << endl;
+										}
+
+										cout << "\n=== Constructor/Destructor Order ===" << endl;
+										// Objects destroyed in reverse order of construction
+										}</div>
+								</div>
+
+								<div class="practice-section">
+									<h4>🏋️ Inheritance Concepts</h4>
+									<div class="practice-links">
+										<a href="#" class="practice-link">IS-A Relationship</a>
+										<a href="#" class="practice-link">Access Specifiers</a>
+										<a href="#" class="practice-link">Constructor Chaining</a>
+										<a href="#" class="practice-link">Method Overriding</a>
+										<a href="#" class="practice-link">Virtual Functions</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Polymorphism Section -->
+						<div class="topic-section" id="polymorphism">
+							<div class="topic-header" onclick="toggleContent('polymorphism')">
+								<h2>🎭 Polymorphism</h2>
+								<div>
+									<span class="difficulty intermediate">Intermediate</span>
+									<button class="toggle-btn" id="polymorphism-btn">▼</button>
+								</div>
+							</div>
+							<div class="topic-content" id="polymorphism-content">
+								<div class="subtopic">
+									<h3>#19 Virtual Functions and Runtime Polymorphism</h3>
+									<p>Understanding how virtual functions enable dynamic method dispatch and runtime polymorphism.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/21.20- C++ - OOP -  Polymorphism and virtual Functions.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="concept-highlight">
+										<h4>🎯 Types of Polymorphism</h4>
+										<ul class="concept-list">
+											<li>Compile-time Polymorphism (Function/Operator Overloading)</li>
+											<li>Runtime Polymorphism (Virtual Functions)</li>
+											<li>Virtual Function Table (vtable) mechanism</li>
+											<li>Dynamic Binding vs Static Binding</li>
+											<li>Pure Virtual Functions and Abstract Classes</li>
+										</ul>
+									</div>
+
+									<div class="code-example">// Polymorphism Examples
+
+class Media {
+protected:
+    string title;
+    int duration; // in seconds
+
+public:
+    Media(string t, int d) : title(t), duration(d) {
+        cout << "Media constructor: " << title << endl;
+    }
+    
+    // Virtual functions for polymorphism
+    virtual void play() {
+        cout << "Playing media: " << title << endl;
+    }
+    
+    virtual void stop() {
+        cout << "Stopping media: " << title << endl;
+    }
+    
+    virtual void getInfo() {
+        cout << "Title: " << title << ", Duration: " << duration << "s" << endl;
+    }
+    
+    // Pure virtual function - makes class abstract
+    virtual double getSize() = 0;
+    
+    virtual ~Media() {
+        cout << "Media destructor: " << title << endl;
+    }
+};
+
+class AudioFile : public Media {
+private:
+    int sampleRate;
+    string format;
+
+public:
+    AudioFile(string t, int d, int rate, string fmt) 
+        : Media(t, d), sampleRate(rate), format(fmt) {
+        cout << "AudioFile constructor: " << title << endl;
+    }
+    
+    void play() override {
+        cout << "🎵 Playing audio: " << title << " (" << format << ")" << endl;
+        cout << "Sample Rate: " << sampleRate << " Hz" << endl;
+    }
+    
+    void stop() override {
+        cout << "🔇 Stopping audio: " << title << endl;
+    }
+    
+    void getInfo() override {
+        Media::getInfo(); // Call base class method
+        cout << "Format: " << format << ", Sample Rate: " << sampleRate << " Hz" << endl;
+    }
+    
+    double getSize() override {
+        // Rough calculation: duration * sample_rate * 2 bytes per sample
+        return (duration * sampleRate * 2) / (1024.0 * 1024.0); // MB
+    }
+    
+    ~AudioFile() {
+        cout << "AudioFile destructor: " << title << endl;
+    }
+};
+
+class VideoFile : public Media {
+private:
+    string resolution;
+    int frameRate;
+
+public:
+    VideoFile(string t, int d, string res, int fps) 
+        : Media(t, d), resolution(res), frameRate(fps) {
+        cout << "VideoFile constructor: " << title << endl;
+    }
+    
+    void play() override {
+        cout << "🎬 Playing video: " << title << " (" << resolution << ")" << endl;
+        cout << "Frame Rate: " << frameRate << " fps" << endl;
+    }
+    
+    void stop() override {
+        cout << "⏹️ Stopping video: " << title << endl;
+    }
+    
+    void getInfo() override {
+        Media::getInfo();
+        cout << "Resolution: " << resolution << ", Frame Rate: " << frameRate << " fps" << endl;
+    }
+    
+    double getSize() override {
+        // Rough calculation for video file size
+        return (duration * frameRate * 0.1); // MB (simplified)
+    }
+    
+    ~VideoFile() {
+        cout << "VideoFile destructor: " << title << endl;
+    }
+};
+
+// Function that demonstrates polymorphism
+void playMedia(Media* media) {
+    cout << "\n--- Playing Media Polymorphically ---" << endl;
+    media->getInfo();
+    media->play();
+    cout << "File size: " << media->getSize() << " MB" << endl;
+    media->stop();
+}
+
+void demonstratePolymorphism() {
+    cout << "=== Polymorphism Example ===" << endl;
+    
+    // Create different media objects
+    AudioFile song("Bohemian Rhapsody", 355, 44100, "MP3");
+    VideoFile movie("The Matrix", 8100, "1920x1080", 24);
+    
+    cout << "\n--- Direct Method Calls ---" << endl;
+    song.play();
+    movie.play();
+    
+    cout << "\n--- Polymorphic Method Calls ---" << endl;
+    Media* mediaArray[] = {&song, &movie};
+    
+    for (int i = 0; i < 2; i++) {
+        playMedia(mediaArray[i]);
+    }
+    
+    cout << "\n--- Dynamic Allocation Example ---" << endl;
+    Media* dynamicMedia = new VideoFile("Inception", 8880, "4K", 60);
+    playMedia(dynamicMedia);
+    delete dynamicMedia; // Calls appropriate destructor due to virtual destructor
+}</div>
+								</div>
+
+								<div class="practice-section">
+									<h4>🏋️ Polymorphism Practice</h4>
+									<div class="practice-links">
+										<a href="#" class="practice-link">Virtual Functions</a>
+										<a href="#" class="practice-link">Function Overriding</a>
+										<a href="#" class="practice-link">Dynamic Binding</a>
+										<a href="#" class="practice-link">vtable Mechanism</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Abstract Classes Section -->
+						<div class="topic-section" id="abstract-classes">
+							<div class="topic-header" onclick="toggleContent('abstract-classes')">
+								<h2>🔒 Abstract Classes</h2>
+								<div>
+									<span class="difficulty advanced">Advanced</span>
+									<button class="toggle-btn" id="abstract-classes-btn">▼</button>
+								</div>
+							</div>
+							<div class="topic-content" id="abstract-classes-content">
+								<div class="subtopic">
+									<h3>#20 Pure Virtual Functions and Abstract Classes</h3>
+									<p>Learn how to create abstract base classes using pure virtual functions to define interfaces.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/22.21 - C++ - OOP - Abstract Class - Final Classifier.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="concept-highlight">
+										<h4>🎯 Abstract Class Characteristics</h4>
+										<ul class="concept-list">
+											<li>Contains at least one pure virtual function</li>
+											<li>Cannot be instantiated directly</li>
+											<li>Serves as a base class for other classes</li>
+											<li>Defines a common interface for derived classes</li>
+											<li>Can have both pure virtual and regular methods</li>
+										</ul>
+									</div>
+
+									<div class="code-example">// Abstract Classes and Interfaces
+
+// Abstract base class - cannot be instantiated
+class Vehicle {
+protected:
+    string brand;
+    int year;
+    double fuelCapacity;
+
+public:
+    Vehicle(string b, int y, double fuel) : brand(b), year(y), fuelCapacity(fuel) {}
+    
+    // Pure virtual functions - must be implemented by derived classes
+    virtual void startEngine() = 0;
+    virtual void stopEngine() = 0;
+    virtual double getFuelEfficiency() = 0;
+    virtual void accelerate() = 0;
+    virtual void brake() = 0;
+    
+    // Regular virtual function with default implementation
+    virtual void displayInfo() {
+        cout << year << " " << brand << " - Fuel Capacity: " << fuelCapacity << "L" << endl;
+    }
+    
+    // Non-virtual function
+    double calculateRange() {
+        return fuelCapacity * getFuelEfficiency();
+    }
+    
+    virtual ~Vehicle() = default;
+};
+
+// Concrete implementation of Car
+class Car : public Vehicle {
+private:
+    int numberOfDoors;
+    bool isAutomatic;
+
+public:
+    Car(string b, int y, double fuel, int doors, bool automatic)
+        : Vehicle(b, y, fuel), numberOfDoors(doors), isAutomatic(automatic) {}
+    
+    void startEngine() override {
+        cout << "🚗 Car engine started with key ignition" << endl;
+    }
+    
+    void stopEngine() override {
+        cout << "🚗 Car engine stopped" << endl;
+    }
+    
+    double getFuelEfficiency() override {
+        return 15.5; // km per liter
+    }
+    
+    void accelerate() override {
+        cout << "🚗 Car accelerating smoothly" << endl;
+    }
+    
+    void brake() override {
+        cout << "🚗 Car braking with ABS system" << endl;
+    }
+    
+    void displayInfo() override {
+        Vehicle::displayInfo();
+        cout << "Type: Car, Doors: " << numberOfDoors 
+             << ", Transmission: " << (isAutomatic ? "Automatic" : "Manual") << endl;
+    }
+};
+
+// Concrete implementation of Motorcycle
+class Motorcycle : public Vehicle {
+private:
+    int engineCC;
+    bool hasSidecar;
+
+public:
+    Motorcycle(string b, int y, double fuel, int cc, bool sidecar)
+        : Vehicle(b, y, fuel), engineCC(cc), hasSidecar(sidecar) {}
+    
+    void startEngine() override {
+        cout << "🏍️ Motorcycle engine started with electric starter" << endl;
+    }
+    
+    void stopEngine() override {
+        cout << "🏍️ Motorcycle engine stopped" << endl;
+    }
+    
+    double getFuelEfficiency() override {
+        return 25.0; // km per liter - more efficient than cars
+    }
+    
+    void accelerate() override {
+        cout << "🏍️ Motorcycle accelerating rapidly" << endl;
+    }
+    
+    void brake() override {
+        cout << "🏍️ Motorcycle braking carefully" << endl;
+    }
+    
+    void displayInfo() override {
+        Vehicle::displayInfo();
+        cout << "Type: Motorcycle, Engine: " << engineCC << "cc" 
+             << ", Sidecar: " << (hasSidecar ? "Yes" : "No") << endl;
+    }
+};
+
+// Interface example - pure abstract class
+class Drawable {
+public:
+    virtual void draw() = 0;
+    virtual void erase() = 0;
+    virtual ~Drawable() = default;
+};
+
+class Printable {
+public:
+    virtual void print() = 0;
+    virtual ~Printable() = default;
+};
+
+// Multiple inheritance from abstract classes (interfaces)
+class Document : public Drawable, public Printable {
+private:
+    string content;
+    string format;
+
+public:
+    Document(string c, string f) : content(c), format(f) {}
+    
+    void draw() override {
+        cout << "📄 Drawing document on screen: " << format << endl;
+    }
+    
+    void erase() override {
+        cout << "🗑️ Erasing document from screen" << endl;
+    }
+    
+    void print() override {
+        cout << "🖨️ Printing document: " << content.substr(0, 20) << "..." << endl;
+    }
+    
+    void save() {
+        cout << "💾 Saving document as " << format << endl;
+    }
+};
+
+// Function that works with abstract Vehicle interface
+void testVehicle(Vehicle* vehicle) {
+    cout << "\n--- Testing Vehicle ---" << endl;
+    vehicle->displayInfo();
+    vehicle->startEngine();
+    vehicle->accelerate();
+    cout << "Range: " << vehicle->calculateRange() << " km" << endl;
+    vehicle->brake();
+    vehicle->stopEngine();
+}
+
+void demonstrateAbstractClasses() {
+    cout << "=== Abstract Classes Example ===" << endl;
+    
+    // Vehicle vehicle; // Error! Cannot instantiate abstract class
+    
+    Car sedan("Toyota", 2023, 50.0, 4, true);
+    Motorcycle sport("Yamaha", 2022, 15.0, 600, false);
+    
+    // Polymorphic usage
+    testVehicle(&sedan);
+    testVehicle(&sport);
+    
+    cout << "\n=== Interface Example ===" << endl;
+    Document report("Annual Report Content...", "PDF");
+    
+    report.draw();
+    report.print();
+    report.save();
+    report.erase();
+}</div>
+								</div>
+
+								<div class="practice-section">
+									<h4>🏋️ Abstract Classes Practice</h4>
+									<div class="practice-links">
+										<a href="#" class="practice-link">Pure Virtual Functions</a>
+										<a href="#" class="practice-link">Interface Design</a>
+										<a href="#" class="practice-link">Multiple Inheritance</a>
+										<a href="#" class="practice-link">Abstract Base Classes</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Friend Functions Section -->
+						<div class="topic-section" id="friend-functions">
+							<div class="topic-header" onclick="toggleContent('friend-functions')">
+								<h2>🤝 Friend Functions</h2>
+								<div>
+									<span class="difficulty intermediate">Intermediate</span>
+									<button class="toggle-btn" id="friend-functions-btn">▼</button>
+								</div>
+							</div>
+							<div class="topic-content" id="friend-functions-content">
+								<div class="subtopic">
+									<h3>#21 Friend Functions and Classes</h3>
+									<p>Understanding how friend functions break encapsulation when necessary and their practical applications.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/23.22 - C++ - OOP - Friend Function and Friend Class.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="concept-highlight">
+										<h4>🎯 Friend Functions Use Cases</h4>
+										<ul class="concept-list">
+											<li>Operator overloading for binary operators</li>
+											<li>Accessing private members from external functions</li>
+											<li>Implementing efficient algorithms that need internal access</li>
+											<li>Creating utility functions that work with multiple classes</li>
+											<li>Friend classes for tightly coupled designs</li>
+										</ul>
+									</div>
+
+									<div class="code-example">// Friend Functions Examples
+
+class Complex {
+private:
+    double real;
+    double imaginary;
+
+public:
+    Complex(double r = 0, double i = 0) : real(r), imaginary(i) {}
+    
+    // Friend function declaration
+    friend Complex add(const Complex& c1, const Complex& c2);
+    friend ostream& operator<<(ostream& out, const Complex& c);
+    friend istream& operator>>(istream& in, Complex& c);
+    
+    // Friend class declaration
+    friend class ComplexCalculator;
+    
+    // Regular member functions
+    void display() const {
+        cout << real;
+        if (imaginary >= 0) cout << " + " << imaginary << "i";
+        else cout << " - " << abs(imaginary) << "i";
+    }
+    
+    double getReal() const { return real; }
+    double getImaginary() const { return imaginary; }
+};
+
+// Friend function implementation - can access private members
+Complex add(const Complex& c1, const Complex& c2) {
+    return Complex(c1.real + c2.real, c1.imaginary + c2.imaginary);
+}
+
+// Friend operator overloading
+ostream& operator<<(ostream& out, const Complex& c) {
+    out << c.real;
+    if (c.imaginary >= 0) out << " + " << c.imaginary << "i";
+    else out << " - " << abs(c.imaginary) << "i";
+    return out;
+}
+
+istream& operator>>(istream& in, Complex& c) {
+    cout << "Enter real part: ";
+    in >> c.real;
+    cout << "Enter imaginary part: ";
+    in >> c.imaginary;
+    return in;
+}
+
+// Friend class - has access to private members of Complex
+class ComplexCalculator {
+public:
+    static double magnitude(const Complex& c) {
+        return sqrt(c.real * c.real + c.imaginary * c.imaginary);
+    }
+    
+    static double phase(const Complex& c) {
+        return atan2(c.imaginary, c.real);
+    }
+    
+    static Complex multiply(const Complex& c1, const Complex& c2) {
+        double newReal = c1.real * c2.real - c1.imaginary * c2.imaginary;
+        double newImg = c1.real * c2.imaginary + c1.imaginary * c2.real;
+        return Complex(newReal, newImg);
+    }
+    
+    static Complex conjugate(const Complex& c) {
+        return Complex(c.real, -c.imaginary);
+    }
+};
+
+// Another example with Point and Distance
+class Point {
+private:
+    double x, y;
+
+public:
+    Point(double x = 0, double y = 0) : x(x), y(y) {}
+    
+    // Friend function to calculate distance between two points
+    friend double distance(const Point& p1, const Point& p2);
+    friend Point midpoint(const Point& p1, const Point& p2);
+    
+    void display() const {
+        cout << "(" << x << ", " << y << ")";
+    }
+    
+    double getX() const { return x; }
+    double getY() const { return y; }
+};
+
+// Friend function implementation
+double distance(const Point& p1, const Point& p2) {
+    double dx = p1.x - p2.x;
+    double dy = p1.y - p2.y;
+    return sqrt(dx * dx + dy * dy);
+}
+
+Point midpoint(const Point& p1, const Point& p2) {
+    return Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+}
+
+// Matrix class with friend function for efficient operations
+class Matrix {
+private:
+    vector<vector<int>> data;
+    int rows, cols;
+
+public:
+    Matrix(int r, int c) : rows(r), cols(c) {
+        data.resize(rows, vector<int>(cols, 0));
+    }
+    
+    // Friend function for matrix multiplication
+    friend Matrix multiply(const Matrix& m1, const Matrix& m2);
+    
+    void setValue(int r, int c, int value) {
+        if (r >= 0 && r < rows && c >= 0 && c < cols) {
+            data[r][c] = value;
+        }
+    }
+    
+    void display() const {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                cout << setw(4) << data[i][j];
+            }
+            cout << endl;
+        }
+    }
+    
+    int getRows() const { return rows; }
+    int getCols() const { return cols; }
+};
+
+Matrix multiply(const Matrix& m1, const Matrix& m2) {
+    if (m1.cols != m2.rows) {
+        cout << "Matrix multiplication not possible!" << endl;
+        return Matrix(0, 0);
+    }
+    
+    Matrix result(m1.rows, m2.cols);
+    for (int i = 0; i < m1.rows; i++) {
+        for (int j = 0; j < m2.cols; j++) {
+            for (int k = 0; k < m1.cols; k++) {
+                result.data[i][j] += m1.data[i][k] * m2.data[k][j];
+            }
+        }
+    }
+    return result;
+}
+
+void demonstrateFriendFunctions() {
+    cout << "=== Friend Functions Example ===" << endl;
+    
+    // Complex number operations
+    Complex c1(3, 4);
+    Complex c2(1, -2);
+    
+    cout << "Complex Numbers:" << endl;
+    cout << "c1 = " << c1 << endl;
+    cout << "c2 = " << c2 << endl;
+    
+    Complex sum = add(c1, c2); // Friend function
+    cout << "Sum = " << sum << endl;
+    
+    // Using friend class
+    cout << "Magnitude of c1: " << ComplexCalculator::magnitude(c1) << endl;
+    cout << "Phase of c1: " << ComplexCalculator::phase(c1) << " radians" << endl;
+    
+    Complex product = ComplexCalculator::multiply(c1, c2);
+    cout << "Product = " << product << endl;
+    
+    // Point operations
+    cout << "\n=== Point Operations ===" << endl;
+    Point p1(1, 2);
+    Point p2(4, 6);
+    
+    cout << "Point 1: "; p1.display(); cout << endl;
+    cout << "Point 2: "; p2.display(); cout << endl;
+    
+    cout << "Distance: " << distance(p1, p2) << endl;
+    Point mid = midpoint(p1, p2);
+    cout << "Midpoint: "; mid.display(); cout << endl;
+}</div>
+								</div>
+
+								<div class="practice-section">
+									<h4>🏋️ Friend Functions Practice</h4>
+									<div class="practice-links">
+										<a href="#" class="practice-link">Friend Functions</a>
+										<a href="#" class="practice-link">Friend Classes</a>
+										<a href="#" class="practice-link">Operator Overloading</a>
+										<a href="#" class="practice-link">Breaking Encapsulation</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Exception Handling Section -->
+						<div class="topic-section" id="exception-handling">
+							<div class="topic-header" onclick="toggleContent('exception-handling')">
+								<h2>⚠️ Exception Handling</h2>
+								<div>
+									<span class="difficulty advanced">Advanced</span>
+									<button class="toggle-btn" id="exception-handling-btn">▼</button>
+								</div>
+							</div>
+							<div class="topic-content" id="exception-handling-content">
+								<div class="subtopic">
+									<h3>#22 Try, Catch, and Throw</h3>
+									<p>Learn how to handle runtime errors gracefully using C++ exception handling mechanisms.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/25.24 - C++ - Exception Handling In C++.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="concept-highlight">
+										<h4>🎯 Exception Handling Benefits</h4>
+										<ul class="concept-list">
+											<li>Graceful error handling without program termination</li>
+											<li>Separation of error handling from normal program logic</li>
+											<li>Propagation of errors up the call stack</li>
+											<li>Custom exception classes for specific error types</li>
+											<li>Resource cleanup through RAII principles</li>
+										</ul>
+									</div>
+
+									<div class="code-example">// Exception Handling Examples
+
+#include <stdexcept>
+#include <string>
+#include <vector>
+#include <memory>
+
+// Custom exception classes
+class BankException : public std::exception {
+protected:
+    std::string message;
+    
+public:
+    BankException(const std::string& msg) : message(msg) {}
+    
+    const char* what() const noexcept override {
+        return message.c_str();
+    }
+};
+
+class InsufficientFundsException : public BankException {
+public:
+    InsufficientFundsException(double requested, double available) 
+        : BankException("Insufficient funds: Requested $" + std::to_string(requested) 
+                       + ", Available $" + std::to_string(available)) {}
+};
+
+class InvalidAccountException : public BankException {
+public:
+    InvalidAccountException(int accountId) 
+        : BankException("Invalid account ID: " + std::to_string(accountId)) {}
+};
+
+class NegativeAmountException : public BankException {
+public:
+    NegativeAmountException() 
+        : BankException("Amount cannot be negative") {}
+};
+
+// Bank Account class with exception handling
+class BankAccount {
+private:
+    int accountId;
+    std::string ownerName;
+    double balance;
+    bool isActive;
+
+public:
+    BankAccount(int id, std::string name, double initialBalance = 0) 
+        : accountId(id), ownerName(name), balance(initialBalance), isActive(true) {
+        
+        if (initialBalance < 0) {
+            throw NegativeAmountException();
+        }
+        
+        cout << "Account created: " << name << " (ID: " << id << ")" << endl;
+    }
+    
+    void deposit(double amount) {
+        if (!isActive) {
+            throw InvalidAccountException(accountId);
+        }
+        
+        if (amount <= 0) {
+            throw NegativeAmountException();
+        }
+        
+        balance += amount;
+        cout << "Deposited $" << amount << ". New balance: $" << balance << endl;
+    }
+    
+    void withdraw(double amount) {
+        if (!isActive) {
+            throw InvalidAccountException(accountId);
+        }
+        
+        if (amount <= 0) {
+            throw NegativeAmountException();
+        }
+        
+        if (amount > balance) {
+            throw InsufficientFundsException(amount, balance);
+        }
+        
+        balance -= amount;
+        cout << "Withdrew $" << amount << ". New balance: $" << balance << endl;
+    }
+    
+    double getBalance() const {
+        if (!isActive) {
+            throw InvalidAccountException(accountId);
+        }
+        return balance;
+    }
+    
+    void closeAccount() {
+        isActive = false;
+        cout << "Account " << accountId << " has been closed." << endl;
+    }
+    
+    int getId() const { return accountId; }
+    std::string getName() const { return ownerName; }
+};
+
+// Array class with bounds checking
+template<typename T>
+class SafeArray {
+private:
+    std::unique_ptr<T[]> data;
+    size_t size;
+
+public:
+    SafeArray(size_t s) : size(s) {
+        if (s == 0) {
+            throw std::invalid_argument("Array size cannot be zero");
+        }
+        data = std::make_unique<T[]>(size);
+    }
+    
+    T& at(size_t index) {
+        if (index >= size) {
+            throw std::out_of_range("Index " + std::to_string(index) + 
+                                   " is out of range (size: " + std::to_string(size) + ")");
+        }
+        return data[index];
+    }
+    
+    const T& at(size_t index) const {
+        if (index >= size) {
+            throw std::out_of_range("Index " + std::to_string(index) + 
+                                   " is out of range (size: " + std::to_string(size) + ")");
+        }
+        return data[index];
+    }
+    
+    T& operator[](size_t index) {
+        return at(index); // Use bounds-checked access
+    }
+    
+    size_t getSize() const { return size; }
+};
+
+// Function that demonstrates multiple exception types
+void demonstrateBasicExceptions() {
+    cout << "=== Basic Exception Handling ===" << endl;
+    
+    try {
+        // Integer division by zero simulation
+        int numerator = 10;
+        int denominator = 0;
+        
+        if (denominator == 0) {
+            throw std::runtime_error("Division by zero error!");
+        }
+        
+        cout << "Result: " << numerator / denominator << endl;
+        
+    } catch (const std::runtime_error& e) {
+        cout << "Runtime Error: " << e.what() << endl;
+    }
+    
+    // Multiple catch blocks
+    try {
+        std::vector<int> numbers = {1, 2, 3};
+        cout << "Accessing element at index 5: " << numbers.at(5) << endl;
+        
+    } catch (const std::out_of_range& e) {
+        cout << "Out of Range Error: " << e.what() << endl;
+    } catch (const std::exception& e) {
+        cout << "General Exception: " << e.what() << endl;
+    }
+}
+
+void demonstrateBankExceptions() {
+    cout << "\n=== Bank Account Exception Handling ===" << endl;
+    
+    try {
+        BankAccount account(123, "John Doe", 1000.0);
+        
+        account.deposit(500.0);  // Should work fine
+        account.withdraw(200.0); // Should work fine
+        
+        cout << "Current balance: $" << account.getBalance() << endl;
+        
+        // This will throw InsufficientFundsException
+        account.withdraw(2000.0);
+        
+    } catch (const InsufficientFundsException& e) {
+        cout << "Banking Error: " << e.what() << endl;
+    } catch (const InvalidAccountException& e) {
+        cout << "Account Error: " << e.what() << endl;
+    } catch (const NegativeAmountException& e) {
+        cout << "Amount Error: " << e.what() << endl;
+    } catch (const BankException& e) {
+        cout << "Bank Exception: " << e.what() << endl;
+    }
+    
+    // Demonstrating exception in constructor
+    try {
+        BankAccount invalidAccount(456, "Jane Smith", -100.0); // Should throw
+    } catch (const BankException& e) {
+        cout << "Constructor Exception: " << e.what() << endl;
+    }
+}
+
+void demonstrateArrayExceptions() {
+    cout << "\n=== Safe Array Exception Handling ===" << endl;
+    
+    try {
+        SafeArray<int> numbers(5);
+        
+        // Fill array with values
+        for (size_t i = 0; i < 5; i++) {
+            numbers[i] = i * 10;
+        }
+        
+        // Print values
+        cout << "Array contents: ";
+        for (size_t i = 0; i < 5; i++) {
+            cout << numbers[i] << " ";
+        }
+        cout << endl;
+        
+        // This will throw out_of_range exception
+        cout << "Accessing invalid index: " << numbers[10] << endl;
+        
+    } catch (const std::out_of_range& e) {
+        cout << "Array Access Error: " << e.what() << endl;
+    } catch (const std::invalid_argument& e) {
+        cout << "Array Creation Error: " << e.what() << endl;
+    }
+}
+
+// Function that demonstrates exception propagation
+void level3Function() {
+    cout << "Level 3: About to throw exception" << endl;
+    throw std::runtime_error("Error from level 3!");
+}
+
+void level2Function() {
+    cout << "Level 2: Calling level 3" << endl;
+    level3Function(); // Exception propagates up
+    cout << "Level 2: This won't be printed" << endl;
+}
+
+void level1Function() {
+    cout << "Level 1: Calling level 2" << endl;
+    try {
+        level2Function();
+    } catch (const std::runtime_error& e) {
+        cout << "Level 1: Caught exception: " << e.what() << endl;
+    }
+    cout << "Level 1: Continuing execution" << endl;
+}
+
+void demonstrateExceptionHandling() {
+    demonstrateBasicExceptions();
+    demonstrateBankExceptions();
+    demonstrateArrayExceptions();
+    
+    cout << "\n=== Exception Propagation ===" << endl;
+    level1Function();
+}</div>
+								</div>
+
+								<div class="practice-section">
+									<h4>🏋️ Exception Handling Practice</h4>
+									<div class="practice-links">
+										<a href="#" class="practice-link">Try-Catch-Throw</a>
+										<a href="#" class="practice-link">Custom Exceptions</a>
+										<a href="#" class="practice-link">Exception Propagation</a>
+										<a href="#" class="practice-link">RAII Pattern</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Pointers Section -->
+						<div class="topic-section" id="pointers">
+							<div class="topic-header" onclick="toggleContent('pointers')">
+								<h2>👉 Pointers in C++</h2>
+								<div>
+									<span class="difficulty advanced">Advanced</span>
+									<button class="toggle-btn" id="pointers-btn">▼</button>
+								</div>
+							</div>
+							<div class="topic-content" id="pointers-content">
+								<div class="subtopic">
+									<h3>#23 Pointers and Object-Oriented Programming</h3>
+									<p>Understanding how pointers work with objects, dynamic memory allocation, and smart pointers.</p>
+
+									<div class="video-section">
+										<video width="100%" height="500" controls preload="none"
+											style="border-radius: 12px; margin: 20px 0; background: #000; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);">
+											<source
+												src="../ELdesouky oop/26.-Programming with C++- - - Pointers in C++ -.mp4"
+												type="video/mp4">
+											Your browser does not support the video tag.
+										</video>
+									</div>
+
+									<div class="concept-highlight">
+										<h4>🎯 Pointers in OOP Context</h4>
+										<ul class="concept-list">
+											<li>Pointers to objects and member functions</li>
+											<li>Dynamic object creation and destruction</li>
+											<li>Polymorphic behavior through base class pointers</li>
+											<li>Smart pointers for automatic memory management</li>
+											<li>Pointer arithmetic and arrays of objects</li>
+										</ul>
+									</div>
+
+									<div class="code-example">// Pointers in Object-Oriented Programming
+
+#include <memory>
+#include <vector>
+#include <iostream>
+
+class Student {
+private:
+    std::string name;
+    int id;
+    std::vector<double> grades;
+
+public:
+    Student(std::string n, int studentId) : name(n), id(studentId) {
+        cout << "Student constructor: " << name << " (ID: " << id << ")" << endl;
+    }
+    
+    void addGrade(double grade) {
+        grades.push_back(grade);
+        cout << name << " received grade: " << grade << endl;
+    }
+    
+    double getAverage() const {
+        if (grades.empty()) return 0.0;
+        
+        double sum = 0.0;
+        for (double grade : grades) {
+            sum += grade;
+        }
+        return sum / grades.size();
+    }
+    
+    void displayInfo() const {
+        cout << "Student: " << name << " (ID: " << id << ")" << endl;
+        cout << "Average Grade: " << getAverage() << endl;
+        cout << "Number of Grades: " << grades.size() << endl;
+    }
+    
+    // Getters
+    std::string getName() const { return name; }
+    int getId() const { return id; }
+    
+    ~Student() {
+        cout << "Student destructor: " << name << endl;
+    }
+};
+
+// Base class for polymorphic examples
+class Animal {
+protected:
+    std::string name;
+    int age;
+
+public:
+    Animal(std::string n, int a) : name(n), age(a) {
+        cout << "Animal constructor: " << name << endl;
+    }
+    
+    virtual void makeSound() {
+        cout << name << " makes a generic animal sound" << endl;
+    }
+    
+    virtual void displayInfo() {
+        cout << "Animal: " << name << ", Age: " << age << endl;
+    }
+    
+    virtual ~Animal() {
+        cout << "Animal destructor: " << name << endl;
+    }
+    
+    std::string getName() const { return name; }
+};
+
+class Dog : public Animal {
+private:
+    std::string breed;
+
+public:
+    Dog(std::string n, int a, std::string b) : Animal(n, a), breed(b) {
+        cout << "Dog constructor: " << name << " (" << breed << ")" << endl;
+    }
+    
+    void makeSound() override {
+        cout << name << " barks: Woof! Woof!" << endl;
+    }
+    
+    void displayInfo() override {
+        Animal::displayInfo();
+        cout << "Breed: " << breed << endl;
+    }
+    
+    void wagTail() {
+        cout << name << " is wagging tail!" << endl;
+    }
+    
+    ~Dog() {
+        cout << "Dog destructor: " << name << endl;
+    }
+};
+
+class Cat : public Animal {
+private:
+    bool isIndoor;
+
+public:
+    Cat(std::string n, int a, bool indoor) : Animal(n, a), isIndoor(indoor) {
+        cout << "Cat constructor: " << name << endl;
+    }
+    
+    void makeSound() override {
+        cout << name << " meows: Meow! Meow!" << endl;
+    }
+    
+    void displayInfo() override {
+        Animal::displayInfo();
+        cout << "Indoor cat: " << (isIndoor ? "Yes" : "No") << endl;
+    }
+    
+    void purr() {
+        cout << name << " is purring contentedly" << endl;
+    }
+    
+    ~Cat() {
+        cout << "Cat destructor: " << name << endl;
+    }
+};
+
+// Demonstrate basic pointers to objects
+void demonstrateBasicPointers() {
+    cout << "=== Basic Pointers to Objects ===" << endl;
+    
+    // Stack-allocated object
+    Student student1("Alice", 101);
+    Student* ptr = &student1;
+    
+    // Accessing through pointer
+    ptr->addGrade(85.5);
+    ptr->addGrade(92.0);
+    ptr->displayInfo();
+    
+    // Arrow operator vs dot operator
+    cout << "\nAccessing through pointer: " << ptr->getName() << endl;
+    cout << "Accessing directly: " << student1.getName() << endl;
+}
+
+void demonstrateDynamicAllocation() {
+    cout << "\n=== Dynamic Memory Allocation ===" << endl;
+    
+    // Dynamic allocation with new/delete
+    Student* dynamicStudent = new Student("Bob", 102);
+    
+    dynamicStudent->addGrade(88.0);
+    dynamicStudent->addGrade(91.5);
+    dynamicStudent->displayInfo();
+    
+    // Important: Must delete manually
+    delete dynamicStudent;
+    dynamicStudent = nullptr; // Good practice
+    
+    cout << "\n--- Array of Objects ---" << endl;
+    
+    // Dynamic array of objects
+    const int numStudents = 3;
+    Student* studentArray = new Student[numStudents] {
+        Student("Charlie", 103),
+        Student("David", 104),
+        Student("Eve", 105)
+    };
+    
+    // Use array
+    for (int i = 0; i < numStudents; i++) {
+        studentArray[i].addGrade(80.0 + i * 5);
+        studentArray[i].displayInfo();
+    }
+    
+    // Delete array
+    delete[] studentArray;
+}
+
+void demonstratePolymorphicPointers() {
+    cout << "\n=== Polymorphic Pointers ===" << endl;
+    
+    // Base class pointers to derived objects
+    Animal* animals[3];
+    animals[0] = new Dog("Buddy", 3, "Golden Retriever");
+    animals[1] = new Cat("Whiskers", 2, true);
+    animals[2] = new Animal("Generic", 5);
+    
+    cout << "\n--- Polymorphic Behavior ---" << endl;
+    for (int i = 0; i < 3; i++) {
+        animals[i]->displayInfo();
+        animals[i]->makeSound(); // Calls appropriate overridden method
+        cout << endl;
+    }
+    
+    // Downcasting example (be careful!)
+    cout << "--- Downcasting Example ---" << endl;
+    Dog* dogPtr = dynamic_cast<Dog*>(animals[0]);
+    if (dogPtr) {
+        dogPtr->wagTail(); // Dog-specific method
+    }
+    
+    Cat* catPtr = dynamic_cast<Cat*>(animals[1]);
+    if (catPtr) {
+        catPtr->purr(); // Cat-specific method
+    }
+    
+    // Clean up
+    for (int i = 0; i < 3; i++) {
+        delete animals[i];
+    }
+}
+
+void demonstrateSmartPointers() {
+    cout << "\n=== Smart Pointers (Modern C++) ===" << endl;
+    
+    // unique_ptr - exclusive ownership
+    cout << "--- unique_ptr Example ---" << endl;
+    std::unique_ptr<Student> uniqueStudent = std::make_unique<Student>("Frank", 106);
+    uniqueStudent->addGrade(95.0);
+    uniqueStudent->displayInfo();
+    
+    // No need to delete - automatic cleanup when out of scope
+    
+    // shared_ptr - shared ownership
+    cout << "\n--- shared_ptr Example ---" << endl;
+    std::shared_ptr<Dog> sharedDog = std::make_shared<Dog>("Rex", 4, "German Shepherd");
+    
+    {
+        std::shared_ptr<Dog> anotherRef = sharedDog;
+        cout << "Reference count: " << sharedDog.use_count() << endl;
+        anotherRef->makeSound();
+    } // anotherRef goes out of scope
+    
+    cout << "Reference count after scope: " << sharedDog.use_count() << endl;
+    sharedDog->wagTail();
+    
+    // weak_ptr - non-owning reference
+    cout << "\n--- weak_ptr Example ---" << endl;
+    std::weak_ptr<Dog> weakDog = sharedDog;
+    
+    if (auto lockedDog = weakDog.lock()) {
+        lockedDog->makeSound();
+        cout << "Successfully accessed through weak_ptr" << endl;
+    }
+    
+    // Vector of smart pointers
+    cout << "\n--- Container of Smart Pointers ---" << endl;
+    std::vector<std::unique_ptr<Animal>> animalCollection;
+    
+    animalCollection.push_back(std::make_unique<Dog>("Max", 6, "Labrador"));
+    animalCollection.push_back(std::make_unique<Cat>("Luna", 3, false));
+    animalCollection.push_back(std::make_unique<Animal>("Wild", 8));
+    
+    for (const auto& animal : animalCollection) {
+        animal->displayInfo();
+        animal->makeSound();
+        cout << endl;
+    }
+    
+    // Automatic cleanup when vector goes out of scope
+}
+
+// Pointer to member function example
+void demonstratePointerToMemberFunction() {
+    cout << "\n=== Pointer to Member Functions ===" << endl;
+    
+    // Pointer to member function
+    void (Animal::*soundFunc)() = &Animal::makeSound;
+    void (Animal::*infoFunc)() = &Animal::displayInfo;
+    
+    Dog myDog("Spot", 2, "Beagle");
+    
+    // Call member function through pointer
+    (myDog.*soundFunc)();
+    (myDog.*infoFunc)();
+    
+    // Using with pointer to object
+    Animal* animalPtr = &myDog;
+    (animalPtr->*soundFunc)();
+    (animalPtr->*infoFunc)();
+}
+
+void demonstratePointers() {
+    demonstrateBasicPointers();
+    demonstrateDynamicAllocation();
+    demonstratePolymorphicPointers();
+    demonstrateSmartPointers();
+    demonstratePointerToMemberFunction();
+}</div>
+								</div>
+
+								<div class="practice-section">
+									<h4>🏋️ Pointers Practice</h4>
+									<div class="practice-links">
+										<a href="#" class="practice-link">Object Pointers</a>
+										<a href="#" class="practice-link">Dynamic Allocation</a>
+										<a href="#" class="practice-link">Smart Pointers</a>
+										<a href="#" class="practice-link">Polymorphic Pointers</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<script>
+        // JavaScript for interactivity
+        function toggleTOC() {
+            const tocContainer = document.getElementById('tocContainer');
+            tocContainer.classList.toggle('active');
+        }
+
+        function toggleContent(sectionId) {
+            const content = document.getElementById(sectionId + '-content');
+            const btn = document.getElementById(sectionId + '-btn');
+            
+            if (content.style.display === 'none' || content.classList.contains('hidden')) {
+                content.style.display = 'block';
+                content.classList.remove('hidden');
+                btn.innerHTML = '▼';
+                btn.classList.remove('rotated');
+            } else {
+                content.style.display = 'none';
+                content.classList.add('hidden');
+                btn.innerHTML = '▲';
+                btn.classList.add('rotated');
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        // Close TOC when clicking outside
+        document.addEventListener('click', function(event) {
+            const tocContainer = document.getElementById('tocContainer');
+            const tocToggle = document.querySelector('.toc-toggle');
+            
+            if (!tocContainer.contains(event.target) && !tocToggle.contains(event.target)) {
+                tocContainer.classList.remove('active');
+            }
+        });
+
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc-list a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                    // Close TOC on mobile
+                    document.getElementById('tocContainer').classList.remove('active');
+                }
+            });
+        });
+    </script>
+	<script>
+		// Custom Video Player initializer
+		(function(){
+			function formatTime(s){ if(isNaN(s)) return '00:00'; const h=Math.floor(s/3600); const m=Math.floor((s%3600)/60); const sec=Math.floor(s%60); return (h?String(h).padStart(2,'0')+':':'')+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0'); }
+
+			function createPlayer(video){
+				if(video.dataset.enhanced==='1') return; video.dataset.enhanced='1';
+				const wrapper=document.createElement('div'); wrapper.className='player paused';
+				const parent=video.parentNode; parent.replaceChild(wrapper, video); wrapper.appendChild(video);
+				try{ video.removeAttribute('controls'); video.controls=false; }catch(e){}
+				try{ video.setAttribute('playsinline',''); video.setAttribute('webkit-playsinline',''); }catch(e){}
+
+				const bigPlay=document.createElement('button'); bigPlay.className='big-play'; bigPlay.innerHTML='►'; wrapper.appendChild(bigPlay);
+				const controls=document.createElement('div'); controls.className='controls';
+				const playBtn=document.createElement('button'); playBtn.className='control-btn play'; playBtn.textContent='Play'; controls.appendChild(playBtn);
+
+				const progress=document.createElement('div'); progress.className='progress'; progress.style.flex='1'; const buffer=document.createElement('div'); buffer.className='buffer'; const bar=document.createElement('div'); bar.className='bar'; const knob=document.createElement('div'); knob.className='knob'; progress.appendChild(buffer); progress.appendChild(bar); progress.appendChild(knob); controls.appendChild(progress);
+
+				const time=document.createElement('div'); time.className='time'; time.textContent='00:00 / 00:00'; controls.appendChild(time);
+				const vol=document.createElement('input'); vol.type='range'; vol.min=0; vol.max=1; vol.step=0.01; vol.value=video.volume; vol.className='volume'; controls.appendChild(vol);
+				const rate=document.createElement('select'); rate.className='playback-rate'; [0.5,0.75,1,1.25,1.5,1.75,2].forEach(r=>{ const o=document.createElement('option'); o.value=r; o.text=r+'x'; if(r===1) o.selected=true; rate.appendChild(o); }); controls.appendChild(rate);
+				const fs=document.createElement('button'); fs.className='control-btn fs'; fs.textContent='⤢'; controls.appendChild(fs);
+				const src=video.querySelector('source')?.src || video.currentSrc || ''; const dl=document.createElement('a'); dl.className='download-link'; dl.href=src; dl.download=''; dl.textContent='⤓'; controls.appendChild(dl);
+				wrapper.appendChild(controls);
+
+				function updateUI(){ const pct=(video.currentTime/Math.max(video.duration||1,1)); bar.style.width=(pct*100)+'%'; const rect=progress.getBoundingClientRect(); knob.style.left=(rect.width*pct)+'px'; time.textContent=formatTime(video.currentTime)+' / '+(isFinite(video.duration)?formatTime(video.duration):'00:00'); }
+				video.addEventListener('timeupdate', updateUI); video.addEventListener('durationchange', updateUI);
+				video.addEventListener('progress', ()=>{ try{ const b=video.buffered; if(b.length){ const end=b.end(b.length-1); buffer.style.width=(end/Math.max(video.duration||1,1)*100)+'%'; } }catch(e){} });
+
+				function setPlayingState(p){ if(p){ wrapper.classList.remove('paused'); playBtn.textContent='Pause'; bigPlay.style.opacity=0; } else { wrapper.classList.add('paused'); playBtn.textContent='Play'; bigPlay.style.opacity=1; } }
+				playBtn.addEventListener('click', ()=>{ if(video.paused) video.play(); else video.pause(); }); bigPlay.addEventListener('click', ()=>{ if(video.paused) video.play(); else video.pause(); });
+				// dragging flag used by progress drag handlers - declare early to avoid TDZ ReferenceError
+				let dragging = false;
+
+				video.addEventListener('click', function(e){ if(e.target.closest && e.target.closest('.controls')) return; if(dragging) return; if(video.paused) video.play(); else video.pause(); });
+				video.addEventListener('play', ()=>setPlayingState(true)); video.addEventListener('pause', ()=>setPlayingState(false));
+
+				progress.addEventListener('click', function(e){ const rect=progress.getBoundingClientRect(); const pct=Math.max(0, Math.min(1, (e.clientX-rect.left)/rect.width)); video.currentTime = pct * (video.duration||0); });
+				progress.addEventListener('mousedown', ()=>dragging=true); window.addEventListener('mouseup', ()=>{ if(dragging) dragging=false; }); window.addEventListener('mousemove', function(e){ if(!dragging) return; const rect=progress.getBoundingClientRect(); const pct=Math.max(0, Math.min(1, (e.clientX-rect.left)/rect.width)); video.currentTime = pct * (video.duration||0); });
+
+				vol.addEventListener('input', ()=>{ video.volume = parseFloat(vol.value); }); rate.addEventListener('change', ()=>{ video.playbackRate = parseFloat(rate.value); });
+				fs.addEventListener('click', function(){ const isFs=document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement; if(!isFs){ if(wrapper.requestFullscreen) wrapper.requestFullscreen(); else if(wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen(); else if(wrapper.mozRequestFullScreen) wrapper.mozRequestFullScreen(); else if(wrapper.msRequestFullscreen) wrapper.msRequestFullscreen(); wrapper.classList.add('is-fullscreen'); } else { if(document.exitFullscreen) document.exitFullscreen(); else if(document.webkitExitFullscreen) document.webkitExitFullscreen(); else if(document.mozCancelFullScreen) document.mozCancelFullScreen(); else if(document.msExitFullscreen) document.msExitFullscreen(); wrapper.classList.remove('is-fullscreen'); } });
+				['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange'].forEach(evt=>{ document.addEventListener(evt, function(){ const isFs=document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement; if(!isFs) wrapper.classList.remove('is-fullscreen'); else wrapper.classList.add('is-fullscreen'); }); });
+
+				const updateDownloadHref=()=>{ const s=video.querySelector('source')?.src||video.currentSrc||''; dl.href=s; }; updateDownloadHref();
+				wrapper.tabIndex=0; wrapper.addEventListener('keydown', function(e){ if(e.code==='Space'){ e.preventDefault(); if(video.paused) video.play(); else video.pause(); } });
+				setPlayingState(video.paused); updateUI();
+			}
+
+			document.addEventListener('DOMContentLoaded', function(){ const videos=Array.from(document.querySelectorAll('.video-section video')); videos.forEach(v=>{ try{ createPlayer(v); } catch(e){ console.error('Failed to enhance video player', e); } }); });
+		})();
+	</script>
+				</body>
+</html>

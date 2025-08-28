@@ -7,18 +7,15 @@
       "default",
       {
         "ignore": [
-          "backdrop-filter",
-          "-webkit-overflow-scrolling",
-          "scrollbar-width",
-          "scrollbar-color"
+          "backdrop-filter"
         ]
       }
     ],
     "no-inline-styles": "off",
-    "axe/name-role-value": [
+    "axe/text-alternatives": [
       "default",
       {
-        "link-name": "off"
+        "document-title": "off"
       }
     ]
   }
