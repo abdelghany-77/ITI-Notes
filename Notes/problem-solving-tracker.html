@@ -3338,26 +3338,13 @@
         const solved = problems.filter((p) => p.solved).length;
         const successRate = total > 0 ? Math.round((solved / total) * 100) : 0;
 
-        // Calculate streak (consecutive solved problems from the end)
-        let streak = 0;
-        const sortedProblems = [...problems].sort(
-          (a, b) => new Date(b.dateSolved || 0) - new Date(a.dateSolved || 0)
-        );
-        for (let problem of sortedProblems) {
-          if (problem.solved) streak++;
-          else break;
-        }
-
-        document.getElementById("total-problems").textContent = total;
-        document.getElementById("solved-problems").textContent = solved;
-        document.getElementById("success-rate").textContent = `${successRate}%`;
-        document.getElementById("streak-count").textContent = streak;
-
-        // Update progress bar
+        // Update progress bar only
         const progressFill = document.getElementById("progress-fill");
         const progressText = document.getElementById("progress-text");
-        progressFill.style.width = `${successRate}%`;
-        progressText.textContent = `${solved} of ${total} problems solved (${successRate}%)`;
+        if (progressFill && progressText) {
+          progressFill.style.width = `${successRate}%`;
+          progressText.textContent = `${solved} of ${total} problems solved (${successRate}%)`;
+        }
       }
 
       function openAddModal() {
