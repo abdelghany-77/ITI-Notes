@@ -1,0 +1,3279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exam Questions & Answers</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 50%,
+          #f093fb 100%
+        );
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 30px 0;
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .back-button {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 25px;
+        cursor: pointer;
+      }
+
+      .back-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+      }
+
+      .exam-section {
+        background: white;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-header {
+        padding: 20px;
+        color: white;
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+
+      .section-header.os {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+      }
+
+      .section-header.network {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+      }
+
+      .section-header.testing {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+      }
+
+      .section-header.linux {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+      }
+
+      .section-content {
+        padding: 25px;
+      }
+
+      .question {
+        background: #f8f9fa;
+        border-left: 4px solid #3498db;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+      }
+
+      .question:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .question-number {
+        background: #3498db;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 0.9em;
+        display: inline-block;
+        margin-bottom: 10px;
+      }
+
+      .question-text {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        color: #2c3e50;
+        font-weight: 500;
+      }
+
+      .options {
+        margin: 15px 0;
+      }
+
+      .option {
+        background: white;
+        padding: 10px 15px;
+        margin: 8px 0;
+        border-radius: 6px;
+        border: 2px solid #ecf0f1;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .option:hover {
+        border-color: #bdc3c7;
+        background: #f8f9fa;
+      }
+
+      .option.correct {
+        background: linear-gradient(135deg, #d5f4e6, #a8e6cf);
+        border-color: #2ecc71;
+        color: #27ae60;
+        font-weight: 600;
+      }
+
+      .option.correct::before {
+        content: "✓ ";
+        color: #27ae60;
+        font-weight: bold;
+      }
+
+      .answer-explanation {
+        background: linear-gradient(135deg, #e8f5e8, #d4f4d4);
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #2ecc71;
+        margin-top: 15px;
+      }
+
+      .answer-explanation h4 {
+        color: #27ae60;
+        margin-bottom: 8px;
+        font-size: 1em;
+      }
+
+      .true-false {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 15px 0;
+      }
+
+      .tf-option {
+        background: white;
+        padding: 12px;
+        text-align: center;
+        border-radius: 6px;
+        border: 2px solid #ecf0f1;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .tf-option:hover {
+        border-color: #bdc3c7;
+      }
+
+      .tf-option.true {
+        background: linear-gradient(135deg, #d5f4e6, #a8e6cf);
+        border-color: #2ecc71;
+        color: #27ae60;
+      }
+
+      .tf-option.false {
+        background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+        border-color: #f39c12;
+        color: #d68910;
+      }
+
+      .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border-top: 4px solid #3498db;
+      }
+
+      .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+        color: #3498db;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9em;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 25px;
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        border-radius: 12px;
+        margin-top: 30px;
+      }
+
+      /* Table of Contents Sidebar */
+      .toc-sidebar {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 280px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        transition: all 0.3s ease;
+        transform: translateX(-100%);
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .toc-sidebar.show {
+        transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .toc-header {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 15px 15px 0 0;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+
+      .toc-content {
+        padding: 20px;
+      }
+
+      .toc-section {
+        margin-bottom: 20px;
+      }
+
+      .toc-section-title {
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+        border-radius: 8px;
+        font-size: 0.95em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .toc-section-title:hover {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        transform: translateX(5px);
+      }
+
+      .toc-section-title.os {
+        border-left: 4px solid #3498db;
+      }
+
+      .toc-section-title.network {
+        border-left: 4px solid #e74c3c;
+      }
+
+      .toc-section-title.testing {
+        border-left: 4px solid #2ecc71;
+      }
+
+      .toc-section-title.linux {
+        border-left: 4px solid #f39c12;
+      }
+
+      .toc-questions {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        margin-top: 10px;
+      }
+
+      .toc-question-link {
+        background: #f8f9fa;
+        border: 1px solid #ecf0f1;
+        border-radius: 6px;
+        padding: 6px 4px;
+        text-align: center;
+        text-decoration: none;
+        color: #2c3e50;
+        font-size: 0.8em;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .toc-question-link:hover {
+        background: #3498db;
+        color: white;
+        transform: scale(1.05);
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+      }
+
+      .toc-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        cursor: pointer;
+        font-size: 18px;
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        transition: all 0.3s ease;
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .toc-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+      }
+
+      .toc-sidebar.hidden {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+
+      .toc-toggle.sidebar-hidden {
+        left: 20px;
+      }
+
+      /* Scroll to Top Button */
+      .scroll-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .scroll-to-top.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .scroll-to-top:hover {
+        background: linear-gradient(135deg, #2980b9, #1f5582);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+      }
+
+      .scroll-to-top:active {
+        transform: translateY(-1px);
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          margin: 10px;
+          padding: 15px;
+        }
+
+        .header h1 {
+          font-size: 2em;
+        }
+
+        .true-false {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* Mobile scroll to top button */
+        .scroll-to-top {
+          bottom: 20px;
+          right: 20px;
+          width: 45px;
+          height: 45px;
+          font-size: 16px;
+        }
+
+        /* Mobile TOC */
+        .toc-sidebar {
+          width: 60px;
+          top: 10px;
+          left: 10px;
+          transform: translateX(-100%);
+          opacity: 0;
+          visibility: hidden;
+        }
+
+        .toc-sidebar.show {
+          transform: translateX(0);
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .toc-header {
+          padding: 8px 5px;
+          font-size: 0.7em;
+          writing-mode: vertical-rl;
+          text-orientation: mixed;
+        }
+
+        .toc-content {
+          padding: 10px 5px;
+        }
+
+        .toc-section-title {
+          font-size: 0.6em;
+          padding: 4px 2px;
+          text-align: center;
+          margin-bottom: 8px;
+          writing-mode: vertical-rl;
+          text-orientation: mixed;
+          height: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .toc-questions {
+          grid-template-columns: 1fr;
+          gap: 3px;
+        }
+
+        .toc-question-link {
+          padding: 4px 2px;
+          font-size: 0.7em;
+        }
+
+        .toc-toggle {
+          left: 10px;
+          width: 35px;
+          height: 35px;
+          font-size: 14px;
+        }
+
+        .toc-toggle.sidebar-hidden {
+          left: 10px;
+        }
+      }
+
+      .multiple-correct {
+        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+        border-left-color: #ff9800;
+      }
+
+      .multiple-correct .question-number {
+        background: #ff9800;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Table of Contents Sidebar -->
+    <div class="toc-sidebar" id="tocSidebar">
+      <div class="toc-header">📚 Table of Contents</div>
+      <div class="toc-content">
+        <div class="toc-section">
+          <div
+            class="toc-section-title os"
+            onclick="scrollToSection('os-section')"
+          >
+            💻 Operating Systems
+          </div>
+          <div class="toc-questions">
+            <a class="toc-question-link" onclick="scrollToQuestion('Q1')">Q1</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q2')">Q2</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q3')">Q3</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q4')">Q4</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q5')">Q5</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q6')">Q6</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q7')">Q7</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q8')">Q8</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q9')">Q9</a>
+            <a class="toc-question-link" onclick="scrollToQuestion('Q10')"
+              >Q10</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q11')"
+              >Q11</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q12')"
+              >Q12</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q13')"
+              >Q13</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q14')"
+              >Q14</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q15')"
+              >Q15</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q16')"
+              >Q16</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q17')"
+              >Q17</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q18')"
+              >Q18</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q19')"
+              >Q19</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q20')"
+              >Q20</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q21')"
+              >Q21</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q22')"
+              >Q22</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q23')"
+              >Q23</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q24')"
+              >Q24</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q25')"
+              >Q25</a
+            >
+          </div>
+        </div>
+
+        <div class="toc-section">
+          <div
+            class="toc-section-title network"
+            onclick="scrollToSection('network-section')"
+          >
+            🌐 Computer Networks
+          </div>
+          <div class="toc-questions">
+            <a class="toc-question-link" onclick="scrollToQuestion('Q26')"
+              >Q26</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q27')"
+              >Q27</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q28')"
+              >Q28</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q29')"
+              >Q29</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q30')"
+              >Q30</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q31')"
+              >Q31</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q32')"
+              >Q32</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q33')"
+              >Q33</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q34')"
+              >Q34</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q35')"
+              >Q35</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q36')"
+              >Q36</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q37')"
+              >Q37</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q38')"
+              >Q38</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q39')"
+              >Q39</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q40')"
+              >Q40</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q41')"
+              >Q41</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q42')"
+              >Q42</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q43')"
+              >Q43</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q44')"
+              >Q44</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q45')"
+              >Q45</a
+            >
+          </div>
+        </div>
+
+        <div class="toc-section">
+          <div
+            class="toc-section-title testing"
+            onclick="scrollToSection('testing-section')"
+          >
+            🧪 Software Testing
+          </div>
+          <div class="toc-questions">
+            <a class="toc-question-link" onclick="scrollToQuestion('Q46')"
+              >Q46</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q47')"
+              >Q47</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q48')"
+              >Q48</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q49')"
+              >Q49</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q50')"
+              >Q50</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q51')"
+              >Q51</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q52')"
+              >Q52</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q53')"
+              >Q53</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q54')"
+              >Q54</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q55')"
+              >Q55</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q56')"
+              >Q56</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q57')"
+              >Q57</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q58')"
+              >Q58</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q59')"
+              >Q59</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q60')"
+              >Q60</a
+            >
+          </div>
+        </div>
+
+        <div class="toc-section">
+          <div
+            class="toc-section-title linux"
+            onclick="scrollToSection('linux-section')"
+          >
+            🐧 Linux Administration
+          </div>
+          <div class="toc-questions">
+            <a class="toc-question-link" onclick="scrollToQuestion('Q61')"
+              >Q61</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q62')"
+              >Q62</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q63')"
+              >Q63</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q64')"
+              >Q64</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q65')"
+              >Q65</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q66')"
+              >Q66</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q67')"
+              >Q67</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q68')"
+              >Q68</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q69')"
+              >Q69</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q70')"
+              >Q70</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q71')"
+              >Q71</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q72')"
+              >Q72</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q73')"
+              >Q73</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q74')"
+              >Q74</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q75')"
+              >Q75</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q76')"
+              >Q76</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q77')"
+              >Q77</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q78')"
+              >Q78</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q79')"
+              >Q79</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q80')"
+              >Q80</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q81')"
+              >Q81</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q82')"
+              >Q82</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q83')"
+              >Q83</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q84')"
+              >Q84</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q85')"
+              >Q85</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q86')"
+              >Q86</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q87')"
+              >Q87</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q88')"
+              >Q88</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q89')"
+              >Q89</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q90')"
+              >Q90</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q91')"
+              >Q91</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q92')"
+              >Q92</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q93')"
+              >Q93</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q94')"
+              >Q94</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q95')"
+              >Q95</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q96')"
+              >Q96</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q97')"
+              >Q97</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q98')"
+              >Q98</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q99')"
+              >Q99</a
+            >
+            <a class="toc-question-link" onclick="scrollToQuestion('Q100')"
+              >Q100</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOC Toggle Button -->
+    <button
+      class="toc-toggle"
+      id="tocToggle"
+      onclick="toggleTOC()"
+      title="Toggle Table of Contents"
+    >
+      ☰
+    </button>
+
+    <div class="container">
+      <div class="header">
+        <h1>📝 Preliminary Test</h1>
+        <p>Operating Systems, Networks & Software Testing</p>
+      </div>
+
+      <a href="../index.html" class="back-button"> ← 🏠 </a>
+
+      <div class="stats-container">
+        <div class="stat-card">
+          <span class="stat-number">100</span>
+          <span class="stat-label">Total Questions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">4</span>
+          <span class="stat-label">Subject Areas</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">15</span>
+          <span class="stat-label">True/False Questions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">85</span>
+          <span class="stat-label">Multiple Choice</span>
+        </div>
+      </div>
+
+      <!-- Part I: Operating Systems -->
+      <div class="exam-section" id="os-section">
+        <div class="section-header os">
+          Part I: Operating Systems Fundamentals
+        </div>
+        <div class="section-content">
+          <div class="question">
+            <div class="question-number">Q1</div>
+            <div class="question-text">
+              The Main Memory consists of RAM (Random Access Memory) and ROM
+              (Read Only Memory).
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                Main memory indeed consists of both RAM (volatile, temporary
+                storage) and ROM (non-volatile, permanent storage containing
+                basic system instructions).
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q2</div>
+            <div class="question-text">
+              All of the secondary storages used as Output devices only for
+              permanent storage.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                Secondary storage devices serve as both input and output
+                devices, not just output devices.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q3</div>
+            <div class="question-text">
+              Bootstrap is a framework stored in ROM contains some instructions
+              called basic input output instructions (BIOS).
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                Bootstrap program is stored in ROM and contains BIOS
+                instructions for basic system initialization.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q4</div>
+            <div class="question-text">
+              Windows server 2008 and Novell Netware are batching operating
+              systems.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                These are network operating systems, not batch operating
+                systems.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q5</div>
+            <div class="question-text">
+              The purpose of the operating system is to ensure that it abstracts
+              the HW and facilitates the seamless execution of users'
+              applications using the system.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                This is the fundamental purpose of an operating system - to
+                abstract hardware and manage applications.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q6</div>
+            <div class="question-text">
+              The application itself is the responsible for accessing the memory
+              variable storage and perform the calculations based on values in
+              memory.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                Applications are responsible for their memory management and
+                computational operations.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q7</div>
+            <div class="question-text">
+              Threads help in performing parallelism within the same process.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                Threads enable concurrent execution within a single process,
+                achieving parallelism.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q8</div>
+            <div class="question-text">
+              Interrupt vector contains the addresses for all Interrupt Service
+              Routines (ISR) for all I/O devices that connected to the computer
+              system.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                The interrupt vector table stores addresses of ISRs for handling
+                different interrupts from I/O devices.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q9</div>
+            <div class="question-text">
+              The process which running in user-mode services would be able to
+              access the hardware directly.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                User-mode processes cannot access hardware directly; they must
+                use system calls through the OS.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q10</div>
+            <div class="question-text">
+              A Virtual Machine has its own guest OS, which may be the same as
+              or different from the underlying host OS.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                Virtual machines can run any compatible operating system,
+                independent of the host OS.
+              </p>
+            </div>
+          </div>
+
+          <!-- Additional True/False Questions -->
+          <div class="question">
+            <div class="question-number">Q11</div>
+            <div class="question-text">
+              The kernel of an operating system always runs in privileged mode
+              to access system resources.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                The kernel operates in privileged mode (kernel mode) to have
+                unrestricted access to hardware and system resources.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q12</div>
+            <div class="question-text">
+              Context switching is the process of storing and restoring the
+              state of a process when switching between processes.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                Context switching involves saving the current state of a process
+                and loading the state of another process to enable multitasking.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q13</div>
+            <div class="question-text">
+              Paging and segmentation are both memory management techniques that
+              can eliminate external fragmentation.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                Paging eliminates external fragmentation, but segmentation can
+                still cause external fragmentation.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q14</div>
+            <div class="question-text">
+              The critical section problem occurs when multiple processes access
+              shared data simultaneously.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">✓ TRUE</div>
+              <div class="tf-option false">FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: TRUE</h4>
+              <p>
+                Critical section refers to code segments where shared resources
+                are accessed, requiring synchronization to prevent race
+                conditions.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q15</div>
+            <div class="question-text">
+              Device drivers are always part of the operating system kernel and
+              cannot be loaded dynamically.
+            </div>
+            <div class="true-false">
+              <div class="tf-option true">TRUE</div>
+              <div class="tf-option false">✓ FALSE</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: FALSE</h4>
+              <p>
+                Modern operating systems support dynamic loading of device
+                drivers, and they can be loaded as kernel modules or run in user
+                space.
+              </p>
+            </div>
+          </div>
+
+          <!-- Multiple Choice Questions -->
+          <div class="question multiple-correct">
+            <div class="question-number">Q16</div>
+            <div class="question-text">
+              Which of the following are Output Devices? (Select all correct
+              answers)
+            </div>
+            <div class="options">
+              <div class="option correct">a. Data Projectors</div>
+              <div class="option">b. Microphone</div>
+              <div class="option correct">c. Speaker and Headphones</div>
+              <div class="option">d. Scanner (2D and 3D)</div>
+              <div class="option correct">
+                e. Printer (2D and 3D) - inkjet or laser
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answers: a, c, e</h4>
+              <p>
+                Data projectors, speakers/headphones, and printers are output
+                devices. Microphones and scanners are input devices.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q17</div>
+            <div class="question-text">
+              The __________ is a program that controls the execution of other
+              programs running on the system. It acts as a facilitator and
+              intermediate layer between the different software components and
+              the computer hardware.
+            </div>
+            <div class="options">
+              <div class="option">a. Bootstrap</div>
+              <div class="option correct">b. Operating System</div>
+              <div class="option">c. Database Management System</div>
+              <div class="option">d. Embedded System</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: b. Operating System</h4>
+              <p>
+                The operating system manages and controls the execution of all
+                programs and acts as an intermediary between software and
+                hardware.
+              </p>
+            </div>
+          </div>
+
+          <div class="question multiple-correct">
+            <div class="question-number">Q18</div>
+            <div class="question-text">
+              The main objectives of any operating systems are: (Select all
+              correct answers)
+            </div>
+            <div class="options">
+              <div class="option correct">
+                a. Efficiency of the OS in terms of responsiveness, fluidity,
+                and so on
+              </div>
+              <div class="option correct">
+                b. Ability to abstract and extend to new devices and software
+              </div>
+              <div class="option correct">
+                c. Ease of usability to the user in terms of making it
+                convenient
+              </div>
+              <div class="option">
+                d. Control the flow of data through local networks
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answers: a, b, c</h4>
+              <p>
+                Main OS objectives include efficiency, abstraction capability,
+                and usability. Network data flow control is not a primary OS
+                objective.
+              </p>
+            </div>
+          </div>
+
+          <div class="question multiple-correct">
+            <div class="question-number">Q19</div>
+            <div class="question-text">
+              The Usage type categorization of operating systems are: (Select
+              all correct answers)
+            </div>
+            <div class="options">
+              <div class="option correct">a. Batch Operating Systems</div>
+              <div class="option correct">
+                b. Time Sharing Operating Systems
+              </div>
+              <div class="option correct">
+                c. Parallel-Distributed Operating Systems
+              </div>
+              <div class="option correct">d. Network Operating Systems</div>
+              <div class="option correct">e. Real Time Operating Systems</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answers: a, b, c, d, e</h4>
+              <p>
+                All listed options are valid categorizations of operating
+                systems based on their usage types.
+              </p>
+            </div>
+          </div>
+
+          <div class="question multiple-correct">
+            <div class="question-number">Q20</div>
+            <div class="question-text">
+              Select the Advantages of virtualization from the following:
+              (Select all correct answers)
+            </div>
+            <div class="options">
+              <div class="option correct">
+                a. Emulate more machines than are physically available
+              </div>
+              <div class="option correct">
+                b. Run operating systems where the physical hardware is
+                unavailable
+              </div>
+              <div class="option correct">c. Run legacy systems</div>
+              <div class="option correct">
+                d. Debug problems (suspend and resume the problem machine)
+              </div>
+              <div class="option correct">e. All of the above</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: e. All of the above</h4>
+              <p>
+                All listed options are advantages of virtualization technology.
+              </p>
+            </div>
+          </div>
+
+          <div class="question multiple-correct">
+            <div class="question-number">Q21</div>
+            <div class="question-text">
+              Which of the following are the responsibilities of an operating
+              systems? (Select all correct answers)
+            </div>
+            <div class="options">
+              <div class="option correct">a. Access and protection</div>
+              <div class="option correct">b. File systems</div>
+              <div class="option correct">c. Scheduling</div>
+              <div class="option correct">d. Memory management</div>
+              <div class="option correct">e. I/O and resource management</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answers: a, b, c, d, e</h4>
+              <p>
+                All listed options are core responsibilities of an operating
+                system.
+              </p>
+            </div>
+          </div>
+
+          <div class="question multiple-correct">
+            <div class="question-number">Q22</div>
+            <div class="question-text">
+              The types of addressing of memory in the operating systems are:
+              (Select all correct answers)
+            </div>
+            <div class="options">
+              <div class="option correct">a. Logical Address</div>
+              <div class="option correct">b. Physical Address</div>
+              <div class="option">c. Controlling</div>
+              <div class="option">d. None of the above</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answers: a, b</h4>
+              <p>
+                Operating systems use logical addresses (virtual) and physical
+                addresses (actual memory locations).
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q23</div>
+            <div class="question-text">
+              The way of management when the two processes need to save in the
+              shared memory at the same time, it is called______.
+            </div>
+            <div class="options">
+              <div class="option">a. Compilation</div>
+              <div class="option">b. Execution</div>
+              <div class="option correct">c. Synchronization</div>
+              <div class="option">d. Termination</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: c. Synchronization</h4>
+              <p>
+                Synchronization manages concurrent access to shared resources
+                between processes.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q24</div>
+            <div class="question-text">
+              When a set of processes become blocked because each process is
+              holding a resource and waiting for another resource acquired by
+              some other process. This is called ______.
+            </div>
+            <div class="options">
+              <div class="option">a. Synchronization</div>
+              <div class="option correct">b. Deadlock</div>
+              <div class="option">c. Acceleration</div>
+              <div class="option">d. Process Status</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: b. Deadlock</h4>
+              <p>
+                Deadlock occurs when processes are permanently blocked, each
+                waiting for resources held by others.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q25</div>
+            <div class="question-text">
+              The OS needs to be able to periodically clear temporarily created
+              files that may no longer be required for the functioning of the
+              system. This is typically done using a ______ on the system.
+            </div>
+            <div class="options">
+              <div class="option correct">a. Garbage Collector</div>
+              <div class="option">b. Data Collector</div>
+              <div class="option">c. Anti-Virus</div>
+              <div class="option">d. None of the above</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: a. Garbage Collector</h4>
+              <p>
+                Garbage collectors automatically manage memory and clean up
+                unused resources in the system.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part II: Computer Networks -->
+      <div class="exam-section" id="network-section">
+        <div class="section-header network">
+          Part II: Computer Networks Fundamentals and Security
+        </div>
+        <div class="section-content">
+          <div class="question">
+            <div class="question-number">Q26</div>
+            <div class="question-text">
+              We can find our IP address on a MS Windows based computer, by
+              using:
+            </div>
+            <div class="options">
+              <div class="option">
+                a. Control Panel\Network and Internet\Network and Sharing Center
+              </div>
+              <div class="option">b. Ipconfig Command</div>
+              <div class="option">c. Ipconfig /all Command</div>
+              <div class="option correct">d. All the above</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: d. All the above</h4>
+              <p>
+                All methods can be used to find IP address on Windows systems.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q27</div>
+            <div class="question-text">
+              We are using__________ protocol to read our mails when internet
+              connection is NOT available all the time.
+            </div>
+            <div class="options">
+              <div class="option correct">a. POP3</div>
+              <div class="option">b. IMAP4</div>
+              <div class="option">c. UDP</div>
+              <div class="option">d. FTP</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: a. POP3</h4>
+              <p>
+                POP3 downloads emails to local device, allowing offline reading.
+                IMAP requires constant connection.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q28</div>
+            <div class="question-text">
+              What is the name of the attack method that can be used to crack
+              passwords?
+            </div>
+            <div class="options">
+              <div class="option">a. DOS attack</div>
+              <div class="option correct">b. Brute force attack</div>
+              <div class="option">c. Smurf attack</div>
+              <div class="option">d. Spam</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: b. Brute force attack</h4>
+              <p>
+                Brute force attacks systematically try all possible password
+                combinations to crack passwords.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q29</div>
+            <div class="question-text">
+              To communicate with hosts on the same LAN, we must use
+              a__________.
+            </div>
+            <div class="options">
+              <div class="option">a. DNS</div>
+              <div class="option">b. Router</div>
+              <div class="option correct">c. Switch</div>
+              <div class="option">d. DHCP</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: c. Switch</h4>
+              <p>
+                Switches connect devices within the same LAN (Local Area
+                Network).
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q30</div>
+            <div class="question-text">
+              You must have an IP address to connect to the internet, you can
+              get your IP address (if your configuration was "obtain
+              automatically") from:
+            </div>
+            <div class="options">
+              <div class="option">a. Router</div>
+              <div class="option correct">b. DHCP</div>
+              <div class="option">c. DNS</div>
+              <div class="option">d. Switch</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: b. DHCP</h4>
+              <p>
+                DHCP (Dynamic Host Configuration Protocol) automatically assigns
+                IP addresses to devices.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q31</div>
+            <div class="question-text">
+              What is the benefit of the Networking?
+            </div>
+            <div class="options">
+              <div class="option">a. File Sharing</div>
+              <div class="option">b. Easier access to Resources</div>
+              <div class="option">c. Easier Backups</div>
+              <div class="option correct">d. All of the Above</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: d. All of the Above</h4>
+              <p>
+                Networking provides all mentioned benefits: file sharing,
+                resource access, and easier backups.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q32</div>
+            <div class="question-text">
+              Which of the following is not the Networking Devices?
+            </div>
+            <div class="options">
+              <div class="option">a. Switch</div>
+              <div class="option correct">b. Linux</div>
+              <div class="option">c. Routers</div>
+              <div class="option">d. Firewalls</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: b. Linux</h4>
+              <p>
+                Linux is an operating system, not a networking device. Others
+                are networking hardware/software.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q33</div>
+            <div class="question-text">
+              A collection of computers and devices connected together via
+              communication devices and transmission media is called a:
+            </div>
+            <div class="options">
+              <div class="option">a. Workgroup</div>
+              <div class="option">b. Server</div>
+              <div class="option">c. Mainframe</div>
+              <div class="option correct">d. Network</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: d. Network</h4>
+              <p>
+                A network is defined as a collection of interconnected computers
+                and devices.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q34</div>
+            <div class="question-text">
+              Which of the following devices is dedicated to connect several
+              computers wirelessly?
+            </div>
+            <div class="options">
+              <div class="option">a. Hub</div>
+              <div class="option">b. Switch</div>
+              <div class="option correct">c. Access Point</div>
+              <div class="option">d. Router</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: c. Access Point</h4>
+              <p>
+                Access Points (APs) are specifically designed to provide
+                wireless connectivity to multiple devices.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q35</div>
+            <div class="question-text">
+              An intrusion detection system (IDS) is primarily designed to
+              perform what function?
+            </div>
+            <div class="options">
+              <div class="option">a. prevents system failures</div>
+              <div class="option">b. Rate system performance</div>
+              <div class="option">c. Test a system for vulnerabilities</div>
+              <div class="option correct">d. Detect abnormal activity</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: d. Detect abnormal activity</h4>
+              <p>
+                IDS systems monitor network traffic and system activities to
+                detect suspicious or malicious behavior.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q36</div>
+            <div class="question-text">
+              __________ is ensuring that information is not revealed to
+              unauthorized persons.
+            </div>
+            <div class="options">
+              <div class="option correct">a. Confidentiality</div>
+              <div class="option">b. Integrity</div>
+              <div class="option">c. Security</div>
+              <div class="option">d. Authorization</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: a. Confidentiality</h4>
+              <p>
+                Confidentiality is one of the CIA triad principles, ensuring
+                information remains private and secure.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q37</div>
+            <div class="question-text">
+              Which of The Following Malicious Program is Replicate
+              Automatically?
+            </div>
+            <div class="options">
+              <div class="option">a. Antivirus</div>
+              <div class="option">b. backdoor</div>
+              <div class="option correct">c. Worm</div>
+              <div class="option">d. Zombie</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: c. Worm</h4>
+              <p>
+                Worms are malicious programs that can replicate and spread
+                automatically across networks without human intervention.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q38</div>
+            <div class="question-text">
+              The modern TCP/IP Protocol Suite model consists of __________
+              Layers?
+            </div>
+            <div class="options">
+              <div class="option correct">a. 4 layers</div>
+              <div class="option">b. 5 layers</div>
+              <div class="option">c. 6 layers</div>
+              <div class="option">d. 7 layers</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: a. 4 layers</h4>
+              <p>
+                The TCP/IP model has 4 layers: Application, Transport, Internet,
+                and Network Access (Link).
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q39</div>
+            <div class="question-text">
+              In which class the IP address 70.70.70.70 exists?
+            </div>
+            <div class="options">
+              <div class="option correct">a. Class A</div>
+              <div class="option">b. Class B</div>
+              <div class="option">c. Class C</div>
+              <div class="option">d. Class D</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: a. Class A</h4>
+              <p>
+                IP addresses 1-126 in the first octet belong to Class A.
+                70.x.x.x falls in Class A range.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q40</div>
+            <div class="question-text">
+              If one site fails in distributed system then ______________.
+            </div>
+            <div class="options">
+              <div class="option correct">
+                a. the remaining sites can continue operating
+              </div>
+              <div class="option">b. all the sites will stop working</div>
+              <div class="option">
+                c. directly connected sites will stop working
+              </div>
+              <div class="option">d. none of the mentioned</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>
+                Correct Answer: a. the remaining sites can continue operating
+              </h4>
+              <p>
+                This is a key advantage of distributed systems - fault tolerance
+                and continued operation despite individual site failures.
+              </p>
+            </div>
+          </div>
+
+          <!-- Additional Network Questions -->
+          <div class="question">
+            <div class="question-number">Q41</div>
+            <div class="question-text">
+              Which protocol is used for secure file transfer over the internet?
+            </div>
+            <div class="options">
+              <div class="option">a. FTP</div>
+              <div class="option">b. HTTP</div>
+              <div class="option correct">c. SFTP</div>
+              <div class="option">d. Telnet</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: c. SFTP</h4>
+              <p>
+                SFTP (SSH File Transfer Protocol) provides secure file transfer
+                with encryption, unlike regular FTP.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q42</div>
+            <div class="question-text">
+              What is the standard port number for HTTPS?
+            </div>
+            <div class="options">
+              <div class="option">a. 80</div>
+              <div class="option">b. 21</div>
+              <div class="option correct">c. 443</div>
+              <div class="option">d. 25</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: c. 443</h4>
+              <p>
+                HTTPS uses port 443 for secure HTTP communications. HTTP uses
+                port 80.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q43</div>
+            <div class="question-text">
+              Which of the following is a symmetric encryption algorithm?
+            </div>
+            <div class="options">
+              <div class="option correct">a. AES</div>
+              <div class="option">b. RSA</div>
+              <div class="option">c. DSA</div>
+              <div class="option">d. ECC</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: a. AES</h4>
+              <p>
+                AES (Advanced Encryption Standard) is a symmetric encryption
+                algorithm. RSA, DSA, and ECC are asymmetric.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q44</div>
+            <div class="question-text">
+              What does MAC stand for in network security?
+            </div>
+            <div class="options">
+              <div class="option">a. Media Access Control</div>
+              <div class="option correct">b. Message Authentication Code</div>
+              <div class="option">c. Machine Access Code</div>
+              <div class="option">d. Multiple Access Channel</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: b. Message Authentication Code</h4>
+              <p>
+                In security context, MAC refers to Message Authentication Code
+                used to verify message integrity and authenticity.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q45</div>
+            <div class="question-text">
+              Which layer of the OSI model is responsible for end-to-end
+              communication?
+            </div>
+            <div class="options">
+              <div class="option">a. Network Layer</div>
+              <div class="option correct">b. Transport Layer</div>
+              <div class="option">c. Session Layer</div>
+              <div class="option">d. Application Layer</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: b. Transport Layer</h4>
+              <p>
+                The Transport Layer (Layer 4) provides end-to-end communication
+                services and handles data segmentation and reassembly.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part III: Software Testing -->
+      <div class="exam-section" id="testing-section">
+        <div class="section-header testing">
+          Part III: Software Testing Fundamentals
+        </div>
+        <div class="section-content">
+          <div class="question">
+            <div class="question-number">Q46</div>
+            <div class="question-text">
+              Which testing phase tests individual software modules combined
+              together as a group?
+            </div>
+            <div class="options">
+              <div class="option">a. Module testing</div>
+              <div class="option correct">b. Integration testing</div>
+              <div class="option">c. White Box testing</div>
+              <div class="option">d. Software testing</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: b. Integration testing</h4>
+              <p>
+                Integration testing focuses on testing the interfaces and
+                interaction between integrated modules.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q47</div>
+            <div class="question-text">
+              The main focus of acceptance testing is:
+            </div>
+            <div class="options">
+              <div class="option">a. Finding faults in the system</div>
+              <div class="option">
+                b. Ensuring that the system is acceptable to all users
+              </div>
+              <div class="option">c. Testing the system with other systems</div>
+              <div class="option correct">
+                d. Testing for a business perspective
+              </div>
+              <div class="option">e. Testing by an independent test team</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: d. Testing for a business perspective</h4>
+              <p>
+                Acceptance testing validates that the system meets business
+                requirements and is ready for deployment.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q48</div>
+            <div class="question-text">
+              Which is NOT true - The black box tester:
+            </div>
+            <div class="options">
+              <div class="option">
+                a. Should be able to understand a functional specification or
+                requirements document
+              </div>
+              <div class="option correct">
+                b. Should be able to understand the source code
+              </div>
+              <div class="option">c. Is highly motivated to find faults</div>
+              <div class="option">
+                d. is creative to find the system's weaknesses
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>
+                Correct Answer: b. Should be able to understand the source code
+              </h4>
+              <p>
+                Black box testing doesn't require knowledge of internal code
+                structure; it focuses on functionality.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q49</div>
+            <div class="question-text">Beta testing is:</div>
+            <div class="options">
+              <div class="option correct">
+                a. Performed by customers at their own site
+              </div>
+              <div class="option">
+                b. Performed by customers at their software developer's site
+              </div>
+              <div class="option">c. Performed by an independent test team</div>
+              <div class="option">d. Useful to test bespoke software</div>
+              <div class="option">
+                e. Performed as early as possible in the lifecycle
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>
+                Correct Answer: a. Performed by customers at their own site
+              </h4>
+              <p>
+                Beta testing is conducted by actual users in their real
+                environment before final release.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q50</div>
+            <div class="question-text">Verification is:</div>
+            <div class="options">
+              <div class="option">
+                a. Checking that we are building the right system
+              </div>
+              <div class="option correct">
+                b. Checking that we are building the system right
+              </div>
+              <div class="option">c. Performed by an independent test team</div>
+              <div class="option">
+                d. Making sure that it is what the user really wants
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>
+                Correct Answer: b. Checking that we are building the system
+                right
+              </h4>
+              <p>
+                Verification ensures the system is built according to
+                specifications. Validation checks if it's the right system.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q51</div>
+            <div class="question-text">
+              The difference between re-testing and regression testing is:
+            </div>
+            <div class="options">
+              <div class="option correct">
+                a. Re-testing is running a test again regression testing looks
+                for unexpected side effects
+              </div>
+              <div class="option">
+                b. Re-testing looks for unexpected side effects: regression
+                testing is repeating those tests
+              </div>
+              <div class="option">
+                c. Re-testing is done after faults are fixed regression testing
+                is done earlier
+              </div>
+              <div class="option">
+                d. Re-testing uses different environments, regression testing
+                uses the same environment
+              </div>
+              <div class="option">
+                e. Re-testing is done by developers, regression testing is done
+                by independent testers
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>
+                Correct Answer: a. Re-testing is running a test again regression
+                testing looks for unexpected side effects
+              </h4>
+              <p>
+                Re-testing verifies fixes work; regression testing ensures
+                changes don't break existing functionality.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q52</div>
+            <div class="question-text">
+              Before launching a software which testing is to be done in-house?
+            </div>
+            <div class="options">
+              <div class="option">a. Beta</div>
+              <div class="option">b. Gamma</div>
+              <div class="option correct">c. Alpha</div>
+              <div class="option">d. None of the above</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: c. Alpha</h4>
+              <p>
+                Alpha testing is performed in-house by internal teams before
+                external beta testing.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q53</div>
+            <div class="question-text">
+              Software testing activities should start
+            </div>
+            <div class="options">
+              <div class="option">a. As soon as the code is written</div>
+              <div class="option">b. During the design stage</div>
+              <div class="option">
+                c. When the requirements have been formally documented
+              </div>
+              <div class="option correct">
+                d. As soon as possible in the development life cycle
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>
+                Correct Answer: d. As soon as possible in the development life
+                cycle
+              </h4>
+              <p>
+                Early testing reduces costs and improves quality. Testing should
+                begin with requirements analysis.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q54</div>
+            <div class="question-text">Faults found by users are due to:</div>
+            <div class="options">
+              <div class="option">a. Poor quality software</div>
+              <div class="option correct">
+                b. Poor software and poor testing
+              </div>
+              <div class="option">c. Bad luck</div>
+              <div class="option">d. Insufficient time for testing</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: b. Poor software and poor testing</h4>
+              <p>
+                User-found faults typically result from both inadequate software
+                quality and insufficient testing coverage.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q55</div>
+            <div class="question-text">In which order should tests be run?</div>
+            <div class="options">
+              <div class="option correct">
+                a. The most important tests first
+              </div>
+              <div class="option">
+                b. The most difficult tests first (to allow maximum time for
+                fixing)
+              </div>
+              <div class="option">
+                c. The easiest tests first (to give initial confidence)
+              </div>
+              <div class="option">d. The order they are thought of</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: a. The most important tests first</h4>
+              <p>
+                Testing should be prioritized by risk and importance to ensure
+                critical functionality is verified first.
+              </p>
+            </div>
+          </div>
+
+          <!-- Additional Testing Questions -->
+          <div class="question">
+            <div class="question-number">Q56</div>
+            <div class="question-text">
+              Which testing technique is based on the internal structure of the
+              software?
+            </div>
+            <div class="options">
+              <div class="option">a. Black Box Testing</div>
+              <div class="option correct">b. White Box Testing</div>
+              <div class="option">c. Gray Box Testing</div>
+              <div class="option">d. Acceptance Testing</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: b. White Box Testing</h4>
+              <p>
+                White box testing examines the internal structure, code paths,
+                and logic of the software.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q57</div>
+            <div class="question-text">
+              What is the primary purpose of smoke testing?
+            </div>
+            <div class="options">
+              <div class="option correct">
+                a. To ensure basic functionality works before detailed testing
+              </div>
+              <div class="option">b. To test performance under load</div>
+              <div class="option">c. To test security vulnerabilities</div>
+              <div class="option">d. To test user interface design</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>
+                Correct Answer: a. To ensure basic functionality works before
+                detailed testing
+              </h4>
+              <p>
+                Smoke testing is a preliminary test to check if the basic
+                functionality works before proceeding with comprehensive
+                testing.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q58</div>
+            <div class="question-text">
+              Which of the following is NOT a software testing level?
+            </div>
+            <div class="options">
+              <div class="option">a. Unit Testing</div>
+              <div class="option">b. Integration Testing</div>
+              <div class="option">c. System Testing</div>
+              <div class="option correct">d. Compilation Testing</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: d. Compilation Testing</h4>
+              <p>
+                Compilation testing is not a recognized testing level. The main
+                levels are Unit, Integration, System, and Acceptance testing.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q59</div>
+            <div class="question-text">
+              What does UAT stand for in software testing?
+            </div>
+            <div class="options">
+              <div class="option">a. Unit Acceptance Testing</div>
+              <div class="option correct">b. User Acceptance Testing</div>
+              <div class="option">c. Universal Access Testing</div>
+              <div class="option">d. Unified Application Testing</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: b. User Acceptance Testing</h4>
+              <p>
+                UAT is User Acceptance Testing, where end users test the system
+                to ensure it meets their requirements.
+              </p>
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q60</div>
+            <div class="question-text">
+              Which testing approach involves testing without any knowledge of
+              the internal workings?
+            </div>
+            <div class="options">
+              <div class="option correct">a. Black Box Testing</div>
+              <div class="option">b. White Box Testing</div>
+              <div class="option">c. Gray Box Testing</div>
+              <div class="option">d. Clear Box Testing</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Correct Answer: a. Black Box Testing</h4>
+              <p>
+                Black box testing focuses on input-output behavior without
+                knowledge of internal code structure or implementation details.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part IV: Linux System Administration -->
+      <div class="exam-section" id="linux-section">
+        <div class="section-header linux">
+          Part IV: Linux System Administration
+        </div>
+        <div class="section-content">
+          <div class="question">
+            <div class="question-number">Q61</div>
+            <div class="question-text">
+              What happens with this command: cat < file1 >> file2 | file3?
+            </div>
+            <div class="options">
+              <div class="option">
+                file1 content will be appended to file2 and finally stored in
+                file3
+              </div>
+              <div class="option">
+                file1 content will be appended to file2 and file3 will be
+                ignored
+              </div>
+              <div class="option">file2 and file3 will have same content</div>
+              <div class="option correct">syntax error</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              This command has a syntax error because you cannot use both input
+              redirection (<) and pipe (|) together with append redirection (>>)
+              in this way.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q62</div>
+            <div class="question-text">
+              In which directory can you store system user default files used
+              for creating user directories?
+            </div>
+            <div class="options">
+              <div class="option">/usr/tmp</div>
+              <div class="option correct">/etc/skel</div>
+              <div class="option">/etc/default</div>
+              <div class="option">None of the above</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The /etc/skel directory contains skeleton files that are copied to
+              a user's home directory when the user account is created.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q63</div>
+            <div class="question-text">
+              Display start from line 6 and show next 15 lines of a large log
+              file.
+            </div>
+            <div class="options">
+              <div class="option">head -n 20 logfile | tail -n 15</div>
+              <div class="option">head -n 15 logfile | tail -n 5</div>
+              <div class="option">head -n 15 logfile | tail -n 6</div>
+              <div class="option correct">head -n 20 logfile | tail -n 15</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              To show lines 6-20 (15 lines starting from line 6), use head -n 20
+              to get first 20 lines, then tail -n 15 to get the last 15 of
+              those.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q64</div>
+            <div class="question-text">
+              Which command is used to create a .tar.gz archive?
+            </div>
+            <div class="options">
+              <div class="option">gzip archive.tar</div>
+              <div class="option correct">tar -czf archive.tar.gz files/</div>
+              <div class="option">zip archive files/</div>
+              <div class="option">compress archive.tar</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The tar command with -czf options creates a compressed tar.gz
+              archive. -c creates, -z compresses with gzip, -f specifies
+              filename.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q65</div>
+            <div class="question-text">
+              What does this command do? find /var -name "*.log" 2>/dev/null
+            </div>
+            <div class="options">
+              <div class="option correct">
+                Finds all .log files in /var and ignores error messages
+              </div>
+              <div class="option">
+                Ignores error messages like "permission denied"
+              </div>
+              <div class="option">Redirects input from /dev/null</div>
+              <div class="option">
+                Finds .log files and saves them to /dev/null
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              This command finds all .log files in /var directory and redirects
+              error messages to /dev/null (discards them).
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q66</div>
+            <div class="question-text">
+              Which of the following shows all running processes for all users?
+            </div>
+            <div class="options">
+              <div class="option">ps</div>
+              <div class="option correct">ps aux</div>
+              <div class="option">cut -f 1</div>
+              <div class="option">grep -p</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              ps aux shows all running processes for all users. 'a' shows
+              processes for all users, 'u' shows user-oriented format, 'x' shows
+              processes not attached to a terminal.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q67</div>
+            <div class="question-text">What does the cut command do?</div>
+            <div class="options">
+              <div class="option">Cuts system processes</div>
+              <div class="option">Filters out unwanted lines from a file</div>
+              <div class="option correct">
+                Extracts columns or fields from each line of a file
+              </div>
+              <div class="option">Counts characters in a file</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The cut command extracts specific columns or fields from each line
+              of input, useful for processing delimited data.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q68</div>
+            <div class="question-text">
+              Which command shows the number of lines in a file?
+            </div>
+            <div class="options">
+              <div class="option">cut -l filename.txt</div>
+              <div class="option correct">wc -l filename.txt</div>
+              <div class="option">grep -n filename.txt</div>
+              <div class="option">ps -l filename.txt</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              wc -l counts and displays the number of lines in a file. 'wc'
+              stands for word count, and -l option counts lines.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q69</div>
+            <div class="question-text">What does command > /dev/null do?</div>
+            <div class="options">
+              <div class="option correct">
+                Discards all output from the command
+              </div>
+              <div class="option">Redirects input from /dev/null</div>
+              <div class="option">Sends errors to the screen</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              Redirecting output to /dev/null discards it completely. /dev/null
+              is a special device that acts as a "black hole" for data.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q70</div>
+            <div class="question-text">
+              Which symbol appends output to an existing file?
+            </div>
+            <div class="options">
+              <div class="option">></div>
+              <div class="option"><</div>
+              <div class="option correct">>></div>
+              <div class="option">|</div>
+              <div class="option"><<</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The >> operator appends output to an existing file, while >
+              overwrites the file.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q71</div>
+            <div class="question-text">
+              What does the | (pipe) symbol do in the shell?
+            </div>
+            <div class="options">
+              <div class="option">Redirects output to a file</div>
+              <div class="option correct">
+                Connects two commands, passing output of one as input to the
+                next
+              </div>
+              <div class="option">Executes two commands in parallel</div>
+              <div class="option">Comments out a command</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The pipe (|) symbol connects commands, sending the output of the
+              first command as input to the second command.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q72</div>
+            <div class="question-text">
+              Which command finds lines containing the word "error" in log.txt?
+            </div>
+            <div class="options">
+              <div class="option">cut error log.txt</div>
+              <div class="option">wc -l error log.txt</div>
+              <div class="option correct">grep error log.txt</div>
+              <div class="option">ps -ef | grep log.txt</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              grep searches for patterns in files. "grep error log.txt" finds
+              all lines containing "error" in log.txt.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q73</div>
+            <div class="question-text">
+              How do you extract the first field from a colon-separated file?
+            </div>
+            <div class="options">
+              <div class="option">cut -f1 file.txt</div>
+              <div class="option correct">cut -d: -f1 file.txt</div>
+              <div class="option">cut -c1 file.txt</div>
+              <div class="option">grep '^1' file.txt</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              cut -d: -f1 specifies colon (:) as delimiter (-d:) and extracts
+              first field (-f1).
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q74</div>
+            <div class="question-text">What does ps -ef | grep sshd do?</div>
+            <div class="options">
+              <div class="option">Starts the sshd service</div>
+              <div class="option">Kills all SSH processes</div>
+              <div class="option correct">
+                Finds all processes related to sshd
+              </div>
+              <div class="option">Edits the SSH config file</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              This command lists all processes (ps -ef) and filters for those
+              containing "sshd" in their name or command line.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q75</div>
+            <div class="question-text">
+              Which command sends a signal to terminate a process by PID?
+            </div>
+            <div class="options">
+              <div class="option">pgrep</div>
+              <div class="option correct">kill</div>
+              <div class="option">nice</div>
+              <div class="option">top</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The kill command sends signals to processes by PID. By default, it
+              sends SIGTERM to terminate the process.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q76</div>
+            <div class="question-text">
+              What is the function of the nice command?
+            </div>
+            <div class="options">
+              <div class="option">Sends termination signals</div>
+              <div class="option">Changes the name of a process</div>
+              <div class="option correct">
+                Starts a process with a specified priority
+              </div>
+              <div class="option">Shows friendly process names</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The nice command runs a program with modified scheduling priority.
+              Lower nice values mean higher priority.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q77</div>
+            <div class="question-text">
+              Which of the following will forcefully kill a process?
+            </div>
+            <div class="options">
+              <div class="option">kill -15 PID</div>
+              <div class="option">pgrep -9 PID</div>
+              <div class="option correct">kill -9 PID</div>
+              <div class="option">nice -n -9 PID</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              kill -9 sends SIGKILL signal which forcefully terminates a process
+              and cannot be caught or ignored.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q78</div>
+            <div class="question-text">
+              What is the default signal sent by the kill command?
+            </div>
+            <div class="options">
+              <div class="option">SIGSTOP</div>
+              <div class="option">SIGKILL</div>
+              <div class="option correct">SIGTERM</div>
+              <div class="option">SIGHUP</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The default signal sent by kill command is SIGTERM (signal 15),
+              which requests graceful termination.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q79</div>
+            <div class="question-text">
+              Which file is executed once when a user logs in through a
+              terminal?
+            </div>
+            <div class="options">
+              <div class="option">~/.bashrc</div>
+              <div class="option correct">~/.profile</div>
+              <div class="option">/etc/bash.bashrc</div>
+              <div class="option">~/.bash_logout</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              ~/.profile is executed once when a user logs in, while ~/.bashrc
+              is executed for each new interactive shell.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q80</div>
+            <div class="question-text">
+              Which command lists the PID of a process named "nginx"?
+            </div>
+            <div class="options">
+              <div class="option">kill nginx</div>
+              <div class="option correct">pgrep nginx</div>
+              <div class="option">nice nginx</div>
+              <div class="option">ps nginx</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              pgrep searches for processes by name and returns their PIDs.
+              "pgrep nginx" finds all processes with "nginx" in their name.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q81</div>
+            <div class="question-text">
+              What does the $PATH variable contain?
+            </div>
+            <div class="options">
+              <div class="option">List of active users</div>
+              <div class="option">Default editor</div>
+              <div class="option correct">
+                Directories searched for executables
+              </div>
+              <div class="option">Files loaded at startup</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The $PATH environment variable contains a list of directories that
+              the shell searches for executable programs when you type a
+              command.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q82</div>
+            <div class="question-text">
+              How do you change the priority of a running process?
+            </div>
+            <div class="options">
+              <div class="option">kill -n PID</div>
+              <div class="option">nice PID</div>
+              <div class="option">pgrep -n PID</div>
+              <div class="option correct">renice PID</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The renice command changes the priority of an already running
+              process. You can use it with a new nice value and PID.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q83</div>
+            <div class="question-text">
+              Which nice value corresponds to highest priority?
+            </div>
+            <div class="options">
+              <div class="option correct">-20</div>
+              <div class="option">0</div>
+              <div class="option">19</div>
+              <div class="option">100</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              Nice values range from -20 to 19, where -20 is the highest
+              priority and 19 is the lowest priority.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q84</div>
+            <div class="question-text">What does killall do?</div>
+            <div class="options">
+              <div class="option">Terminates all processes on the system</div>
+              <div class="option correct">
+                Kills all processes with a given name
+              </div>
+              <div class="option">Kills all processes started by root</div>
+              <div class="option">Restarts all services</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              killall kills all processes that match the specified process name,
+              not all processes on the system.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q85</div>
+            <div class="question-text">
+              Which file is executed every time a new interactive shell is
+              opened?
+            </div>
+            <div class="options">
+              <div class="option">~/.profile</div>
+              <div class="option">~/.bash_history</div>
+              <div class="option correct">~/.bashrc</div>
+              <div class="option">/etc/profile</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              ~/.bashrc is executed every time a new interactive bash shell is
+              started, while ~/.profile is executed only at login.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q86</div>
+            <div class="question-text">
+              Which file stores the encrypted user passwords in most modern
+              Linux systems?
+            </div>
+            <div class="options">
+              <div class="option">/etc/passwd</div>
+              <div class="option">/etc/login.defs</div>
+              <div class="option correct">/etc/shadow</div>
+              <div class="option">/etc/group</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              /etc/shadow stores encrypted passwords in modern Linux systems for
+              security reasons, while /etc/passwd contains other user
+              information.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q87</div>
+            <div class="question-text">
+              What does the ls -l output -rwxr--r-- mean?
+            </div>
+            <div class="options">
+              <div class="option">Only root can execute the file</div>
+              <div class="option">Everyone can read and execute</div>
+              <div class="option correct">
+                Owner can read/write/execute; group and others can read
+              </div>
+              <div class="option">
+                File is a directory with full permissions
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              -rwxr--r-- means: owner has read/write/execute (rwx), group has
+              read only (r--), others have read only (r--).
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q88</div>
+            <div class="question-text">What does chmod 755 file.sh do?</div>
+            <div class="options">
+              <div class="option correct">
+                Owner: rwx, Group: r-x, Others: r-x
+              </div>
+              <div class="option">Gives all users read/write/execute</div>
+              <div class="option">Makes the file read-only for everyone</div>
+              <div class="option">Owner: r-x, Group: rw-, Others: ---</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              chmod 755 gives owner full permissions (7=rwx), group and others
+              read and execute (5=r-x).
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q89</div>
+            <div class="question-text">
+              What is the default permission for a file created by a regular
+              user before umask is applied?
+            </div>
+            <div class="options">
+              <div class="option">777</div>
+              <div class="option">644</div>
+              <div class="option correct">666</div>
+              <div class="option">600</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The default permission for files is 666 (rw-rw-rw-) before umask
+              is applied. Directories default to 777.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q90</div>
+            <div class="question-text">What is the purpose of the umask?</div>
+            <div class="options">
+              <div class="option">Grants root access</div>
+              <div class="option">Defines default file owner</div>
+              <div class="option correct">
+                Subtracts permissions from default at file creation
+              </div>
+              <div class="option">Prevents users from executing files</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              umask defines which permissions to remove from the default
+              permissions when creating new files and directories.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q91</div>
+            <div class="question-text">
+              Which symbol represents the current directory?
+            </div>
+            <div class="options">
+              <div class="option">~</div>
+              <div class="option">..</div>
+              <div class="option">/</div>
+              <div class="option correct">.</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              A single dot (.) represents the current directory, while ..
+              represents the parent directory.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q92</div>
+            <div class="question-text">What does cd .. do?</div>
+            <div class="options">
+              <div class="option">Goes to the user's home directory</div>
+              <div class="option">Opens the directory</div>
+              <div class="option">Goes to the root directory</div>
+              <div class="option correct">Moves up one directory level</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              cd .. changes to the parent directory (one level up in the
+              directory tree).
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q93</div>
+            <div class="question-text">
+              Which of the following is a valid absolute path?
+            </div>
+            <div class="options">
+              <div class="option">../Documents/notes.txt</div>
+              <div class="option">./scripts/run.sh</div>
+              <div class="option correct">/var/log/syslog</div>
+              <div class="option">scripts/log.sh</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              An absolute path starts with / (root directory). /var/log/syslog
+              is absolute, others are relative paths.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q94</div>
+            <div class="question-text">
+              Which command renames a file called old.txt to new.txt?
+            </div>
+            <div class="options">
+              <div class="option">rename old.txt new.txt</div>
+              <div class="option">cp old.txt new.txt</div>
+              <div class="option correct">mv old.txt new.txt</div>
+              <div class="option">edit old.txt new.txt</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The mv command both moves and renames files. To rename, you move
+              the file to the same directory with a new name.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q95</div>
+            <div class="question-text">What is a hidden file in Linux?</div>
+            <div class="options">
+              <div class="option">A file in the /root directory</div>
+              <div class="option">A file that ends with .hidden</div>
+              <div class="option">A file with no permissions</div>
+              <div class="option correct">
+                A file whose name starts with a .
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              In Linux, files and directories whose names begin with a dot (.)
+              are considered hidden and not shown by ls unless -a option is
+              used.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q96</div>
+            <div class="question-text">
+              What does 2> do in a command like command 2> error.log?
+            </div>
+            <div class="options">
+              <div class="option">Redirects standard output to error.log</div>
+              <div class="option">
+                Redirects both output and error to error.log
+              </div>
+              <div class="option correct">
+                Redirects standard error to error.log
+              </div>
+              <div class="option">Appends standard error to error.log</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              2> redirects stderr (file descriptor 2) to a file, overwriting it.
+              Use 2>> to append instead.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q97</div>
+            <div class="question-text">
+              What does the following command do? grep "ssh" /var/log/auth.log >
+              ssh.log
+            </div>
+            <div class="options">
+              <div class="option">
+                Searches for "ssh" in the log and displays it on the screen
+              </div>
+              <div class="option">Redirects input to grep from ssh.log</div>
+              <div class="option">
+                Pipes the log into grep, then into ssh.log without using cat
+              </div>
+              <div class="option correct">
+                Saves the grep output into ssh.log, overwriting it
+              </div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              This command searches for lines containing "ssh" in
+              /var/log/auth.log and redirects the output to ssh.log file,
+              overwriting it.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q98</div>
+            <div class="question-text">
+              Which command will extract the contents of file.tar.bz2?
+            </div>
+            <div class="options">
+              <div class="option">tar -xzf file.tar.bz2</div>
+              <div class="option correct">tar -xjf file.tar.bz2</div>
+              <div class="option">bzip2 -d file.tar.bz2</div>
+              <div class="option">unzip file.tar.bz2</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              tar -xjf extracts bzip2 compressed tar files. -x extracts, -j
+              handles bzip2 compression, -f specifies filename.
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q99</div>
+            <div class="question-text">
+              What is the difference between gzip and tar?
+            </div>
+            <div class="options">
+              <div class="option">gzip archives, tar compresses</div>
+              <div class="option correct">
+                gzip is used to compress a single file; tar creates multi-file
+                archives
+              </div>
+              <div class="option">
+                gzip creates archives with metadata; tar doesn't
+              </div>
+              <div class="option">They are the same tool</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              gzip compresses individual files, while tar creates archives of
+              multiple files. They're often used together (tar.gz).
+            </div>
+          </div>
+
+          <div class="question">
+            <div class="question-number">Q100</div>
+            <div class="question-text">
+              What command is used to save the standard output in a file, as
+              well as display it on the terminal?
+            </div>
+            <div class="options">
+              <div class="option correct">tee</div>
+              <div class="option">grep</div>
+              <div class="option">more</div>
+              <div class="option">no one of the above</div>
+            </div>
+            <div class="answer-explanation">
+              <h4>Explanation:</h4>
+              The tee command reads from input and writes to both standard
+              output (terminal) and files simultaneously.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p style="margin-top: 10px"><strong>Created By:</strong> Abdelghany</p>
+      </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to Top">
+      ↑
+    </button>
+
+    <script>
+      // Table of Contents Functionality
+      function toggleTOC() {
+        const sidebar = document.getElementById("tocSidebar");
+        const toggle = document.getElementById("tocToggle");
+        const isMobile = window.innerWidth <= 768;
+
+        sidebar.classList.toggle("show");
+
+        // Change toggle icon and position
+        if (sidebar.classList.contains("show")) {
+          toggle.innerHTML = "✕";
+          toggle.title = "Hide Table of Contents";
+          if (!isMobile) {
+            toggle.style.left = "320px"; // Move button when sidebar is open on desktop
+          }
+        } else {
+          toggle.innerHTML = "☰";
+          toggle.title = "Show Table of Contents";
+          if (!isMobile) {
+            toggle.style.left = "20px"; // Reset button position when sidebar is closed on desktop
+          }
+        }
+      }
+
+      function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+          highlightSection(sectionId);
+        }
+      }
+
+      function scrollToQuestion(questionId) {
+        // Find the question by its number
+        const questions = document.querySelectorAll(".question-number");
+        let targetQuestion = null;
+
+        questions.forEach((question) => {
+          if (question.textContent.trim() === questionId) {
+            targetQuestion = question.closest(".question");
+          }
+        });
+
+        if (targetQuestion) {
+          targetQuestion.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+          highlightQuestion(targetQuestion);
+        }
+      }
+
+      function highlightSection(sectionId) {
+        // Remove any existing highlights
+        document.querySelectorAll(".section-header").forEach((header) => {
+          header.style.boxShadow = "";
+        });
+
+        // Add highlight to target section
+        const section = document.getElementById(sectionId);
+        if (section) {
+          const header = section.querySelector(".section-header");
+          if (header) {
+            header.style.boxShadow = "0 0 20px rgba(255, 255, 255, 0.6)";
+            setTimeout(() => {
+              header.style.boxShadow = "";
+            }, 2000);
+          }
+        }
+      }
+
+      function highlightQuestion(questionElement) {
+        // Remove any existing highlights
+        document.querySelectorAll(".question").forEach((q) => {
+          q.style.boxShadow = "";
+          q.style.transform = "";
+        });
+
+        // Add highlight to target question
+        questionElement.style.boxShadow = "0 8px 25px rgba(52, 152, 219, 0.3)";
+        questionElement.style.transform = "translateY(-5px)";
+
+        setTimeout(() => {
+          questionElement.style.boxShadow = "";
+          questionElement.style.transform = "";
+        }, 2000);
+      }
+
+      // Auto-hide TOC on scroll for mobile
+      let lastScrollTop = 0;
+      let ticking = false;
+
+      function updateTOCOnScroll() {
+        const st = window.pageYOffset || document.documentElement.scrollTop;
+        const sidebar = document.getElementById("tocSidebar");
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile && sidebar.classList.contains("show")) {
+          if (st > lastScrollTop && st > 100) {
+            // Scrolling down - hide TOC
+            sidebar.style.transform = "translateX(-100%)";
+            sidebar.style.opacity = "0";
+          } else {
+            // Scrolling up - show TOC
+            sidebar.style.transform = "translateX(0)";
+            sidebar.style.opacity = "1";
+          }
+        }
+
+        lastScrollTop = st <= 0 ? 0 : st;
+        ticking = false;
+      }
+
+      window.addEventListener("scroll", function () {
+        if (!ticking) {
+          requestAnimationFrame(updateTOCOnScroll);
+          ticking = true;
+        }
+      });
+
+      // Scroll to Top Button Functionality
+      window.addEventListener("scroll", function () {
+        const scrollToTopBtn = document.querySelector(".scroll-to-top");
+
+        if (window.pageYOffset > 300) {
+          scrollToTopBtn.classList.add("show");
+        } else {
+          scrollToTopBtn.classList.remove("show");
+        }
+      });
+
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+
+      // Enhanced scroll behavior for better UX
+      let isScrolling = false;
+
+      function handleScroll() {
+        const scrollToTopBtn = document.querySelector(".scroll-to-top");
+
+        if (window.pageYOffset > 300) {
+          scrollToTopBtn.classList.add("show");
+        } else {
+          scrollToTopBtn.classList.remove("show");
+        }
+
+        // Clear the timeout throughout the scroll
+        clearTimeout(isScrolling);
+
+        // Set a timeout to run after scrolling ends
+        isScrolling = setTimeout(function () {
+          // Add any post-scroll functionality here if needed
+        }, 66);
+      }
+
+      // Use passive event listener for better performance
+      window.addEventListener("scroll", handleScroll, { passive: true });
+
+      // Add keyboard support (Ctrl + Home)
+      document.addEventListener("keydown", function (e) {
+        if (e.ctrlKey && e.key === "Home") {
+          e.preventDefault();
+          scrollToTop();
+        }
+
+        // Toggle TOC with Ctrl + T
+        if (e.ctrlKey && e.key === "t") {
+          e.preventDefault();
+          toggleTOC();
+        }
+      });
+
+      // Initialize TOC state based on screen size
+      window.addEventListener("load", function () {
+        const sidebar = document.getElementById("tocSidebar");
+        const toggle = document.getElementById("tocToggle");
+
+        // Start with TOC hidden on all screen sizes
+        sidebar.classList.remove("show");
+        toggle.innerHTML = "☰";
+        toggle.title = "Show Table of Contents";
+        toggle.style.left = "20px";
+      });
+
+      // Handle window resize
+      window.addEventListener("resize", function () {
+        const sidebar = document.getElementById("tocSidebar");
+        const toggle = document.getElementById("tocToggle");
+        const isMobile = window.innerWidth <= 768;
+
+        if (!isMobile) {
+          // Desktop - reset any mobile transforms
+          sidebar.style.transform = "";
+          sidebar.style.opacity = "";
+
+          // Update toggle position based on sidebar state
+          if (sidebar.classList.contains("show")) {
+            toggle.style.left = "320px";
+          } else {
+            toggle.style.left = "20px";
+          }
+        } else {
+          // Mobile - ensure toggle is in correct position
+          toggle.style.left = "10px";
+        }
+      });
+    </script>
+  </body>
+</html>
