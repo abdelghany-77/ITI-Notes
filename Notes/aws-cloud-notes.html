@@ -1,0 +1,3882 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AWS Cloud Computing Study Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #FF9900 0%, #FF6600 100%);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* Layout Container */
+      .layout-container {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100vh;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 153, 0, 0.95) 0%,
+          rgba(255, 102, 0, 0.95) 100%
+        );
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .sidebar-header {
+        background: linear-gradient(135deg, #FF9900, #FF6600);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1002;
+      }
+
+      .sidebar-header h3 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+        font-weight: 700;
+      }
+
+      .sidebar-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .sidebar-content {
+        padding: 20px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar li {
+        margin-bottom: 8px;
+      }
+
+      .sidebar a {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 15px;
+        display: block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+      }
+
+      .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+        border-left-color: #232F3E;
+      }
+
+      .sidebar-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #FF9900, #FF6600);
+        color: white;
+        border: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1003;
+      }
+
+      .sidebar-toggle:hover {
+        background: linear-gradient(135deg, #FF6600, #FF9900);
+        transform: translateY(-2px);
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+
+      .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        margin-left: 20px;
+        margin-right: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 30px 0;
+        background: linear-gradient(135deg, #232F3E, #131A22);
+        color: white;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.3;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .course-outline {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        border-left: 5px solid #FF9900;
+      }
+
+      .course-outline h2 {
+        color: #232F3E;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
+
+      .lesson-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .lesson-item {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-left: 4px solid #FF9900;
+      }
+
+      .lesson-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .lesson {
+        background: white;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .lesson:hover {
+        transform: translateY(-5px);
+      }
+
+      .lesson-header {
+        background: linear-gradient(135deg, #FF9900, #FF6600);
+        color: white;
+        padding: 20px;
+        position: relative;
+      }
+
+      .lesson-header::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #FF9900, #232F3E, #FF6600, #146EB4);
+      }
+
+      .lesson-header h2 {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+      }
+
+      .lesson-content {
+        padding: 25px;
+      }
+
+      .section {
+        margin-bottom: 25px;
+      }
+
+      .section-title {
+        color: #232F3E;
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #ecf0f1;
+        position: relative;
+      }
+
+      .section-title::before {
+        content: "▶";
+        color: #FF9900;
+        margin-right: 10px;
+        font-size: 0.8em;
+      }
+
+      .subsection {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+
+      .subsection-title {
+        color: #34495e;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .content-box {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #FF9900;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #FFF3CD, #FFE69C);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #FF9900;
+        position: relative;
+      }
+
+      .highlight-box::before {
+        content: "💡";
+        position: absolute;
+        top: 15px;
+        left: -12px;
+        background: #FF9900;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+      }
+
+      .definition-box {
+        background: linear-gradient(135deg, #D4EDDA, #C3E6CB);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #28A745;
+      }
+
+      .code-box {
+        background: #232F3E;
+        color: #ecf0f1;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-family: 'Courier New', monospace;
+        overflow-x: auto;
+      }
+
+      .code-box pre {
+        margin: 0;
+        white-space: pre-wrap;
+      }
+
+      .cli-box {
+        background: #1a1a1a;
+        color: #00ff00;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-family: 'Courier New', monospace;
+        overflow-x: auto;
+        border-left: 4px solid #FF9900;
+      }
+
+      .cli-box pre {
+        margin: 0;
+        white-space: pre-wrap;
+      }
+
+      ul,
+      ol {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+
+      li {
+        margin-bottom: 8px;
+        padding-left: 5px;
+      }
+
+      .component-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .component-card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border-top: 4px solid #FF9900;
+        transition: transform 0.3s ease;
+      }
+
+      .component-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .component-card h4 {
+        color: #FF9900;
+        margin-bottom: 10px;
+      }
+
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .comparison-table th {
+        background: linear-gradient(135deg, #FF9900, #FF6600);
+        color: white;
+        padding: 12px;
+        text-align: left;
+      }
+
+      .comparison-table td {
+        padding: 12px;
+        border-bottom: 1px solid #ecf0f1;
+      }
+
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .back-to-main {
+        position: fixed;
+        top: 80px;
+        left: 20px;
+        background: linear-gradient(135deg, #232F3E, #131A22);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-to-main:hover {
+        background: linear-gradient(135deg, #131A22, #232F3E);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        color: white;
+      }
+
+      .back-to-main::before {
+        content: "🏠";
+        font-size: 1.1em;
+      }
+
+      .example-box {
+        background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #146EB4;
+      }
+
+      .example-box h5 {
+        color: #0D47A1;
+        margin-bottom: 10px;
+      }
+
+      .warning-box {
+        background: linear-gradient(135deg, #FFE5E5, #FFCCCC);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #DC3545;
+      }
+
+      .warning-box::before {
+        content: "⚠️";
+        margin-right: 8px;
+      }
+
+      .aws-service-card {
+        background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        padding: 20px;
+        border-radius: 8px;
+        margin: 15px 0;
+        border-left: 5px solid #FF9900;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .aws-service-card h4 {
+        color: #232F3E;
+        margin-bottom: 10px;
+        font-size: 1.3em;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 280px;
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
+        .container {
+          margin: 10px;
+          padding: 15px;
+        }
+
+        .sidebar-toggle {
+          top: 10px;
+          left: 10px;
+          padding: 10px 12px;
+        }
+
+        .back-to-main {
+          top: 60px;
+          left: 10px;
+          padding: 8px 15px;
+          font-size: 0.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+    <a href="../index.html" class="back-to-main"></a>
+
+    <div class="layout-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h3>📚 Course Navigation</h3>
+          <p>AWS Cloud Computing</p>
+        </div>
+        <div class="sidebar-content">
+          <ul>
+            <li>
+              <a href="#outline" onclick="closeSidebar()">📋 Course Outline</a>
+            </li>
+            <li>
+              <a href="#day1-intro" onclick="closeSidebar()">☁️ Cloud Computing Intro</a>
+            </li>
+            <li>
+              <a href="#day1-infrastructure" onclick="closeSidebar()">🌍 Global Infrastructure</a>
+            </li>
+            <li>
+              <a href="#day1-core" onclick="closeSidebar()">🔧 Core Services</a>
+            </li>
+            <li>
+              <a href="#day1-iam" onclick="closeSidebar()">🔐 IAM</a>
+            </li>
+            <li>
+              <a href="#day2-scaling" onclick="closeSidebar()">📈 Elasticity & Scaling</a>
+            </li>
+            <li>
+              <a href="#day2-databases" onclick="closeSidebar()">💾 Databases</a>
+            </li>
+            <li>
+              <a href="#day2-monitoring" onclick="closeSidebar()">📊 Monitoring</a>
+            </li>
+            <li>
+              <a href="#day2-cost" onclick="closeSidebar()">💰 Cost Management</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="container" id="mainContainer">
+          <div class="header">
+            <h1>AWS Cloud Computing</h1>
+            <p>Comprehensive Study Guide & Notes</p>
+          </div>
+
+          <section id="outline" class="course-outline">
+            <h2>📚 Course Outline</h2>
+            <div class="lesson-list">
+              <div class="lesson-item">
+                <strong>Day 1 - Module 1:</strong> Introduction to Cloud Computing
+              </div>
+              <div class="lesson-item">
+                <strong>Day 1 - Module 2:</strong> AWS Global Infrastructure
+              </div>
+              <div class="lesson-item">
+                <strong>Day 1 - Module 3:</strong> Core AWS Services Overview
+              </div>
+              <div class="lesson-item">
+                <strong>Day 1 - Module 4:</strong> Identity & Access Management (IAM)
+              </div>
+              <div class="lesson-item">
+                <strong>Day 2 - Module 1:</strong> Elasticity & Scaling
+              </div>
+              <div class="lesson-item">
+                <strong>Day 2 - Module 2:</strong> Databases in AWS
+              </div>
+              <div class="lesson-item">
+                <strong>Day 2 - Module 3:</strong> Monitoring & Logging
+              </div>
+              <div class="lesson-item">
+                <strong>Day 2 - Module 4:</strong> Cost Management & Best Practices
+              </div>
+            </div>
+          </section>
+
+          <!-- DAY 1 -->
+          <div id="day1-intro" class="lesson">
+            <div class="lesson-header">
+              <h2>📅 Day 1 - Module 1: Introduction to Cloud Computing</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">1.1 What is Cloud Computing?</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>Cloud Computing</strong> is the on-demand delivery of IT resources over the Internet 
+                    with pay-as-you-go pricing. Instead of buying, owning, and maintaining physical data centers 
+                    and servers, you can access technology services on an as-needed basis.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Simple Analogy:</strong></p>
+                  <p>
+                    Think of cloud computing like electricity in your home. You don't own a power plant; 
+                    you just plug in and pay for what you use. Similarly, with cloud computing, you don't 
+                    need to own servers—you just use AWS resources and pay for what you consume.
+                  </p>
+                </div>
+
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>🌐 On-Demand Access</h4>
+                    <p>Get resources when you need them, instantly</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>💳 Pay-as-You-Go</h4>
+                    <p>Only pay for what you actually use</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>📈 Scalability</h4>
+                    <p>Scale up or down based on demand</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🌍 Global Reach</h4>
+                    <p>Deploy applications worldwide in minutes</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.2 Cloud Service Models: IaaS vs PaaS vs SaaS</h3>
+                
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Model</th>
+                      <th>What You Manage</th>
+                      <th>What Provider Manages</th>
+                      <th>AWS Example</th>
+                      <th>Real-World Analogy</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>IaaS</strong><br>(Infrastructure as a Service)</td>
+                      <td>Applications, Data, Runtime, Middleware, OS</td>
+                      <td>Virtualization, Servers, Storage, Networking</td>
+                      <td>Amazon EC2, Amazon S3</td>
+                      <td>Renting a car - you drive and maintain it</td>
+                    </tr>
+                    <tr>
+                      <td><strong>PaaS</strong><br>(Platform as a Service)</td>
+                      <td>Applications, Data</td>
+                      <td>Runtime, Middleware, OS, Virtualization, Servers, Storage, Networking</td>
+                      <td>AWS Elastic Beanstalk, AWS Lambda</td>
+                      <td>Taking a taxi - just tell the destination</td>
+                    </tr>
+                    <tr>
+                      <td><strong>SaaS</strong><br>(Software as a Service)</td>
+                      <td>Nothing (just use the application)</td>
+                      <td>Everything</td>
+                      <td>Amazon WorkMail, AWS Chime</td>
+                      <td>Using public transport - just pay and ride</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="example-box">
+                  <h5>Practical Example: Building a Website</h5>
+                  <ul>
+                    <li><strong>IaaS (EC2):</strong> You rent a virtual server, install web server software (Apache/Nginx), deploy your code, manage updates and security</li>
+                    <li><strong>PaaS (Elastic Beanstalk):</strong> You just upload your code, AWS handles the server, scaling, and infrastructure</li>
+                    <li><strong>SaaS (WordPress.com):</strong> You just create content, everything else is handled for you</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.3 Benefits of Cloud Computing</h3>
+                
+                <div class="aws-service-card">
+                  <h4>📊 Scalability</h4>
+                  <p>
+                    The ability to accommodate larger loads by making hardware stronger (scale up) or 
+                    adding more nodes (scale out).
+                  </p>
+                  <div class="example-box">
+                    <h5>Example:</h5>
+                    <p>
+                      An e-commerce website during Black Friday can automatically add more servers to 
+                      handle increased traffic, then scale down after the rush.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>🔄 Elasticity</h4>
+                  <p>
+                    Once a system is scalable, elasticity means it can scale automatically based on load.
+                  </p>
+                  <div class="example-box">
+                    <h5>Example:</h5>
+                    <p>
+                      AWS Auto Scaling automatically adds EC2 instances when CPU usage exceeds 70% and 
+                      removes them when usage drops below 30%.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>💰 Pay-as-You-Go Pricing</h4>
+                  <p>
+                    No upfront costs or long-term commitments. Pay only for the compute power, storage, 
+                    and other resources you use.
+                  </p>
+                  <div class="example-box">
+                    <h5>Example:</h5>
+                    <p>
+                      Instead of buying a $10,000 server that might sit idle 50% of the time, you pay 
+                      AWS only for the hours you actually use the compute resources.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>⚡ Speed & Agility</h4>
+                    <p>Deploy resources in minutes, not weeks</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🌍 Global in Minutes</h4>
+                    <p>Deploy to multiple regions worldwide quickly</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>💡 Innovation</h4>
+                    <p>Focus on business, not infrastructure</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🔧 No Maintenance</h4>
+                    <p>AWS handles hardware maintenance</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.4 Shared Responsibility Model</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    Security and compliance is a <strong>shared responsibility</strong> between AWS and the customer. 
+                    AWS is responsible for security <strong>OF</strong> the cloud, while customers are responsible 
+                    for security <strong>IN</strong> the cloud.
+                  </p>
+                </div>
+
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>AWS Responsibility</h4>
+                    <p><strong>"Security OF the Cloud"</strong></p>
+                    <ul style="text-align: left; margin-top: 10px;">
+                      <li>Physical data center security</li>
+                      <li>Hardware infrastructure</li>
+                      <li>Network infrastructure</li>
+                      <li>Virtualization layer</li>
+                      <li>Managed services (RDS, S3)</li>
+                    </ul>
+                  </div>
+                  <div class="component-card">
+                    <h4>Customer Responsibility</h4>
+                    <p><strong>"Security IN the Cloud"</strong></p>
+                    <ul style="text-align: left; margin-top: 10px;">
+                      <li>Customer data</li>
+                      <li>Applications</li>
+                      <li>Identity & Access Management</li>
+                      <li>Operating system patches</li>
+                      <li>Firewall configuration</li>
+                      <li>Encryption</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: EC2 Instance Security</h5>
+                  <ul>
+                    <li><strong>AWS secures:</strong> The physical server, hypervisor, network infrastructure</li>
+                    <li><strong>You secure:</strong> The operating system, installed applications, security groups, data encryption, IAM policies</li>
+                  </ul>
+                </div>
+
+                <div class="warning-box">
+                  <strong>Important:</strong> Even though AWS secures the infrastructure, if you misconfigure 
+                  an S3 bucket to be publicly accessible with sensitive data, that's YOUR responsibility!
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.5 Reflection Questions</h3>
+                <div class="content-box">
+                  <ol>
+                    <li><strong>Q:</strong> How does cloud computing differ from traditional on-premises infrastructure?<br>
+                    <strong>A:</strong> Traditional infrastructure requires upfront capital investment, physical space, maintenance staff, and capacity planning. Cloud computing offers on-demand resources, pay-as-you-go pricing, no maintenance overhead, and instant global deployment.</li>
+                    
+                    <li><strong>Q:</strong> Which service model (IaaS, PaaS, SaaS) do you think most companies adopt first, and why?<br>
+                    <strong>A:</strong> Most companies start with SaaS (like email, CRM) because it requires zero infrastructure management. For development, they often move to IaaS (EC2) for maximum control, then gradually adopt PaaS for faster deployment.</li>
+                    
+                    <li><strong>Q:</strong> In the Shared Responsibility Model, what's one example of a security task AWS handles vs one you must handle?<br>
+                    <strong>A:</strong> AWS handles physical data center security (guards, cameras, access control). You must handle IAM policies to control who can access your resources.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.6 References</h3>
+                <div class="content-box">
+                  <ul>
+                    <li>📖 <a href="https://aws.amazon.com/what-is-cloud-computing/" target="_blank" rel="noopener">What is Cloud Computing?</a></li>
+                    <li>📖 <a href="https://aws.amazon.com/types-of-cloud-computing/" target="_blank" rel="noopener">Types of Cloud Computing</a></li>
+                    <li>📖 <a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank" rel="noopener">Shared Responsibility Model</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="day1-infrastructure" class="lesson">
+            <div class="lesson-header">
+              <h2>📅 Day 1 - Module 2: AWS Global Infrastructure</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">2.1 Global Infrastructure Overview</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    AWS Global Infrastructure is designed and built to deliver a flexible, reliable, scalable, 
+                    and secure cloud computing environment with high-quality global network performance.
+                  </p>
+                </div>
+
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>🌍 Regions</h4>
+                    <p>30+ geographic areas worldwide</p>
+                    <p><em>Example: us-east-1, eu-west-1</em></p>
+                  </div>
+                  <div class="component-card">
+                    <h4>📍 Availability Zones</h4>
+                    <p>99+ isolated locations within Regions</p>
+                    <p><em>Example: us-east-1a, us-east-1b</em></p>
+                  </div>
+                  <div class="component-card">
+                    <h4>⚡ Edge Locations</h4>
+                    <p>400+ points of presence</p>
+                    <p><em>Used for CloudFront CDN</em></p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🔌 Local Zones</h4>
+                    <p>Ultra-low latency for specific metros</p>
+                    <p><em>Example: Los Angeles, Boston</em></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.2 AWS Regions</h3>
+                
+                <div class="aws-service-card">
+                  <h4>What is a Region?</h4>
+                  <p>
+                    A <strong>Region</strong> is a physical location around the world where AWS clusters data centers. 
+                    Each Region consists of multiple, isolated Availability Zones.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Region Naming Convention:</strong></p>
+                  <ul>
+                    <li><code>us-east-1</code> → US East (N. Virginia)</li>
+                    <li><code>eu-west-1</code> → Europe (Ireland)</li>
+                    <li><code>ap-southeast-1</code> → Asia Pacific (Singapore)</li>
+                    <li><code>sa-east-1</code> → South America (São Paulo)</li>
+                  </ul>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">How to Choose a Region?</h4>
+                  <div class="content-box">
+                    <ol>
+                      <li><strong>Compliance & Data Residency:</strong> Some countries require data to stay within borders (e.g., GDPR in Europe)</li>
+                      <li><strong>Latency:</strong> Choose a region close to your users for faster response times</li>
+                      <li><strong>Service Availability:</strong> Not all AWS services are available in all regions</li>
+                      <li><strong>Pricing:</strong> Costs vary by region (us-east-1 is often cheapest)</li>
+                    </ol>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Region Selection</h5>
+                  <p>
+                    <strong>Scenario:</strong> You're building an app for European customers with strict GDPR compliance.
+                  </p>
+                  <ul>
+                    <li>✅ <strong>Choose:</strong> eu-west-1 (Ireland) or eu-central-1 (Frankfurt)</li>
+                    <li>❌ <strong>Avoid:</strong> us-east-1 (Virginia) - data residency issues</li>
+                    <li>📊 <strong>Benefit:</strong> Lower latency for EU users + GDPR compliance</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.3 Availability Zones (AZs)</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    An <strong>Availability Zone</strong> is one or more discrete data centers with redundant power, 
+                    networking, and connectivity in an AWS Region. Each AZ is isolated but connected via 
+                    high-bandwidth, low-latency networking.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Key Points:</strong></p>
+                  <ul>
+                    <li>Each Region has a <strong>minimum of 3 AZs</strong> (most have 3-6 AZs)</li>
+                    <li>AZs are physically separated (tens of miles apart) to protect against disasters</li>
+                    <li>Connected via private fiber-optic networks</li>
+                    <li>Independent power, cooling, and physical security</li>
+                  </ul>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: High Availability Architecture</h5>
+                  <div class="code-box">
+<pre>
+Region: us-east-1 (N. Virginia)
+├── AZ: us-east-1a
+│   ├── EC2 Instance 1 (Web Server)
+│   └── RDS Database (Primary)
+│
+├── AZ: us-east-1b
+│   ├── EC2 Instance 2 (Web Server)
+│   └── RDS Database (Standby Replica)
+│
+└── AZ: us-east-1c
+    └── EC2 Instance 3 (Web Server)
+
+If one AZ fails, your app continues running in other AZs!
+</pre>
+                  </div>
+                </div>
+
+                <div class="warning-box">
+                  <strong>Best Practice:</strong> Always deploy your application across at least 2 Availability Zones 
+                  for high availability and fault tolerance!
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.4 Edge Locations & CloudFront</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Edge Locations</strong> are AWS data centers designed to deliver content to end users 
+                    with lower latency. Used by Amazon CloudFront (AWS's Content Delivery Network).
+                  </p>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>How CloudFront Works</h4>
+                  <ol>
+                    <li>User in Tokyo requests a video from your website</li>
+                    <li>Request goes to nearest Edge Location (Tokyo)</li>
+                    <li>If content is cached, Edge Location serves it immediately (fast!)</li>
+                    <li>If not cached, Edge Location fetches from origin (S3/EC2), caches it, then serves</li>
+                    <li>Next user in Tokyo gets cached content instantly</li>
+                  </ol>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Without vs With CloudFront</h5>
+                  <table class="comparison-table">
+                    <thead>
+                      <tr>
+                        <th>Scenario</th>
+                        <th>Without CloudFront</th>
+                        <th>With CloudFront</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>User Location</td>
+                        <td>Tokyo, Japan</td>
+                        <td>Tokyo, Japan</td>
+                      </tr>
+                      <tr>
+                        <td>Server Location</td>
+                        <td>us-east-1 (Virginia)</td>
+                        <td>Origin in us-east-1, Edge in Tokyo</td>
+                      </tr>
+                      <tr>
+                        <td>Latency</td>
+                        <td>~150ms</td>
+                        <td>~10ms (from Edge cache)</td>
+                      </tr>
+                      <tr>
+                        <td>User Experience</td>
+                        <td>Slow load times</td>
+                        <td>Fast, responsive</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.5 Reflection Questions</h3>
+                <div class="content-box">
+                  <ol>
+                    <li><strong>Q:</strong> If your users are in Europe but your servers are in the US, what challenges might arise?<br>
+                    <strong>A:</strong> High latency (slow page loads), potential data residency/GDPR compliance issues, increased network costs, poor user experience.</li>
+                    
+                    <li><strong>Q:</strong> Why might a company choose to deploy in multiple Availability Zones?<br>
+                    <strong>A:</strong> High availability - if one AZ fails (power outage, network issue), the application continues running in other AZs. Provides fault tolerance and disaster recovery.</li>
+                    
+                    <li><strong>Q:</strong> How do edge locations improve user experience?<br>
+                    <strong>A:</strong> Edge locations cache content closer to users, dramatically reducing latency. A user in Sydney gets content from Sydney edge location instead of waiting for data from Virginia.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.6 References</h3>
+                <div class="content-box">
+                  <ul>
+                    <li>📖 <a href="https://aws.amazon.com/about-aws/global-infrastructure/" target="_blank" rel="noopener">AWS Global Infrastructure</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html" target="_blank" rel="noopener">Regions & Availability Zones</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html" target="_blank" rel="noopener">CloudFront & Edge Locations</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="day1-core" class="lesson">
+            <div class="lesson-header">
+              <h2>📅 Day 1 - Module 3: Core AWS Services Overview</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">3.1 Compute Services</h3>
+                
+                <div class="aws-service-card">
+                  <h4>☁️ Amazon EC2 (Elastic Compute Cloud)</h4>
+                  <p>
+                    Virtual servers in the cloud. Think of EC2 as renting a computer in AWS's data center 
+                    that you can configure and control remotely.
+                  </p>
+                  
+                  <div class="highlight-box">
+                    <p><strong>Key Concepts:</strong></p>
+                    <ul>
+                      <li><strong>Instance:</strong> A virtual server</li>
+                      <li><strong>Instance Types:</strong> Different combinations of CPU, memory, storage (t2.micro, m5.large, etc.)</li>
+                      <li><strong>AMI (Amazon Machine Image):</strong> Template with OS and software</li>
+                      <li><strong>EBS (Elastic Block Store):</strong> Persistent storage for EC2</li>
+                    </ul>
+                  </div>
+
+                  <div class="example-box">
+                    <h5>Example: Launching an EC2 Instance (AWS Console)</h5>
+                    <ol>
+                      <li>Go to EC2 Dashboard → Click "Launch Instance"</li>
+                      <li>Choose AMI (Amazon Linux 2, Ubuntu, Windows, etc.)</li>
+                      <li>Choose Instance Type (t2.micro for free tier)</li>
+                      <li>Configure network settings (VPC, subnet, security group)</li>
+                      <li>Add storage (default 8GB EBS volume)</li>
+                      <li>Review and Launch</li>
+                    </ol>
+                  </div>
+
+                  <div class="cli-box">
+<pre>
+# Launch EC2 instance using AWS CLI
+aws ec2 run-instances \
+  --image-id ami-0c55b159cbfafe1f0 \
+  --instance-type t2.micro \
+  --key-name MyKeyPair \
+  --security-group-ids sg-0123456789abcdef0 \
+  --subnet-id subnet-0bb1c79de3EXAMPLE
+
+# Connect to EC2 instance
+ssh -i "MyKeyPair.pem" ec2-user@ec2-XX-XXX-XXX-XXX.compute-1.amazonaws.com
+
+# View running instances
+aws ec2 describe-instances --query 'Reservations[*].Instances[*].[InstanceId,State.Name,InstanceType]'
+</pre>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>⚡ AWS Lambda</h4>
+                  <p>
+                    Serverless compute service - run code without managing servers. You pay only for the 
+                    compute time you consume (charged per millisecond).
+                  </p>
+                  
+                  <div class="highlight-box">
+                    <p><strong>When to Use Lambda:</strong></p>
+                    <ul>
+                      <li>Processing file uploads (resize images, extract metadata)</li>
+                      <li>API backends (serverless REST APIs)</li>
+                      <li>Scheduled tasks (cron jobs)</li>
+                      <li>Real-time stream processing</li>
+                      <li>Event-driven applications</li>
+                    </ul>
+                  </div>
+
+                  <div class="example-box">
+                    <h5>Example: Lambda Function (Node.js)</h5>
+                    <div class="code-box">
+<pre>
+// Lambda function to resize images when uploaded to S3
+exports.handler = async (event) => {
+    const bucket = event.Records[0].s3.bucket.name;
+    const key = event.Records[0].s3.object.key;
+    
+    console.log(`Processing image: ${key} from bucket: ${bucket}`);
+    
+    // Image processing logic here
+    // 1. Download image from S3
+    // 2. Resize using Sharp library
+    // 3. Upload resized image back to S3
+    
+    return {
+        statusCode: 200,
+        body: JSON.stringify('Image processed successfully')
+    };
+};
+</pre>
+                    </div>
+                  </div>
+
+                  <div class="cli-box">
+<pre>
+# Create Lambda function
+aws lambda create-function \
+  --function-name MyImageProcessor \
+  --runtime nodejs18.x \
+  --role arn:aws:iam::123456789012:role/lambda-ex \
+  --handler index.handler \
+  --zip-file fileb://function.zip
+
+# Invoke Lambda function
+aws lambda invoke \
+  --function-name MyImageProcessor \
+  --payload '{"key1":"value1"}' \
+  response.json
+</pre>
+                  </div>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Feature</th>
+                      <th>EC2</th>
+                      <th>Lambda</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Server Management</strong></td>
+                      <td>You manage (OS updates, patching)</td>
+                      <td>AWS manages everything</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Scaling</strong></td>
+                      <td>Manual or Auto Scaling Groups</td>
+                      <td>Automatic, instant</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Pricing</strong></td>
+                      <td>Pay per hour/second (even if idle)</td>
+                      <td>Pay per request + execution time</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Use Case</strong></td>
+                      <td>Long-running applications, databases</td>
+                      <td>Short tasks, event-driven, APIs</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Execution Time</strong></td>
+                      <td>Unlimited</td>
+                      <td>Max 15 minutes per invocation</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.2 Storage Services</h3>
+                
+                <div class="aws-service-card">
+                  <h4>📦 Amazon S3 (Simple Storage Service)</h4>
+                  <p>
+                    Object storage service offering industry-leading scalability, data availability, security, 
+                    and performance. Store and retrieve any amount of data from anywhere.
+                  </p>
+                  
+                  <div class="highlight-box">
+                    <p><strong>Key Concepts:</strong></p>
+                    <ul>
+                      <li><strong>Bucket:</strong> Container for objects (like a folder)</li>
+                      <li><strong>Object:</strong> Files stored in S3 (up to 5TB each)</li>
+                      <li><strong>Key:</strong> Unique identifier/path for an object</li>
+                      <li><strong>Durability:</strong> 99.999999999% (11 nines) - designed to sustain loss of data in 2 facilities</li>
+                      <li><strong>Availability:</strong> 99.99% - accessible when you need it</li>
+                    </ul>
+                  </div>
+
+                  <div class="example-box">
+                    <h5>Example: S3 Use Cases</h5>
+                    <ul>
+                      <li>🖼️ <strong>Media Storage:</strong> Store images, videos for websites/apps</li>
+                      <li>💾 <strong>Backup & Restore:</strong> Database backups, file archives</li>
+                      <li>🌐 <strong>Static Website Hosting:</strong> Host HTML/CSS/JS files</li>
+                      <li>📊 <strong>Data Lakes:</strong> Store massive amounts of data for analytics</li>
+                      <li>📱 <strong>Mobile/App Storage:</strong> User uploads, app assets</li>
+                    </ul>
+                  </div>
+
+                  <div class="cli-box">
+<pre>
+# Create S3 bucket
+aws s3 mb s3://my-unique-bucket-name-12345
+
+# Upload file to S3
+aws s3 cp myfile.txt s3://my-unique-bucket-name-12345/
+
+# Download file from S3
+aws s3 cp s3://my-unique-bucket-name-12345/myfile.txt ./
+
+# List objects in bucket
+aws s3 ls s3://my-unique-bucket-name-12345/
+
+# Sync entire directory
+aws s3 sync ./my-folder s3://my-unique-bucket-name-12345/my-folder/
+
+# Make object public (be careful!)
+aws s3api put-object-acl \
+  --bucket my-unique-bucket-name-12345 \
+  --key myfile.txt \
+  --acl public-read
+</pre>
+                  </div>
+
+                  <div class="subsection">
+                    <h4 class="subsection-title">S3 Storage Classes</h4>
+                    <table class="comparison-table">
+                      <thead>
+                        <tr>
+                          <th>Storage Class</th>
+                          <th>Use Case</th>
+                          <th>Cost</th>
+                          <th>Retrieval Time</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><strong>S3 Standard</strong></td>
+                          <td>Frequently accessed data</td>
+                          <td>$$$$</td>
+                          <td>Milliseconds</td>
+                        </tr>
+                        <tr>
+                          <td><strong>S3 Intelligent-Tiering</strong></td>
+                          <td>Unknown or changing access patterns</td>
+                          <td>$$$</td>
+                          <td>Milliseconds</td>
+                        </tr>
+                        <tr>
+                          <td><strong>S3 Standard-IA</strong></td>
+                          <td>Infrequently accessed (backups)</td>
+                          <td>$$</td>
+                          <td>Milliseconds</td>
+                        </tr>
+                        <tr>
+                          <td><strong>S3 Glacier</strong></td>
+                          <td>Long-term archive</td>
+                          <td>$</td>
+                          <td>Minutes to hours</td>
+                        </tr>
+                        <tr>
+                          <td><strong>S3 Glacier Deep Archive</strong></td>
+                          <td>Compliance, 7-10 year retention</td>
+                          <td>¢</td>
+                          <td>12-48 hours</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.3 Networking Services</h3>
+                
+                <div class="aws-service-card">
+                  <h4>🌐 Amazon VPC (Virtual Private Cloud)</h4>
+                  <p>
+                    A logically isolated section of the AWS Cloud where you can launch AWS resources in a 
+                    virtual network that you define. Think of it as your own private network in AWS.
+                  </p>
+                  
+                  <div class="highlight-box">
+                    <p><strong>VPC Components:</strong></p>
+                    <ul>
+                      <li><strong>Subnets:</strong> Segments of VPC IP address range (public/private)</li>
+                      <li><strong>Internet Gateway (IGW):</strong> Allows communication with internet</li>
+                      <li><strong>Route Tables:</strong> Rules for directing network traffic</li>
+                      <li><strong>NAT Gateway:</strong> Allows private subnets to access internet</li>
+                      <li><strong>Network ACLs:</strong> Firewall at subnet level</li>
+                      <li><strong>Security Groups:</strong> Firewall at instance level</li>
+                    </ul>
+                  </div>
+
+                  <div class="example-box">
+                    <h5>Example: VPC Architecture</h5>
+                    <div class="code-box">
+<pre>
+VPC (10.0.0.0/16)
+│
+├── Public Subnet (10.0.1.0/24)
+│   ├── Web Server EC2 (10.0.1.10)
+│   ├── Load Balancer
+│   └── Internet Gateway → Access from internet
+│
+└── Private Subnet (10.0.2.0/24)
+    ├── Application Server EC2 (10.0.2.10)
+    ├── Database (RDS)
+    └── NAT Gateway → Access to internet (outbound only)
+
+Public Subnet: Can receive traffic from internet (web servers)
+Private Subnet: No direct internet access (databases, app servers)
+</pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>🔒 Security Groups</h4>
+                  <p>
+                    Virtual firewalls that control inbound and outbound traffic for EC2 instances. 
+                    Security groups are <strong>stateful</strong> (if you allow inbound, response is automatically allowed).
+                  </p>
+                  
+                  <div class="example-box">
+                    <h5>Example: Web Server Security Group</h5>
+                    <table class="comparison-table">
+                      <thead>
+                        <tr>
+                          <th>Type</th>
+                          <th>Protocol</th>
+                          <th>Port</th>
+                          <th>Source</th>
+                          <th>Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><strong>Inbound</strong></td>
+                          <td>HTTP</td>
+                          <td>80</td>
+                          <td>0.0.0.0/0</td>
+                          <td>Allow web traffic from anywhere</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Inbound</strong></td>
+                          <td>HTTPS</td>
+                          <td>443</td>
+                          <td>0.0.0.0/0</td>
+                          <td>Allow secure web traffic</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Inbound</strong></td>
+                          <td>SSH</td>
+                          <td>22</td>
+                          <td>Your IP/32</td>
+                          <td>Allow SSH only from your IP</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Outbound</strong></td>
+                          <td>All</td>
+                          <td>All</td>
+                          <td>0.0.0.0/0</td>
+                          <td>Allow all outbound traffic</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="cli-box">
+<pre>
+# Create security group
+aws ec2 create-security-group \
+  --group-name WebServerSG \
+  --description "Security group for web servers" \
+  --vpc-id vpc-0123456789abcdef0
+
+# Add inbound rule for HTTP
+aws ec2 authorize-security-group-ingress \
+  --group-id sg-0123456789abcdef0 \
+  --protocol tcp \
+  --port 80 \
+  --cidr 0.0.0.0/0
+
+# Add inbound rule for SSH (your IP only)
+aws ec2 authorize-security-group-ingress \
+  --group-id sg-0123456789abcdef0 \
+  --protocol tcp \
+  --port 22 \
+  --cidr 203.0.113.25/32
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.4 Reflection Questions</h3>
+                <div class="content-box">
+                  <ol>
+                    <li><strong>Q:</strong> When would you choose EC2 over Lambda for running code?<br>
+                    <strong>A:</strong> Choose EC2 for: long-running applications, applications needing persistent connections, custom OS/software requirements, execution time > 15 minutes, applications with consistent traffic. Choose Lambda for: short tasks, event-driven workloads, variable/unpredictable traffic, serverless architecture.</li>
+                    
+                    <li><strong>Q:</strong> Why is S3 considered "infinitely scalable" storage?<br>
+                    <strong>A:</strong> S3 automatically scales to handle any amount of data without you managing capacity. No need to provision storage in advance - just upload files and S3 handles the rest. It's designed to store trillions of objects.</li>
+                    
+                    <li><strong>Q:</strong> How do security groups differ from IAM policies in controlling access?<br>
+                    <strong>A:</strong> Security Groups control <strong>network access</strong> (who can connect to your EC2 instance - IP addresses, ports). IAM policies control <strong>API access</strong> (what actions users/services can perform on AWS resources - create, delete, read).</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.5 References</h3>
+                <div class="content-box">
+                  <ul>
+                    <li>📖 <a href="https://docs.aws.amazon.com/ec2/index.html" target="_blank" rel="noopener">Amazon EC2 Documentation</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/lambda/index.html" target="_blank" rel="noopener">AWS Lambda Documentation</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/s3/index.html" target="_blank" rel="noopener">Amazon S3 Documentation</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/vpc/index.html" target="_blank" rel="noopener">Amazon VPC Documentation</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html" target="_blank" rel="noopener">Security Groups</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="day1-iam" class="lesson">
+            <div class="lesson-header">
+              <h2>📅 Day 1 - Module 4: Identity & Access Management (IAM)</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">4.1 What is IAM?</h3>
+                I'll continue the AWS Cloud Computing notes from where it stopped. Here's the rest of the file:
+
+````html
+                <div class="definition-box">
+                  <p>
+                    <strong>AWS Identity and Access Management (IAM)</strong> is a web service that helps you 
+                    securely control access to AWS resources. You use IAM to control who is authenticated 
+                    (signed in) and authorized (has permissions) to use resources.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>IAM is FREE!</strong> There's no charge for IAM - it's included with your AWS account.</p>
+                  <p><strong>IAM is Global:</strong> Users, groups, and roles are not region-specific.</p>
+                </div>
+
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>👤 Users</h4>
+                    <p>Individual people or applications</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>👥 Groups</h4>
+                    <p>Collection of users</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🎭 Roles</h4>
+                    <p>Temporary permissions for AWS services</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>📜 Policies</h4>
+                    <p>JSON documents defining permissions</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.2 IAM Users</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    An <strong>IAM User</strong> is an identity with long-term credentials (username/password or access keys) 
+                    that represents a person or application that interacts with AWS.
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Creating an IAM User</h5>
+                  <ol>
+                    <li>Go to IAM Console → Users → Add User</li>
+                    <li>Enter username: <code>john-developer</code></li>
+                    <li>Select access type:
+                      <ul>
+                        <li>✅ Programmatic access (generates access key for CLI/SDK)</li>
+                        <li>✅ AWS Management Console access (username/password for Console)</li>
+                      </ul>
+                    </li>
+                    <li>Set permissions (attach policies or add to group)</li>
+                    <li>Review and create user</li>
+                    <li>Download credentials (important - shown only once!)</li>
+                  </ol>
+                </div>
+
+                <div class="cli-box">
+<pre>
+# Create IAM user
+aws iam create-user --user-name john-developer
+
+# Create login profile (console password)
+aws iam create-login-profile \
+  --user-name john-developer \
+  --password 'MyP@ssw0rd123!' \
+  --password-reset-required
+
+# Create access key (programmatic access)
+aws iam create-access-key --user-name john-developer
+
+# List all users
+aws iam list-users
+</pre>
+                </div>
+
+                <div class="warning-box">
+                  <strong>Best Practice:</strong> Never use the root account for daily tasks! Create IAM users instead.
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.3 IAM Groups</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    An <strong>IAM Group</strong> is a collection of IAM users. Groups let you specify permissions 
+                    for multiple users, making it easier to manage permissions.
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Organizing Users with Groups</h5>
+                  <div class="code-box">
+<pre>
+Company Structure:
+
+Group: Developers
+├── User: alice-dev
+├── User: bob-dev
+└── User: charlie-dev
+Permissions: Read/Write to development resources
+
+Group: Admins
+├── User: admin-john
+└── User: admin-sarah
+Permissions: Full access to all resources
+
+Group: Data-Scientists
+├── User: scientist-maria
+└── User: scientist-david
+Permissions: Access to S3, EMR, SageMaker
+</pre>
+                  </div>
+                </div>
+
+                <div class="cli-box">
+<pre>
+# Create IAM group
+aws iam create-group --group-name Developers
+
+# Attach policy to group
+aws iam attach-group-policy \
+  --group-name Developers \
+  --policy-arn arn:aws:iam::aws:policy/PowerUserAccess
+
+# Add user to group
+aws iam add-user-to-group \
+  --group-name Developers \
+  --user-name alice-dev
+
+# List groups
+aws iam list-groups
+</pre>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Key Points:</strong></p>
+                  <ul>
+                    <li>Users can belong to multiple groups</li>
+                    <li>Groups cannot be nested (no groups within groups)</li>
+                    <li>A user inherits permissions from all groups they belong to</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.4 IAM Roles</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    An <strong>IAM Role</strong> is an identity with permissions that determine what the identity can and cannot do. 
+                    Unlike users, roles don't have long-term credentials. They're assumed temporarily by users, applications, or AWS services.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>When to Use Roles:</strong></p>
+                  <ul>
+                    <li>Give EC2 instances permission to access S3 or RDS</li>
+                    <li>Allow Lambda functions to write logs to CloudWatch</li>
+                    <li>Enable cross-account access (Account A access Account B's resources)</li>
+                    <li>Grant temporary access to users from another identity provider</li>
+                  </ul>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: EC2 Instance Role</h5>
+                  <p><strong>Scenario:</strong> You have an EC2 instance that needs to upload files to S3.</p>
+                  
+                  <p><strong>❌ Bad Practice:</strong> Store AWS access keys on the EC2 instance</p>
+                  <p><strong>✅ Best Practice:</strong> Create an IAM role and attach it to the EC2 instance</p>
+
+                  <div class="code-box">
+<pre>
+1. Create IAM Role: "EC2-S3-Upload-Role"
+2. Attach Policy: AmazonS3FullAccess (or custom S3 write policy)
+3. Attach Role to EC2 Instance
+4. EC2 instance can now access S3 without hardcoded credentials!
+</pre>
+                  </div>
+                </div>
+
+                <div class="cli-box">
+<pre>
+# Create trust policy (allows EC2 to assume role)
+cat > trust-policy.json << EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": { "Service": "ec2.amazonaws.com" },
+    "Action": "sts:AssumeRole"
+  }]
+}
+EOF
+
+# Create IAM role
+aws iam create-role \
+  --role-name EC2-S3-Upload-Role \
+  --assume-role-policy-document file://trust-policy.json
+
+# Attach S3 policy to role
+aws iam attach-role-policy \
+  --role-name EC2-S3-Upload-Role \
+  --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+# Create instance profile
+aws iam create-instance-profile \
+  --instance-profile-name EC2-S3-Profile
+
+# Add role to instance profile
+aws iam add-role-to-instance-profile \
+  --instance-profile-name EC2-S3-Profile \
+  --role-name EC2-S3-Upload-Role
+
+# Attach to EC2 instance
+aws ec2 associate-iam-instance-profile \
+  --instance-id i-1234567890abcdef0 \
+  --iam-instance-profile Name=EC2-S3-Profile
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.5 IAM Policies</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>IAM Policies</strong> are JSON documents that define permissions. They specify what actions 
+                    are allowed or denied on which resources.
+                  </p>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Policy Structure</h4>
+                  <div class="code-box">
+<pre>
+{
+  "Version": "2012-10-17",           // Policy language version
+  "Statement": [                      // List of statements
+    {
+      "Effect": "Allow",              // Allow or Deny
+      "Action": [                     // What actions
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Resource": [                   // On which resources
+        "arn:aws:s3:::my-bucket/*"
+      ],
+      "Condition": {                  // Optional conditions
+        "IpAddress": {
+          "aws:SourceIp": "203.0.113.0/24"
+        }
+      }
+    }
+  ]
+}
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Policy Examples</h4>
+                  
+                  <div class="example-box">
+                    <h5>Example 1: Read-Only S3 Access</h5>
+                    <div class="code-box">
+<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::company-reports",
+        "arn:aws:s3:::company-reports/*"
+      ]
+    }
+  ]
+}
+</pre>
+                    </div>
+                  </div>
+
+                  <div class="example-box">
+                    <h5>Example 2: EC2 Start/Stop Only</h5>
+                    <div class="code-box">
+<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:StartInstances",
+        "ec2:StopInstances",
+        "ec2:DescribeInstances"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "ec2:ResourceTag/Environment": "Development"
+        }
+      }
+    }
+  ]
+}
+</pre>
+                    </div>
+                    <p>This allows starting/stopping only EC2 instances tagged with Environment=Development</p>
+                  </div>
+
+                  <div class="example-box">
+                    <h5>Example 3: Deny All Except Specific Region</h5>
+                    <div class="code-box">
+<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Deny",
+      "Action": "*",
+      "Resource": "*",
+      "Condition": {
+        "StringNotEquals": {
+          "aws:RequestedRegion": [
+            "us-east-1",
+            "eu-west-1"
+          ]
+        }
+      }
+    }
+  ]
+}
+</pre>
+                    </div>
+                    <p>This prevents users from using AWS services outside us-east-1 and eu-west-1 regions</p>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Policy Types</h4>
+                  <table class="comparison-table">
+                    <thead>
+                      <tr>
+                        <th>Policy Type</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>AWS Managed Policies</strong></td>
+                        <td>Created and maintained by AWS</td>
+                        <td>AdministratorAccess, PowerUserAccess, ReadOnlyAccess</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Customer Managed Policies</strong></td>
+                        <td>Created and maintained by you</td>
+                        <td>Custom policies for specific use cases</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Inline Policies</strong></td>
+                        <td>Embedded directly in a user, group, or role</td>
+                        <td>One-to-one relationship with identity</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.6 Principle of Least Privilege</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Least Privilege</strong> means granting only the minimum permissions necessary to perform a task. 
+                    Start with minimal permissions and grant additional permissions as needed.
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Applying Least Privilege</h5>
+                  
+                  <p><strong>❌ Bad Practice:</strong></p>
+                  <div class="code-box">
+<pre>
+// Giving a developer full admin access
+{
+  "Effect": "Allow",
+  "Action": "*",
+  "Resource": "*"
+}
+// They can now delete production databases, modify billing, etc.
+</pre>
+                  </div>
+
+                  <p><strong>✅ Best Practice:</strong></p>
+                  <div class="code-box">
+<pre>
+// Give only what they need for their job
+{
+  "Effect": "Allow",
+  "Action": [
+    "ec2:DescribeInstances",
+    "ec2:StartInstances",
+    "ec2:StopInstances",
+    "s3:GetObject",
+    "s3:PutObject"
+  ],
+  "Resource": [
+    "arn:aws:ec2:us-east-1:*:instance/*",
+    "arn:aws:s3:::dev-bucket/*"
+  ],
+  "Condition": {
+    "StringEquals": {
+      "aws:RequestedRegion": "us-east-1"
+    }
+  }
+}
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.7 IAM Best Practices</h3>
+                
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>🔐 Enable MFA</h4>
+                    <p>Multi-Factor Authentication for root and privileged users</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🚫 Don't Use Root</h4>
+                    <p>Create IAM users for daily tasks</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>👥 Use Groups</h4>
+                    <p>Assign permissions to groups, not individual users</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🎭 Use Roles</h4>
+                    <p>For applications and AWS services</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>🔄 Rotate Credentials</h4>
+                    <p>Regularly rotate access keys and passwords</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>📊 Monitor Activity</h4>
+                    <p>Use CloudTrail to audit IAM actions</p>
+                  </div>
+                </div>
+
+                <div class="warning-box">
+                  <strong>Root Account Security:</strong>
+                  <ul>
+                    <li>✅ Enable MFA on root account immediately</li>
+                    <li>✅ Delete root account access keys</li>
+                    <li>✅ Use root account only for account and billing tasks</li>
+                    <li>✅ Store root credentials in secure location</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.8 Reflection Questions</h3>
+                <div class="content-box">
+                  <ol>
+                    <li><strong>Q:</strong> Why is it dangerous to use the root account for daily tasks?<br>
+                    <strong>A:</strong> The root account has unrestricted access to everything - billing, all services, account closure. If credentials are compromised, an attacker could delete your entire infrastructure, rack up huge bills, or lock you out. Plus, actions can't be easily tracked to individuals.</li>
+                    
+                    <li><strong>Q:</strong> What's the difference between a role and a user in IAM?<br>
+                    <strong>A:</strong> Users have long-term credentials (username/password, access keys) and represent people or applications. Roles have no credentials - they're assumed temporarily by users, applications, or AWS services. Roles are more secure for applications because credentials rotate automatically.</li>
+                    
+                    <li><strong>Q:</strong> How would you explain "least privilege" to a non-technical stakeholder?<br>
+                    <strong>A:</strong> It's like giving an employee only the keys they need. A janitor doesn't need keys to the CEO's office or the vault. Similarly, a developer shouldn't have access to delete production databases or modify billing. Give people only what they need to do their job - no more, no less.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.9 References</h3>
+                <div class="content-box">
+                  <ul>
+                    <li>📖 <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html" target="_blank" rel="noopener">IAM Introduction</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html" target="_blank" rel="noopener">IAM Policy Elements</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html" target="_blank" rel="noopener">IAM Best Practices</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DAY 2 -->
+          <div id="day2-scaling" class="lesson">
+            <div class="lesson-header">
+              <h2>📅 Day 2 - Module 1: Elasticity & Scaling</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">1.1 Auto Scaling Groups (ASG)</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Auto Scaling Groups</strong> automatically adjust the number of EC2 instances in your application 
+                    based on demand. Scale out (add instances) during high traffic, scale in (remove instances) during low traffic.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Benefits of Auto Scaling:</strong></p>
+                  <ul>
+                    <li>💰 <strong>Cost Optimization:</strong> Only pay for instances you need</li>
+                    <li>📈 <strong>Handle Traffic Spikes:</strong> Automatically add capacity during high demand</li>
+                    <li>🔄 <strong>High Availability:</strong> Replace unhealthy instances automatically</li>
+                    <li>⚖️ <strong>Load Distribution:</strong> Distribute traffic across multiple instances</li>
+                  </ul>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: E-commerce Website Auto Scaling</h5>
+                  <div class="code-box">
+<pre>
+Normal Traffic (9 AM - 5 PM):
+├── Minimum: 2 instances
+├── Desired: 2 instances
+└── Maximum: 10 instances
+
+Black Friday Sale (Peak Traffic):
+├── CPU Usage exceeds 70%
+├── Auto Scaling triggers: Add 3 instances
+├── New Total: 5 instances running
+└── Traffic handled smoothly
+
+After Sale (Low Traffic):
+├── CPU Usage drops below 30%
+├── Auto Scaling triggers: Remove 3 instances
+├── Back to: 2 instances running
+└── Cost optimized!
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Auto Scaling Components</h4>
+                  <div class="component-grid">
+                    <div class="component-card">
+                      <h4>📋 Launch Template</h4>
+                      <p>Blueprint for EC2 instances (AMI, instance type, security groups)</p>
+                    </div>
+                    <div class="component-card">
+                      <h4>📊 Scaling Policies</h4>
+                      <p>Rules that determine when to scale (CPU, network, custom metrics)</p>
+                    </div>
+                    <div class="component-card">
+                      <h4>❤️ Health Checks</h4>
+                      <p>Monitor instance health and replace unhealthy instances</p>
+                    </div>
+                    <div class="component-card">
+                      <h4>⚖️ Load Balancer</h4>
+                      <p>Distribute traffic across healthy instances</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="cli-box">
+<pre>
+# Create launch template
+aws ec2 create-launch-template \
+  --launch-template-name MyWebServerTemplate \
+  --version-description "Web server v1" \
+  --launch-template-data '{
+    "ImageId": "ami-0c55b159cbfafe1f0",
+    "InstanceType": "t2.micro",
+    "SecurityGroupIds": ["sg-0123456789abcdef0"],
+    "UserData": "IyEvYmluL2Jhc2gKYXB0IHVwZGF0ZSAteQphcHQgaW5zdGFsbCBhcGFjaGUyIC15"
+  }'
+
+# Create Auto Scaling Group
+aws autoscaling create-auto-scaling-group \
+  --auto-scaling-group-name MyWebServerASG \
+  --launch-template LaunchTemplateName=MyWebServerTemplate \
+  --min-size 2 \
+  --max-size 10 \
+  --desired-capacity 2 \
+  --availability-zones us-east-1a us-east-1b us-east-1c \
+  --target-group-arns arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/my-targets/1234567890abcdef \
+  --health-check-type ELB \
+  --health-check-grace-period 300
+
+# Create scaling policy (target tracking)
+aws autoscaling put-scaling-policy \
+  --auto-scaling-group-name MyWebServerASG \
+  --policy-name cpu-target-tracking-policy \
+  --policy-type TargetTrackingScaling \
+  --target-tracking-configuration '{
+    "PredefinedMetricSpecification": {
+      "PredefinedMetricType": "ASGAverageCPUUtilization"
+    },
+    "TargetValue": 70.0
+  }'
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.2 Scaling Policies</h3>
+                
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Policy Type</th>
+                      <th>Description</th>
+                      <th>Use Case</th>
+                      <th>Example</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Target Tracking</strong></td>
+                      <td>Maintain a specific metric at target value</td>
+                      <td>Keep average CPU at 70%</td>
+                      <td>Most common, easiest to configure</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Step Scaling</strong></td>
+                      <td>Scale based on metric threshold breaches</td>
+                      <td>Add 2 instances if CPU > 80%, add 4 if CPU > 90%</td>
+                      <td>More granular control</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Simple Scaling</strong></td>
+                      <td>Single scaling adjustment based on alarm</td>
+                      <td>Add 1 instance when CPU > 70%</td>
+                      <td>Basic, less flexible</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Scheduled Scaling</strong></td>
+                      <td>Scale at specific times</td>
+                      <td>Scale up every weekday at 8 AM, scale down at 6 PM</td>
+                      <td>Predictable traffic patterns</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="example-box">
+                  <h5>Example: Step Scaling Policy</h5>
+                  <div class="code-box">
+<pre>
+Metric: Average CPU Utilization
+
+Scaling Rules:
+├── CPU 50-60%: Do nothing (current capacity is fine)
+├── CPU 60-75%: Add 1 instance (moderate increase)
+├── CPU 75-85%: Add 2 instances (higher demand)
+└── CPU > 85%:  Add 4 instances (urgent - prevent overload!)
+
+Scale-In Rules:
+├── CPU < 30%: Remove 1 instance (reduce costs)
+└── CPU < 20%: Remove 2 instances (significant overcapacity)
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Scheduled Scaling</h5>
+                  <div class="cli-box">
+<pre>
+# Scale up before business hours (Monday-Friday 8 AM)
+aws autoscaling put-scheduled-action \
+  --auto-scaling-group-name MyWebServerASG \
+  --scheduled-action-name ScaleUpMorning \
+  --recurrence "0 8 * * 1-5" \
+  --desired-capacity 5
+
+# Scale down after business hours (Monday-Friday 6 PM)
+aws autoscaling put-scheduled-action \
+  --auto-scaling-group-name MyWebServerASG \
+  --scheduled-action-name ScaleDownEvening \
+  --recurrence "0 18 * * 1-5" \
+  --desired-capacity 2
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.3 Elastic Load Balancer (ELB)</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Elastic Load Balancer</strong> automatically distributes incoming application traffic 
+                    across multiple targets (EC2 instances, containers, IP addresses) in multiple Availability Zones.
+                  </p>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Types of Load Balancers</h4>
+                  
+                  <div class="aws-service-card">
+                    <h4>🌐 Application Load Balancer (ALB)</h4>
+                    <p>Best suited for HTTP/HTTPS traffic, operates at Layer 7 (application layer)</p>
+                    <div class="highlight-box">
+                      <p><strong>Features:</strong></p>
+                      <ul>
+                        <li>Path-based routing: /api/* → API servers, /images/* → Image servers</li>
+                        <li>Host-based routing: api.example.com → API servers, www.example.com → Web servers</li>
+                        <li>Support for WebSockets and HTTP/2</li>
+                        <li>Native IPv6 support</li>
+                        <li>Integration with AWS WAF (Web Application Firewall)</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="aws-service-card">
+                    <h4>⚡ Network Load Balancer (NLB)</h4>
+                    <p>Ultra-high performance, operates at Layer 4 (transport layer)</p>
+                    <div class="highlight-box">
+                      <p><strong>Features:</strong></p>
+                      <ul>
+                        <li>Handles millions of requests per second</li>
+                        <li>Ultra-low latency (microseconds)</li>
+                        <li>Static IP address support</li>
+                        <li>Preserves source IP address</li>
+                        <li>Best for TCP/UDP traffic, gaming, IoT</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="aws-service-card">
+                    <h4>🔧 Gateway Load Balancer (GWLB)</h4>
+                    <p>Deploy, scale, and manage third-party virtual appliances</p>
+                    <div class="highlight-box">
+                      <p><strong>Use Cases:</strong></p>
+                      <ul>
+                        <li>Firewalls</li>
+                        <li>Intrusion detection/prevention systems</li>
+                        <li>Deep packet inspection</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: ALB with Path-Based Routing</h5>
+                  <div class="code-box">
+<pre>
+Application Load Balancer: www.myapp.com
+│
+├── Rule 1: /api/*
+│   └── Target Group: API Servers
+│       ├── EC2 Instance: api-server-1
+│       ├── EC2 Instance: api-server-2
+│       └── EC2 Instance: api-server-3
+│
+├── Rule 2: /admin/*
+│   └── Target Group: Admin Servers
+│       ├── EC2 Instance: admin-server-1
+│       └── EC2 Instance: admin-server-2
+│
+└── Default Rule: /*
+    └── Target Group: Web Servers
+        ├── EC2 Instance: web-server-1
+        ├── EC2 Instance: web-server-2
+        └── EC2 Instance: web-server-3
+
+User Request: www.myapp.com/api/users
+→ Routes to: API Servers Target Group
+
+User Request: www.myapp.com/products
+→ Routes to: Web Servers Target Group
+</pre>
+                  </div>
+                </div>
+
+                <div class="cli-box">
+<pre>
+# Create Application Load Balancer
+aws elbv2 create-load-balancer \
+  --name my-alb \
+  --subnets subnet-0123456789abcdef0 subnet-0abcdef1234567890 \
+  --security-groups sg-0123456789abcdef0 \
+  --scheme internet-facing \
+  --type application \
+  --ip-address-type ipv4
+
+# Create target group
+aws elbv2 create-target-group \
+  --name my-web-servers \
+  --protocol HTTP \
+  --port 80 \
+  --vpc-id vpc-0123456789abcdef0 \
+  --health-check-path /health \
+  --health-check-interval-seconds 30
+
+# Register targets
+aws elbv2 register-targets \
+  --target-group-arn arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/my-web-servers/1234567890abcdef \
+  --targets Id=i-1234567890abcdef0 Id=i-0abcdef1234567890
+
+# Create listener
+aws elbv2 create-listener \
+  --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/my-alb/1234567890abcdef \
+  --protocol HTTP \
+  --port 80 \
+  --default-actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/my-web-servers/1234567890abcdef
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.4 Complete High Availability Architecture</h3>
+                
+                <div class="example-box">
+                  <h5>Example: Production-Ready Architecture</h5>
+                  <div class="code-box">
+<pre>
+                        ┌─────────────────┐
+                        │   Route 53 DNS  │
+                        └────────┬────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    │ Application Load Balancer│
+                    │  (Multi-AZ, public)     │
+                    └────────────┬────────────┘
+                                 │
+        ┌────────────────────────┼────────────────────────┐
+        │                        │                        │
+┌───────▼────────┐      ┌───────▼────────┐      ┌───────▼────────┐
+│   us-east-1a   │      │   us-east-1b   │      │   us-east-1c   │
+│                │      │                │      │                │
+│ Auto Scaling   │      │ Auto Scaling   │      │ Auto Scaling   │
+│ ┌───────────┐  │      │ ┌───────────┐  │      │ ┌───────────┐  │
+│ │EC2 Instance│  │      │ │EC2 Instance│  │      │ │EC2 Instance│  │
+│ │ Web Server │  │      │ │ Web Server │  │      │ │ Web Server │  │
+│ └───────────┘  │      │ └───────────┘  │      │ └───────────┘  │
+│                │      │                │      │                │
+│ ┌───────────┐  │      │ ┌───────────┐  │      │                │
+│ │    RDS     │──┼──────┼─│ RDS Standby│  │      │                │
+│ │  Primary   │  │      │ │  Replica   │  │      │                │
+│ └───────────┘  │      │ └───────────┘  │      │                │
+└────────────────┘      └────────────────┘      └────────────────┘
+
+Benefits:
+✅ High Availability: If one AZ fails, app continues in other AZs
+✅ Scalability: Auto Scaling adds/removes instances based on demand
+✅ Load Distribution: ALB distributes traffic evenly
+✅ Database Failover: RDS automatically fails over to standby
+✅ Cost Optimization: Scale in during low traffic
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.5 Reflection Questions</h3>
+                <div class="content-box">
+                  <ol>
+                    <li><strong>Q:</strong> Why is elasticity one of the biggest advantages of cloud?<br>
+                    <strong>A:</strong> Elasticity allows you to match resources to demand automatically. Without cloud, you'd buy servers for peak load (expensive, mostly idle). Or worse, under-provision and crash during spikes. Cloud elasticity = save money during low traffic, handle spikes during high traffic, all automatically.</li>
+                    
+                    <li><strong>Q:</strong> How does an ALB improve availability compared to a single EC2 instance?<br>
+                    <strong>A:</strong> Single instance = single point of failure (if it crashes, site is down). ALB distributes traffic across multiple instances in multiple AZs. If one instance fails, ALB routes traffic to healthy instances. If an entire AZ fails, instances in other AZs keep running.</li>
+                    
+                    <li><strong>Q:</strong> Can you think of a scenario where scaling down is just as important as scaling up?<br>
+                    <strong>A:</strong> A news website might scale up during breaking news (millions of readers), but needs to scale down after the story dies to avoid paying for idle servers. E-commerce scales up during sales, down overnight. Development environments can scale to zero outside business hours.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.6 References</h3>
+                <div class="content-box">
+                  <ul>
+                    <li>📖 <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html" target="_blank" rel="noopener">Auto Scaling Groups</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html" target="_blank" rel="noopener">Application Load Balancer</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="day2-databases" class="lesson">
+            <div class="lesson-header">
+              <h2>📅 Day 2 - Module 2: Databases in AWS</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">2.1 Database Overview</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    AWS offers a variety of database services for different use cases. The two main categories 
+                    are <strong>Relational Databases (SQL)</strong> and <strong>NoSQL Databases</strong>.
+                  </p>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Feature</th>
+                      <th>Relational (SQL)</th>
+                      <th>NoSQL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Data Model</strong></td>
+                      <td>Tables with rows and columns</td>
+                      <td>Key-value, document, graph, column-family</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Schema</strong></td>
+                      <td>Fixed schema, must be defined upfront</td>
+                      <td>Flexible schema, can change anytime</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Scaling</strong></td>
+                      <td>Vertical scaling (bigger server)</td>
+                      <td>Horizontal scaling (more servers)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>ACID Compliance</strong></td>
+                      <td>Strong ACID guarantees</td>
+                      <td>Eventually consistent (usually)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Use Cases</strong></td>
+                      <td>Banking, ERP, CRM, complex transactions</td>
+                      <td>Social media, IoT, gaming, real-time apps</td>
+                    </tr>
+                    <tr>
+                      <td><strong>AWS Service</strong></td>
+                      <td>Amazon RDS, Aurora</td>
+                      <td>DynamoDB, DocumentDB</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.2 Amazon RDS (Relational Database Service)</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Amazon RDS</strong> makes it easy to set up, operate, and scale a relational database 
+                    in the cloud. AWS manages database administration tasks like backups, patching, and scaling.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Supported Database Engines:</strong></p>
+                  <ul>
+                    <li>🐬 <strong>MySQL</strong> - Popular open-source database</li>
+                    <li>🐘 <strong>PostgreSQL</strong> - Advanced open-source database</li>
+                    <li>🪶 <strong>MariaDB</strong> - MySQL fork with additional features</li>
+                    <li>📊 <strong>Oracle</strong> - Enterprise database</li>
+                    <li>🔷 <strong>Microsoft SQL Server</strong> - Enterprise database</li>
+                    <li>⚡ <strong>Amazon Aurora</strong> - AWS-built MySQL/PostgreSQL compatible (5x faster)</li>
+                  </ul>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">RDS Features</h4>
+                  <div class="component-grid">
+                    <div class="component-card">
+                      <h4>🔄 Automated Backups</h4>
+                      <p>Daily automated backups, point-in-time recovery up to 35 days</p>
+                    </div>
+                    <div class="component-card">
+                      <h4>📸 Snapshots</h4>
+                      <p>Manual backups stored indefinitely in S3</p>
+                    </div>
+                    <div class="component-card">
+                      <h4>🔁 Multi-AZ Deployment</h4>
+                      <p>Automatic failover to standby replica for high availability</p>
+                    </div>
+                    <div class="component-card">
+                      <h4>📖 Read Replicas</h4>
+                      <p>Scale read performance with up to 15 replicas</p>
+                    </div>
+                    <div class="component-card">
+                      <h4>🔒 Encryption</h4>
+                      <p>Encryption at rest using AWS KMS</p>
+                    </div>
+                    <div class="component-card">
+                      <h4>📊 Monitoring</h4>
+                      <p>CloudWatch metrics for performance monitoring</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Creating RDS MySQL Instance</h5>
+                  <div class="cli-box">
+<pre>
+# Create RDS MySQL instance
+aws rds create-db-instance \
+  --db-instance-identifier myapp-database \
+  --db-instance-class db.t3.micro \
+  --engine mysql \
+  --engine-version 8.0.35 \
+  --master-username admin \
+  --master-user-password 'MySecureP@ssw0rd!' \
+  --allocated-storage 20 \
+  --storage-type gp3 \
+  --vpc-security-group-ids sg-0123456789abcdef0 \
+  --db-subnet-group-name my-db-subnet-group \
+  --backup-retention-period 7 \
+  --multi-az \
+  --no-publicly-accessible
+
+# Create read replica
+aws rds create-db-instance-read-replica \
+  --db-instance-identifier myapp-database-read-replica \
+  --source-db-instance-identifier myapp-database
+
+# Create snapshot
+aws rds create-db-snapshot \
+  --db-instance-identifier myapp-database \
+  --db-snapshot-identifier myapp-snapshot-2025-01-18
+
+# List databases
+aws rds describe-db-instances --query 'DBInstances[*].[DBInstanceIdentifier,Engine,DBInstanceStatus]'
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Multi-AZ vs Read Replicas</h4>
+                  <table class="comparison-table">
+                    <thead>
+                      <tr>
+                        <th>Feature</th>
+                        <th>Multi-AZ Deployment</th>
+                        <th>Read Replicas</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Purpose</strong></td>
+                        <td>High Availability / Disaster Recovery</td>
+                        <td>Performance Scaling / Read Performance</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Replication</strong></td>
+                        <td>Synchronous (instant)</td>
+                        <td>Asynchronous (slight delay)</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Standby Usage</strong></td>
+                        <td>Not accessible, only for failover</td>
+                        <td>Can be used for read queries</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Failover</strong></td>
+                        <td>Automatic (1-2 minutes)</td>
+                        <td>Manual promotion to primary</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Region</strong></td>
+                        <td>Same region, different AZ</td>
+                        <td>Same or different region</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Cost</strong></td>
+                        <td>~2x cost of single-AZ</td>
+                        <td>Additional cost per replica</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.3 Amazon DynamoDB</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Amazon DynamoDB</strong> is a fully managed NoSQL database service that provides fast 
+                    and predictable performance with seamless scalability. Single-digit millisecond latency at any scale.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Key Features:</strong></p>
+                  <ul>
+                    <li>⚡ <strong>Performance:</strong> Single-digit millisecond response time</li>
+                    <li>📈 <strong>Scalability:</strong> Automatically scales up/down based on traffic</li>
+                    <li>🔒 <strong>Fully Managed:</strong> No servers to manage, automatic backups</li>
+                    <li>🌍 <strong>Global Tables:</strong> Multi-region, fully replicated tables</li>
+                    <li>💰 <strong>Pay-per-Request:</strong> Or provision capacity for predictable workloads</li>
+                    <li>📊 <strong>Streams:</strong> Capture table changes for real-time processing</li>
+                  </ul>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">DynamoDB Core Concepts</h4>
+                  <div class="content-box">
+                    <ul>
+                      <li><strong>Table:</strong> Collection of data (like a table in SQL, but schemaless)</li>
+                      <li><strong>Item:</strong> A single data record (like a row in SQL)</li>
+                      <li><strong>Attribute:</strong> A data element in an item (like a column in SQL)</li>
+                      <li><strong>Primary Key:</strong> Uniquely identifies each item (Partition Key or Partition Key + Sort Key)</li>
+                      <li><strong>Secondary Index:</strong> Query data using alternate keys</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: DynamoDB Table Structure</h5>
+                  <div class="code-box">
+<pre>
+Table: Users
+Primary Key: userId (Partition Key)
+
+Items:
+{
+  "userId": "user-123",
+  "name": "Alice Johnson",
+  "email": "alice@example.com",
+  "age": 28,
+  "preferences": {
+    "theme": "dark",
+    "language": "en"
+  },
+  "tags": ["premium", "verified"]
+}
+
+{
+  "userId": "user-456",
+  "name": "Bob Smith",
+  "email": "bob@example.com",
+  "age": 35,
+  "company": "TechCorp"  // Different attributes per item - flexible schema!
+}
+</pre>
+                  </div>
+                </div>
+
+                <div class="cli-box">
+<pre>
+# Create DynamoDB table
+aws dynamodb create-table \
+  --table-name Users \
+  --attribute-definitions \
+    AttributeName=userId,AttributeType=S \
+  --key-schema \
+    AttributeName=userId,KeyType=HASH \
+  --billing-mode PAY_PER_REQUEST
+
+# Put item
+aws dynamodb put-item \
+  --table-name Users \
+  --item '{
+    "userId": {"S": "user-123"},
+    "name": {"S": "Alice Johnson"},
+    "email": {"S": "alice@example.com"},
+    "age": {"N": "28"}
+  }'
+
+# Get item
+aws dynamodb get-item \
+  --table-name Users \
+  --key '{"userId": {"S": "user-123"}}'
+
+# Query items
+aws dynamodb query \
+  --table-name Users \
+  --key-condition-expression "userId = :userId" \
+  --expression-attribute-values '{":userId": {"S": "user-123"}}'
+
+# Scan table (reads all items - expensive!)
+aws dynamodb scan --table-name Users
+
+# Update item
+aws dynamodb update-item \
+  --table-name Users \
+  --key '{"userId": {"S": "user-123"}}' \
+  --update-expression "SET age = :newAge" \
+  --expression-attribute-values '{":newAge": {"N": "29"}}'
+
+# Delete item
+aws dynamodb delete-item \
+  --table-name Users \
+  --key '{"userId": {"S": "user-123"}}'
+</pre>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">When to Use DynamoDB vs RDS</h4>
+                  
+                  <div class="aws-service-card">
+                    <h4>✅ Choose DynamoDB when:</h4>
+                    <ul>
+                      <li>You need single-digit millisecond latency at any scale</li>
+                      <li>Your data access patterns are simple (key-value lookups)</li>
+                      <li>You need to scale massively (millions of requests/sec)</li>
+                      <li>Your schema is flexible or frequently changing</li>
+                      <li>Building serverless applications</li>
+                      <li>Examples: Session storage, gaming leaderboards, IoT data, mobile apps</li>
+                    </ul>
+                  </div>
+
+                  <div class="aws-service-card">
+                    <h4>✅ Choose RDS when:</h4>
+                    <ul>
+                      <li>You need complex queries (JOINs, aggregations, GROUP BY)</li>
+                      <li>You require strong ACID transactions</li>
+                      <li>Your data has complex relationships</li>
+                      <li>You're migrating an existing relational database</li>
+                      <li>You need SQL compatibility</li>
+                      <li>Examples: E-commerce orders, financial transactions, CRM, ERP</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.4 Practical Example: Choosing the Right Database</h3>
+                
+                <div class="example-box">
+                  <h5>Scenario 1: E-commerce Platform</h5>
+                  <div class="content-box">
+                    <p><strong>Requirements:</strong></p>
+                    <ul>
+                      <li>Store product catalog, orders, customers</li>
+                      <li>Complex queries: "Show all orders for customer X in the last 30 days where total > $100"</li>
+                      <li>Need transactions: Order must decrease inventory and charge customer atomically</li>
+                      <li>Existing SQL-based application</li>
+                    </ul>
+                    <p><strong>✅ Solution: Amazon RDS (MySQL or PostgreSQL)</strong></p>
+                    <p>Reason: Complex queries, relationships, transactions, SQL compatibility</p>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Scenario 2: Gaming Leaderboard</h5>
+                  <div class="content-box">
+                    <p><strong>Requirements:</strong></p>
+                    <ul>
+                      <li>Store player scores (millions of players)</li>
+                      <li>Simple queries: "Get score for player X" or "Get top 10 players"</li>
+                      <li>Need ultra-low latency (< 10ms)</li>
+                      <li>Traffic spikes during game launches</li>
+                      <li>Global player base</li>
+                    </ul>
+                    <p><strong>✅ Solution: Amazon DynamoDB with Global Tables</strong></p>
+                    <p>Reason: Simple access patterns, low latency, massive scale, global replication</p>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Scenario 3: IoT Sensor Data</h5>
+                  <div class="content-box">
+                    <p><strong>Requirements:</strong></p>
+                    <ul>
+                      <li>Store data from millions of sensors</li>
+                      <li>Each sensor sends data every second</li>
+                      <li>Simple queries: "Get latest data from sensor X"</li>
+                      <li>Retention: Keep data for 30 days, then archive</li>
+                      <li>Need to scale automatically</li>
+                    </ul>
+                    <p><strong>✅ Solution: Amazon DynamoDB with TTL (Time To Live)</strong></p>
+                    <p>Reason: High write throughput, simple queries, automatic scaling, TTL for automatic deletion</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.5 Reflection Questions</h3>
+                <div class="content-box">
+                  <ol>
+                    <li><strong>Q:</strong> What are the trade-offs between relational and NoSQL databases?<br>
+                    <strong>A:</strong> Relational: Structured data, complex queries, ACID transactions, harder to scale horizontally. NoSQL: Flexible schema, simple queries, massive scale, eventually consistent, limited transaction support. Choose based on your specific needs.</li>
+                    
+                    <li><strong>Q:</strong> Why might a startup choose DynamoDB over RDS?<br>
+                    <strong>A:</strong> Startups value speed and don't know future scale. DynamoDB: serverless (no capacity planning), scales automatically, pay-per-request pricing (cost-effective at low volume), extremely fast development. Perfect for MVP and uncertain growth.</li>
+                    
+                    <li><strong>Q:</strong> How does AWS handle backups differently in RDS vs DynamoDB?<br>
+                    <strong>A:</strong> RDS: Automated daily backups to S3, point-in-time recovery, manual snapshots, retention up to 35 days. DynamoDB: Continuous backups with point-in-time recovery (PITR), on-demand backups, no retention limit, faster restore times.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.6 References</h3>
+                <div class="content-box">
+                  <ul>
+                    <li>📖 <a href="https://docs.aws.amazon.com/rds/index.html" target="_blank" rel="noopener">Amazon RDS Documentation</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/amazondynamodb/index.html" target="_blank" rel="noopener">Amazon DynamoDB Documentation</a></li>
+                    <li>📖 <a href="https://aws.amazon.com/nosql/" target="_blank" rel="noopener">Choosing Between RDS & DynamoDB</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="day2-monitoring" class="lesson">
+            <div class="lesson-header">
+              <h2>📅 Day 2 - Module 3: Monitoring & Logging</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">3.1 Amazon CloudWatch</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Amazon CloudWatch</strong> is a monitoring and observability service that provides 
+                    data and actionable insights for AWS resources, applications, and services. Monitor metrics, 
+                    collect logs, set alarms, and visualize data.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>CloudWatch Components:</strong></p>
+                  <ul>
+                    <li>📊 <strong>Metrics:</strong> Time-series data points (CPU, memory, disk usage)</li>
+                    <li>🚨 <strong>Alarms:</strong> Notifications based on metric thresholds</li>
+                    <li>📈 <strong>Dashboards:</strong> Customizable views of metrics and alarms</li>
+                    <li>📝 <strong>Logs:</strong> Collect, store, and analyze log files</li>
+                    <li>📅 <strong>Events:</strong> Respond to state changes in AWS resources</li>
+                  </ul>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">CloudWatch Metrics</h4>
+                  <div class="content-box">
+                    <p><strong>Default Metrics (Free):</strong> Automatically collected for most AWS services</p>
+                    <ul>
+                      <li><strong>EC2:</strong> CPUUtilization, NetworkIn/Out, DiskReadOps/WriteOps</li>
+                      <li><strong>ELB:</strong> RequestCount, TargetResponseTime, HealthyHostCount</li>
+                      <li><strong>RDS:</strong> DatabaseConnections, CPUUtilization, FreeStorageSpace</li>
+                      <li><strong>Lambda:</strong> Invocations, Duration, Errors, Throttles</li>
+                      <li><strong>DynamoDB:</strong> ConsumedReadCapacityUnits, ConsumedWriteCapacityUnits</li>
+                    </ul>
+                    
+                    <p><strong>Custom Metrics:</strong> Publish your own application-specific metrics</p>
+                    <ul>
+                      <li>Active users count</li>
+                      <li>Application response time</li>
+                      <li>Order processing rate</li>
+                      <li>Custom business KPIs</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Viewing EC2 Metrics</h5>
+                  <div class="cli-box">
+<pre>
+# Get EC2 CPU utilization (last hour)
+aws cloudwatch get-metric-statistics \
+  --namespace AWS/EC2 \
+  --metric-name CPUUtilization \
+  --dimensions Name=InstanceId,Value=i-1234567890abcdef0 \
+  --start-time 2025-01-18T12:00:00Z \
+  --end-time 2025-01-18T13:00:00Z \
+  --period 300 \
+  --statistics Average
+
+# List available metrics for EC2
+aws cloudwatch list-metrics --namespace AWS/EC2
+
+# Put custom metric
+aws cloudwatch put-metric-data \
+  --namespace MyApp/Orders \
+  --metric-name OrdersProcessed \
+  --value 150 \
+  --timestamp 2025-01-18T13:30:00Z
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.2 CloudWatch Alarms</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>CloudWatch Alarms</strong> monitor metrics and automatically perform actions 
+                    when thresholds are breached. Trigger notifications, Auto Scaling actions, or EC2 actions.
+                  </p>
+                </div>
+                                <div class="example-box">
+                  <h5>Example: Creating a High CPU Alarm</h5>
+                  <div class="cli-box">
+<pre>
+# Create SNS topic for notifications
+aws sns create-topic --name HighCPUAlerts
+
+# Subscribe email to topic
+aws sns subscribe \
+  --topic-arn arn:aws:sns:us-east-1:123456789012:HighCPUAlerts \
+  --protocol email \
+  --notification-endpoint admin@example.com
+
+# Create CloudWatch alarm
+aws cloudwatch put-metric-alarm \
+  --alarm-name HighCPU-WebServer-1 \
+  --alarm-description "Alert when CPU exceeds 80% for 5 minutes" \
+  --metric-name CPUUtilization \
+  --namespace AWS/EC2 \
+  --statistic Average \
+  --period 300 \
+  --threshold 80 \
+  --comparison-operator GreaterThanThreshold \
+  --evaluation-periods 1 \
+  --dimensions Name=InstanceId,Value=i-1234567890abcdef0 \
+  --alarm-actions arn:aws:sns:us-east-1:123456789012:HighCPUAlerts
+
+# List all alarms
+aws cloudwatch describe-alarms
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Alarm States</h4>
+                  <div class="component-grid">
+                    <div class="component-card">
+                      <h4 style="color: #28A745;">✅ OK</h4>
+                      <p>Metric is within threshold</p>
+                    </div>
+                    <div class="component-card">
+                      <h4 style="color: #DC3545;">🚨 ALARM</h4>
+                      <p>Metric has breached threshold</p>
+                    </div>
+                    <div class="component-card">
+                      <h4 style="color: #FFC107;">⚠️ INSUFFICIENT_DATA</h4>
+                      <p>Not enough data to determine state</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Common Alarm Scenarios</h5>
+                  <table class="comparison-table">
+                    <thead>
+                      <tr>
+                        <th>Scenario</th>
+                        <th>Metric</th>
+                        <th>Threshold</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>High CPU Usage</td>
+                        <td>CPUUtilization</td>
+                        <td>> 80% for 5 minutes</td>
+                        <td>Send SNS notification, trigger Auto Scaling</td>
+                      </tr>
+                      <tr>
+                        <td>Low Disk Space</td>
+                        <td>FreeStorageSpace</td>
+                        <td>< 10 GB</td>
+                        <td>Alert operations team</td>
+                      </tr>
+                      <tr>
+                        <td>High Error Rate</td>
+                        <td>HTTPCode_Target_5XX_Count</td>
+                        <td>> 50 errors in 5 minutes</td>
+                        <td>Page on-call engineer</td>
+                      </tr>
+                      <tr>
+                        <td>Database Connections</td>
+                        <td>DatabaseConnections</td>
+                        <td>> 90% of max connections</td>
+                        <td>Alert DBA team</td>
+                      </tr>
+                      <tr>
+                        <td>Lambda Throttling</td>
+                        <td>Throttles</td>
+                        <td>> 10 throttles</td>
+                        <td>Increase concurrency limit</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.3 CloudWatch Dashboards</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>CloudWatch Dashboards</strong> are customizable home pages in the CloudWatch console 
+                    that you can use to monitor your resources in a single view. Create multiple dashboards 
+                    for different purposes or teams.
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Creating a Dashboard</h5>
+                  <div class="cli-box">
+<pre>
+# Create dashboard with JSON configuration
+aws cloudwatch put-dashboard \
+  --dashboard-name MyAppDashboard \
+  --dashboard-body '{
+    "widgets": [
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            ["AWS/EC2", "CPUUtilization", {"stat": "Average"}]
+          ],
+          "period": 300,
+          "stat": "Average",
+          "region": "us-east-1",
+          "title": "EC2 CPU Utilization"
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            ["AWS/ApplicationELB", "TargetResponseTime", {"stat": "Average"}]
+          ],
+          "period": 300,
+          "stat": "Average",
+          "region": "us-east-1",
+          "title": "Application Response Time"
+        }
+      }
+    ]
+  }'
+
+# List dashboards
+aws cloudwatch list-dashboards
+</pre>
+                  </div>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Dashboard Best Practices:</strong></p>
+                  <ul>
+                    <li>Create role-specific dashboards (DevOps, Business, Executive)</li>
+                    <li>Include both technical metrics and business KPIs</li>
+                    <li>Use alarms widgets to show current system health</li>
+                    <li>Set appropriate time ranges (last hour, last 24 hours, last week)</li>
+                    <li>Share dashboards publicly for status pages</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.4 CloudWatch Logs</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>CloudWatch Logs</strong> enables you to centralize logs from all your systems, 
+                    applications, and AWS services. Monitor, store, and access log files from EC2, Lambda, 
+                    CloudTrail, and other sources.
+                  </p>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">CloudWatch Logs Concepts</h4>
+                  <div class="content-box">
+                    <ul>
+                      <li><strong>Log Group:</strong> Collection of log streams (e.g., /aws/lambda/my-function)</li>
+                      <li><strong>Log Stream:</strong> Sequence of log events from same source (e.g., individual Lambda execution)</li>
+                      <li><strong>Log Event:</strong> A record of activity (timestamp + message)</li>
+                      <li><strong>Retention:</strong> How long to keep logs (1 day to 10 years, or indefinitely)</li>
+                      <li><strong>Log Insights:</strong> Query and analyze log data</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Working with CloudWatch Logs</h5>
+                  <div class="cli-box">
+<pre>
+# Create log group
+aws logs create-log-group --log-group-name /aws/ec2/webserver
+
+# Set retention policy (7 days)
+aws logs put-retention-policy \
+  --log-group-name /aws/ec2/webserver \
+  --retention-in-days 7
+
+# Create log stream
+aws logs create-log-stream \
+  --log-group-name /aws/ec2/webserver \
+  --log-stream-name instance-i-1234567890abcdef0
+
+# Put log events
+aws logs put-log-events \
+  --log-group-name /aws/ec2/webserver \
+  --log-stream-name instance-i-1234567890abcdef0 \
+  --log-events \
+    timestamp=1705580400000,message="Application started successfully" \
+    timestamp=1705580401000,message="Listening on port 80"
+
+# Query logs with Insights
+aws logs start-query \
+  --log-group-name /aws/ec2/webserver \
+  --start-time 1705580000 \
+  --end-time 1705583600 \
+  --query-string 'fields @timestamp, @message | filter @message like /ERROR/ | sort @timestamp desc | limit 20'
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: CloudWatch Logs Insights Queries</h5>
+                  <div class="code-box">
+<pre>
+# Find all errors in the last hour
+fields @timestamp, @message
+| filter @message like /ERROR/
+| sort @timestamp desc
+| limit 100
+
+# Count errors by type
+fields @message
+| filter @message like /ERROR/
+| parse @message /ERROR: (?<errorType>.*)/
+| stats count() by errorType
+
+# Calculate average response time
+fields @timestamp, responseTime
+| filter ispresent(responseTime)
+| stats avg(responseTime) as avgResponseTime by bin(5m)
+
+# Find slow requests (> 1 second)
+fields @timestamp, url, responseTime
+| filter responseTime > 1000
+| sort responseTime desc
+| limit 50
+
+# Count requests per endpoint
+fields url
+| stats count() as requestCount by url
+| sort requestCount desc
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.5 AWS CloudTrail</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>AWS CloudTrail</strong> is a service that enables governance, compliance, and operational 
+                    and risk auditing of your AWS account. It logs, continuously monitors, and retains account 
+                    activity related to actions across your AWS infrastructure.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>What CloudTrail Captures:</strong></p>
+                  <ul>
+                    <li>🔐 <strong>API Calls:</strong> Who made the call, when, from where (IP address)</li>
+                    <li>📝 <strong>Console Actions:</strong> User login, resource creation/deletion</li>
+                    <li>🤖 <strong>Service Actions:</strong> AWS services acting on your behalf</li>
+                    <li>🔍 <strong>Resource Changes:</strong> What changed, before/after values</li>
+                    <li>⚠️ <strong>Errors:</strong> Failed API calls and the reason</li>
+                  </ul>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: CloudTrail Event</h5>
+                  <div class="code-box">
+<pre>
+{
+  "eventVersion": "1.08",
+  "userIdentity": {
+    "type": "IAMUser",
+    "userName": "alice-dev",
+    "accountId": "123456789012"
+  },
+  "eventTime": "2025-01-18T14:30:00Z",
+  "eventSource": "ec2.amazonaws.com",
+  "eventName": "TerminateInstances",
+  "awsRegion": "us-east-1",
+  "sourceIPAddress": "203.0.113.25",
+  "userAgent": "aws-cli/2.13.0",
+  "requestParameters": {
+    "instancesSet": {
+      "items": [
+        {"instanceId": "i-1234567890abcdef0"}
+      ]
+    }
+  },
+  "responseElements": null,
+  "requestID": "12345678-1234-1234-1234-123456789012",
+  "eventID": "87654321-4321-4321-4321-210987654321"
+}
+
+Translation: User "alice-dev" terminated EC2 instance i-1234567890abcdef0 
+from IP 203.0.113.25 on January 18, 2025 at 2:30 PM UTC
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">CloudWatch vs CloudTrail</h4>
+                  <table class="comparison-table">
+                    <thead>
+                      <tr>
+                        <th>Feature</th>
+                        <th>CloudWatch</th>
+                        <th>CloudTrail</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Purpose</strong></td>
+                        <td>Performance monitoring</td>
+                        <td>Auditing and compliance</td>
+                      </tr>
+                      <tr>
+                        <td><strong>What it tracks</strong></td>
+                        <td>Resource performance (CPU, memory, disk)</td>
+                        <td>User and API activity (who did what, when)</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Use Case</strong></td>
+                        <td>"Is my application healthy?"</td>
+                        <td>"Who deleted the database?"</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Data Type</strong></td>
+                        <td>Metrics, logs, events</td>
+                        <td>API call history, account activity</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Alerts</strong></td>
+                        <td>Performance-based (CPU > 80%)</td>
+                        <td>Security-based (unauthorized API calls)</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Example Question</strong></td>
+                        <td>"Why is my app slow?"</td>
+                        <td>"Who modified the security group?"</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Security Investigation with CloudTrail</h5>
+                  <div class="content-box">
+                    <p><strong>Scenario:</strong> An S3 bucket was accidentally made public. Investigate who did it.</p>
+                    <div class="cli-box">
+<pre>
+# Search CloudTrail for S3 bucket policy changes
+aws cloudtrail lookup-events \
+  --lookup-attributes AttributeKey=ResourceName,AttributeValue=my-private-bucket \
+  --max-results 50 \
+  --query 'Events[?EventName==`PutBucketPolicy`]'
+
+# Result shows:
+# User: bob-dev
+# Time: 2025-01-18 10:15:23 UTC
+# Action: PutBucketPolicy
+# IP: 198.51.100.42
+
+# Actions:
+# 1. Revert the policy change
+# 2. Talk to bob-dev about the incident
+# 3. Implement preventive controls (SCPs, permissions review)
+# 4. Set CloudTrail alarm for future PutBucketPolicy events
+</pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="cli-box">
+<pre>
+# Create CloudTrail trail
+aws cloudtrail create-trail \
+  --name MyCompanyTrail \
+  --s3-bucket-name my-cloudtrail-logs-bucket
+
+# Start logging
+aws cloudtrail start-logging --name MyCompanyTrail
+
+# Enable log file validation (integrity checking)
+aws cloudtrail update-trail \
+  --name MyCompanyTrail \
+  --enable-log-file-validation
+
+# Lookup recent events
+aws cloudtrail lookup-events \
+  --max-results 10
+
+# Search for specific user activity
+aws cloudtrail lookup-events \
+  --lookup-attributes AttributeKey=Username,AttributeValue=alice-dev \
+  --start-time 2025-01-18T00:00:00Z \
+  --end-time 2025-01-18T23:59:59Z
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.6 Reflection Questions</h3>
+                <div class="content-box">
+                  <ol>
+                    <li><strong>Q:</strong> Why is monitoring critical even for small applications?<br>
+                    <strong>A:</strong> Without monitoring, you're flying blind. You won't know when things break until customers complain. Even small apps need to know: Is it running? Is it slow? Are there errors? Monitoring enables proactive problem-solving instead of reactive firefighting. Plus, it helps you understand usage patterns and optimize costs.</li>
+                    
+                    <li><strong>Q:</strong> How would you use CloudWatch alarms to prevent downtime?<br>
+                    <strong>A:</strong> Set alarms for critical metrics: high CPU (triggers Auto Scaling before crash), low disk space (add storage before it fills), high error rates (alert team before users are affected), unhealthy instances (replace before service degrades). Alarms let you fix problems before they cause downtime.</li>
+                    
+                    <li><strong>Q:</strong> What kind of suspicious activity might CloudTrail help you detect?<br>
+                    <strong>A:</strong> Unauthorized access (login from unusual location), privilege escalation (user giving themselves admin rights), data exfiltration (large S3 downloads), resource deletion (who terminated the production database), security group changes (opening port 22 to 0.0.0.0/0), credential usage (access keys used from multiple IPs).</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.7 References</h3>
+                <div class="content-box">
+                  <ul>
+                    <li>📖 <a href="https://docs.aws.amazon.com/cloudwatch/index.html" target="_blank" rel="noopener">Amazon CloudWatch Documentation</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html" target="_blank" rel="noopener">AWS CloudTrail User Guide</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="day2-cost" class="lesson">
+            <div class="lesson-header">
+              <h2>📅 Day 2 - Module 4: Cost Management & Best Practices</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">4.1 AWS Pricing Models</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    AWS offers flexible pricing models to match your workload patterns and optimize costs. 
+                    Understanding these models is crucial for cost-effective cloud architecture.
+                  </p>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>💳 On-Demand Instances</h4>
+                  <p>Pay for compute capacity by the hour or second with no long-term commitments.</p>
+                  <div class="highlight-box">
+                    <p><strong>Characteristics:</strong></p>
+                    <ul>
+                      <li>💰 <strong>Pricing:</strong> Highest per-hour cost</li>
+                      <li>⏱️ <strong>Commitment:</strong> None - start/stop anytime</li>
+                      <li>📊 <strong>Best For:</strong> Unpredictable workloads, development/testing, short-term projects</li>
+                      <li>✅ <strong>Pros:</strong> Maximum flexibility, no upfront costs</li>
+                      <li>❌ <strong>Cons:</strong> Most expensive option for steady workloads</li>
+                    </ul>
+                  </div>
+                  <div class="example-box">
+                    <h5>Example: t3.medium On-Demand</h5>
+                    <p>$0.0416/hour × 730 hours/month = <strong>$30.37/month</strong></p>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>📅 Reserved Instances (RI)</h4>
+                  <p>Commit to using EC2 for 1 or 3 years in exchange for significant discounts (up to 75% off On-Demand).</p>
+                  <div class="highlight-box">
+                    <p><strong>Characteristics:</strong></p>
+                    <ul>
+                      <li>💰 <strong>Savings:</strong> 40-75% discount vs On-Demand</li>
+                      <li>⏱️ <strong>Commitment:</strong> 1 year or 3 years</li>
+                      <li>💳 <strong>Payment:</strong> All Upfront, Partial Upfront, or No Upfront</li>
+                      <li>📊 <strong>Best For:</strong> Steady-state workloads (databases, always-on web servers)</li>
+                      <li>✅ <strong>Pros:</strong> Significant cost savings</li>
+                      <li>❌ <strong>Cons:</strong> Locked into commitment, less flexibility</li>
+                    </ul>
+                  </div>
+                  <div class="example-box">
+                    <h5>Example: t3.medium Reserved (1-year, All Upfront)</h5>
+                    <p>$182 upfront = <strong>$15.17/month</strong> (50% savings vs On-Demand)</p>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>🎯 Spot Instances</h4>
+                  <p>Bid on unused EC2 capacity for up to 90% discount. AWS can reclaim instances with 2-minute warning.</p>
+                  <div class="highlight-box">
+                    <p><strong>Characteristics:</strong></p>
+                    <ul>
+                      <li>💰 <strong>Savings:</strong> Up to 90% discount vs On-Demand</li>
+                      <li>⚠️ <strong>Risk:</strong> Can be terminated by AWS anytime</li>
+                      <li>📊 <strong>Best For:</strong> Fault-tolerant workloads (batch processing, data analysis, testing)</li>
+                      <li>✅ <strong>Pros:</strong> Massive cost savings</li>
+                      <li>❌ <strong>Cons:</strong> Can be interrupted, not suitable for critical workloads</li>
+                    </ul>
+                  </div>
+                  <div class="example-box">
+                    <h5>Example: t3.medium Spot</h5>
+                    <p>~$0.0125/hour × 730 hours = <strong>$9.13/month</strong> (70% savings vs On-Demand)</p>
+                    <p><em>Note: Spot prices fluctuate based on supply and demand</em></p>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>💾 Savings Plans</h4>
+                  <p>Flexible pricing model offering lower prices in exchange for commitment to consistent usage ($/hour) for 1 or 3 years.</p>
+                  <div class="highlight-box">
+                    <p><strong>Types:</strong></p>
+                    <ul>
+                      <li><strong>Compute Savings Plans:</strong> Most flexible, applies to EC2, Fargate, Lambda (up to 66% savings)</li>
+                      <li><strong>EC2 Instance Savings Plans:</strong> Applies to specific instance family in a region (up to 72% savings)</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Pricing Model</th>
+                      <th>Discount</th>
+                      <th>Flexibility</th>
+                      <th>Best Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>On-Demand</strong></td>
+                      <td>0% (baseline)</td>
+                      <td>⭐⭐⭐⭐⭐</td>
+                      <td>Development, testing, unpredictable workloads</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Reserved</strong></td>
+                      <td>40-75%</td>
+                      <td>⭐⭐</td>
+                      <td>Production databases, always-on applications</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Spot</strong></td>
+                      <td>70-90%</td>
+                      <td>⭐⭐⭐</td>
+                      <td>Batch jobs, big data, CI/CD, fault-tolerant apps</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Savings Plans</strong></td>
+                      <td>66-72%</td>
+                      <td>⭐⭐⭐⭐</td>
+                      <td>Consistent compute usage across services</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.2 AWS Free Tier</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>AWS Free Tier</strong> enables you to gain free, hands-on experience with AWS services. 
+                    Includes three types of offers: Always Free, 12 Months Free, and Trials.
+                  </p>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Free Tier Categories</h4>
+                  
+                  <div class="aws-service-card">
+                    <h4>🆓 12 Months Free (from account creation)</h4>
+                    <ul>
+                      <li><strong>EC2:</strong> 750 hours/month of t2.micro or t3.micro instances</li>
+                      <li><strong>S3:</strong> 5 GB standard storage, 20,000 GET requests, 2,000 PUT requests</li>
+                      <li><strong>RDS:</strong> 750 hours/month of db.t2.micro, db.t3.micro, or db.t4g.micro</li>
+                      <li><strong>EBS:</strong> 30 GB of storage (SSD or Magnetic)</li>
+                      <li><strong>CloudFront:</strong> 50 GB data transfer out, 2,000,000 HTTP/HTTPS requests</li>
+                      <li><strong>Lambda:</strong> 1 million free requests/month, 400,000 GB-seconds compute time</li>
+                    </ul>
+                  </div>
+
+                  <div class="aws-service-card">
+                    <h4>♾️ Always Free</h4>
+                    <ul>
+                      <li><strong>DynamoDB:</strong> 25 GB storage, 200 million requests/month</li>
+                      <li><strong>Lambda:</strong> 1 million requests/month (ongoing, not just 12 months)</li>
+                      <li><strong>SNS:</strong> 1 million publishes, 100,000 HTTP/S deliveries, 1,000 email deliveries</li>
+                      <li><strong>CloudWatch:</strong> 10 custom metrics, 10 alarms, 1 million API requests</li>
+                      <li><strong>Cognito:</strong> 50,000 monthly active users</li>
+                    </ul>
+                  </div>
+
+                  <div class="aws-service-card">
+                    <h4>🔬 Trials (service-specific durations)</h4>
+                    <ul>
+                      <li><strong>SageMaker:</strong> 250 hours/month of t2.medium notebook usage (2 months)</li>
+                      <li><strong>Lightsail:</strong> 750 hours/month (1 month)</li>
+                      <li><strong>Inspector:</strong> 90 days</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="warning-box">
+                  <strong>Free Tier Warnings:</strong>
+                  <ul>
+                    <li>⚠️ Monitor usage carefully - exceeding limits incurs charges</li>
+                    <li>⚠️ Some services (like NAT Gateway, EIP when not attached) are NOT free</li>
+                    <li>⚠️ Data transfer OUT beyond free tier is charged</li>
+                    <li>⚠️ Set up billing alerts to avoid surprises!</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.3 AWS Budgets & Cost Explorer</h3>
+                
+                <div class="aws-service-card">
+                  <h4>💰 AWS Budgets</h4>
+                  <p>Set custom cost and usage budgets that alert you when you exceed (or are forecasted to exceed) your budgeted amount.</p>
+                  
+                  <div class="example-box">
+                    <h5>Example: Creating a Monthly Budget</h5>
+                    <div class="cli-box">
+<pre>
+# Create a monthly cost budget ($100 limit)
+aws budgets create-budget \
+  --account-id 123456789012 \
+  --budget file://budget.json \
+  --notifications-with-subscribers file://notifications.json
+
+# budget.json
+{
+  "BudgetName": "Monthly-Cost-Budget",
+  "BudgetLimit": {
+    "Amount": "100",
+    "Unit": "USD"
+  },
+  "TimeUnit": "MONTHLY",
+  "BudgetType": "COST"
+}
+
+# notifications.json
+{
+  "Notification": {
+    "NotificationType": "ACTUAL",
+    "ComparisonOperator": "GREATER_THAN",
+    "Threshold": 80,
+    "ThresholdType": "PERCENTAGE"
+  },
+  "Subscribers": [{
+    "SubscriptionType": "EMAIL",
+    "Address": "admin@example.com"
+  }]
+}
+
+# This creates alerts at:
+# - 80% of budget ($80) - Warning
+# - 100% of budget ($100) - Critical
+# - Forecasted to exceed - Proactive alert
+</pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>📊 AWS Cost Explorer</h4>
+                  <p>Visualize, understand, and manage your AWS costs and usage over time.</p>
+                  
+                  <div class="highlight-box">
+                    <p><strong>Use Cost Explorer to:</strong></p>
+                    <ul>
+                      <li>View costs by service, region, linked account, or tag</li>
+                      <li>Identify cost trends and anomalies</li>
+                      <li>Forecast future costs based on historical usage</li>
+                      <li>Find Reserved Instance recommendations</li>
+                      <li>Analyze costs by time period (daily, monthly, yearly)</li>
+                    </ul>
+                  </div>
+
+                  <div class="example-box">
+                    <h5>Example: Common Cost Analysis Questions</h5>
+                    <ul>
+                      <li><strong>Q:</strong> "Which service is costing me the most?"<br>
+                      <strong>A:</strong> Group by Service → EC2: $150, RDS: $80, S3: $20</li>
+                      
+                      <li><strong>Q:</strong> "Why did my bill spike last month?"<br>
+                      <strong>A:</strong> Filter by month → EC2 usage increased 300% (forgot to terminate test instances)</li>
+                      
+                      <li><strong>Q:</strong> "What will my costs be next month?"<br>
+                      <strong>A:</strong> Cost Explorer forecast → Estimated $250 (based on current trends)</li>
+                      
+                      <li><strong>Q:</strong> "Which region is most expensive?"<br>
+                      <strong>A:</strong> Group by Region → us-east-1: $120, eu-west-1: $45</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.4 Cost Optimization Best Practices</h3>
+                
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>🔍 Right-Size Resources</h4>
+                    <p>Match instance types to actual workload needs</p>
+                    <ul style="text-align: left; margin-top: 10px; font-size: 0.9em;">
+                      <li>Use CloudWatch to monitor utilization</li>
+                      <li>Downsize underutilized instances</li>
+                      <li>Use AWS Compute Optimizer recommendations</li>
+                    </ul>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>⏰ Schedule Resources</h4>
+                    <p>Turn off resources when not needed</p>
+                    <ul style="text-align: left; margin-top: 10px; font-size: 0.9em;">
+                      <li>Stop dev/test instances at night</li>
+                      <li>Use Auto Scaling schedules</li>
+                      <li>Lambda for automated start/stop</li>
+                    </ul>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>💾 Optimize Storage</h4>
+                    <p>Use appropriate storage classes</p>
+                    <ul style="text-align: left; margin-top: 10px; font-size: 0.9em;">
+                      <li>S3 Lifecycle policies for old data</li>
+                      <li>Delete unattached EBS volumes</li>
+                      <li>Use S3 Intelligent-Tiering</li>
+                    </ul>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>🏷️ Use Tags</h4>
+                    <p>Track costs by project, team, environment</p>
+                    <ul style="text-align: left; margin-top: 10px; font-size: 0.9em;">
+                      <li>Tag all resources consistently</li>
+                      <li>Enable cost allocation tags</li>
+                      <li>Create tag-based budgets</li>
+                    </ul>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>📦 Reserved Capacity</h4>
+                    <p>Commit for steady workloads</p>
+                    <ul style="text-align: left; margin-top: 10px; font-size: 0.9em;">
+                      <li>Buy RIs for production databases</li>
+                      <li>Use Savings Plans for flexibility</li>
+                      <li>Review RI recommendations monthly</li>
+                    </ul>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>🎯 Use Spot Instances</h4>
+                    <p>Leverage for fault-tolerant workloads</p>
+                    <ul style="text-align: left; margin-top: 10px; font-size: 0.9em;">
+                      <li>Batch processing jobs</li>
+                      <li>CI/CD build servers</li>
+                      <li>Data analysis tasks</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Cost Optimization Scenario</h5>
+                  <div class="content-box">
+                    <p><strong>Current Situation:</strong> Monthly AWS bill = $1,000</p>
+                    <ul>
+                      <li>EC2: 5× t3.medium On-Demand (24/7) = $152 each = $760/month</li>
+                      <li>RDS: db.t3.small On-Demand (24/7) = $30/month</li>
+                      <li>S3: 200 GB standard storage = $5/month</li>
+                      <li>Data Transfer: $205/month</li>
+                    </ul>
+
+                    <p><strong>Optimizations Applied:</strong></p>
+                    <ol>
+                      <li><strong>Right-size EC2:</strong> Analysis shows low CPU → downsize to t3.small = $15.18 each
+                        <br>Savings: ($30.37 - $15.18) × 5 = <strong>$75.95/month</strong></li>
+                      
+                      <li><strong>Reserved Instances:</strong> Buy 1-year RI for 3 instances (always on)
+                        <br>Savings: 50% on 3 instances = <strong>$22.79/month</strong></li>
+                      
+                      <li><strong>Schedule Dev/Test:</strong> Stop 2 instances at night (12 hours/day)
+                        <br>Savings: $15.18 × 2 × 0.5 = <strong>$15.18/month</strong></li>
+                      
+                      <li><strong>RDS Reserved:</strong> 1-year RI for database
+                        <br>Savings: 40% = <strong>$12/month</strong></li>
+                      
+                      <li><strong>S3 Lifecycle:</strong> Move old data to Glacier (100 GB)
+                        <br>Savings: (100 GB × $0.023) - (100 GB × $0.004) = <strong>$1.90/month</strong></li>
+                      
+                      <li><strong>CloudFront:</strong> Enable caching to reduce data transfer
+                        <br>Savings: 30% of transfer costs = <strong>$61.50/month</strong></li>
+                    </ol>
+
+                    <p><strong>New Monthly Bill:</strong> $1,000 - $189.32 = <strong>$810.68</strong></p>
+                    <p style="color: #28A745; font-weight: bold;">💰 Total Savings: $189.32/month = $2,271.84/year (19% reduction!)</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.5 AWS Well-Architected Framework</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    The <strong>AWS Well-Architected Framework</strong> helps you understand the pros and cons of 
+                    decisions you make while building systems on AWS. It provides best practices across five pillars.
+                  </p>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>1️⃣ Operational Excellence</h4>
+                  <p>Run and monitor systems to deliver business value and continually improve processes.</p>
+                  <div class="highlight-box">
+                    <p><strong>Key Principles:</strong></p>
+                    <ul>
+                      <li>Perform operations as code (Infrastructure as Code)</li>
+                      <li>Make frequent, small, reversible changes</li>
+                      <li>Refine operations procedures frequently</li>
+                      <li>Anticipate failure and learn from failures</li>
+                      <li>Example: Use CloudFormation for infrastructure, implement CI/CD pipelines</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>2️⃣ Security</h4>
+                  <p>Protect information, systems, and assets while delivering business value.</p>
+                  <div class="highlight-box">
+                    <p><strong>Key Principles:</strong></p>
+                    <ul>
+                      <li>Implement strong identity foundation (IAM, MFA, least privilege)</li>
+                      <li>Enable traceability (CloudTrail, VPC Flow Logs)</li>
+                      <li>Apply security at all layers (WAF, Security Groups, encryption)</li>
+                      <li>Automate security best practices</li>
+                      <li>Protect data in transit and at rest (TLS, KMS encryption)</li>
+                      <li>Example: Enable MFA, encrypt all S3 buckets, use private subnets</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>3️⃣ Reliability</h4>
+                  <p>Ensure a workload performs its intended function correctly and consistently.</p>
+                  <div class="highlight-box">
+                    <p><strong>Key Principles:</strong></p>
+                    <ul>
+                      <li>Automatically recover from failure (health checks, Auto Scaling)</li>
+                      <li>Test recovery procedures (chaos engineering, disaster recovery drills)</li>
+                      <li>Scale horizontally (multiple small instances vs one large)</li>
+                      <li>Stop guessing capacity (use Auto Scaling)</li>
+                      <li>Manage change through automation</li>
+                      <li>Example: Deploy across multiple AZs, implement automated backups</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>4️⃣ Performance Efficiency</h4>
+                  <p>Use computing resources efficiently to meet requirements and maintain efficiency as demand changes.</p>
+                  <div class="highlight-box">
+                    <p><strong>Key Principles:</strong></p>
+                    <ul>
+                      <li>Democratize advanced technologies (use managed services)</li>
+                      <li>Go global in minutes (deploy to multiple regions easily)</li>
+                      <li>Use serverless architectures (Lambda, DynamoDB)</li>
+                      <li>Experiment more often (easy to try new instance types)</li>
+                      <li>Mechanical sympathy (use right tool for the job)</li>
+                      <li>Example: Use ElastiCache for caching, CloudFront for CDN, choose right database</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="aws-service-card">
+                  <h4>5️⃣ Cost Optimization</h4>
+                  <p>Avoid unnecessary costs and achieve cost-effective results.</p>
+                  <div class="highlight-box">
+                    <p><strong>Key Principles:</strong></p>
+                    <ul>
+                      <li>Implement cloud financial management</li>
+                      <li>Adopt a consumption model (pay only for what you use)</li>
+                      <li>Measure overall efficiency (cost per transaction, cost per user)</li>
+                      <li>Stop spending money on undifferentiated heavy lifting (use managed services)</li>
+                      <li>Analyze and attribute expenditure (cost allocation tags, Cost Explorer)</li>
+                      <li>Example: Use Auto Scaling, buy Reserved Instances, implement S3 lifecycle policies</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Well-Architected Review Questions</h5>
+                  <div class="content-box">
+                    <p><strong>Operational Excellence:</strong> Do you have runbooks for common operational tasks?</p>
+                    <p><strong>Security:</strong> Are all S3 buckets encrypted and non-public?</p>
+                    <p><strong>Reliability:</strong> Can your application survive the loss of an Availability Zone?</p>
+                    <p><strong>Performance:</strong> Have you tested different instance types to find the optimal cost/performance?</p>
+                    <p><strong>Cost Optimization:</strong> Are you using Reserved Instances for steady-state workloads?</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.6 Reflection Questions</h3>
+                <div class="content-box">
+                  <ol>
+                    <li><strong>Q:</strong> Why might a company choose Reserved Instances over On-Demand?<br>
+                    <strong>A:</strong> If you have predictable, steady-state workloads (production databases, always-on applications), Reserved Instances offer 40-75% savings. The commitment (1-3 years) is acceptable because you know you'll need that capacity anyway. For example, your production database will always run 24/7, so why pay On-Demand rates?</li>
+                    
+                    <li><strong>Q:</strong> How can poor architecture decisions lead to higher costs?<br>
+                    <strong>A:</strong> Examples: Using oversized instances (waste), not implementing Auto Scaling (paying for idle capacity), keeping all data in S3 Standard (not using lifecycle policies), deploying in expensive regions, not using CloudFront (high data transfer costs), running dev/test 24/7 instead of scheduling, not using Spot for batch jobs.</li>
+                    
+                    <li><strong>Q:</strong> Which of the Well-Architected pillars do you think is most often overlooked, and why?<br>
+                    <strong>A:</strong> Operational Excellence is often overlooked because teams rush to build features. They skip documentation, runbooks, and automation. This creates technical debt. Security is second - teams focus on speed over security until a breach happens. Both require upfront investment but prevent costly problems later.</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.7 References</h3>
+                <div class="content-box">
+                  <ul>
+                    <li>📖 <a href="https://aws.amazon.com/pricing/" target="_blank" rel="noopener">AWS Pricing Overview</a></li>
+                    <li>📖 <a href="https://aws.amazon.com/free/" target="_blank" rel="noopener">AWS Free Tier</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html" target="_blank" rel="noopener">AWS Budgets</a></li>
+                    <li>📖 <a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html" target="_blank" rel="noopener">AWS Well-Architected Framework</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }
+
+      function closeSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      }
+
+      // Close sidebar when clicking a link
+      document.querySelectorAll('.sidebar a').forEach(link => {
+        link.addEventListener('click', () => {
+          closeSidebar();
+        });
+      });
+    </script>
+  </body>
+</html>

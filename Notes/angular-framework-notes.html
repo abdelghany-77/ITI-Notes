@@ -1,0 +1,2776 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Angular Framework Study Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* Layout Container */
+      .layout-container {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100vh;
+        background: linear-gradient(
+          180deg,
+          rgba(52, 152, 219, 0.95) 0%,
+          rgba(41, 128, 185, 0.95) 100%
+        );
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .sidebar-header {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1002;
+      }
+
+      .sidebar-header h3 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+        font-weight: 700;
+      }
+
+      .sidebar-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .sidebar-content {
+        padding: 20px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar li {
+        margin-bottom: 8px;
+      }
+
+      .sidebar a {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 15px;
+        display: block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+      }
+
+      .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+        border-left-color: #f39c12;
+      }
+
+      .sidebar-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1003;
+      }
+
+      .sidebar-toggle:hover {
+        background: linear-gradient(135deg, #2980b9, #3498db);
+        transform: translateY(-2px);
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+
+      .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        margin-left: 20px;
+        margin-right: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 30px 0;
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.3;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .course-outline {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        border-left: 5px solid #e74c3c;
+      }
+
+      .course-outline h2 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
+
+      .lesson-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .lesson-item {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-left: 4px solid #e74c3c;
+      }
+
+      .lesson-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .lesson {
+        background: white;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .lesson:hover {
+        transform: translateY(-5px);
+      }
+
+      .lesson-header {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 20px;
+        position: relative;
+      }
+
+      .lesson-header::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #e74c3c, #f39c12, #2ecc71, #9b59b6);
+      }
+
+      .lesson-header h2 {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+      }
+
+      .lesson-content {
+        padding: 25px;
+      }
+
+      .section {
+        margin-bottom: 25px;
+      }
+
+      .section-title {
+        color: #2c3e50;
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #ecf0f1;
+        position: relative;
+      }
+
+      .section-title::before {
+        content: "▶";
+        color: #e74c3c;
+        margin-right: 10px;
+        font-size: 0.8em;
+      }
+
+      .subsection {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+
+      .subsection-title {
+        color: #34495e;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .content-box {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #e74c3c;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #fff5cd, #fff2a8);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #f39c12;
+        position: relative;
+      }
+
+      .highlight-box::before {
+        content: "💡";
+        position: absolute;
+        top: 15px;
+        left: -12px;
+        background: #f39c12;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+      }
+
+      .definition-box {
+        background: linear-gradient(135deg, #e8f5e8, #d4f4d4);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #2ecc71;
+      }
+
+      .code-box {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-family: "Courier New", monospace;
+        overflow-x: auto;
+      }
+
+      .code-box pre {
+        margin: 0;
+        white-space: pre-wrap;
+      }
+
+      ul,
+      ol {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+
+      li {
+        margin-bottom: 8px;
+        padding-left: 5px;
+      }
+
+      .component-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .component-card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border-top: 4px solid #e74c3c;
+        transition: transform 0.3s ease;
+      }
+
+      .component-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .component-card h4 {
+        color: #e74c3c;
+        margin-bottom: 10px;
+      }
+
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .comparison-table th {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 12px;
+        text-align: left;
+      }
+
+      .comparison-table td {
+        padding: 12px;
+        border-bottom: 1px solid #ecf0f1;
+      }
+
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .back-to-main {
+        position: fixed;
+        top: 80px;
+        left: 20px;
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-to-main:hover {
+        background: linear-gradient(135deg, #34495e, #2c3e50);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        color: white;
+      }
+
+      .back-to-main::before {
+        content: "🏠";
+        font-size: 1.1em;
+      }
+
+      .example-box {
+        background: linear-gradient(135deg, #e8f4f8, #d4eaf4);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #3498db;
+      }
+
+      .example-box h5 {
+        color: #2980b9;
+        margin-bottom: 10px;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 280px;
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
+        .container {
+          margin: 10px;
+          padding: 15px;
+        }
+
+        .sidebar-toggle {
+          top: 10px;
+          left: 10px;
+          padding: 10px 12px;
+        }
+
+        .back-to-main {
+          top: 60px;
+          left: 10px;
+          padding: 8px 15px;
+          font-size: 0.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+    <a href="../index.html" class="back-to-main"></a>
+
+    <div class="layout-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h3>📚 Course Navigation</h3>
+          <p>Angular Framework</p>
+        </div>
+        <div class="sidebar-content">
+          <ul>
+            <li>
+              <a href="#outline" onclick="closeSidebar()">📋 Course Outline</a>
+            </li>
+            <li>
+              <a href="#lesson1" onclick="closeSidebar()">🏗️ Core Structure</a>
+            </li>
+            <li>
+              <a href="#lesson2" onclick="closeSidebar()">🔗 Data Binding</a>
+            </li>
+            <li>
+              <a href="#lesson3" onclick="closeSidebar()"
+                >🎯 Directives & Pipes</a
+              >
+            </li>
+            <li>
+              <a href="#lesson4" onclick="closeSidebar()"
+                >♻️ Component Lifecycle</a
+              >
+            </li>
+            <li>
+              <a href="#lesson5" onclick="closeSidebar()">🧭 Routing</a>
+            </li>
+            <li>
+              <a href="#lesson6" onclick="closeSidebar()">⚙️ Services & DI</a>
+            </li>
+            <li>
+              <a href="#lesson7" onclick="closeSidebar()">📝 Forms</a>
+            </li>
+            <li>
+              <a href="#lesson8" onclick="closeSidebar()">🚀 Deployment</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="container" id="mainContainer">
+          <div class="header">
+            <h1>Angular Framework</h1>
+            <p>Comprehensive Study Guide & Notes</p>
+          </div>
+
+          <section id="outline" class="course-outline">
+            <h2>📚 Course Outline</h2>
+            <div class="lesson-list">
+              <div class="lesson-item">
+                <strong>Lesson 1:</strong> Core Structure and Modules
+              </div>
+              <div class="lesson-item">
+                <strong>Lesson 2:</strong> Data Binding
+              </div>
+              <div class="lesson-item">
+                <strong>Lesson 3:</strong> Directives and Pipes
+              </div>
+              <div class="lesson-item">
+                <strong>Lesson 4:</strong> Component Lifecycle and Change
+                Detection
+              </div>
+              <div class="lesson-item">
+                <strong>Lesson 5:</strong> Routing and Navigation
+              </div>
+              <div class="lesson-item">
+                <strong>Lesson 6:</strong> Services, DI, and RxJS
+              </div>
+              <div class="lesson-item">
+                <strong>Lesson 7:</strong> Forms (Template-Driven & Reactive)
+              </div>
+              <div class="lesson-item">
+                <strong>Lesson 8:</strong> HTTP Communication and Deployment
+              </div>
+            </div>
+          </section>
+
+          <div id="lesson1" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 1: Core Structure and Modules</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">1.1 What is Angular?</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>Angular</strong> is a front-end web application
+                    framework built on TypeScript. It is developed and actively
+                    maintained by Google and used to build Single-Page
+                    Applications (SPAs), which load once and update parts of the
+                    page without a full refresh.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Key Features:</strong></p>
+                  <ul>
+                    <li>Component-based architecture</li>
+                    <li>Two-way data binding</li>
+                    <li>Dependency injection</li>
+                    <li>Powerful CLI tools</li>
+                    <li>TypeScript support</li>
+                    <li>Rich ecosystem and community</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">
+                  1.2 NgModules vs. Standalone Projects
+                </h3>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">NgModule (@NgModule)</h4>
+                  <div class="content-box">
+                    <p>
+                      A class that groups building blocks (components,
+                      directives, pipes) and defines dependencies so Angular
+                      knows how to compile and run that feature.
+                    </p>
+                  </div>
+
+                  <div class="component-grid">
+                    <div class="component-card">
+                      <h4>declarations</h4>
+                      <p>
+                        Lists components, directives, and pipes owned by the
+                        module
+                      </p>
+                    </div>
+                    <div class="component-card">
+                      <h4>imports</h4>
+                      <p>
+                        Specifies other modules needed (e.g., CommonModule,
+                        RouterModule)
+                      </p>
+                    </div>
+                    <div class="component-card">
+                      <h4>exports</h4>
+                      <p>
+                        Defines which declarations are shared with other modules
+                      </p>
+                    </div>
+                    <div class="component-card">
+                      <h4>providers</h4>
+                      <p>Services for Dependency Injection scope</p>
+                    </div>
+                    <div class="component-card">
+                      <h4>bootstrap</h4>
+                      <p>
+                        Specifies the component that starts the application
+                        (root module only)
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="example-box">
+                    <h5>Example: AppModule</h5>
+                    <div class="code-box">
+                      <pre>
+@NgModule({
+  declarations: [
+    AppComponent,
+    HeaderComponent,
+    FooterComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule
+  ],
+  providers: [UserService],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Standalone Project</h4>
+                  <div class="definition-box">
+                    <p>
+                      A modern approach where the application is organized
+                      around standalone components, and dependencies are
+                      imported directly into the component instead of relying on
+                      NgModules.
+                    </p>
+                  </div>
+
+                  <div class="example-box">
+                    <h5>Example: Standalone Component</h5>
+                    <div class="code-box">
+                      <pre>
+@Component({
+  selector: 'app-user-profile',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.css']
+})
+export class UserProfileComponent {
+  userName = 'John Doe';
+}
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson2" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 2: Data Binding</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">2.1 Data Binding Overview</h3>
+                <div class="definition-box">
+                  <p>
+                    Data binding is the process that connects a component's
+                    logic (TypeScript) with its template (HTML), allowing for
+                    automatic synchronization between the UI and the application
+                    state.
+                  </p>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Syntax</th>
+                      <th>Direction</th>
+                      <th>Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Interpolation</strong></td>
+                      <td>{{ value }}</td>
+                      <td>Component → Template</td>
+                      <td>Displaying data from component in HTML</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Property Binding</strong></td>
+                      <td>[property]="expression"</td>
+                      <td>Component → Template</td>
+                      <td>Binding a DOM property to a component field</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Event Binding</strong></td>
+                      <td>(event)="handler()"</td>
+                      <td>Template → Component</td>
+                      <td>Listening to DOM events and triggering methods</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Two-Way Binding</strong></td>
+                      <td>[(ngModel)]="value"</td>
+                      <td>Component ↔ Template</td>
+                      <td>Binds form input value in both directions</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.2 Interpolation</h3>
+                <div class="example-box">
+                  <h5>Example: Displaying Component Data</h5>
+                  <div class="code-box">
+                    <pre>
+// Component
+export class UserComponent {
+  title = 'Welcome to Angular';
+  userName = 'Alice';
+  currentYear = 2024;
+}
+
+// Template
+&lt;h1&gt;{{ title }}&lt;/h1&gt;
+&lt;p&gt;Hello, {{ userName }}!&lt;/p&gt;
+&lt;footer&gt;© {{ currentYear }}&lt;/footer&gt;
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.3 Property Binding</h3>
+                <div class="example-box">
+                  <h5>Example: Binding Image Source and Button State</h5>
+                  <div class="code-box">
+                    <pre>
+// Component
+export class ProductComponent {
+  imageUrl = 'assets/product.jpg';
+  isDisabled = false;
+  productId = 42;
+}
+
+// Template
+&lt;img [src]="imageUrl" alt="Product"&gt;
+&lt;button [disabled]="isDisabled"&gt;Add to Cart&lt;/button&gt;
+&lt;a [href]="'/products/' + productId"&gt;View Details&lt;/a&gt;
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.4 Event Binding</h3>
+                <div class="example-box">
+                  <h5>Example: Handling Click Events</h5>
+                  <div class="code-box">
+                    <pre>
+// Component
+export class CounterComponent {
+  count = 0;
+  
+  increment() {
+    this.count++;
+  }
+  
+  decrement() {
+    this.count--;
+  }
+}
+
+// Template
+&lt;p&gt;Count: {{ count }}&lt;/p&gt;
+&lt;button (click)="increment()"&gt;+&lt;/button&gt;
+&lt;button (click)="decrement()"&gt;-&lt;/button&gt;
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.5 Two-Way Binding</h3>
+                <div class="highlight-box">
+                  <p>
+                    Two-way binding requires importing
+                    <strong>FormsModule</strong> in your module or standalone
+                    component.
+                  </p>
+                </div>
+                <div class="example-box">
+                  <h5>Example: Form Input with ngModel</h5>
+                  <div class="code-box">
+                    <pre>
+// Component
+import { FormsModule } from '@angular/forms';
+
+export class LoginComponent {
+  username = '';
+  password = '';
+}
+
+// Template
+&lt;input [(ngModel)]="username" placeholder="Username"&gt;
+&lt;input [(ngModel)]="password" type="password" placeholder="Password"&gt;
+&lt;p&gt;Username: {{ username }}&lt;/p&gt;
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson3" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 3: Directives and Pipes</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">3.1 Directives Overview</h3>
+                <div class="definition-box">
+                  <p>
+                    Directives are Angular's mechanism for manipulating the DOM
+                    or the behavior of elements, adding structure, style, or
+                    logic.
+                  </p>
+                </div>
+
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>Structural Directives</h4>
+                    <p>Add, remove, or replace elements in the DOM</p>
+                    <p><em>Examples: *ngIf, *ngFor, *ngSwitch</em></p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Attribute Directives</h4>
+                    <p>Change appearance or behavior of existing elements</p>
+                    <p><em>Examples: [ngClass], [ngStyle]</em></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.2 Structural Directives</h3>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">
+                    *ngIf - Conditional Rendering
+                  </h4>
+                  <div class="example-box">
+                    <h5>Example: Show/Hide Content</h5>
+                    <div class="code-box">
+                      <pre>
+// Component
+export class AppComponent {
+  isLoggedIn = true;
+  userRole = 'admin';
+}
+
+// Template
+&lt;div *ngIf="isLoggedIn"&gt;
+  &lt;h2&gt;Welcome back!&lt;/h2&gt;
+&lt;/div&gt;
+
+&lt;div *ngIf="!isLoggedIn"&gt;
+  &lt;h2&gt;Please log in&lt;/h2&gt;
+&lt;/div&gt;
+
+&lt;div *ngIf="userRole === 'admin'; else notAdmin"&gt;
+  &lt;button&gt;Admin Panel&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;ng-template #notAdmin&gt;
+  &lt;p&gt;You don't have admin privileges&lt;/p&gt;
+&lt;/ng-template&gt;
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">*ngFor - List Rendering</h4>
+                  <div class="example-box">
+                    <h5>Example: Rendering an Array</h5>
+                    <div class="code-box">
+                      <pre>
+// Component
+export class ProductListComponent {
+  products = [
+    { id: 1, name: 'Laptop', price: 999 },
+    { id: 2, name: 'Mouse', price: 25 },
+    { id: 3, name: 'Keyboard', price: 75 }
+  ];
+}
+
+// Template
+&lt;ul&gt;
+  &lt;li *ngFor="let product of products; let i = index"&gt;
+    {{ i + 1 }}. {{ product.name }} - ${{ product.price }}
+  &lt;/li&gt;
+&lt;/ul&gt;
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">
+                    *ngSwitch - Multiple Conditions
+                  </h4>
+                  <div class="example-box">
+                    <h5>Example: Display Based on Status</h5>
+                    <div class="code-box">
+                      <pre>
+// Component
+export class OrderComponent {
+  orderStatus = 'shipped';
+}
+
+// Template
+&lt;div [ngSwitch]="orderStatus"&gt;
+  &lt;p *ngSwitchCase="'pending'"&gt;Order is pending&lt;/p&gt;
+  &lt;p *ngSwitchCase="'shipped'"&gt;Order has been shipped&lt;/p&gt;
+  &lt;p *ngSwitchCase="'delivered'"&gt;Order delivered&lt;/p&gt;
+  &lt;p *ngSwitchDefault&gt;Unknown status&lt;/p&gt;
+&lt;/div&gt;
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.3 Attribute Directives</h3>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">
+                    ngClass - Dynamic CSS Classes
+                  </h4>
+                  <div class="example-box">
+                    <h5>Example: Conditional Styling</h5>
+                    <div class="code-box">
+                      <pre>
+// Component
+export class AlertComponent {
+  isError = true;
+  isWarning = false;
+}
+
+// Template
+&lt;div [ngClass]="{ 
+  'error': isError, 
+  'warning': isWarning,
+  'active': true 
+}"&gt;
+  Alert Message
+&lt;/div&gt;
+
+&lt;!-- Alternative syntax --&gt;
+&lt;div [ngClass]="isError ? 'error-box' : 'info-box'"&gt;
+  Conditional Class
+&lt;/div&gt;
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">
+                    ngStyle - Dynamic Inline Styles
+                  </h4>
+                  <div class="example-box">
+                    <h5>Example: Dynamic Styling</h5>
+                    <div class="code-box">
+                      <pre>
+// Component
+export class BoxComponent {
+  backgroundColor = 'blue';
+  fontSize = 16;
+  isLarge = true;
+}
+
+// Template
+&lt;div [ngStyle]="{
+  'background-color': backgroundColor,
+  'font-size.px': fontSize,
+  'padding': isLarge ? '20px' : '10px'
+}"&gt;
+  Styled Content
+&lt;/div&gt;
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.4 Custom Directives</h3>
+                <div class="example-box">
+                  <h5>Example: Highlight Directive</h5>
+                  <div class="code-box">
+                    <pre>
+import { Directive, ElementRef, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appHighlight]',
+  standalone: true
+})
+export class HighlightDirective {
+  constructor(private el: ElementRef) {}
+
+  @HostListener('mouseenter') onMouseEnter() {
+    this.el.nativeElement.style.backgroundColor = 'yellow';
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this.el.nativeElement.style.backgroundColor = '';
+  }
+}
+
+// Usage in template
+&lt;p appHighlight&gt;Hover over me!&lt;/p&gt;
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.5 Pipes</h3>
+                <div class="definition-box">
+                  <p>
+                    Pipes are formatters for template values. They take an input
+                    and return a transformed output without changing the
+                    original data.
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Built-in Pipes</h5>
+                  <div class="code-box">
+                    <pre>
+// Component
+export class DataComponent {
+  today = new Date();
+  price = 1234.56;
+  userName = 'john doe';
+  longText = 'This is a very long text that needs to be shortened';
+}
+
+// Template
+&lt;p&gt;Date: {{ today | date:'short' }}&lt;/p&gt;
+&lt;p&gt;Date: {{ today | date:'fullDate' }}&lt;/p&gt;
+&lt;p&gt;Price: {{ price | currency:'USD' }}&lt;/p&gt;
+&lt;p&gt;Name: {{ userName | uppercase }}&lt;/p&gt;
+&lt;p&gt;Name: {{ userName | titlecase }}&lt;/p&gt;
+&lt;p&gt;Text: {{ longText | slice:0:20 }}...&lt;/p&gt;
+</pre
+                    >
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Custom Pipes</h4>
+                  <div class="example-box">
+                    <h5>Example: Capitalize Pipe</h5>
+                    <div class="code-box">
+                      <pre>
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'capitalize',
+  standalone: true
+})
+export class CapitalizePipe implements PipeTransform {
+  transform(value: string): string {
+    if (!value) return value;
+    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+  }
+}
+
+// Usage
+&lt;p&gt;{{ 'hello world' | capitalize }}&lt;/p&gt;
+// Output: Hello world
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Async Pipe</h4>
+                  <div class="highlight-box">
+                    <p>
+                      The <strong>async pipe</strong> automatically resolves an
+                      Observable or Promise in the template and handles
+                      subscription/unsubscription automatically.
+                    </p>
+                  </div>
+                  <div class="example-box">
+                    <h5>Example: Using Async Pipe</h5>
+                    <div class="code-box">
+                      <pre>
+// Component
+export class UserComponent {
+  user$ = this.http.get&lt;User&gt;('/api/user');
+  
+  constructor(private http: HttpClient) {}
+}
+
+// Template
+&lt;div *ngIf="user$ | async as user"&gt;
+  &lt;h2&gt;{{ user.name }}&lt;/h2&gt;
+  &lt;p&gt;{{ user.email }}&lt;/p&gt;
+&lt;/div&gt;
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson4" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 4: Component Lifecycle and Change Detection</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">4.1 Component Lifecycle Hooks</h3>
+                <div class="definition-box">
+                  <p>
+                    Angular calls specific methods during a component's
+                    lifecycle, allowing you to tap into key moments and execute
+                    custom logic.
+                  </p>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Hook</th>
+                      <th>When it Fires</th>
+                      <th>Primary Use</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>constructor()</strong></td>
+                      <td>Class instantiation (TS/JS only)</td>
+                      <td>Injecting services</td>
+                    </tr>
+                    <tr>
+                      <td><strong>ngOnChanges()</strong></td>
+                      <td>
+                        Before ngOnInit and whenever @Input() value changes
+                      </td>
+                      <td>Reacting to input changes</td>
+                    </tr>
+                    <tr>
+                      <td><strong>ngOnInit()</strong></td>
+                      <td>Once, after the first ngOnChanges</td>
+                      <td>Fetching initial data, setting up initial state</td>
+                    </tr>
+                    <tr>
+                      <td><strong>ngDoCheck()</strong></td>
+                      <td>Every change detection cycle</td>
+                      <td>Custom change detection for deep/mutable changes</td>
+                    </tr>
+                    <tr>
+                      <td><strong>ngAfterContentInit()</strong></td>
+                      <td>
+                        Once, after projected content (&lt;ng-content&gt;) is
+                        inserted
+                      </td>
+                      <td>Working with projected content</td>
+                    </tr>
+                    <tr>
+                      <td><strong>ngAfterViewInit()</strong></td>
+                      <td>
+                        Once, after component's view and child views are
+                        initialized
+                      </td>
+                      <td>Safe to access @ViewChild() elements</td>
+                    </tr>
+                    <tr>
+                      <td><strong>ngOnDestroy()</strong></td>
+                      <td>Just before the component is destroyed</td>
+                      <td>
+                        Cleanup: unsubscribe from Observables, remove listeners,
+                        cancel timers
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.2 Lifecycle Hooks Example</h3>
+                <div class="example-box">
+                  <h5>Example: Complete Lifecycle Implementation</h5>
+                  <div class="code-box">
+                    <pre>
+import { 
+  Component, OnInit, OnChanges, OnDestroy, 
+  AfterViewInit, Input, SimpleChanges 
+} from '@angular/core';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-user-profile',
+  template: `
+    &lt;div&gt;
+      &lt;h2&gt;{{ userName }}&lt;/h2&gt;
+      &lt;p&gt;Age: {{ userAge }}&lt;/p&gt;
+    &lt;/div&gt;
+  `
+})
+export class UserProfileComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+  @Input() userName: string = '';
+  @Input() userAge: number = 0;
+  
+  private subscription: Subscription = new Subscription();
+  
+  constructor() {
+    console.log('1. Constructor called');
+  }
+  
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('2. ngOnChanges called', changes);
+    if (changes['userName']) {
+      console.log('Username changed:', changes['userName'].currentValue);
+    }
+  }
+  
+  ngOnInit() {
+    console.log('3. ngOnInit called');
+    // Fetch initial data
+    this.loadUserData();
+  }
+  
+  ngAfterViewInit() {
+    console.log('4. ngAfterViewInit called');
+    // Safe to access DOM elements here
+  }
+  
+  ngOnDestroy() {
+    console.log('5. ngOnDestroy called');
+    // Cleanup
+    this.subscription.unsubscribe();
+  }
+  
+  private loadUserData() {
+    // Simulate data loading
+    console.log('Loading user data...');
+  }
+}
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.3 Change Detection</h3>
+                <div class="definition-box">
+                  <p>
+                    A Change Detection (CD) cycle is Angular's regular check to
+                    see if data has changed in the component tree and update the
+                    DOM accordingly.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Change Detection Triggers:</strong></p>
+                  <ul>
+                    <li>User events (click, input, etc.)</li>
+                    <li>HTTP responses</li>
+                    <li>Timers (setTimeout, setInterval)</li>
+                    <li>Async pipe emissions</li>
+                    <li>Manual triggers</li>
+                  </ul>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Change Detection Strategies</h4>
+                  <div class="component-grid">
+                    <div class="component-card">
+                      <h4>Default</h4>
+                      <p>Checks every component every time something happens</p>
+                      <p><em>Good for: Most applications</em></p>
+                    </div>
+                    <div class="component-card">
+                      <h4>OnPush</h4>
+                      <p>
+                        Checks component only when inputs change or events fire
+                      </p>
+                      <p><em>Good for: Performance optimization</em></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: OnPush Change Detection</h5>
+                  <div class="code-box">
+                    <pre>
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
+
+@Component({
+  selector: 'app-product',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    &lt;div&gt;
+      &lt;h3&gt;{{ product.name }}&lt;/h3&gt;
+      &lt;p&gt;Price: {{ product.price }}&lt;/p&gt;
+      &lt;button (click)="updatePrice()"&gt;Update Price&lt;/button&gt;
+    &lt;/div&gt;
+  `
+})
+export class ProductComponent {
+  @Input() product: any;
+  
+  constructor(private cdr: ChangeDetectorRef) {}
+  
+  updatePrice() {
+    // ❌ This won't trigger change detection with OnPush
+    // this.product.price = 99.99;
+    
+    // ✅ Create new object reference
+    this.product = { ...this.product, price: 99.99 };
+    
+    // Or manually trigger change detection
+    // this.cdr.markForCheck();
+  }
+}
+</pre
+                    >
+                  </div>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Mutation Issue with OnPush:</strong></p>
+                  <p>
+                    Mutating objects/arrays in place is often missed by Angular
+                    with OnPush because the object's reference remains the same.
+                    The fix is to provide a new reference or explicitly call
+                    <code>markForCheck()</code>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson5" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 5: Routing and Navigation</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">5.1 Routing Basics</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>Routing</strong> is the process of mapping a URL
+                    (e.g., /products/42) to the correct component to display,
+                    enabling navigation in Single-Page Applications.
+                  </p>
+                </div>
+
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>Route Configuration</h4>
+                    <p>A Routes array defines the map of paths to components</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Router Outlet</h4>
+                    <p>
+                      &lt;router-outlet&gt; marks where routed components are
+                      displayed
+                    </p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Router Link</h4>
+                    <p>routerLink directive for declarative navigation</p>
+                  </div>
+                  <div class="component-card">
+                    <h4>Lazy Loading</h4>
+                    <p>Defers loading of feature modules until needed</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.2 Setting Up Routes</h3>
+                <div class="example-box">
+                  <h5>Example: Basic Route Configuration</h5>
+                  <div class="code-box">
+                    <pre>
+import { Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { AboutComponent } from './about/about.component';
+import { ProductsComponent } from './products/products.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+
+export const routes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'about', component: AboutComponent },
+  { path: 'products', component: ProductsComponent },
+  { path: '**', component: NotFoundComponent }  // Wildcard route - must be last
+];
+
+// In main.ts or app.config.ts
+import { provideRouter } from '@angular/router';
+
+export const appConfig = {
+  providers: [
+    provideRouter(routes)
+  ]
+};
+</pre
+                    >
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Using Router Outlet</h5>
+                  <div class="code-box">
+                    <pre>
+// app.component.html
+&lt;nav&gt;
+  &lt;a routerLink="/"&gt;Home&lt;/a&gt;
+  &lt;a routerLink="/about"&gt;About&lt;/a&gt;
+  &lt;a routerLink="/products"&gt;Products&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;router-outlet&gt;&lt;/router-outlet&gt;
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.3 Navigation Methods</h3>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">
+                    Declarative Navigation (routerLink)
+                  </h4>
+                  <div class="example-box">
+                    <h5>Example: RouterLink in Templates</h5>
+                    <div class="code-box">
+                      <pre>
+&lt;!-- Simple link --&gt;
+&lt;a routerLink="/products"&gt;Products&lt;/a&gt;
+
+&lt;!-- Link with parameter --&gt;
+&lt;a [routerLink]="['/products', productId]"&gt;Product Details&lt;/a&gt;
+
+&lt;!-- Link with query params --&gt;
+&lt;a [routerLink]="['/products']" [queryParams]="{ sort: 'price', order: 'asc' }"&gt;
+  Sorted Products
+&lt;/a&gt;
+
+&lt;!-- Active link styling --&gt;
+&lt;a routerLink="/about" routerLinkActive="active-link"&gt;About&lt;/a&gt;
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Programmatic Navigation</h4>
+                  <div class="example-box">
+                    <h5>Example: Router Service</h5>
+                    <div class="code-box">
+                      <pre>
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-login',
+  template: `
+    &lt;button (click)="login()"&gt;Login&lt;/button&gt;
+  `
+})
+export class LoginComponent {
+  constructor(private router: Router) {}
+  
+  login() {
+    // Perform authentication...
+    
+    // Navigate to dashboard
+    this.router.navigate(['/dashboard']);
+    
+    // Navigate with query params
+    this.router.navigate(['/products'], {
+      queryParams: { category: 'electronics' }
+    });
+    
+    // Navigate with relative path
+    this.router.navigate(['../sibling'], { relativeTo: this.route });
+  }
+}
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.4 Advanced Routing</h3>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Parameterized Routes</h4>
+                  <div class="example-box">
+                    <h5>Example: Route Parameters</h5>
+                    <div class="code-box">
+                      <pre>
+// Route configuration
+const routes: Routes = [
+  { path: 'products/:id', component: ProductDetailComponent }
+];
+
+// Component reading parameter
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-product-detail',
+  template: `&lt;h2&gt;Product ID: {{ productId }}&lt;/h2&gt;`
+})
+export class ProductDetailComponent implements OnInit {
+  productId: string | null = null;
+  
+  constructor(private route: ActivatedRoute) {}
+  
+  ngOnInit() {
+    // Read parameter once (snapshot)
+    this.productId = this.route.snapshot.paramMap.get('id');
+    
+    // OR subscribe to parameter changes
+    this.route.paramMap.subscribe(params => {
+      this.productId = params.get('id');
+      this.loadProduct(this.productId);
+    });
+  }
+  
+  loadProduct(id: string | null) {
+    console.log('Loading product:', id);
+  }
+}
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">
+                    Query Parameters and Fragments
+                  </h4>
+                  <div class="example-box">
+                    <h5>
+                      Example: Query Params (/products?sort=price&order=asc#top)
+                    </h5>
+                    <div class="code-box">
+                      <pre>
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-products'
+})
+export class ProductsComponent implements OnInit {
+  constructor(private route: ActivatedRoute) {}
+  
+  ngOnInit() {
+    // Read query parameters
+    this.route.queryParamMap.subscribe(params => {
+      const sort = params.get('sort');
+      const order = params.get('order');
+      console.log('Sort:', sort, 'Order:', order);
+    });
+    
+    // Read fragment
+    this.route.fragment.subscribe(fragment => {
+      console.log('Fragment:', fragment);  // "top"
+    });
+  }
+}
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Lazy Loading</h4>
+                  <div class="highlight-box">
+                    <p>
+                      <strong>Lazy Loading</strong> improves first-load
+                      performance by deferring the loading of a feature's code
+                      until the user navigates to it.
+                    </p>
+                  </div>
+                  <div class="example-box">
+                    <h5>Example: Lazy Loaded Module</h5>
+                    <div class="code-box">
+                      <pre>
+// Route configuration with lazy loading
+const routes: Routes = [
+  { path: '', component: HomeComponent },
+  { 
+    path: 'admin', 
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+  },
+  {
+    path: 'shop',
+    loadChildren: () => import('./shop/shop.routes').then(m => m.SHOP_ROUTES)
+  }
+];
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Route Guards</h4>
+                  <div class="definition-box">
+                    <p>
+                      <strong>Route Guards</strong> are used to prevent
+                      navigation to certain routes based on defined conditions
+                      (e.g., checking if the user is authenticated).
+                    </p>
+                  </div>
+                  <div class="example-box">
+                    <h5>Example: Auth Guard (CanActivate)</h5>
+                    <div class="code-box">
+                      <pre>
+import { inject } from '@angular/core';
+import { Router, CanActivateFn } from '@angular/router';
+import { AuthService } from './auth.service';
+
+export const authGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  
+  if (authService.isLoggedIn()) {
+    return true;  // Allow activation
+  }
+  
+  // Redirect to login
+  return router.createUrlTree(['/login']);
+};
+
+// Using the guard in routes
+const routes: Routes = [
+  { 
+    path: 'dashboard', 
+    component: DashboardComponent,
+    canActivate: [authGuard]
+  }
+];
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson6" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 6: Services, DI, and RxJS</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">6.1 Dependency Injection (DI)</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>Dependency Injection (DI)</strong> is a design
+                    pattern where Angular supplies dependencies (objects) to
+                    components/services automatically, promoting loose coupling
+                    and testability.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Benefits of DI:</strong></p>
+                  <ul>
+                    <li>Loose coupling between classes</li>
+                    <li>Easier testing (can inject mocks)</li>
+                    <li>Better code reusability</li>
+                    <li>Centralized configuration</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">6.2 Services</h3>
+                <div class="definition-box">
+                  <p>
+                    A <strong>Service</strong> is a class marked with
+                    @Injectable() that holds reusable business logic or data
+                    management code meant to be shared across the app.
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Creating a Service</h5>
+                  <div class="code-box">
+                    <pre>
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'  // Singleton instance available app-wide
+})
+export class UserService {
+  private users = [
+    { id: 1, name: 'Alice' },
+    { id: 2, name: 'Bob' }
+  ];
+  
+  getUsers() {
+    return this.users;
+  }
+  
+  getUserById(id: number) {
+    return this.users.find(user => user.id === id);
+  }
+  
+  addUser(name: string) {
+    const newUser = {
+      id: this.users.length + 1,
+      name
+    };
+    this.users.push(newUser);
+    return newUser;
+  }
+}
+</pre
+                    >
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Injecting a Service</h5>
+                  <div class="code-box">
+                    <pre>
+import { Component, OnInit } from '@angular/core';
+import { UserService } from './user.service';
+
+@Component({
+  selector: 'app-user-list',
+  template: `
+    &lt;ul&gt;
+      &lt;li *ngFor="let user of users"&gt;{{ user.name }}&lt;/li&gt;
+    &lt;/ul&gt;
+  `
+})
+export class UserListComponent implements OnInit {
+  users: any[] = [];
+  
+  // Inject service via constructor
+  constructor(private userService: UserService) {}
+  
+  ngOnInit() {
+    this.users = this.userService.getUsers();
+  }
+}
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">6.3 RxJS and Observables</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>RxJS</strong> is a library for handling asynchronous
+                    and event-based data using Observables.
+                  </p>
+                  <p>
+                    <strong>Asynchronous:</strong> Operations that don't block
+                    the main program (e.g., HTTP requests or timers).
+                  </p>
+                  <p>
+                    <strong>Observable:</strong> Represents a data stream that
+                    can be subscribed to. HttpClient.get() returns an
+                    Observable.
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Creating and Subscribing to Observables</h5>
+                  <div class="code-box">
+                    <pre>
+import { Observable } from 'rxjs';
+
+// Creating an Observable
+const myObservable = new Observable(observer => {
+  observer.next('First value');
+  observer.next('Second value');
+  
+  setTimeout(() => {
+    observer.next('Third value after 2s');
+    observer.complete();
+  }, 2000);
+});
+
+// Subscribing to the Observable
+myObservable.subscribe({
+  next: (value) => console.log(value),
+  error: (err) => console.error(err),
+  complete: () => console.log('Completed!')
+});
+</pre
+                    >
+                  </div>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Common RxJS Operators:</strong></p>
+                  <ul>
+                    <li><strong>map:</strong> Transform emitted values</li>
+                    <li><strong>filter:</strong> Filter emitted values</li>
+                    <li><strong>tap:</strong> Perform side effects</li>
+                    <li><strong>catchError:</strong> Handle errors</li>
+                    <li>
+                      <strong>switchMap:</strong> Switch to new observable
+                    </li>
+                    <li><strong>debounceTime:</strong> Delay emissions</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">6.4 Subjects and BehaviorSubject</h3>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Subject</h4>
+                  <div class="definition-box">
+                    <p>
+                      A <strong>Subject</strong> is an object that is both an
+                      Observable and an Observer. It acts as an event bus for
+                      real-time communication between unrelated components.
+                    </p>
+                  </div>
+                  <div class="example-box">
+                    <h5>Example: Using Subject for Communication</h5>
+                    <div class="code-box">
+                      <pre>
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class MessageService {
+  private messageSubject = new Subject&lt;string&gt;();
+  
+  // Observable for components to subscribe
+  message$ = this.messageSubject.asObservable();
+  
+  // Method to emit values
+  sendMessage(message: string) {
+    this.messageSubject.next(message);
+  }
+}
+
+// Component A - Sending
+export class SenderComponent {
+  constructor(private messageService: MessageService) {}
+  
+  send() {
+    this.messageService.sendMessage('Hello from Sender!');
+  }
+}
+
+// Component B - Receiving
+export class ReceiverComponent implements OnInit {
+  message = '';
+  
+  constructor(private messageService: MessageService) {}
+  
+  ngOnInit() {
+    this.messageService.message$.subscribe(msg => {
+      this.message = msg;
+    });
+  }
+}
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">BehaviorSubject</h4>
+                  <div class="definition-box">
+                    <p>
+                      A <strong>BehaviorSubject</strong> is a specialized
+                      Subject that stores the last emitted value. New
+                      subscribers immediately receive this most recent value
+                      upon subscribing. Ideal for managing application state
+                      like authentication status.
+                    </p>
+                  </div>
+                  <div class="example-box">
+                    <h5>Example: Auth State with BehaviorSubject</h5>
+                    <div class="code-box">
+                      <pre>
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+  private isAuthenticatedSubject = new BehaviorSubject&lt;boolean&gt;(false);
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  
+  login() {
+    // Perform login logic...
+    this.isAuthenticatedSubject.next(true);
+  }
+  
+  logout() {
+    this.isAuthenticatedSubject.next(false);
+  }
+  
+  isLoggedIn(): boolean {
+    return this.isAuthenticatedSubject.value;  // Get current value
+  }
+}
+
+// Component using auth state
+export class NavComponent implements OnInit {
+  isAuthenticated = false;
+  
+  constructor(private authService: AuthService) {}
+  
+  ngOnInit() {
+    // Gets current value immediately, then updates on changes
+    this.authService.isAuthenticated$.subscribe(isAuth => {
+      this.isAuthenticated = isAuth;
+    });
+  }
+}
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson7" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 7: Forms (Template-Driven & Reactive)</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">7.1 Forms Overview</h3>
+                <div class="definition-box">
+                  <p>
+                    Angular provides two primary approaches for handling forms,
+                    both of which track user input, changes, and validation.
+                  </p>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Feature</th>
+                      <th>Template-Driven Forms</th>
+                      <th>Reactive Forms</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Logic/Model</strong></td>
+                      <td>
+                        Logic relies heavily on directives in the template
+                        (NgModel, NgForm)
+                      </td>
+                      <td>
+                        Provides direct, explicit access to the forms object
+                        model in TypeScript
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Module</strong></td>
+                      <td>Requires FormsModule</td>
+                      <td>Requires ReactiveFormsModule</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Directives</strong></td>
+                      <td>
+                        NgForm binds to &lt;form&gt;. NgModel links controls to
+                        data
+                      </td>
+                      <td>
+                        [formGroup] links to FormGroup. formControlName links
+                        inputs to controls
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Scalability</strong></td>
+                      <td>Best for simple forms; doesn't scale well</td>
+                      <td>
+                        More scalable, reusable, and testable (recommended for
+                        complex forms)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Validation</strong></td>
+                      <td>
+                        Configured in template via attributes (required,
+                        minlength)
+                      </td>
+                      <td>
+                        Defined explicitly in component code during FormControl
+                        creation
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">7.2 Template-Driven Forms</h3>
+                <div class="example-box">
+                  <h5>Example: Simple Login Form</h5>
+                  <div class="code-box">
+                    <pre>
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-login',
+  standalone: true,
+  imports: [FormsModule],
+  template: `
+    &lt;form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)"&gt;
+      &lt;div&gt;
+        &lt;label&gt;Email:&lt;/label&gt;
+        &lt;input 
+          type="email" 
+          name="email" 
+          [(ngModel)]="user.email"
+          required
+          email
+          #emailField="ngModel"
+        &gt;
+        &lt;div *ngIf="emailField.invalid && emailField.touched"&gt;
+          &lt;p *ngIf="emailField.errors?.['required']"&gt;Email is required&lt;/p&gt;
+          &lt;p *ngIf="emailField.errors?.['email']"&gt;Invalid email format&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      
+      &lt;div&gt;
+        &lt;label&gt;Password:&lt;/label&gt;
+        &lt;input 
+          type="password" 
+          name="password" 
+          [(ngModel)]="user.password"
+          required
+          minlength="6"
+          #passwordField="ngModel"
+        &gt;
+        &lt;div *ngIf="passwordField.invalid && passwordField.touched"&gt;
+          &lt;p *ngIf="passwordField.errors?.['required']"&gt;Password is required&lt;/p&gt;
+          &lt;p *ngIf="passwordField.errors?.['minlength']"&gt;
+            Password must be at least 6 characters
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      
+      &lt;button type="submit" [disabled]="loginForm.invalid"&gt;Login&lt;/button&gt;
+    &lt;/form&gt;
+  `
+})
+export class LoginComponent {
+  user = {
+    email: '',
+    password: ''
+  };
+  
+  onSubmit(form: any) {
+    if (form.valid) {
+      console.log('Form submitted:', this.user);
+    }
+  }
+}
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">7.3 Reactive Forms</h3>
+                <div class="highlight-box">
+                  <p>
+                    <strong>FormBuilder:</strong> A shorthand service for easily
+                    creating instances of FormControl, FormGroup, or FormArray,
+                    reducing boilerplate.
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Registration Form with Reactive Forms</h5>
+                  <div class="code-box">
+                    <pre>
+import { Component, OnInit } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-register',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  template: `
+    &lt;form [formGroup]="registerForm" (ngSubmit)="onSubmit()"&gt;
+      &lt;div&gt;
+        &lt;label&gt;Username:&lt;/label&gt;
+        &lt;input type="text" formControlName="username"&gt;
+        &lt;div *ngIf="registerForm.get('username')?.invalid && 
+                    registerForm.get('username')?.touched"&gt;
+          &lt;p *ngIf="registerForm.get('username')?.errors?.['required']"&gt;
+            Username is required
+          &lt;/p&gt;
+          &lt;p *ngIf="registerForm.get('username')?.errors?.['minlength']"&gt;
+            Username must be at least 3 characters
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      
+      &lt;div&gt;
+        &lt;label&gt;Email:&lt;/label&gt;
+        &lt;input type="email" formControlName="email"&gt;
+        &lt;div *ngIf="registerForm.get('email')?.invalid && 
+                    registerForm.get('email')?.touched"&gt;
+          &lt;p&gt;Valid email is required&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      
+      &lt;div&gt;
+        &lt;label&gt;Password:&lt;/label&gt;
+        &lt;input type="password" formControlName="password"&gt;
+      &lt;/div&gt;
+      
+      &lt;div&gt;
+        &lt;label&gt;Confirm Password:&lt;/label&gt;
+        &lt;input type="password" formControlName="confirmPassword"&gt;
+        &lt;div *ngIf="registerForm.errors?.['passwordMismatch'] && 
+                    registerForm.get('confirmPassword')?.touched"&gt;
+          &lt;p&gt;Passwords do not match&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      
+      &lt;button type="submit" [disabled]="registerForm.invalid"&gt;Register&lt;/button&gt;
+    &lt;/form&gt;
+  `
+})
+export class RegisterComponent implements OnInit {
+  registerForm!: FormGroup;
+  
+  constructor(private fb: FormBuilder) {}
+  
+  ngOnInit() {
+    this.registerForm = this.fb.group({
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required]
+    }, { validators: this.passwordMatchValidator });
+  }
+  
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password');
+    const confirmPassword = form.get('confirmPassword');
+    
+    if (password?.value !== confirmPassword?.value) {
+      return { passwordMismatch: true };
+    }
+    return null;
+  }
+  
+  onSubmit() {
+    if (this.registerForm.valid) {
+      console.log('Form Data:', this.registerForm.value);
+    }
+  }
+}
+</pre
+                    >
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">
+                    FormArray - Dynamic Form Controls
+                  </h4>
+                  <div class="example-box">
+                    <h5>Example: Dynamic Skills List</h5>
+                    <div class="code-box">
+                      <pre>
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-profile',
+  template: `
+    &lt;form [formGroup]="profileForm"&gt;
+      &lt;div formArrayName="skills"&gt;
+        &lt;h3&gt;Skills&lt;/h3&gt;
+        &lt;div *ngFor="let skill of skills.controls; let i = index"&gt;
+          &lt;input [formControlName]="i" placeholder="Skill {{ i + 1 }}"&gt;
+          &lt;button type="button" (click)="removeSkill(i)"&gt;Remove&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;button type="button" (click)="addSkill()"&gt;Add Skill&lt;/button&gt;
+    &lt;/form&gt;
+  `
+})
+export class ProfileComponent implements OnInit {
+  profileForm!: FormGroup;
+  
+  constructor(private fb: FormBuilder) {}
+  
+  ngOnInit() {
+    this.profileForm = this.fb.group({
+      skills: this.fb.array([this.fb.control('', Validators.required)])
+    });
+  }
+  
+  get skills(): FormArray {
+    return this.profileForm.get('skills') as FormArray;
+  }
+  
+  addSkill() {
+    this.skills.push(this.fb.control('', Validators.required));
+  }
+  
+  removeSkill(index: number) {
+    this.skills.removeAt(index);
+  }
+}
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson8" class="lesson">
+            <div class="lesson-header">
+              <h2>Lesson 8: HTTP Communication and Deployment</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">8.1 HTTP Client</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>HttpClient</strong> is used to make HTTP requests
+                    (GET, POST, PUT, DELETE, etc.) to a backend service.
+                    Requires importing HttpClientModule. Requests return
+                    Observables and must be subscribed to.
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Basic HTTP Service</h5>
+                  <div class="code-box">
+                    <pre>
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, catchError, throwError } from 'rxjs';
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProductService {
+  private apiUrl = 'https://api.example.com/products';
+  
+  constructor(private http: HttpClient) {}
+  
+  // GET all products
+  getProducts(): Observable&lt;Product[]&gt; {
+    return this.http.get&lt;Product[]&gt;(this.apiUrl)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  
+  // GET single product
+  getProduct(id: number): Observable&lt;Product&gt; {
+    return this.http.get&lt;Product&gt;(`${this.apiUrl}/${id}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  
+  // POST create product
+  createProduct(product: Product): Observable&lt;Product&gt; {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post&lt;Product&gt;(this.apiUrl, product, { headers })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  
+  // PUT update product
+  updateProduct(id: number, product: Product): Observable&lt;Product&gt; {
+    return this.http.put&lt;Product&gt;(`${this.apiUrl}/${id}`, product)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  
+  // DELETE product
+  deleteProduct(id: number): Observable&lt;void&gt; {
+    return this.http.delete&lt;void&gt;(`${this.apiUrl}/${id}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  
+  // GET with query parameters
+  searchProducts(query: string): Observable&lt;Product[]&gt; {
+    const params = new HttpParams().set('q', query);
+    return this.http.get&lt;Product[]&gt;(this.apiUrl, { params });
+  }
+  
+  private handleError(error: any) {
+    console.error('An error occurred:', error);
+    return throwError(() => new Error('Something went wrong'));
+  }
+}
+</pre
+                    >
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Using HTTP Service in Component</h5>
+                  <div class="code-box">
+                    <pre>
+import { Component, OnInit } from '@angular/core';
+import { ProductService } from './product.service';
+
+@Component({
+  selector: 'app-product-list',
+  template: `
+    &lt;div *ngIf="loading"&gt;Loading...&lt;/div&gt;
+    &lt;div *ngIf="error"&gt;{{ error }}&lt;/div&gt;
+    
+    &lt;ul *ngIf="!loading"&gt;
+      &lt;li *ngFor="let product of products"&gt;
+        {{ product.name }} - ${{ product.price }}
+        &lt;button (click)="deleteProduct(product.id)"&gt;Delete&lt;/button&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  `
+})
+export class ProductListComponent implements OnInit {
+  products: any[] = [];
+  loading = false;
+  error = '';
+  
+  constructor(private productService: ProductService) {}
+  
+  ngOnInit() {
+    this.loadProducts();
+  }
+  
+  loadProducts() {
+    this.loading = true;
+    this.productService.getProducts().subscribe({
+      next: (data) => {
+        this.products = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load products';
+        this.loading = false;
+      }
+    });
+  }
+  
+  deleteProduct(id: number) {
+    this.productService.deleteProduct(id).subscribe({
+      next: () => {
+        this.products = this.products.filter(p => p.id !== id);
+      },
+      error: (err) => {
+        this.error = 'Failed to delete product';
+      }
+    });
+  }
+}
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">8.2 HTTP Interceptors</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>Interceptors</strong> are used to inspect and modify
+                    HTTP requests or responses globally (e.g., adding
+                    authentication tokens or logging).
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Auth Interceptor</h5>
+                  <div class="code-box">
+                    <pre>
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest&lt;any&gt;, next: HttpHandler): Observable&lt;HttpEvent&lt;any&gt;&gt; {
+    // Get token from storage
+    const token = localStorage.getItem('auth_token');
+    
+    // Clone request and add authorization header
+    if (token) {
+      const clonedRequest = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return next.handle(clonedRequest);
+    }
+    
+    return next.handle(req);
+  }
+}
+
+// Provide interceptor in app.config.ts or main.ts
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
+export const appConfig = {
+  providers: [
+    provideHttpClient(),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ]
+};
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">8.3 JSON Server (Mock Backend)</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>JSON Server</strong> is a tool used for mocking
+                    backend APIs during development/testing, using a local JSON
+                    file as a database.
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Setting Up JSON Server</h5>
+                  <div class="code-box">
+                    <pre>
+// 1. Install JSON Server
+npm install -g json-server
+
+// 2. Create db.json file
+{
+  "products": [
+    { "id": 1, "name": "Laptop", "price": 999 },
+    { "id": 2, "name": "Mouse", "price": 25 }
+  ],
+  "users": [
+    { "id": 1, "name": "Alice", "email": "alice@example.com" }
+  ]
+}
+
+// 3. Start JSON Server
+json-server --watch db.json --port 3000
+
+// 4. Use in Angular
+// GET http://localhost:3000/products
+// POST http://localhost:3000/products
+// PUT http://localhost:3000/products/1
+// DELETE http://localhost:3000/products/1
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">8.4 Environment Variables</h3>
+                <div class="definition-box">
+                  <p>
+                    Used to set configuration values for different deployment
+                    environments (e.g., development, production).
+                  </p>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Environment Configuration</h5>
+                  <div class="code-box">
+                    <pre>
+// src/environments/environment.ts (Development)
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:3000/api',
+  apiKey: 'dev-api-key-12345'
+};
+
+// src/environments/environment.prod.ts (Production)
+export const environment = {
+  production: true,
+  apiUrl: 'https://api.myapp.com',
+  apiKey: 'prod-api-key-67890'
+};
+
+// Using in service
+import { environment } from '../environments/environment';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService {
+  private apiUrl = environment.apiUrl;
+  
+  constructor(private http: HttpClient) {}
+  
+  getData() {
+    return this.http.get(`${this.apiUrl}/data`);
+  }
+}
+</pre
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">8.5 Deployment</h3>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Building for Production</h4>
+                  <div class="example-box">
+                    <h5>Build Commands</h5>
+                    <div class="code-box">
+                      <pre>
+# Build for production
+ng build --configuration production
+
+# Or shorthand
+ng build --prod
+
+# Output will be in dist/ folder
+# Contains optimized, minified files ready for deployment
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Deployment Options</h4>
+                  <div class="component-grid">
+                    <div class="component-card">
+                      <h4>🔥 Firebase Hosting</h4>
+                      <p>Free tier available, CDN included</p>
+                      <code>firebase deploy</code>
+                    </div>
+                    <div class="component-card">
+                      <h4>📦 Netlify</h4>
+                      <p>Easy drag-and-drop deployment</p>
+                      <code>netlify deploy --prod</code>
+                    </div>
+                    <div class="component-card">
+                      <h4>☁️ AWS S3</h4>
+                      <p>Scalable cloud storage</p>
+                      <code>aws s3 sync dist/ s3://bucket</code>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Firebase Deployment Example</h4>
+                  <div class="example-box">
+                    <h5>Step-by-Step Firebase Deployment</h5>
+                    <div class="code-box">
+                      <pre>
+# 1. Install Firebase CLI
+npm install -g firebase-tools
+
+# 2. Login to Firebase
+firebase login
+
+# 3. Initialize Firebase in your project
+firebase init
+
+# Select:
+# - Hosting
+# - Use existing project or create new
+# - Public directory: dist/your-app-name
+# - Single-page app: Yes
+# - GitHub integration: Optional
+
+# 4. Build your Angular app
+ng build --prod
+
+# 5. Deploy to Firebase
+firebase deploy
+
+# Your app is now live at:
+# https://your-project.web.app
+</pre
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Deployment Checklist:</strong></p>
+                  <ul>
+                    <li>✅ Build with production configuration</li>
+                    <li>✅ Update environment variables for production</li>
+                    <li>✅ Test the production build locally</li>
+                    <li>✅ Configure routing for Single-Page App</li>
+                    <li>✅ Set up SSL/HTTPS</li>
+                    <li>✅ Configure custom domain (if needed)</li>
+                    <li>✅ Enable compression and caching</li>
+                    <li>✅ Monitor and optimize performance</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.querySelector(".sidebar-overlay");
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+      }
+
+      function closeSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.querySelector(".sidebar-overlay");
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+      }
+
+      // Close sidebar when clicking a link
+      document.querySelectorAll(".sidebar a").forEach((link) => {
+        link.addEventListener("click", () => {
+          closeSidebar();
+        });
+      });
+    </script>
+  </body>
+</html>

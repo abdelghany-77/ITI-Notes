@@ -1,0 +1,5159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MongoDB & NoSQL Study Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #4db33d 0%, #3b8c2a 100%);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* Layout Container */
+      .layout-container {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100vh;
+        background: linear-gradient(
+          180deg,
+          rgba(77, 179, 61, 0.95) 0%,
+          rgba(59, 140, 42, 0.95) 100%
+        );
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .sidebar-header {
+        background: linear-gradient(135deg, #4db33d, #3b8c2a);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1002;
+      }
+
+      .sidebar-header h3 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+        font-weight: 700;
+      }
+
+      .sidebar-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .sidebar-content {
+        padding: 20px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar li {
+        margin-bottom: 8px;
+      }
+
+      .sidebar a {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 15px;
+        display: block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+      }
+
+      .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+        border-left-color: #ff6b6b;
+      }
+
+      .sidebar-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #4db33d, #3b8c2a);
+        color: white;
+        border: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1003;
+      }
+
+      .sidebar-toggle:hover {
+        background: linear-gradient(135deg, #3b8c2a, #4db33d);
+        transform: translateY(-2px);
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+
+      .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        margin-left: 20px;
+        margin-right: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 30px 0;
+        background: linear-gradient(135deg, #4db33d, #3b8c2a);
+        color: white;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.3;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .course-outline {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        border-left: 5px solid #4db33d;
+      }
+
+      .course-outline h2 {
+        color: #3b8c2a;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
+
+      .lesson-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .lesson-item {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-left: 4px solid #4db33d;
+      }
+
+      .lesson-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .lesson {
+        background: white;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .lesson:hover {
+        transform: translateY(-5px);
+      }
+
+      .lesson-header {
+        background: linear-gradient(135deg, #4db33d, #3b8c2a);
+        color: white;
+        padding: 20px;
+        position: relative;
+      }
+
+      .lesson-header::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #4db33d, #00ed64, #3b8c2a, #13aa52);
+      }
+
+      .lesson-header h2 {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+      }
+
+      .lesson-content {
+        padding: 25px;
+      }
+
+      .section {
+        margin-bottom: 25px;
+      }
+
+      .section-title {
+        color: #3b8c2a;
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #ecf0f1;
+        position: relative;
+      }
+
+      .section-title::before {
+        content: "▶";
+        color: #4db33d;
+        margin-right: 10px;
+        font-size: 0.8em;
+      }
+
+      .subsection {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+
+      .subsection-title {
+        color: #34495e;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .content-box {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #4db33d;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #4db33d;
+        position: relative;
+      }
+
+      .highlight-box::before {
+        content: "💡";
+        position: absolute;
+        top: 15px;
+        left: -12px;
+        background: #4db33d;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+      }
+
+      .definition-box {
+        background: linear-gradient(135deg, #fff9c4, #fff59d);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #fbc02d;
+      }
+
+      .code-box {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-family: 'Courier New', monospace;
+        overflow-x: auto;
+      }
+
+      .code-box pre {
+        margin: 0;
+        white-space: pre-wrap;
+      }
+
+      .mongo-command {
+        background: #13aa52;
+        color: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-family: 'Courier New', monospace;
+        overflow-x: auto;
+        border-left: 4px solid #4db33d;
+      }
+
+      .mongo-command pre {
+        margin: 0;
+        white-space: pre-wrap;
+      }
+
+      .mongo-command .prompt {
+        color: #00ed64;
+      }
+
+      .mongo-command .comment {
+        color: #a8e6cf;
+      }
+
+      ul,
+      ol {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+
+      li {
+        margin-bottom: 8px;
+        padding-left: 5px;
+      }
+
+      .component-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .component-card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border-top: 4px solid #4db33d;
+        transition: transform 0.3s ease;
+      }
+
+      .component-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .component-card h4 {
+        color: #4db33d;
+        margin-bottom: 10px;
+      }
+
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .comparison-table th {
+        background: linear-gradient(135deg, #4db33d, #3b8c2a);
+        color: white;
+        padding: 12px;
+        text-align: left;
+      }
+
+      .comparison-table td {
+        padding: 12px;
+        border-bottom: 1px solid #ecf0f1;
+      }
+
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .back-to-main {
+        position: fixed;
+        top: 80px;
+        left: 20px;
+        background: linear-gradient(135deg, #3b8c2a, #4db33d);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-to-main:hover {
+        background: linear-gradient(135deg, #4db33d, #3b8c2a);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        color: white;
+      }
+
+      .back-to-main::before {
+        content: "🏠";
+        font-size: 1.1em;
+      }
+
+      .example-box {
+        background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #0288d1;
+      }
+
+      .example-box h5 {
+        color: #01579b;
+        margin-bottom: 10px;
+      }
+
+      .warning-box {
+        background: linear-gradient(135deg, #ffebee, #ffcdd2);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #f44336;
+      }
+
+      .warning-box::before {
+        content: "⚠️";
+        margin-right: 8px;
+      }
+
+      .mongo-icon {
+        display: inline-block;
+        background: #4db33d;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-right: 5px;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 280px;
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
+        .container {
+          margin: 10px;
+          padding: 15px;
+        }
+
+        .sidebar-toggle {
+          top: 10px;
+          left: 10px;
+          padding: 10px 12px;
+        }
+
+        .back-to-main {
+          top: 60px;
+          left: 10px;
+          padding: 8px 15px;
+          font-size: 0.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+    <a href="../index.html" class="back-to-main"></a>
+
+    <div class="layout-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h3>📚 Course Navigation</h3>
+          <p>MongoDB & NoSQL</p>
+        </div>
+        <div class="sidebar-content">
+          <ul>
+            <li>
+              <a href="#outline" onclick="closeSidebar()">📋 Course Outline</a>
+            </li>
+            <li>
+              <a href="#lesson1" onclick="closeSidebar()">🍃 MongoDB Fundamentals</a>
+            </li>
+            <li>
+              <a href="#lesson2" onclick="closeSidebar()">⚖️ NoSQL vs SQL</a>
+            </li>
+            <li>
+              <a href="#lesson3" onclick="closeSidebar()">📊 Data Types</a>
+            </li>
+            <li>
+              <a href="#lesson4" onclick="closeSidebar()">➕ Create Operations</a>
+            </li>
+            <li>
+              <a href="#lesson5" onclick="closeSidebar()">🔍 Read Operations</a>
+            </li>
+            <li>
+              <a href="#lesson6" onclick="closeSidebar()">✏️ Update Operations</a>
+            </li>
+            <li>
+              <a href="#lesson7" onclick="closeSidebar()">🗑️ Delete Operations</a>
+            </li>
+            <li>
+              <a href="#lesson8" onclick="closeSidebar()">✅ Schema Validation</a>
+            </li>
+            <li>
+              <a href="#lesson9" onclick="closeSidebar()">🔗 Data Modeling</a>
+            </li>
+            <li>
+              <a href="#lesson10" onclick="closeSidebar()">🚀 Advanced Topics</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="container" id="mainContainer">
+          <div class="header">
+            <h1>🍃 MongoDB & NoSQL</h1>
+            <p>Comprehensive Study Guide & Notes</p>
+          </div>
+
+          <section id="outline" class="course-outline">
+            <h2>📚 Course Outline</h2>
+            <div class="lesson-list">
+              <div class="lesson-item">
+                <strong>Module 1:</strong> MongoDB Fundamentals
+              </div>
+              <div class="lesson-item">
+                <strong>Module 2:</strong> NoSQL vs. SQL Comparison
+              </div>
+              <div class="lesson-item">
+                <strong>Module 3:</strong> Data Types in MongoDB
+              </div>
+              <div class="lesson-item">
+                <strong>Module 4:</strong> Create Operations (Insert)
+              </div>
+              <div class="lesson-item">
+                <strong>Module 5:</strong> Read Operations (Query/Find)
+              </div>
+              <div class="lesson-item">
+                <strong>Module 6:</strong> Update Operations
+              </div>
+              <div class="lesson-item">
+                <strong>Module 7:</strong> Delete Operations
+              </div>
+              <div class="lesson-item">
+                <strong>Module 8:</strong> Schema Validation
+              </div>
+              <div class="lesson-item">
+                <strong>Module 9:</strong> Data Modeling & Relationships
+              </div>
+              <div class="lesson-item">
+                <strong>Module 10:</strong> Advanced Topics (Aggregation, Indexing)
+              </div>
+            </div>
+          </section>
+
+          <div id="lesson1" class="lesson">
+            <div class="lesson-header">
+              <h2>Module 1: MongoDB Fundamentals</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">1.1 What is MongoDB?</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>MongoDB</strong> is a document-oriented NoSQL database designed for ease of development 
+                    and scaling. It stores data in flexible, JSON-like documents called BSON (Binary JSON).
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Key Features:</strong></p>
+                  <ul>
+                    <li>📄 <strong>Document-Oriented:</strong> Stores data as documents, not rows and tables</li>
+                    <li>📈 <strong>Scalable:</strong> Horizontal scaling through sharding</li>
+                    <li>🔍 <strong>Flexible Schema:</strong> No predefined schema required</li>
+                    <li>⚡ <strong>High Performance:</strong> Fast reads and writes</li>
+                    <li>🔄 <strong>Replication:</strong> Built-in redundancy and high availability</li>
+                    <li>🌐 <strong>Distributed:</strong> Designed for distributed data stores</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.2 Data Storage Model</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    MongoDB stores data records as <strong>BSON Documents</strong>. BSON is a binary representation 
+                    of JSON documents with more data types than standard JSON.
+                  </p>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Hierarchy of Data Organization</h4>
+                  <div class="code-box">
+<pre>
+<strong>Database</strong>
+  ├── <strong>Collection</strong> (similar to SQL table)
+  │     ├── <strong>Document</strong> (similar to SQL row)
+  │     │     ├── Field: Value (similar to SQL column)
+  │     │     ├── Field: Value
+  │     │     └── Field: Value
+  │     ├── Document
+  │     └── Document
+  │
+  └── Collection
+        ├── Document
+        └── Document
+
+Example Structure:
+Database: "company"
+  └── Collection: "employees"
+        ├── Document: { "_id": 1, "name": "Alice", "age": 30 }
+        ├── Document: { "_id": 2, "name": "Bob", "age": 25, "dept": "IT" }
+        └── Document: { "_id": 3, "name": "Charlie" }
+
+Note: Documents in same collection can have different fields (flexible schema)
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: JSON vs BSON</h5>
+                  <div class="code-box">
+<pre><span class="comment">// JSON Document (what you write)</span>
+{
+  "name": "Alice",
+  "age": 30,
+  "email": "alice@example.com",
+  "active": true
+}
+
+<span class="comment">// BSON Document (how MongoDB stores it internally)</span>
+<span class="comment">// Binary format with additional types:</span>
+- ObjectId for _id
+- Date objects
+- Binary data
+- Regular expressions
+- More precise numbers (Int32, Int64, Decimal128)
+- And more...
+
+<span class="comment">// BSON benefits:</span>
+✅ Faster to traverse
+✅ More data types
+✅ Efficient encoding/decoding
+✅ Smaller size in many cases
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.3 MongoDB Shell</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    The <strong>Mongo Shell</strong> (mongosh) is an interactive JavaScript interface to MongoDB. 
+                    It's based on a JavaScript engine but without the DOM or BOM. It uses modern JavaScript 
+                    implementation (ES6+).
+                  </p>
+                </div>
+
+                <div class="mongo-command">
+<pre><span class="comment"># Start MongoDB Shell</span>
+<span class="prompt">$</span> mongosh
+
+<span class="comment"># Connect to specific database</span>
+<span class="prompt">$</span> mongosh "mongodb://localhost:27017/mydb"
+
+<span class="comment"># Connect to remote MongoDB</span>
+<span class="prompt">$</span> mongosh "mongodb://username:password@host:port/database"
+
+<span class="comment"># Common shell commands</span>
+<span class="prompt">></span> show dbs                    <span class="comment">// List all databases</span>
+<span class="prompt">></span> use myDatabase              <span class="comment">// Switch to database (creates if not exists)</span>
+<span class="prompt">></span> db                          <span class="comment">// Show current database</span>
+<span class="prompt">></span> show collections            <span class="comment">// List collections in current database</span>
+<span class="prompt">></span> exit                        <span class="comment">// Exit shell</span>
+</pre>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>JavaScript Features Available:</strong></p>
+                  <ul>
+                    <li>ES6+ syntax (arrow functions, template literals, etc.)</li>
+                    <li>Variables: <code>let</code>, <code>const</code>, <code>var</code></li>
+                    <li>Functions and loops</li>
+                    <li>Array and object methods</li>
+                    <li>JSON operations</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.4 Storage Engine</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    MongoDB uses the <strong>WiredTiger Storage Engine</strong> (default since MongoDB 3.2). 
+                    It provides document-level concurrency control, compression, and encryption at rest.
+                  </p>
+                </div>
+
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>🔒 Concurrency</h4>
+                    <p>Document-level locking for better performance</p>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>📦 Compression</h4>
+                    <p>Snappy (default) or zlib compression</p>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>🔐 Encryption</h4>
+                    <p>Encryption at rest support</p>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>⚡ Performance</h4>
+                    <p>Optimized for SSD and modern hardware</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">1.5 Basic Database Operations</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// List all databases</span>
+<span class="prompt">></span> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+
+<span class="comment">// Show current database</span>
+<span class="prompt">></span> db
+test
+
+<span class="comment">// Switch to database (creates if doesn't exist)</span>
+<span class="prompt">></span> use myDatabase
+switched to db myDatabase
+
+<span class="comment">// Note: Database won't appear in 'show dbs' until you insert data</span>
+
+<span class="comment">// List collections in current database</span>
+<span class="prompt">></span> show collections
+users
+products
+orders
+
+<span class="comment">// Create collection explicitly</span>
+<span class="prompt">></span> db.createCollection("customers")
+{ ok: 1 }
+
+<span class="comment">// Create collection implicitly (on first insert)</span>
+<span class="prompt">></span> db.newCollection.insertOne({name: "Test"})
+<span class="comment">// Collection 'newCollection' is created automatically</span>
+
+<span class="comment">// Drop collection</span>
+<span class="prompt">></span> db.customers.drop()
+true
+
+<span class="comment">// Drop entire database</span>
+<span class="prompt">></span> db.dropDatabase()
+{ ok: 1, dropped: 'myDatabase' }
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson2" class="lesson">
+            <div class="lesson-header">
+              <h2>Module 2: NoSQL vs. SQL Comparison</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">2.1 Understanding NoSQL</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>NoSQL</strong> (Not Only SQL) databases are designed for distributed data stores with 
+                    humongous data storage needs. They provide flexible schemas, horizontal scaling, and are 
+                    optimized for specific data models.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>When to Use NoSQL (MongoDB):</strong></p>
+                  <ul>
+                    <li>📈 Rapid development with frequent schema changes</li>
+                    <li>🌐 Massive scale with horizontal partitioning</li>
+                    <li>📊 Semi-structured or unstructured data</li>
+                    <li>⚡ High-velocity data (IoT, real-time analytics)</li>
+                    <li>🔄 Flexible data models</li>
+                    <li>🗺️ Geographic distribution of data</li>
+                  </ul>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>When to Use SQL (Relational):</strong></p>
+                  <ul>
+                    <li>💼 Complex transactions with ACID requirements</li>
+                    <li>🔗 Complex relationships and joins</li>
+                    <li>📊 Structured data with fixed schema</li>
+                    <li>📈 Business intelligence and reporting</li>
+                    <li>🔒 Strong consistency requirements</li>
+                    <li>✅ Well-defined relationships</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.2 Detailed Comparison</h3>
+                
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Feature</th>
+                      <th>NoSQL (MongoDB)</th>
+                      <th>SQL (RDBMS)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Schema</strong></td>
+                      <td>❌ Not required - Dynamic/Flexible Schema<br>Documents can have different fields</td>
+                      <td>✅ Fixed Schema<br>Must define tables and columns upfront</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Data Model</strong></td>
+                      <td>Document-oriented (JSON/BSON)<br>Collections contain documents</td>
+                      <td>Table-based<br>Tables contain rows and columns</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Scaling</strong></td>
+                      <td>✅ Horizontal Scaling (Easy)<br>Add more servers (sharding)</td>
+                      <td>⚠️ Vertical Scaling (Harder)<br>Add more power to existing server</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Relations</strong></td>
+                      <td>❌ Avoids Joins<br>Embeds documents or uses references</td>
+                      <td>✅ Supports Joins<br>Foreign keys and relationships</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Query Language</strong></td>
+                      <td>MongoDB Query Language (JSON-based)</td>
+                      <td>SQL (Structured Query Language)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Data Types</strong></td>
+                      <td>Many types: Key-value, Column-oriented, Document, Graphs</td>
+                      <td>One type: Relational (tables)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Data Volume</strong></td>
+                      <td>✅ Stores high data volume (Humongous)<br>Semi-structured & unstructured data</td>
+                      <td>⚠️ Stores medium data volume<br>Structured data only</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Consistency Model</strong></td>
+                      <td>Follows <strong>BASE</strong><br>(Basically Available, Soft state, Eventually consistent)</td>
+                      <td>Follows <strong>ACID</strong><br>(Atomicity, Consistency, Isolation, Durability)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Performance</strong></td>
+                      <td>Fast for large data reads/writes<br>Optimized for distributed systems</td>
+                      <td>Fast for complex queries with joins<br>Optimized for transactional workloads</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Use Cases</strong></td>
+                      <td>Real-time analytics, IoT, content management, mobile apps, gaming</td>
+                      <td>Financial systems, ERP, CRM, traditional business apps</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.3 ACID vs BASE</h3>
+                
+                <div class="subsection">
+                  <h4 class="subsection-title">ACID (SQL Databases)</h4>
+                  <div class="content-box">
+                    <ul>
+                      <li><strong>A</strong>tomicity: All operations succeed or all fail (no partial transactions)</li>
+                      <li><strong>C</strong>onsistency: Database remains in valid state before and after transaction</li>
+                      <li><strong>I</strong>solation: Concurrent transactions don't interfere with each other</li>
+                      <li><strong>D</strong>urability: Committed transactions are permanently stored</li>
+                    </ul>
+                    <div class="example-box">
+                      <h5>Example: Bank Transfer</h5>
+                      <p>Transfer $100 from Account A to Account B:</p>
+                      <ol>
+                        <li>Deduct $100 from A</li>
+                        <li>Add $100 to B</li>
+                      </ol>
+                      <p>✅ ACID ensures both steps complete or neither does (no lost money!)</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">BASE (NoSQL Databases)</h4>
+                  <div class="content-box">
+                    <ul>
+                      <li><strong>BA</strong>sically Available: System guarantees availability</li>
+                      <li><strong>S</strong>oft state: System state may change over time, even without input</li>
+                      <li><strong>E</strong>ventually consistent: System will become consistent over time</li>
+                    </ul>
+                    <div class="example-box">
+                      <h5>Example: Social Media Post</h5>
+                      <p>You post on social media:</p>
+                      <ol>
+                        <li>Post is immediately visible to you</li>
+                        <li>Gradually becomes visible to your followers (different servers sync)</li>
+                        <li>Eventually, all followers see the post</li>
+                      </ol>
+                      <p>✅ BASE prioritizes availability and performance over immediate consistency</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">2.4 Real-World Example Comparison</h3>
+                
+                <div class="example-box">
+                  <h5>Scenario: E-commerce Product Catalog</h5>
+                  
+                  <div class="code-box">
+<pre><strong>SQL Approach:</strong>
+Products Table:
+┌────┬──────────┬───────┬─────────────┐
+│ ID │ Name     │ Price │ Category_ID │
+├────┼──────────┼───────┼─────────────┤
+│ 1  │ Laptop   │ 999   │ 1           │
+│ 2  │ Mouse    │ 25    │ 1           │
+└────┴──────────┴───────┴─────────────┘
+
+Categories Table:
+┌────┬─────────────┐
+│ ID │ Name        │
+├────┼─────────────┤
+│ 1  │ Electronics │
+└────┴─────────────┘
+
+Attributes Table:
+┌────┬────────────┬────────┬───────┐
+│ ID │ Product_ID │ Name   │ Value │
+├────┼────────────┼────────┼───────┤
+│ 1  │ 1          │ RAM    │ 16GB  │
+│ 2  │ 1          │ CPU    │ i7    │
+└────┴────────────┴────────┴───────┘
+
+<span class="comment">// Query requires JOIN</span>
+SELECT p.*, c.Name as Category, GROUP_CONCAT(a.Name, ':', a.Value)
+FROM Products p
+JOIN Categories c ON p.Category_ID = c.ID
+LEFT JOIN Attributes a ON p.ID = a.Product_ID
+GROUP BY p.ID;
+
+<strong>MongoDB Approach:</strong>
+<span class="comment">// Single document contains everything</span>
+{
+  "_id": 1,
+  "name": "Laptop",
+  "price": 999,
+  "category": {
+    "id": 1,
+    "name": "Electronics"
+  },
+  "attributes": [
+    { "name": "RAM", "value": "16GB" },
+    { "name": "CPU", "value": "i7" }
+  ],
+  "reviews": [
+    { "user": "Alice", "rating": 5, "comment": "Great!" }
+  ],
+  "tags": ["electronics", "computers", "gaming"]
+}
+
+<span class="comment">// Query is simple - no joins!</span>
+db.products.findOne({ _id: 1 })
+
+<strong>Advantages of MongoDB approach:</strong>
+✅ One query instead of multiple joins
+✅ Easy to add new fields (flexible schema)
+✅ Data locality (related data stored together)
+✅ Better read performance for this use case
+
+<strong>When SQL might be better:</strong>
+⚠️ If categories change frequently and affect many products
+⚠️ If you need complex analytics across many tables
+⚠️ If strong referential integrity is critical
+</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson3" class="lesson">
+            <div class="lesson-header">
+              <h2>Module 3: Data Types in MongoDB</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">3.1 BSON Data Types</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    MongoDB uses BSON (Binary JSON) types which extend JSON with additional data types 
+                    for better performance and functionality.
+                  </p>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Description</th>
+                      <th>Example</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>String</strong></td>
+                      <td>UTF-8 encoded text</td>
+                      <td><code>"name": "Alice"</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Integer</strong></td>
+                      <td>32-bit or 64-bit number</td>
+                      <td><code>"age": 30</code><br><code>"views": NumberInt(100)</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Double</strong></td>
+                      <td>64-bit floating point</td>
+                      <td><code>"price": 99.99</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Decimal128</strong></td>
+                      <td>High-precision decimal (financial data)</td>
+                      <td><code>"amount": NumberDecimal("1234.56")</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Boolean</strong></td>
+                      <td>true or false</td>
+                      <td><code>"active": true</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Date</strong></td>
+                      <td>64-bit integer (milliseconds since Unix epoch)</td>
+                      <td><code>"created": new Date()</code><br><code>"birthday": ISODate("2000-01-01")</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Object</strong></td>
+                      <td>Embedded/nested document</td>
+                      <td><code>"address": { "city": "NYC", "zip": "10001" }</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Array</strong></td>
+                      <td>List of values</td>
+                      <td><code>"tags": ["mongodb", "database", "nosql"]</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>ObjectId</strong></td>
+                      <td>12-byte unique identifier</td>
+                      <td><code>"_id": ObjectId("507f1f77bcf86cd799439011")</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Binary Data</strong></td>
+                      <td>Binary data (files, images)</td>
+                      <td><code>"photo": BinData(0, "base64data...")</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Null</strong></td>
+                      <td>Represents null/missing value</td>
+                      <td><code>"middleName": null</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Regular Expression</strong></td>
+                      <td>Pattern matching</td>
+                      <td><code>"pattern": /^test/i</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Timestamp</strong></td>
+                      <td>Internal MongoDB type for replication</td>
+                      <td><code>Timestamp(1234567890, 1)</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>MinKey/MaxKey</strong></td>
+                      <td>Compare against lowest/highest BSON values</td>
+                      <td>Used internally for comparisons</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.2 ObjectId Explained</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>ObjectId</strong> is a 12-byte unique identifier automatically generated by MongoDB 
+                    for the <code>_id</code> field if not provided.
+                  </p>
+                </div>
+
+                <div class="code-box">
+<pre><strong>ObjectId Structure (12 bytes total):</strong>
+
+507f1f77bcf86cd799439011
+├──────┬──┬────┬──────┐
+│      │  │    │      │
+│      │  │    │      └─ 3 bytes: Random value (counter)
+│      │  │    └──────── 2 bytes: Process ID
+│      │  └───────────── 3 bytes: Machine ID
+│      └──────────────── 4 bytes: Timestamp (seconds since Unix epoch)
+
+<strong>Benefits:</strong>
+✅ Unique across distributed systems (no coordination needed)
+✅ Sortable by creation time (timestamp component)
+✅ Lightweight (only 12 bytes)
+✅ Fast generation (no database round-trip)
+
+<strong>Example Usage:</strong>
+<span class="comment">// MongoDB auto-generates _id</span>
+db.users.insertOne({ name: "Alice" })
+{
+  "acknowledged": true,
+  "insertedId": ObjectId("507f1f77bcf86cd799439011")
+}
+
+<span class="comment">// Extract timestamp from ObjectId</span>
+ObjectId("507f1f77bcf86cd799439011").getTimestamp()
+ISODate("2012-10-17T20:46:31.000Z")
+
+<span class="comment">// Custom _id (not recommended unless you have good reason)</span>
+db.users.insertOne({ _id: "custom-id-123", name: "Bob" })
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.3 Working with Dates</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Current date/time</span>
+<span class="prompt">></span> new Date()
+ISODate("2025-10-18T17:18:52.000Z")
+
+<span class="comment">// Specific date</span>
+<span class="prompt">></span> new Date("2024-01-15")
+ISODate("2024-01-15T00:00:00.000Z")
+
+<span class="comment">// Using ISODate helper</span>
+<span class="prompt">></span> ISODate("2024-01-15T10:30:00Z")
+ISODate("2024-01-15T10:30:00.000Z")
+
+<span class="comment">// Insert document with date</span>
+<span class="prompt">></span> db.events.insertOne({
+  title: "Conference",
+  date: new Date(),
+  startTime: ISODate("2024-12-01T09:00:00Z"),
+  endTime: ISODate("2024-12-01T17:00:00Z")
+})
+
+<span class="comment">// Query by date range</span>
+<span class="prompt">></span> db.events.find({
+  date: {
+    $gte: ISODate("2024-01-01"),
+    $lt: ISODate("2025-01-01")
+  }
+})
+
+<span class="comment">// Date arithmetic</span>
+<span class="prompt">></span> let tomorrow = new Date()
+<span class="prompt">></span> tomorrow.setDate(tomorrow.getDate() + 1)
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">3.4 Complete Document Example with All Types</h3>
+                
+                <div class="code-box">
+<pre>{
+  <span class="comment">// ObjectId - auto-generated unique ID</span>
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  
+  <span class="comment">// String</span>
+  "name": "Alice Johnson",
+  "email": "alice@example.com",
+  
+  <span class="comment">// Integer</span>
+  "age": NumberInt(30),
+  "followers": NumberInt(1250),
+  
+  <span class="comment">// Double (default for numbers)</span>
+  "rating": 4.8,
+  "balance": 1234.56,
+  
+  <span class="comment">// Decimal128 (for precise financial data)</span>
+  "accountBalance": NumberDecimal("9999.99"),
+  
+  <span class="comment">// Boolean</span>
+  "isActive": true,
+  "verified": false,
+  
+  <span class="comment">// Date</span>
+  "createdAt": ISODate("2024-01-15T10:30:00Z"),
+  "lastLogin": new Date(),
+  
+  <span class="comment">// Null</span>
+  "middleName": null,
+  
+  <span class="comment">// Object (Embedded Document)</span>
+  "address": {
+    "street": "123 Main St",
+    "city": "New York",
+    "state": "NY",
+    "zip": "10001",
+    "country": "USA"
+  },
+  
+  <span class="comment">// Array of Strings</span>
+  "tags": ["developer", "mongodb", "javascript"],
+  
+  <span class="comment">// Array of Numbers</span>
+  "scores": [95, 87, 92, 88],
+  
+  <span class="comment">// Array of Objects</span>
+  "orders": [
+    {
+      "orderId": "ORD-001",
+      "amount": 99.99,
+      "date": ISODate("2024-01-10T14:30:00Z")
+    },
+    {
+      "orderId": "ORD-002",
+      "amount": 149.99,
+      "date": ISODate("2024-01-12T09:15:00Z")
+    }
+  ],
+  
+  <span class="comment">// Regular Expression</span>
+  "namePattern": /^Alice/i,
+  
+  <span class="comment">// Binary Data (simplified representation)</span>
+  "profilePhoto": BinData(0, "base64EncodedImageData..."),
+  
+  <span class="comment">// Nested Object with Mixed Types</span>
+  "preferences": {
+    "notifications": {
+      "email": true,
+      "sms": false,
+      "push": true
+    },
+    "theme": "dark",
+    "language": "en",
+    "timezone": "America/New_York"
+  },
+  
+  <span class="comment">// Mixed Array (different types)</span>
+  "mixedData": ["text", 123, true, null, { "key": "value" }]
+}
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="lesson4" class="lesson">
+            <div class="lesson-header">
+              <h2>Module 4: Create Operations (Insert)</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">4.1 Insert Methods Overview</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    MongoDB provides several methods to insert documents into collections. If the collection 
+                    doesn't exist, MongoDB creates it automatically on first insert.
+                  </p>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Method</th>
+                      <th>Description</th>
+                      <th>Returns</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>insertOne()</strong></td>
+                      <td>Insert a single document</td>
+                      <td>Acknowledged status and inserted ID</td>
+                    </tr>
+                    <tr>
+                      <td><strong>insertMany()</strong></td>
+                      <td>Insert multiple documents</td>
+                      <td>Acknowledged status and array of inserted IDs</td>
+                    </tr>
+                    <tr>
+                      <td><strong>insert()</strong></td>
+                      <td>Insert one or many documents (legacy)</td>
+                      <td>WriteResult object</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.2 Insert One Document</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Basic insertOne</span>
+<span class="prompt">></span> db.users.insertOne({
+  name: "Alice Johnson",
+  email: "alice@example.com",
+  age: 30,
+  active: true
+})
+
+<span class="comment">// Response</span>
+{
+  "acknowledged": true,
+  "insertedId": ObjectId("507f1f77bcf86cd799439011")
+}
+
+<span class="comment">// Insert with custom _id</span>
+<span class="prompt">></span> db.users.insertOne({
+  _id: "user-001",
+  name: "Bob Smith",
+  email: "bob@example.com"
+})
+
+<span class="comment">// Insert with nested document</span>
+<span class="prompt">></span> db.users.insertOne({
+  name: "Charlie Brown",
+  email: "charlie@example.com",
+  address: {
+    street: "123 Main St",
+    city: "New York",
+    state: "NY",
+    zip: "10001"
+  },
+  hobbies: ["reading", "gaming", "coding"],
+  createdAt: new Date()
+})
+
+<span class="comment">// Insert with array of objects</span>
+<span class="prompt">></span> db.orders.insertOne({
+  orderId: "ORD-001",
+  customer: "Alice Johnson",
+  items: [
+    { product: "Laptop", quantity: 1, price: 999.99 },
+    { product: "Mouse", quantity: 2, price: 25.00 }
+  ],
+  total: 1049.99,
+  status: "pending",
+  orderDate: new Date()
+})
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.3 Insert Many Documents</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Insert multiple documents</span>
+<span class="prompt">></span> db.products.insertMany([
+  {
+    name: "Laptop",
+    category: "Electronics",
+    price: 999.99,
+    stock: 50,
+    tags: ["computers", "electronics"]
+  },
+  {
+    name: "Mouse",
+    category: "Electronics",
+    price: 25.00,
+    stock: 200,
+    tags: ["accessories", "electronics"]
+  },
+  {
+    name: "Desk Chair",
+    category: "Furniture",
+    price: 199.99,
+    stock: 30,
+    tags: ["furniture", "office"]
+  }
+])
+
+<span class="comment">// Response</span>
+{
+  "acknowledged": true,
+  "insertedIds": [
+    ObjectId("507f1f77bcf86cd799439011"),
+    ObjectId("507f1f77bcf86cd799439012"),
+    ObjectId("507f1f77bcf86cd799439013")
+  ]
+}
+
+<span class="comment">// Insert with ordered: false (continue on error)</span>
+<span class="prompt">></span> db.users.insertMany(
+  [
+    { _id: 1, name: "User 1" },
+    { _id: 2, name: "User 2" },
+    { _id: 2, name: "User 2 Duplicate" }, <span class="comment">// This will fail</span>
+    { _id: 3, name: "User 3" }           <span class="comment">// This will still insert</span>
+  ],
+  { ordered: false }
+)
+
+<span class="comment">// Default ordered: true stops on first error</span>
+<span class="prompt">></span> db.users.insertMany([
+  { _id: 4, name: "User 4" },
+  { _id: 4, name: "Duplicate" },  <span class="comment">// Fails here</span>
+  { _id: 5, name: "User 5" }      <span class="comment">// Never inserted</span>
+])
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.4 Legacy Insert Method</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Insert one document (legacy)</span>
+<span class="prompt">></span> db.users.insert({
+  name: "David",
+  email: "david@example.com"
+})
+
+<span class="comment">// Insert many documents (legacy)</span>
+<span class="prompt">></span> db.users.insert([
+  { name: "Eve", email: "eve@example.com" },
+  { name: "Frank", email: "frank@example.com" }
+])
+
+<span class="comment">// Note: insertOne() and insertMany() are preferred in modern MongoDB</span>
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.5 Common Insert Patterns</h3>
+                
+                <div class="example-box">
+                  <h5>Example 1: E-commerce Product with Reviews</h5>
+                  <div class="mongo-command">
+<pre><span class="prompt">></span> db.products.insertOne({
+  sku: "LAPTOP-001",
+  name: "Gaming Laptop",
+  brand: "TechBrand",
+  category: "Electronics",
+  price: 1299.99,
+  discount: {
+    percentage: 10,
+    validUntil: ISODate("2024-12-31T23:59:59Z")
+  },
+  specifications: {
+    cpu: "Intel i7-12700H",
+    ram: "16GB DDR5",
+    storage: "512GB NVMe SSD",
+    gpu: "RTX 3060",
+    screen: "15.6 inch FHD 144Hz"
+  },
+  images: [
+    "https://example.com/images/laptop-1.jpg",
+    "https://example.com/images/laptop-2.jpg"
+  ],
+  reviews: [
+    {
+      userId: ObjectId("507f1f77bcf86cd799439011"),
+      username: "Alice",
+      rating: 5,
+      comment: "Excellent laptop for gaming!",
+      date: new Date(),
+      helpful: 15
+    },
+    {
+      userId: ObjectId("507f1f77bcf86cd799439012"),
+      username: "Bob",
+      rating: 4,
+      comment: "Good performance but a bit heavy",
+      date: new Date(),
+      helpful: 8
+    }
+  ],
+  stock: 25,
+  available: true,
+  tags: ["gaming", "laptop", "high-performance"],
+  createdAt: new Date(),
+  updatedAt: new Date()
+})
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 2: Social Media User Profile</h5>
+                  <div class="mongo-command">
+<pre><span class="prompt">></span> db.users.insertOne({
+  username: "johndoe",
+  email: "john.doe@example.com",
+  passwordHash: "$2b$10$...", <span class="comment">// Hashed password</span>
+  profile: {
+    firstName: "John",
+    lastName: "Doe",
+    bio: "Software developer passionate about MongoDB",
+    avatar: "https://example.com/avatars/johndoe.jpg",
+    location: {
+      city: "San Francisco",
+      state: "CA",
+      country: "USA",
+      coordinates: {
+        lat: 37.7749,
+        lng: -122.4194
+      }
+    },
+    birthDate: ISODate("1990-05-15T00:00:00Z"),
+    website: "https://johndoe.dev"
+  },
+  followers: [],
+  following: [],
+  followerCount: 0,
+  followingCount: 0,
+  posts: [],
+  postCount: 0,
+  settings: {
+    privacy: {
+      profileVisible: true,
+      emailVisible: false,
+      locationVisible: true
+    },
+    notifications: {
+      email: true,
+      push: true,
+      sms: false
+    },
+    theme: "dark",
+    language: "en"
+  },
+  verified: false,
+  premium: false,
+  createdAt: new Date(),
+  lastLogin: new Date(),
+  loginHistory: [
+    {
+      timestamp: new Date(),
+      ip: "192.168.1.1",
+      device: "Chrome on Windows",
+      location: "San Francisco, CA"
+    }
+  ]
+})
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 3: Blog Post with Comments</h5>
+                  <div class="mongo-command">
+<pre><span class="prompt">></span> db.posts.insertOne({
+  title: "Getting Started with MongoDB",
+  slug: "getting-started-with-mongodb",
+  author: {
+    id: ObjectId("507f1f77bcf86cd799439011"),
+    name: "Alice Johnson",
+    email: "alice@example.com"
+  },
+  content: "MongoDB is a powerful NoSQL database...",
+  excerpt: "Learn the basics of MongoDB in this comprehensive guide",
+  featuredImage: "https://example.com/images/mongodb-intro.jpg",
+  category: "Tutorials",
+  tags: ["mongodb", "database", "nosql", "tutorial"],
+  status: "published",
+  publishedAt: new Date(),
+  updatedAt: new Date(),
+  views: 0,
+  likes: 0,
+  comments: [
+    {
+      id: ObjectId(),
+      author: {
+        id: ObjectId("507f1f77bcf86cd799439012"),
+        name: "Bob Smith",
+        avatar: "https://example.com/avatars/bob.jpg"
+      },
+      content: "Great tutorial! Very helpful.",
+      createdAt: new Date(),
+      likes: 3,
+      replies: [
+        {
+          id: ObjectId(),
+          author: {
+            id: ObjectId("507f1f77bcf86cd799439011"),
+            name: "Alice Johnson"
+          },
+          content: "Thanks Bob! Glad you found it useful.",
+          createdAt: new Date()
+        }
+      ]
+    }
+  ],
+  metadata: {
+    readTime: 5, <span class="comment">// minutes</span>
+    difficulty: "beginner",
+    language: "en"
+  },
+  seo: {
+    metaTitle: "Getting Started with MongoDB - Complete Guide",
+    metaDescription: "Learn MongoDB basics with this step-by-step tutorial",
+    keywords: ["mongodb tutorial", "nosql database", "mongodb guide"]
+  }
+})
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">4.6 Bulk Insert Best Practices</h3>
+                
+                <div class="highlight-box">
+                  <p><strong>Performance Tips:</strong></p>
+                  <ul>
+                    <li>✅ Use <code>insertMany()</code> instead of multiple <code>insertOne()</code> calls</li>
+                    <li>✅ Batch inserts in groups of 100-1000 documents for optimal performance</li>
+                    <li>✅ Use <code>ordered: false</code> for parallel inserts when order doesn't matter</li>
+                    <li>✅ Consider using bulk write operations for very large datasets</li>
+                    <li>⚠️ Be aware of the 16MB document size limit</li>
+                    <li>⚠️ Monitor memory usage during large bulk operations</li>
+                  </ul>
+                </div>
+
+                <div class="mongo-command">
+<pre><span class="comment">// Efficient bulk insert</span>
+<span class="prompt">></span> const docs = [];
+<span class="prompt">></span> for (let i = 0; i < 1000; i++) {
+  docs.push({
+    userId: i,
+    name: `User ${i}`,
+    email: `user${i}@example.com`,
+    createdAt: new Date()
+  });
+}
+<span class="prompt">></span> db.users.insertMany(docs, { ordered: false })
+
+<span class="comment">// Bulk write operation (advanced)</span>
+<span class="prompt">></span> db.users.bulkWrite([
+  { insertOne: { document: { name: "User 1", email: "user1@example.com" } } },
+  { insertOne: { document: { name: "User 2", email: "user2@example.com" } } },
+  { updateOne: { filter: { name: "User 1" }, update: { $set: { active: true } } } }
+])
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson5" class="lesson">
+            <div class="lesson-header">
+              <h2>Module 5: Read Operations (Query/Find)</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">5.1 Find Methods Overview</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    The <code>find()</code> method returns a <strong>cursor</strong> - a pointer to the result set. 
+                    By default, the cursor iterates automatically, but it can be controlled manually.
+                  </p>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Method</th>
+                      <th>Description</th>
+                      <th>Returns</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>find()</strong></td>
+                      <td>Find all matching documents</td>
+                      <td>Cursor to documents</td>
+                    </tr>
+                    <tr>
+                      <td><strong>findOne()</strong></td>
+                      <td>Find first matching document</td>
+                      <td>Single document or null</td>
+                    </tr>
+                    <tr>
+                      <td><strong>countDocuments()</strong></td>
+                      <td>Count matching documents</td>
+                      <td>Number</td>
+                    </tr>
+                    <tr>
+                      <td><strong>estimatedDocumentCount()</strong></td>
+                      <td>Fast approximate count</td>
+                      <td>Number</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.2 Basic Find Operations</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Find all documents</span>
+<span class="prompt">></span> db.users.find({})
+<span class="prompt">></span> db.users.find()  <span class="comment">// Same as above</span>
+
+<span class="comment">// Find with pretty formatting</span>
+<span class="prompt">></span> db.users.find({}).pretty()
+
+<span class="comment">// Find one document</span>
+<span class="prompt">></span> db.users.findOne({})
+
+<span class="comment">// Find by exact match</span>
+<span class="prompt">></span> db.users.find({ name: "Alice" })
+<span class="prompt">></span> db.users.find({ age: 30 })
+<span class="prompt">></span> db.users.find({ active: true })
+
+<span class="comment">// Find by multiple conditions (AND)</span>
+<span class="prompt">></span> db.users.find({
+  age: 30,
+  active: true,
+  city: "New York"
+})
+
+<span class="comment">// Find by _id</span>
+<span class="prompt">></span> db.users.findOne({ _id: ObjectId("507f1f77bcf86cd799439011") })
+
+<span class="comment">// Count documents</span>
+<span class="prompt">></span> db.users.countDocuments({ active: true })
+250
+
+<span class="comment">// Estimated count (fast but approximate)</span>
+<span class="prompt">></span> db.users.estimatedDocumentCount()
+1000
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.3 Query Operators</h3>
+                
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Operation</th>
+                      <th>MongoDB Syntax</th>
+                      <th>SQL Equivalent</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Equality</strong></td>
+                      <td><code>{ key: value }</code></td>
+                      <td><code>WHERE key = value</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Less Than</strong></td>
+                      <td><code>{ key: { $lt: value } }</code></td>
+                      <td><code>WHERE key < value</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Less Than or Equal</strong></td>
+                      <td><code>{ key: { $lte: value } }</code></td>
+                      <td><code>WHERE key <= value</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Greater Than</strong></td>
+                      <td><code>{ key: { $gt: value } }</code></td>
+                      <td><code>WHERE key > value</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Greater Than or Equal</strong></td>
+                      <td><code>{ key: { $gte: value } }</code></td>
+                      <td><code>WHERE key >= value</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Not Equal</strong></td>
+                      <td><code>{ key: { $ne: value } }</code></td>
+                      <td><code>WHERE key != value</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>In Array</strong></td>
+                      <td><code>{ key: { $in: [v1, v2] } }</code></td>
+                      <td><code>WHERE key IN (v1, v2)</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Not In Array</strong></td>
+                      <td><code>{ key: { $nin: [v1, v2] } }</code></td>
+                      <td><code>WHERE key NOT IN (v1, v2)</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>AND</strong></td>
+                      <td><code>{ $and: [{}, {}] }</code></td>
+                      <td><code>WHERE cond1 AND cond2</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>OR</strong></td>
+                      <td><code>{ $or: [{}, {}] }</code></td>
+                      <td><code>WHERE cond1 OR cond2</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>NOT</strong></td>
+                      <td><code>{ key: { $not: { $gt: value } } }</code></td>
+                      <td><code>WHERE NOT (key > value)</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>LIKE</strong></td>
+                      <td><code>{ key: /pattern/ }</code> or<br><code>{ key: { $regex: /pattern/ } }</code></td>
+                      <td><code>WHERE key LIKE '%pattern%'</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="mongo-command">
+<pre><span class="comment">// Comparison operators examples</span>
+<span class="prompt">></span> db.products.find({ price: { $lt: 100 } })  <span class="comment">// price < 100</span>
+<span class="prompt">></span> db.products.find({ price: { $lte: 100 } }) <span class="comment">// price <= 100</span>
+<span class="prompt">></span> db.products.find({ price: { $gt: 50 } })   <span class="comment">// price > 50</span>
+<span class="prompt">></span> db.products.find({ price: { $gte: 50 } })  <span class="comment">// price >= 50</span>
+<span class="prompt">></span> db.products.find({ price: { $ne: 99.99 } }) <span class="comment">// price != 99.99</span>
+
+<span class="comment">// Range query</span>
+<span class="prompt">></span> db.products.find({
+  price: {
+    $gte: 50,
+    $lte: 100
+  }
+}) <span class="comment">// 50 <= price <= 100</span>
+
+<span class="comment">// IN operator</span>
+<span class="prompt">></span> db.products.find({
+  category: { $in: ["Electronics", "Books", "Toys"] }
+})
+
+<span class="comment">// NOT IN operator</span>
+<span class="prompt">></span> db.products.find({
+  category: { $nin: ["Food", "Clothing"] }
+})
+
+<span class="comment">// AND operator (implicit)</span>
+<span class="prompt">></span> db.products.find({
+  category: "Electronics",
+  price: { $lt: 500 },
+  available: true
+})
+
+<span class="comment">// AND operator (explicit)</span>
+<span class="prompt">></span> db.products.find({
+  $and: [
+    { price: { $gte: 100 } },
+    { price: { $lte: 500 } },
+    { available: true }
+  ]
+})
+
+<span class="comment">// OR operator</span>
+<span class="prompt">></span> db.products.find({
+  $or: [
+    { category: "Electronics" },
+    { price: { $lt: 50 } }
+  ]
+})
+
+<span class="comment">// Complex: (condition1 OR condition2) AND condition3</span>
+<span class="prompt">></span> db.products.find({
+  $or: [
+    { category: "Electronics" },
+    { category: "Books" }
+  ],
+  price: { $lt: 100 },
+  available: true
+})
+
+<span class="comment">// NOT operator</span>
+<span class="prompt">></span> db.products.find({
+  price: { $not: { $gt: 100 } }
+}) <span class="comment">// price <= 100</span>
+
+<span class="comment">// REGEX pattern matching</span>
+<span class="prompt">></span> db.users.find({ name: /alice/i })           <span class="comment">// Contains "alice" (case-insensitive)</span>
+<span class="prompt">></span> db.users.find({ name: /^Alice/ })           <span class="comment">// Starts with "Alice"</span>
+<span class="prompt">></span> db.users.find({ name: /Johnson$/ })         <span class="comment">// Ends with "Johnson"</span>
+<span class="prompt">></span> db.users.find({ email: /@gmail\.com$/ })    <span class="comment">// Ends with "@gmail.com"</span>
+
+<span class="comment">// REGEX with $regex operator</span>
+<span class="prompt">></span> db.users.find({
+  name: { $regex: /alice/i }
+})
+
+<span class="comment">// REGEX with options</span>
+<span class="prompt">></span> db.users.find({
+  name: {
+    $regex: "alice",
+    $options: "i"  <span class="comment">// i = case-insensitive</span>
+  }
+})
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.4 Querying Embedded Documents</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Sample document structure</span>
+{
+  name: "Alice",
+  address: {
+    street: "123 Main St",
+    city: "New York",
+    state: "NY",
+    zip: "10001"
+  },
+  orders: [
+    { orderId: "ORD-001", total: 99.99 },
+    { orderId: "ORD-002", total: 149.99 }
+  ]
+}
+
+<span class="comment">// Match exact embedded document (order matters!)</span>
+<span class="prompt">></span> db.users.find({
+  address: {
+    street: "123 Main St",
+    city: "New York",
+    state: "NY",
+    zip: "10001"
+  }
+}) <span class="comment">// Must match exactly, including field order</span>
+
+<span class="comment">// Match specific nested field (dot notation) - RECOMMENDED</span>
+<span class="prompt">></span> db.users.find({ "address.city": "New York" })
+<span class="prompt">></span> db.users.find({ "address.state": "NY" })
+<span class="prompt">></span> db.users.find({ "address.zip": "10001" })
+
+<span class="comment">// Multiple nested fields</span>
+<span class="prompt">></span> db.users.find({
+  "address.city": "New York",
+  "address.state": "NY"
+})
+
+<span class="comment">// Nested field with operator</span>
+<span class="prompt">></span> db.orders.find({
+  "customer.age": { $gte: 18 }
+})
+
+<span class="comment">// Deep nesting</span>
+<span class="prompt">></span> db.users.find({
+  "profile.settings.notifications.email": true
+})
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.5 Querying Arrays</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Sample document with arrays</span>
+{
+  name: "Product 1",
+  tags: ["electronics", "computers", "gaming"],
+  ratings: [4, 5, 5, 4, 3],
+  dimensions: [
+    { width: 10, height: 20 },
+    { width: 15, height: 25 }
+  ]
+}
+
+<span class="comment">// Exact array match (order and elements must match exactly)</span>
+<span class="prompt">></span> db.products.find({
+  tags: ["electronics", "computers", "gaming"]
+})
+
+<span class="comment">// Array contains element (any position)</span>
+<span class="prompt">></span> db.products.find({ tags: "electronics" })
+
+<span class="comment">// Array contains all elements (order doesn't matter)</span>
+<span class="prompt">></span> db.products.find({
+  tags: { $all: ["electronics", "gaming"] }
+})
+
+<span class="comment">// Array contains any element</span>
+<span class="prompt">></span> db.products.find({
+  tags: { $in: ["electronics", "books", "toys"] }
+})
+
+<span class="comment">// Query by array index</span>
+<span class="prompt">></span> db.products.find({ "tags.0": "electronics" })  <span class="comment">// First element</span>
+<span class="prompt">></span> db.products.find({ "tags.2": "gaming" })       <span class="comment">// Third element</span>
+
+<span class="comment">// Query by array length</span>
+<span class="prompt">></span> db.products.find({ tags: { $size: 3 } })
+
+<span class="comment">// Array element matches condition</span>
+<span class="prompt">></span> db.products.find({ ratings: { $gt: 4 } })  <span class="comment">// At least one rating > 4</span>
+
+<span class="comment">// All array elements match condition</span>
+<span class="prompt">></span> db.products.find({
+  ratings: {
+    $not: { $lte: 3 }  <span class="comment">// All ratings > 3</span>
+  }
+})
+
+<span class="comment">// $elemMatch: Match array element with multiple conditions</span>
+<span class="prompt">></span> db.products.find({
+  dimensions: {
+    $elemMatch: {
+      width: { $gte: 10 },
+      height: { $lte: 25 }
+    }
+  }
+})
+
+<span class="comment">// Query embedded document in array</span>
+<span class="prompt">></span> db.orders.find({ "items.product": "Laptop" })
+<span class="prompt">></span> db.orders.find({ "items.price": { $gt: 500 } })
+
+<span class="comment">// $elemMatch for embedded documents in array</span>
+<span class="prompt">></span> db.orders.find({
+  items: {
+    $elemMatch: {
+      product: "Laptop",
+      price: { $lt: 1000 }
+    }
+  }
+})
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.6 Projection (Select Fields)</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Projection</strong> specifies which fields to return in the result. 
+                    Use <code>1</code> to include a field and <code>0</code> to exclude it.
+                  </p>
+                </div>
+
+                <div class="mongo-command">
+<pre><span class="comment">// Include specific fields (exclude all others except _id)</span>
+<span class="prompt">></span> db.users.find({}, { name: 1, email: 1 })
+<span class="comment">// Returns: { _id: ..., name: "...", email: "..." }</span>
+
+<span class="comment">// Include fields and exclude _id</span>
+<span class="prompt">></span> db.users.find({}, { name: 1, email: 1, _id: 0 })
+<span class="comment">// Returns: { name: "...", email: "..." }</span>
+
+<span class="comment">// Exclude specific fields (include all others)</span>
+<span class="prompt">></span> db.users.find({}, { password: 0, ssn: 0 })
+
+<span class="comment">// Project nested fields</span>
+<span class="prompt">></span> db.users.find({}, { "address.city": 1, "address.state": 1 })
+
+<span class="comment">// Project array elements</span>
+<span class="prompt">></span> db.products.find({}, { name: 1, "reviews": 1 })
+
+<span class="comment">// $slice: Limit array elements</span>
+<span class="prompt">></span> db.products.find({}, {
+  name: 1,
+  reviews: { $slice: 5 }  <span class="comment">// First 5 reviews</span>
+})
+
+<span class="prompt">></span> db.products.find({}, {
+  name: 1,
+  reviews: { $slice: -5 }  <span class="comment">// Last 5 reviews</span>
+})
+
+<span class="prompt">></span> db.products.find({}, {
+  name: 1,
+  reviews: { $slice: [10, 5] }  <span class="comment">// Skip 10, return 5</span>
+})
+
+<span class="comment">// $elemMatch in projection</span>
+<span class="prompt">></span> db.users.find(
+  { "scores.score": { $gt: 90 } },
+  {
+    name: 1,
+    scores: { $elemMatch: { score: { $gt: 90 } } }
+  }
+)
+
+<span class="comment">// Note: Cannot mix inclusion and exclusion (except for _id)</span>
+<span class="comment">// ❌ This will error:</span>
+<span class="prompt">></span> db.users.find({}, { name: 1, password: 0 })
+
+<span class="comment">// ✅ This is OK (_id is special case):</span>
+<span class="prompt">></span> db.users.find({}, { name: 1, email: 1, _id: 0 })
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.7 Sorting, Limiting, and Skipping</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Sort ascending (1) or descending (-1)</span>
+<span class="prompt">></span> db.products.find({}).sort({ price: 1 })     <span class="comment">// Ascending</span>
+<span class="prompt">></span> db.products.find({}).sort({ price: -1 })    <span class="comment">// Descending</span>
+
+<span class="comment">// Sort by multiple fields</span>
+<span class="prompt">></span> db.products.find({}).sort({ category: 1, price: -1 })
+<span class="comment">// Sort by category (A-Z), then by price (high to low)</span>
+
+<span class="comment">// Limit results</span>
+<span class="prompt">></span> db.products.find({}).limit(10)  <span class="comment">// First 10 documents</span>
+
+<span class="comment">// Skip documents</span>
+<span class="prompt">></span> db.products.find({}).skip(20)   <span class="comment">// Skip first 20 documents</span>
+
+<span class="comment">// Pagination: Skip and Limit together</span>
+<span class="prompt">></span> db.products.find({}).skip(20).limit(10)  <span class="comment">// Documents 21-30</span>
+
+<span class="comment">// Method chaining (order doesn't matter for skip/limit/sort)</span>
+<span class="prompt">></span> db.products.find({})
+  .sort({ price: -1 })
+  .skip(10)
+  .limit(5)
+
+<span class="comment">// Practical pagination example</span>
+<span class="prompt">></span> const pageSize = 10;
+<span class="prompt">></span> const pageNumber = 3;  <span class="comment">// Page 3 (0-indexed would be 2)</span>
+<span class="prompt">></span> db.products.find({})
+  .sort({ createdAt: -1 })
+  .skip((pageNumber - 1) * pageSize)
+  .limit(pageSize)
+
+<span class="comment">// Sort by nested field</span>
+<span class="prompt">></span> db.users.find({}).sort({ "address.city": 1 })
+
+<span class="comment">// Sort by array element (sorts by first element)</span>
+<span class="prompt">></span> db.products.find({}).sort({ "ratings": -1 })
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.8 Cursor Methods</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    A <strong>cursor</strong> is a pointer to the result set. You can manually iterate through 
+                    results or convert to an array.
+                  </p>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Method</th>
+                      <th>Description</th>
+                      <th>Example</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>hasNext()</strong></td>
+                      <td>Check if more documents exist</td>
+                      <td><code>cursor.hasNext()</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>next()</strong></td>
+                      <td>Get next document</td>
+                      <td><code>cursor.next()</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>toArray()</strong></td>
+                      <td>Convert all results to array</td>
+                      <td><code>cursor.toArray()</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>forEach()</strong></td>
+                      <td>Apply function to each document</td>
+                      <td><code>cursor.forEach(func)</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>count()</strong></td>
+                      <td>Count documents (deprecated)</td>
+                      <td>Use <code>countDocuments()</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="mongo-command">
+<pre><span class="comment">// Get cursor</span>
+<span class="prompt">></span> const cursor = db.users.find({ age: { $gte: 18 } })
+
+<span class="comment">// Manual iteration</span>
+<span class="prompt">></span> while (cursor.hasNext()) {
+  const doc = cursor.next();
+  print(doc.name);
+}
+
+<span class="comment">// Convert to array</span>
+<span class="prompt">></span> const users = db.users.find({}).toArray()
+<span class="prompt">></span> print(users.length)
+
+<span class="comment">// forEach method</span>
+<span class="prompt">></span> db.users.find({}).forEach(function(user) {
+  print(user.name + " - " + user.email);
+})
+
+<span class="comment">// forEach with arrow function (ES6)</span>
+<span class="prompt">></span> db.users.find({}).forEach(user => {
+  print(`${user.name} - ${user.email}`);
+})
+
+<span class="comment">// Map-like operation</span>
+<span class="prompt">></span> const emails = [];
+<span class="prompt">></span> db.users.find({}).forEach(user => {
+  emails.push(user.email);
+})
+
+<span class="comment">// Cursor size (number of docs in current batch)</span>
+<span class="prompt">></span> cursor.objsLeftInBatch()
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">5.9 Complex Query Examples</h3>
+                
+                <div class="example-box">
+                  <h5>Example 1: E-commerce Product Search</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Find electronics under $500, in stock, with rating >= 4</span>
+<span class="prompt">></span> db.products.find({
+  category: "Electronics",
+  price: { $lt: 500 },
+  stock: { $gt: 0 },
+  "rating.average": { $gte: 4 }
+}).sort({ price: 1 }).limit(20)
+
+<span class="comment">// Search by text in name or description</span>
+<span class="prompt">></span> db.products.find({
+  $or: [
+    { name: { $regex: /laptop/i } },
+    { description: { $regex: /laptop/i } }
+  ],
+  available: true
+})
+
+<span class="comment">// Products with specific features</span>
+<span class="prompt">></span> db.products.find({
+  tags: { $all: ["wireless", "bluetooth"] },
+  "specifications.warranty": { $gte: 12 }
+})
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 2: Social Media Feed</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Get recent posts from followed users</span>
+<span class="prompt">></span> const myFollowing = ["user123", "user456", "user789"];
+<span class="prompt">></span> db.posts.find({
+  "author.id": { $in: myFollowing },
+  status: "published",
+  publishedAt: {
+    $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)  <span class="comment">// Last 7 days</span>
+  }
+}).sort({ publishedAt: -1 }).limit(50)
+
+<span class="comment">// Posts with high engagement</span>
+<span class="prompt">></span> db.posts.find({
+  $or: [
+    { likes: { $gte: 100 } },
+    { "comments.count": { $gte: 50 } },
+    { shares: { $gte: 25 } }
+  ],
+  status: "published"
+}).sort({ likes: -1 })
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 3: User Analytics</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Active users who haven't purchased in 30 days</span>
+<span class="prompt">></span> db.users.find({
+  active: true,
+  lastLogin: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
+  $or: [
+    { lastPurchase: { $lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } },
+    { lastPurchase: { $exists: false } }
+  ]
+})
+
+<span class="comment">// Premium users in specific regions</span>
+<span class="prompt">></span> db.users.find({
+  "subscription.tier": "premium",
+  "subscription.active": true,
+  "profile.location.country": { $in: ["USA", "Canada", "UK"] },
+  "profile.preferences.marketing": true
+})
+</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson6" class="lesson">
+            <div class="lesson-header">
+              <h2>Module 6: Update Operations</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">6.1 Update Methods Overview</h3>
+                
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Method</th>
+                      <th>Description</th>
+                      <th>Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>updateOne()</strong></td>
+                      <td>Update first matching document</td>
+                      <td>Update specific record by ID</td>
+                    </tr>
+                    <tr>
+                      <td><strong>updateMany()</strong></td>
+                      <td>Update all matching documents</td>
+                      <td>Bulk updates (price changes, status updates)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>replaceOne()</strong></td>
+                      <td>Replace entire document (except _id)</td>
+                      <td>Complete document replacement</td>
+                    </tr>
+                    <tr>
+                      <td><strong>save()</strong></td>
+                      <td>Insert or replace based on _id</td>
+                      <td>Legacy method (not recommended)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>findOneAndUpdate()</strong></td>
+                      <td>Update and return document (atomic)</td>
+                      <td>Need updated document immediately</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">6.2 Update Operators</h3>
+                
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Operator</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="4"><strong>Field Update</strong></td>
+                      <td><code>$set</code></td>
+                      <td>Set the value of a field</td>
+                    </tr>
+                    <tr>
+                      <td><code>$unset</code></td>
+                      <td>Remove field from document</td>
+                    </tr>
+                    <tr>
+                      <td><code>$inc</code></td>
+                      <td>Increment numeric value</td>
+                    </tr>
+                    <tr>
+                      <td><code>$rename</code></td>
+                      <td>Rename a field</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="6"><strong>Array Update</strong></td>
+                      <td><code>$push</code></td>
+                      <td>Add element to array</td>
+                    </tr>
+                    <tr>
+                      <td><code>$pull</code></td>
+                      <td>Remove elements matching condition</td>
+                    </tr>
+                    <tr>
+                      <td><code>$addToSet</code></td>
+                      <td>Add element only if doesn't exist (unique)</td>
+                    </tr>
+                    <tr>
+                      <td><code>$pop</code></td>
+                      <td>Remove first or last element</td>
+                    </tr>
+                    <tr>
+                      <td><code>$pullAll</code></td>
+                      <td>Remove all matching values</td>
+                    </tr>
+                    <tr>
+                      <td><code>$[]</code></td>
+                      <td>Update all array elements</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="3"><strong>Other</strong></td>
+                      <td><code>$mul</code></td>
+                      <td>Multiply numeric value</td>
+                    </tr>
+                    <tr>
+                      <td><code>$min</code></td>
+                      <td>Update only if new value is less</td>
+                    </tr>
+                    <tr>
+                      <td><code>$max</code></td>
+                      <td>Update only if new value is greater</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">6.3 Basic Update Operations</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Update single field</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $set: { age: 31 } }
+)
+
+<span class="comment">// Update multiple fields</span>
+<span class="prompt">></span> db.users.updateOne(
+  { email: "alice@example.com" },
+  {
+    $set: {
+      age: 31,
+      city: "San Francisco",
+      updatedAt: new Date()
+    }
+  }
+)
+
+<span class="comment">// Update nested field</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $set: { "address.city": "Los Angeles" } }
+)
+
+<span class="comment">// Update many documents</span>
+<span class="prompt">></span> db.products.updateMany(
+  { category: "Electronics" },
+  {
+    $set: {
+      taxRate: 0.08,
+      updatedAt: new Date()
+    }
+  }
+)
+
+<span class="comment">// Increment value</span>
+<span class="prompt">></span> db.products.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $inc: { views: 1 } }  <span class="comment">// Increment by 1</span>
+)
+
+<span class="prompt">></span> db.products.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $inc: { stock: -5 } }  <span class="comment">// Decrement by 5</span>
+)
+
+<span class="comment">// Multiply value</span>
+<span class="prompt">></span> db.products.updateMany(
+  { category: "Electronics" },
+  { $mul: { price: 1.1 } }  <span class="comment">// Increase price by 10%</span>
+)
+
+<span class="comment">// Remove field</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $unset: { temporaryField: "" } }  <span class="comment">// Value doesn't matter</span>
+)
+
+<span class="comment">// Rename field</span>
+<span class="prompt">></span> db.users.updateMany(
+  {},
+  { $rename: { "phone": "phoneNumber" } }
+)
+
+<span class="comment">// Update with min/max</span>
+<span class="prompt">></span> db.products.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $min: { price: 99.99 } }  <span class="comment">// Set to 99.99 only if current > 99.99</span>
+)
+
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $max: { highScore: 1500 } }  <span class="comment">// Set to 1500 only if current < 1500</span>
+)
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">6.4 Array Update Operations</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Push element to array</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $push: { hobbies: "photography" } }
+)
+
+<span class="comment">// Push multiple elements</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    $push: {
+      hobbies: {
+        $each: ["cooking", "hiking", "reading"]
+      }
+    }
+  }
+)
+
+<span class="comment">// Push with sort and slice (keep only top 10)</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    $push: {
+      scores: {
+        $each: [95, 87],
+        $sort: -1,      <span class="comment">// Sort descending</span>
+        $slice: 10      <span class="comment">// Keep only top 10</span>
+      }
+    }
+  }
+)
+
+<span class="comment">// Add to set (only if doesn't exist - keeps array unique)</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $addToSet: { tags: "developer" } }
+)
+
+<span class="comment">// Add multiple to set</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    $addToSet: {
+      tags: {
+        $each: ["javascript", "mongodb", "nodejs"]
+      }
+    }
+  }
+)
+
+<span class="comment">// Pull element from array</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $pull: { hobbies: "gaming" } }
+)
+
+<span class="comment">// Pull elements matching condition</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $pull: { scores: { $lt: 60 } } }  <span class="comment">// Remove scores < 60</span>
+)
+
+<span class="comment">// Pull all matching values</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $pullAll: { tags: ["old-tag", "deprecated-tag"] } }
+)
+
+<span class="comment">// Pop element from array</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $pop: { hobbies: 1 } }   <span class="comment">// Remove last element</span>
+)
+
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $pop: { hobbies: -1 } }  <span class="comment">// Remove first element</span>
+)
+
+<span class="comment">// Update all array elements</span>
+<span class="prompt">></span> db.products.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $inc: { "reviews.$[].likes": 1 } }  <span class="comment">// Increment likes for all reviews</span>
+)
+
+<span class="comment">// Update specific array element by index</span>
+<span class="prompt">></span> db.products.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $set: { "items.0.quantity": 5 } }  <span class="comment">// Update first item</span>
+)
+
+<span class="comment">// Update array element with $ positional operator</span>
+<span class="prompt">></span> db.products.updateOne(
+  {
+    _id: ObjectId("507f1f77bcf86cd799439011"),
+    "items.product": "Laptop"  <span class="comment">// Match condition</span>
+  },
+  { $set: { "items.$.quantity": 10 } }  <span class="comment">// Update matched element</span>
+)
+
+<span class="comment">// Update array elements matching condition (filtered positional)</span>
+<span class="prompt">></span> db.products.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    $inc: { "reviews.$[elem].likes": 1 }
+  },
+  {
+    arrayFilters: [{ "elem.rating": { $gte: 4 } }]  <span class="comment">// Only 4-5 star reviews</span>
+  }
+)
+
+<span class="comment">// Push to nested array</span>
+<span class="prompt">></span> db.posts.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    $push: {
+      "comments": {
+        id: ObjectId(),
+        author: "Bob",
+        text: "Great post!",
+        createdAt: new Date(),
+        replies: []
+      }
+    }
+  }
+)
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">6.5 Upsert Operations</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Upsert</strong> = Update + Insert. If document exists, update it; 
+                    if not, insert a new one.
+                  </p>
+                </div>
+
+                <div class="mongo-command">
+<pre><span class="comment">// Upsert example</span>
+<span class="prompt">></span> db.users.updateOne(
+  { email: "newuser@example.com" },
+  {
+    $set: {
+      name: "New User",
+      age: 25,
+      createdAt: new Date()
+    }
+  },
+  { upsert: true }  <span class="comment">// Create if doesn't exist</span>
+)
+
+<span class="comment">// Upsert with $setOnInsert (only on insert, not update)</span>
+<span class="prompt">></span> db.users.updateOne(
+  { email: "user@example.com" },
+  {
+    $set: { lastSeen: new Date() },           <span class="comment">// Always update</span>
+    $setOnInsert: {                            <span class="comment">// Only on insert</span>
+      createdAt: new Date(),
+      registrationSource: "web"
+    }
+  },
+  { upsert: true }
+)
+
+<span class="comment">// Upsert with increment</span>
+<span class="prompt">></span> db.pageViews.updateOne(
+  { page: "/home" },
+  {
+    $inc: { views: 1 },
+    $setOnInsert: { createdAt: new Date() }
+  },
+  { upsert: true }
+)
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">6.6 Find and Modify</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// findOneAndUpdate - returns original document by default</span>
+<span class="prompt">></span> db.users.findOneAndUpdate(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $set: { age: 32 } }
+)
+
+<span class="comment">// Return updated document</span>
+<span class="prompt">></span> db.users.findOneAndUpdate(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  { $set: { age: 32 } },
+  { returnDocument: "after" }  <span class="comment">// or returnNewDocument: true (older syntax)</span>
+)
+
+<span class="comment">// findOneAndUpdate with upsert</span>
+<span class="prompt">></span> db.counters.findOneAndUpdate(
+  { _id: "pageViews" },
+  { $inc: { count: 1 } },
+  {
+    returnDocument: "after",
+    upsert: true
+  }
+)
+
+<span class="comment">// findOneAndReplace</span>
+<span class="prompt">></span> db.users.findOneAndReplace(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    name: "New Name",
+    email: "newemail@example.com",
+    age: 30
+  },
+  { returnDocument: "after" }
+)
+
+<span class="comment">// findOneAndDelete</span>
+<span class="prompt">></span> const deletedDoc = db.users.findOneAndDelete(
+  { _id: ObjectId("507f1f77bcf86cd799439011") }
+)
+</pre>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">6.7 Replace Operation</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>replaceOne()</strong> replaces an entire document (except _id) with a new document. 
+                    Unlike update operators, you provide a complete replacement document.
+                  </p>
+                </div>
+
+                <div class="mongo-command">
+<pre><span class="comment">// Replace entire document</span>
+<span class="prompt">></span> db.users.replaceOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    name: "Alice Johnson",
+    email: "alice.new@example.com",
+    age: 32,
+    city: "Los Angeles",
+    active: true,
+    updatedAt: new Date()
+  }
+)
+
+<span class="comment">// Note: All old fields are removed (except _id)!</span>
+<span class="comment">// ⚠️ Be careful - this is destructive!</span>
+
+<span class="comment">// Replace with upsert</span>
+<span class="prompt">></span> db.users.replaceOne(
+  { email: "newuser@example.com" },
+  {
+    name: "New User",
+    email: "newuser@example.com",
+    age: 25,
+    createdAt: new Date()
+  },
+  { upsert: true }
+)
+</pre>
+                </div>
+
+                <div class="warning-box">
+                  <strong>Important:</strong> Use <code>replaceOne()</code> with caution! It removes all fields 
+                  except _id. Use <code>updateOne()</code> with <code>$set</code> if you want to preserve existing fields.
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">6.8 Practical Update Examples</h3>
+                
+                <div class="example-box">
+                  <h5>Example 1: User Login Update</h5>
+                  <div class="mongo-command">
+<pre><span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    $set: {
+      lastLogin: new Date(),
+      "loginStats.lastIP": "192.168.1.100"
+    },
+    $inc: { "loginStats.totalLogins": 1 },
+    $push: {
+      "loginHistory": {
+        $each: [{
+          timestamp: new Date(),
+          ip: "192.168.1.100",
+          device: "Chrome on Windows"
+        }],
+        $slice: -50  <span class="comment">// Keep last 50 logins</span>
+      }
+    }
+  }
+)
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 2: Product Purchase</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Decrement stock and increment sold count</span>
+<span class="prompt">></span> db.products.updateOne(
+  {
+    _id: ObjectId("507f1f77bcf86cd799439011"),
+    stock: { $gte: 1 }  <span class="comment">// Only if in stock</span>
+  },
+  {
+    $inc: {
+      stock: -1,
+      sold: 1
+    },
+    $set: { updatedAt: new Date() }
+  }
+)
+
+<span class="comment">// Check if update was successful</span>
+if (result.modifiedCount === 0) {
+  print("Product out of stock or not found");
+}
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 3: Blog Post Like/Unlike</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Like post (add user to likes array)</span>
+<span class="prompt">></span> db.posts.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    $addToSet: { likes: ObjectId("user123") },  <span class="comment">// Add only if not exists</span>
+    $inc: { likeCount: 1 }
+  }
+)
+
+<span class="comment">// Unlike post (remove user from likes array)</span>
+<span class="prompt">></span> db.posts.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    $pull: { likes: ObjectId("user123") },
+    $inc: { likeCount: -1 }
+  }
+)
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 4: Shopping Cart Update</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Add item to cart</span>
+<span class="prompt">></span> db.users.updateOne(
+  {
+    _id: ObjectId("507f1f77bcf86cd799439011"),
+    "cart.items.productId": { $ne: "PROD-123" }  <span class="comment">// Item not in cart</span>
+  },
+  {
+    $push: {
+      "cart.items": {
+        productId: "PROD-123",
+        name: "Laptop",
+        price: 999.99,
+        quantity: 1,
+        addedAt: new Date()
+      }
+    },
+    $inc: { "cart.total": 999.99 }
+  }
+)
+
+<span class="comment">// Update quantity if item already in cart</span>
+<span class="prompt">></span> db.users.updateOne(
+  {
+    _id: ObjectId("507f1f77bcf86cd799439011"),
+    "cart.items.productId": "PROD-123"
+  },
+  {
+    $inc: {
+      "cart.items.$.quantity": 1,
+      "cart.total": 999.99
+    }
+  }
+)
+
+<span class="comment">// Remove item from cart</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    $pull: {
+      "cart.items": { productId: "PROD-123" }
+    }
+  }
+)
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 5: Bulk Status Update</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Mark all pending orders as processing</span>
+<span class="prompt">></span> db.orders.updateMany(
+  {
+    status: "pending",
+    createdAt: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) }  <span class="comment">// Older than 24h</span>
+  },
+  {
+    $set: {
+      status: "processing",
+      processedAt: new Date()
+    }
+  }
+)
+
+<span class="comment">// Apply discount to all electronics</span>
+<span class="prompt">></span> db.products.updateMany(
+  { category: "Electronics" },
+  {
+    $mul: { price: 0.9 },  <span class="comment">// 10% discount</span>
+    $set: {
+      discount: {
+        percentage: 10,
+        active: true,
+        validUntil: new Date("2025-12-31")
+      }
+    }
+  }
+)
+</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson7" class="lesson">
+            <div class="lesson-header">
+              <h2>Module 7: Delete Operations</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">7.1 Delete Methods Overview</h3>
+                
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Method</th>
+                      <th>Description</th>
+                      <th>Returns</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>deleteOne()</strong></td>
+                      <td>Delete first matching document</td>
+                      <td>Acknowledged status and delete count</td>
+                    </tr>
+                    <tr>
+                      <td><strong>deleteMany()</strong></td>
+                      <td>Delete all matching documents</td>
+                      <td>Acknowledged status and delete count</td>
+                    </tr>
+                    <tr>
+                      <td><strong>findOneAndDelete()</strong></td>
+                      <td>Delete and return document</td>
+                      <td>The deleted document</td>
+                    </tr>
+                    <tr>
+                      <td><strong>drop()</strong></td>
+                      <td>Delete entire collection</td>
+                      <td>Boolean (true/false)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>dropDatabase()</strong></td>
+                      <td>Delete entire database</td>
+                      <td>Operation result</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">7.2 Basic Delete Operations</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Delete one document by _id</span>
+<span class="prompt">></span> db.users.deleteOne({
+  _id: ObjectId("507f1f77bcf86cd799439011")
+})
+
+<span class="comment">// Response</span>
+{
+  "acknowledged": true,
+  "deletedCount": 1
+}
+
+<span class="comment">// Delete one document by field</span>
+<span class="prompt">></span> db.users.deleteOne({
+  email: "user@example.com"
+})
+
+<span class="comment">// Delete first inactive user</span>
+<span class="prompt">></span> db.users.deleteOne({
+  active: false
+})
+
+<span class="comment">// Delete all inactive users</span>
+<span class="prompt">></span> db.users.deleteMany({
+  active: false
+})
+
+<span class="comment">// Response</span>
+{
+  "acknowledged": true,
+  "deletedCount": 25
+}
+
+<span class="comment">// Delete with multiple conditions</span>
+<span class="prompt">></span> db.users.deleteMany({
+  active: false,
+  lastLogin: {
+    $lt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)  <span class="comment">// > 1 year ago</span>
+  }
+})
+
+<span class="comment">// Delete all documents in collection (dangerous!)</span>
+<span class="prompt">></span> db.users.deleteMany({})
+
+<span class="comment">// Find and delete (returns deleted document)</span>
+<span class="prompt">></span> const deletedUser = db.users.findOneAndDelete({
+  _id: ObjectId("507f1f77bcf86cd799439011")
+})
+<span class="prompt">></span> print(deletedUser.name)  <span class="comment">// Access deleted document</span>
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">7.3 Drop Collection and Database</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Drop collection</span>
+<span class="prompt">></span> db.users.drop()
+true
+
+<span class="comment">// Drop database</span>
+<span class="prompt">></span> use myDatabase
+<span class="prompt">></span> db.dropDatabase()
+{
+  "ok": 1,
+  "dropped": "myDatabase"
+}
+
+<span class="comment">// List databases to verify</span>
+<span class="prompt">></span> show dbs
+</pre>
+                </div>
+
+                <div class="warning-box">
+                  <strong>⚠️ Warning:</strong> 
+                  <ul>
+                    <li><code>drop()</code> deletes the entire collection and all its indexes</li>
+                    <li><code>dropDatabase()</code> deletes the entire database</li>
+                    <li>These operations are <strong>irreversible</strong>!</li>
+                    <li>Always backup before dropping production data</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">7.4 Practical Delete Examples</h3>
+                
+                <div class="example-box">
+                  <h5>Example 1: Cleanup Old Data</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Delete logs older than 30 days</span>
+<span class="prompt">></span> db.logs.deleteMany({
+  timestamp: {
+    $lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+  }
+})
+
+<span class="comment">// Delete temporary sessions older than 24 hours</span>
+<span class="prompt">></span> db.sessions.deleteMany({
+  expiresAt: { $lt: new Date() }
+})
+
+<span class="comment">// Delete canceled orders older than 90 days</span>
+<span class="prompt">></span> db.orders.deleteMany({
+  status: "canceled",
+  canceledAt: {
+    $lt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
+  }
+})
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 2: Conditional Deletion</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Delete products with zero stock and not restocking</span>
+<span class="prompt">></span> db.products.deleteMany({
+  stock: 0,
+  restocking: false,
+  discontinued: true
+})
+
+<span class="comment">// Delete user accounts pending verification for > 7 days</span>
+<span class="prompt">></span> db.users.deleteMany({
+  verified: false,
+  createdAt: {
+    $lt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+  }
+})
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 3: Soft Delete (Recommended for Production)</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Instead of deleting, mark as deleted</span>
+<span class="prompt">></span> db.users.updateOne(
+  { _id: ObjectId("507f1f77bcf86cd799439011") },
+  {
+    $set: {
+      deleted: true,
+      deletedAt: new Date(),
+      deletedBy: "admin@example.com"
+    }
+  }
+)
+
+<span class="comment">// Query active (non-deleted) documents</span>
+<span class="prompt">></span> db.users.find({ deleted: { $ne: true } })
+
+<span class="comment">// Permanently delete soft-deleted records after retention period</span>
+<span class="prompt">></span> db.users.deleteMany({
+  deleted: true,
+  deletedAt: {
+    $lt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)  <span class="comment">// 1 year</span>
+  }
+})
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">7.5 Delete Best Practices</h3>
+                
+                <div class="highlight-box">
+                  <p><strong>Recommendations:</strong></p>
+                  <ul>
+                    <li>✅ Always backup before large delete operations</li>
+                    <li>✅ Test delete operations on staging environment first</li>
+                    <li>✅ Use <code>deleteOne()</code> instead of <code>deleteMany()</code> when targeting specific records</li>
+                    <li>✅ Consider soft deletes for critical data (mark as deleted instead of removing)</li>
+                    <li>✅ Add <code>deletedAt</code> and <code>deletedBy</code> fields for audit trail</li>
+                    <li>✅ Use TTL indexes for automatic expiration of temporary data</li>
+                    <li>⚠️ Avoid <code>deleteMany({})</code> - be specific with filter conditions</li>
+                    <li>⚠️ Monitor delete operations in production with logging</li>
+                  </ul>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: TTL Index for Auto-Expiration</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Create TTL index to auto-delete after 24 hours</span>
+<span class="prompt">></span> db.sessions.createIndex(
+  { createdAt: 1 },
+  { expireAfterSeconds: 86400 }  <span class="comment">// 24 hours</span>
+)
+
+<span class="comment">// Documents will be automatically deleted 24 hours after createdAt</span>
+<span class="prompt">></span> db.sessions.insertOne({
+  userId: "user123",
+  token: "abc123",
+  createdAt: new Date()
+})
+</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson8" class="lesson">
+            <div class="lesson-header">
+              <h2>Module 8: Schema Validation</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">8.1 Why Schema Validation?</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    Although MongoDB is schema-less, <strong>schema validation</strong> allows you to enforce 
+                    data quality rules. Starting in MongoDB 3.6, you can use JSON Schema validation to ensure 
+                    documents meet specific requirements.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Benefits of Schema Validation:</strong></p>
+                  <ul>
+                    <li>✅ Enforce data types and formats</li>
+                    <li>✅ Require specific fields</li>
+                    <li>✅ Validate field values (min/max, enums, patterns)</li>
+                    <li>✅ Prevent invalid data from entering database</li>
+                    <li>✅ Document data structure for team</li>
+                    <li>✅ Gradual migration path (can warn instead of reject)</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">8.2 Schema Validation Before Creation</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Create collection with validation rules</span>
+<span class="prompt">></span> db.createCollection("users", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["firstName", "lastName", "email", "age"],
+      properties: {
+        firstName: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        lastName: {
+          bsonType: "string",
+          description: "must be a string and is required"
+        },
+        email: {
+          bsonType: "string",
+          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+          description: "must be a valid email and is required"
+        },
+        age: {
+          bsonType: "int",
+          minimum: 0,
+          maximum: 120,
+          description: "must be an integer between 0 and 120 and is required"
+        },
+        phone: {
+          bsonType: "string",
+          description: "must be a string if the field exists"
+        },
+        address: {
+          bsonType: "object",
+          properties: {
+            street: { bsonType: "string" },
+            city: { bsonType: "string" },
+            state: { bsonType: "string" },
+            zip: { bsonType: "string" }
+          }
+        }
+      }
+    }
+  }
+})
+
+<span class="comment">// Valid insert - will succeed</span>
+<span class="prompt">></span> db.users.insertOne({
+  firstName: "Alice",
+  lastName: "Johnson",
+  email: "alice@example.com",
+  age: NumberInt(30)
+})
+
+<span class="comment">// Invalid insert - will fail (missing required field)</span>
+<span class="prompt">></span> db.users.insertOne({
+  firstName: "Bob",
+  lastName: "Smith"
+  <span class="comment">// Missing email and age - ERROR!</span>
+})
+
+<span class="comment">// Invalid insert - will fail (wrong type)</span>
+<span class="prompt">></span> db.users.insertOne({
+  firstName: "Charlie",
+  lastName: "Brown",
+  email: "charlie@example.com",
+  age: "thirty"  <span class="comment">// String instead of int - ERROR!</span>
+})
+
+<span class="comment">// Invalid insert - will fail (invalid email format)</span>
+<span class="prompt">></span> db.users.insertOne({
+  firstName: "David",
+  lastName: "Wilson",
+  email: "not-an-email",
+  age: NumberInt(25)
+})
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">8.3 Schema Validation After Creation</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Add validation to existing collection</span>
+<span class="prompt">></span> db.runCommand({
+  collMod: "products",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "price", "category"],
+      properties: {
+        name: {
+          bsonType: "string",
+          minLength: 1,
+          maxLength: 200,
+          description: "must be a string between 1 and 200 characters"
+        },
+        price: {
+          bsonType: ["double", "decimal"],
+          minimum: 0,
+          description: "must be a positive number"
+        },
+        category: {
+          enum: ["Electronics", "Books", "Clothing", "Food", "Toys"],
+          description: "must be one of the allowed categories"
+        },
+        stock: {
+          bsonType: "int",
+          minimum: 0,
+          description: "must be a non-negative integer"
+        },
+        tags: {
+          bsonType: "array",
+          items: {
+            bsonType: "string"
+          },
+          description: "must be an array of strings"
+        }
+      }
+    }
+  }
+})
+
+<span class="comment">// Test validation</span>
+<span class="prompt">></span> db.products.insertOne({
+  name: "Laptop",
+  price: 999.99,
+  category: "Electronics",
+  stock: NumberInt(50),
+  tags: ["computers", "electronics"]
+})  <span class="comment">// ✅ Success</span>
+
+<span class="prompt">></span> db.products.insertOne({
+  name: "Book",
+  price: -10,  <span class="comment">// ❌ Negative price - ERROR!</span>
+  category: "Books"
+})
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">8.4 Validation Levels and Actions</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    MongoDB allows you to configure how strictly validation is enforced and what happens 
+                    when validation fails.
+                  </p>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Option</th>
+                      <th>Value</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="2"><strong>validationLevel</strong></td>
+                      <td><code>strict</code></td>
+                      <td>Apply validation to all inserts and updates (default)</td>
+                    </tr>
+                    <tr>
+                      <td><code>moderate</code></td>
+                      <td>Apply validation only to documents that already meet criteria</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="2"><strong>validationAction</strong></td>
+                      <td><code>error</code></td>
+                      <td>Reject invalid documents (default)</td>
+                    </tr>
+                    <tr>
+                      <td><code>warn</code></td>
+                      <td>Log warning but allow invalid documents</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="mongo-command">
+<pre><span class="comment">// Create collection with warning instead of error</span>
+<span class="prompt">></span> db.createCollection("logs", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["level", "message"],
+      properties: {
+        level: {
+          enum: ["INFO", "WARNING", "ERROR", "DEBUG"]
+        },
+        message: {
+          bsonType: "string"
+        }
+      }
+    }
+  },
+  validationAction: "warn"  <span class="comment">// Warn but don't reject</span>
+})
+
+<span class="comment">// Moderate validation level (only validate already-valid docs)</span>
+<span class="prompt">></span> db.runCommand({
+  collMod: "users",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["email"],
+      properties: {
+        email: { bsonType: "string" }
+      }
+    }
+  },
+  validationLevel: "moderate"  <span class="comment">// Don't validate existing invalid docs</span>
+})
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">8.5 Advanced Validation Examples</h3>
+                
+                <div class="example-box">
+                  <h5>Example 1: E-commerce Order Validation</h5>
+                  <div class="mongo-command">
+<pre><span class="prompt">></span> db.createCollection("orders", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["orderId", "customerId", "items", "total", "status", "createdAt"],
+      properties: {
+        orderId: {
+          bsonType: "string",
+          pattern: "^ORD-[0-9]{6}$",
+          description: "must be in format ORD-######"
+        },
+        customerId: {
+          bsonType: "objectId",
+          description: "must be a valid ObjectId"
+        },
+        items: {
+          bsonType: "array",
+          minItems: 1,
+          items: {
+            bsonType: "object",
+            required: ["productId", "name", "quantity", "price"],
+            properties: {
+              productId: { bsonType: "string" },
+              name: { bsonType: "string" },
+              quantity: {
+                bsonType: "int",
+                minimum: 1,
+                maximum: 100
+              },
+              price: {
+                bsonType: "double",
+                minimum: 0
+              }
+            }
+          }
+        },
+        total: {
+          bsonType: "double",
+          minimum: 0
+        },
+        status: {
+          enum: ["pending", "processing", "shipped", "delivered", "canceled"],
+          description: "must be a valid status"
+        },
+        shippingAddress: {
+          bsonType: "object",
+          required: ["street", "city", "state", "zip"],
+          properties: {
+            street: { bsonType: "string" },
+            city: { bsonType: "string" },
+            state: { bsonType: "string", minLength: 2, maxLength: 2 },
+            zip: { bsonType: "string", pattern: "^[0-9]{5}$" }
+          }
+        },
+        createdAt: {
+          bsonType: "date"
+        }
+      },
+      additionalProperties: false  <span class="comment">// No extra fields allowed</span>
+    }
+  }
+})
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 2: User Registration Validation</h5>
+                  <div class="mongo-command">
+<pre><span class="prompt">></span> db.createCollection("registrations", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["username", "email", "password", "age"],
+      properties: {
+        username: {
+          bsonType: "string",
+          minLength: 3,
+          maxLength: 20,
+          pattern: "^[a-zA-Z0-9_]+$",
+          description: "3-20 characters, alphanumeric and underscore only"
+        },
+        email: {
+          bsonType: "string",
+          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        },
+        password: {
+          bsonType: "string",
+          minLength: 8,
+          description: "must be at least 8 characters"
+        },
+        age: {
+          bsonType: "int",
+          minimum: 18,
+          maximum: 150,
+          description: "must be 18 or older"
+        },
+        phoneNumber: {
+          bsonType: "string",
+          pattern: "^\\+?[1-9]\\d{1,14}$",
+          description: "must be a valid international phone number"
+        },
+        agreedToTerms: {
+          bsonType: "bool",
+          enum: [true],
+          description: "must agree to terms"
+        }
+      }
+    }
+  }
+})
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 3: Blog Post Validation</h5>
+                  <div class="mongo-command">
+<pre><span class="prompt">></span> db.createCollection("posts", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["title", "content", "author", "status", "createdAt"],
+      properties: {
+        title: {
+          bsonType: "string",
+          minLength: 10,
+          maxLength: 200
+        },
+        content: {
+          bsonType: "string",
+          minLength: 100
+        },
+        author: {
+          bsonType: "object",
+          required: ["id", "name"],
+          properties: {
+            id: { bsonType: "objectId" },
+            name: { bsonType: "string" },
+            email: { bsonType: "string" }
+          }
+        },
+        status: {
+          enum: ["draft", "published", "archived"]
+        },
+        tags: {
+          bsonType: "array",
+          maxItems: 10,
+          items: { bsonType: "string" },
+          uniqueItems: true
+        },
+        views: {
+          bsonType: "int",
+          minimum: 0
+        },
+        publishedAt: {
+          bsonType: "date"
+        },
+        createdAt: {
+          bsonType: "date"
+        }
+      }
+    }
+  }
+})
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">8.6 Viewing and Removing Validation</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// View collection validation rules</span>
+<span class="prompt">></span> db.getCollectionInfos({ name: "users" })
+
+<span class="comment">// Remove validation</span>
+<span class="prompt">></span> db.runCommand({
+  collMod: "users",
+  validator: {},
+  validationLevel: "off"
+})
+
+<span class="comment">// Update validation rules</span>
+<span class="prompt">></span> db.runCommand({
+  collMod: "users",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["email"],
+      properties: {
+        email: { bsonType: "string" }
+      }
+    }
+  }
+})
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson9" class="lesson">
+            <div class="lesson-header">
+              <h2>Module 9: Data Modeling & Relationships</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">9.1 Data Modeling Approaches</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    MongoDB offers two main approaches to represent relationships between data: 
+                    <strong>Embedding</strong> (denormalization) and <strong>Referencing</strong> (normalization).
+                  </p>
+                </div>
+
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>📦 Embedding</h4>
+                    <p>Store related data in a single document</p>
+                    <p style="font-size: 0.9em; margin-top: 10px;"><strong>Pros:</strong> Fast reads, data locality</p>
+                    <p style="font-size: 0.9em;"><strong>Cons:</strong> Data duplication, large documents</p>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>🔗 Referencing</h4>
+                    <p>Store references (IDs) to related documents</p>
+                    <p style="font-size: 0.9em; margin-top: 10px;"><strong>Pros:</strong> No duplication, smaller documents</p>
+                    <p style="font-size: 0.9em;"><strong>Cons:</strong> Multiple queries needed, manual joins</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">9.2 One-to-One Relationships</h3>
+                
+                <div class="subsection">
+                  <h4 class="subsection-title">Approach 1: Embedding (Recommended for One-to-One)</h4>
+                  <div class="mongo-command">
+<pre><span class="comment">// User with embedded address</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  "name": "Alice Johnson",
+  "email": "alice@example.com",
+  "address": {  <span class="comment">// Embedded document</span>
+    "street": "123 Main St",
+    "city": "New York",
+    "state": "NY",
+    "zip": "10001",
+    "country": "USA"
+  }
+}
+
+<span class="comment">// Benefits:</span>
+<span class="comment">// ✅ Single query to get user with address</span>
+<span class="comment">// ✅ Atomic updates</span>
+<span class="comment">// ✅ Better performance</span>
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Approach 2: Referencing</h4>
+                  <div class="mongo-command">
+<pre><span class="comment">// Employee document</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john@example.com",
+  "addressId": 101  <span class="comment">// Reference to address</span>
+}
+
+<span class="comment">// Address document (separate collection)</span>
+{
+  "_id": 101,
+  "street": "456 Elm St",
+  "city": "Boston",
+  "state": "MA",
+  "zip": "02101"
+}
+
+<span class="comment">// Finding related documents (manual approach)</span>
+<span class="prompt">></span> const employee = db.employees.findOne({ firstName: "John" })
+<span class="prompt">></span> const address = db.addresses.findOne({ _id: employee.addressId })
+
+<span class="comment">// Finding with $lookup (aggregation)</span>
+<span class="prompt">></span> db.employees.aggregate([
+  {
+    $lookup: {
+      from: "addresses",           <span class="comment">// Collection to join</span>
+      localField: "addressId",     <span class="comment">// Field in employees</span>
+      foreignField: "_id",         <span class="comment">// Field in addresses</span>
+      as: "addressDetails"         <span class="comment">// Output field name</span>
+    }
+  }
+])
+
+<span class="comment">// Result:</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john@example.com",
+  "addressId": 101,
+  "addressDetails": [
+    {
+      "_id": 101,
+      "street": "456 Elm St",
+      "city": "Boston",
+      "state": "MA",
+      "zip": "02101"
+    }
+  ]
+}
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">9.3 One-to-Many Relationships</h3>
+                
+                <div class="subsection">
+                  <h4 class="subsection-title">Approach 1: Embedding (Few Related Documents)</h4>
+                  <div class="mongo-command">
+<pre><span class="comment">// Blog post with embedded comments</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  "title": "Getting Started with MongoDB",
+  "content": "MongoDB is a powerful NoSQL database...",
+  "author": "Alice Johnson",
+  "comments": [  <span class="comment">// Embedded array of comments</span>
+    {
+      "id": ObjectId("507f1f77bcf86cd799439012"),
+      "author": "Bob Smith",
+      "text": "Great tutorial!",
+      "createdAt": ISODate("2025-10-15T10:30:00Z")
+    },
+    {
+      "id": ObjectId("507f1f77bcf86cd799439013"),
+      "author": "Charlie Brown",
+      "text": "Very helpful, thanks!",
+      "createdAt": ISODate("2025-10-16T14:20:00Z")
+    }
+  ],
+  "createdAt": ISODate("2025-10-14T09:00:00Z")
+}
+
+<span class="comment">// When to use: Few related documents (< 100), data accessed together</span>
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Approach 2: Referencing (Many Related Documents)</h4>
+                  <div class="mongo-command">
+<pre><span class="comment">// User document</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  "name": "Alice Johnson",
+  "email": "alice@example.com"
+}
+
+<span class="comment">// Order documents (separate collection)</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439020"),
+  "userId": ObjectId("507f1f77bcf86cd799439011"),  <span class="comment">// Reference to user</span>
+  "orderId": "ORD-001",
+  "total": 99.99,
+  "status": "delivered",
+  "createdAt": ISODate("2025-10-01T10:00:00Z")
+}
+
+{
+  "_id": ObjectId("507f1f77bcf86cd799439021"),
+  "userId": ObjectId("507f1f77bcf86cd799439011"),
+  "orderId": "ORD-002",
+  "total": 149.99,
+  "status": "shipped",
+  "createdAt": ISODate("2025-10-10T15:30:00Z")
+}
+
+<span class="comment">// Find user's orders</span>
+<span class="prompt">></span> const user = db.users.findOne({ name: "Alice Johnson" })
+<span class="prompt">></span> const orders = db.orders.find({ userId: user._id })
+
+<span class="comment">// Using $lookup to join</span>
+<span class="prompt">></span> db.users.aggregate([
+  {
+    $match: { name: "Alice Johnson" }
+  },
+  {
+    $lookup: {
+      from: "orders",
+      localField: "_id",
+      foreignField: "userId",
+      as: "userOrders"
+    }
+  }
+])
+
+<span class="comment">// When to use: Many related documents, data not always accessed together</span>
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Approach 3: Hybrid (Array of References)</h4>
+                  <div class="mongo-command">
+<pre><span class="comment">// Author with array of book IDs</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  "name": "J.K. Rowling",
+  "bookIds": [  <span class="comment">// Array of references</span>
+    ObjectId("507f1f77bcf86cd799439020"),
+    ObjectId("507f1f77bcf86cd799439021"),
+    ObjectId("507f1f77bcf86cd799439022")
+  ]
+}
+
+<span class="comment">// Book documents</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439020"),
+  "title": "Harry Potter and the Philosopher's Stone",
+  "year": 1997
+}
+
+<span class="comment">// Find author's books</span>
+<span class="prompt">></span> const author = db.authors.findOne({ name: "J.K. Rowling" })
+<span class="prompt">></span> const books = db.books.find({ _id: { $in: author.bookIds } })
+
+<span class="comment">// When to use: Moderate number of references, need to query from parent</span>
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">9.4 Many-to-Many Relationships</h3>
+                
+                <div class="subsection">
+                  <h4 class="subsection-title">Approach 1: Array of References (Both Sides)</h4>
+                  <div class="mongo-command">
+<pre><span class="comment">// Student document</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  "name": "Alice Johnson",
+  "courseIds": [
+    ObjectId("507f1f77bcf86cd799439020"),
+    ObjectId("507f1f77bcf86cd799439021")
+  ]
+}
+
+<span class="comment">// Course document</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439020"),
+  "name": "MongoDB Fundamentals",
+  "studentIds": [
+    ObjectId("507f1f77bcf86cd799439011"),
+    ObjectId("507f1f77bcf86cd799439012")
+  ]
+}
+
+<span class="comment">// Find student's courses</span>
+<span class="prompt">></span> const student = db.students.findOne({ name: "Alice Johnson" })
+<span class="prompt">></span> const courses = db.courses.find({ _id: { $in: student.courseIds } })
+
+<span class="comment">// Find course's students</span>
+<span class="prompt">></span> const course = db.courses.findOne({ name: "MongoDB Fundamentals" })
+<span class="prompt">></span> const students = db.students.find({ _id: { $in: course.studentIds } })
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Approach 2: Junction Collection</h4>
+                  <div class="mongo-command">
+<pre><span class="comment">// Student document</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  "name": "Alice Johnson",
+  "email": "alice@example.com"
+}
+
+<span class="comment">// Course document</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439020"),
+  "name": "MongoDB Fundamentals",
+  "credits": 3
+}
+
+<span class="comment">// Enrollment collection (junction/bridge)</span>
+{
+  "_id": ObjectId("507f1f77bcf86cd799439030"),
+  "studentId": ObjectId("507f1f77bcf86cd799439011"),
+  "courseId": ObjectId("507f1f77bcf86cd799439020"),
+  "enrolledAt": ISODate("2025-09-01T00:00:00Z"),
+  "grade": "A",
+  "status": "completed"
+}
+
+<span class="comment">// Find student's courses with enrollment details</span>
+<span class="prompt">></span> db.enrollments.aggregate([
+  {
+    $match: { studentId: ObjectId("507f1f77bcf86cd799439011") }
+  },
+  {
+    $lookup: {
+      from: "courses",
+      localField: "courseId",
+      foreignField: "_id",
+      as: "courseDetails"
+    }
+  },
+  {
+    $unwind: "$courseDetails"
+  }
+])
+
+<span class="comment">// Benefits:</span>
+<span class="comment">// ✅ Store additional relationship data (grade, enrolledAt)</span>
+<span class="comment">// ✅ Easier to query and maintain</span>
+<span class="comment">// ✅ Similar to SQL junction tables</span>
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">9.5 Advanced $lookup Examples</h3>
+                
+                <div class="example-box">
+                  <h5>Example 1: Basic $lookup</h5>
+                  <div class="mongo-command">
+<pre><span class="prompt">></span> db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",          <span class="comment">// Collection to join</span>
+      localField: "customerId",   <span class="comment">// Field in orders</span>
+      foreignField: "_id",        <span class="comment">// Field in customers</span>
+      as: "customerInfo"          <span class="comment">// Output array</span>
+    }
+  }
+])
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 2: $lookup with Pipeline</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Advanced lookup with filtering and projection</span>
+<span class="prompt">></span> db.authors.aggregate([
+  {
+    $lookup: {
+      from: "books",
+      let: { authorId: "$_id" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ["$authorId", "$$authorId"] },
+                { $gte: ["$year", 2000] }  <span class="comment">// Only books after 2000</span>
+              ]
+            }
+          }
+        },
+        {
+          $project: { title: 1, year: 1 }  <span class="comment">// Only return title and year</span>
+        }
+      ],
+      as: "recentBooks"
+    }
+  }
+])
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 3: Multiple $lookup Stages</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Join multiple collections</span>
+<span class="prompt">></span> db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",
+      localField: "customerId",
+      foreignField: "_id",
+      as: "customer"
+    }
+  },
+  {
+    $unwind: "$customer"  <span class="comment">// Convert array to object</span>
+  },
+  {
+    $lookup: {
+      from: "products",
+      localField: "items.productId",
+      foreignField: "_id",
+      as: "productDetails"
+    }
+  }
+])
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">9.6 Choosing Between Embedding and Referencing</h3>
+                
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Factor</th>
+                      <th>Prefer Embedding</th>
+                      <th>Prefer Referencing</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Relationship Type</strong></td>
+                      <td>One-to-One, One-to-Few</td>
+                      <td>One-to-Many, Many-to-Many</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Data Access Pattern</strong></td>
+                      <td>Data always accessed together</td>
+                      <td>Data accessed independently</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Update Frequency</strong></td>
+                      <td>Embedded data rarely changes</td>
+                      <td>Related data changes frequently</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Document Size</strong></td>
+                      <td>Embedded data is small (< 100 items)</td>
+                      <td>Would create very large documents (> 16MB)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Data Duplication</strong></td>
+                      <td>Duplication is acceptable</td>
+                      <td>Must avoid duplication</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Query Performance</strong></td>
+                      <td>Need fast reads (single query)</td>
+                      <td>Write performance more important</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="highlight-box">
+                  <p><strong>General Guidelines:</strong></p>
+                  <ul>
+                    <li>✅ <strong>Embed</strong> when you have "contains" relationships (blog post contains comments)</li>
+                    <li>✅ <strong>Embed</strong> when child data is always viewed with parent</li>
+                    <li>✅ <strong>Reference</strong> when you have "references" relationships (order references customer)</li>
+                    <li>✅ <strong>Reference</strong> when data is shared across multiple documents</li>
+                    <li>✅ <strong>Reference</strong> when embedded array would grow unbounded</li>
+                    <li>⚠️ MongoDB has 16MB document size limit - keep this in mind!</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="lesson10" class="lesson">
+            <div class="lesson-header">
+              <h2>Module 10: Advanced Topics</h2>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">10.1 Aggregation Framework</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    The <strong>Aggregation Framework</strong> is MongoDB's powerful data processing pipeline. 
+                    It allows you to perform complex data analysis, transformations, and computations.
+                  </p>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Common Aggregation Stages</h4>
+                  <table class="comparison-table">
+                    <thead>
+                      <tr>
+                        <th>Stage</th>
+                        <th>Description</th>
+                        <th>SQL Equivalent</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>$match</strong></td>
+                        <td>Filter documents</td>
+                        <td>WHERE</td>
+                      </tr>
+                      <tr>
+                        <td><strong>$project</strong></td>
+                        <td>Select/transform fields</td>
+                        <td>SELECT</td>
+                      </tr>
+                      <tr>
+                        <td><strong>$group</strong></td>
+                        <td>Group documents and compute aggregates</td>
+                        <td>GROUP BY</td>
+                      </tr>
+                      <tr>
+                        <td><strong>$sort</strong></td>
+                        <td>Sort documents</td>
+                        <td>ORDER BY</td>
+                      </tr>
+                      <tr>
+                        <td><strong>$limit</strong></td>
+                        <td>Limit number of documents</td>
+                        <td>LIMIT</td>
+                      </tr>
+                      <tr>
+                        <td><strong>$skip</strong></td>
+                        <td>Skip documents</td>
+                        <td>OFFSET</td>
+                      </tr>
+                      <tr>
+                        <td><strong>$lookup</strong></td>
+                        <td>Join collections</td>
+                        <td>JOIN</td>
+                      </tr>
+                      <tr>
+                        <td><strong>$unwind</strong></td>
+                        <td>Deconstruct array field</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td><strong>$count</strong></td>
+                        <td>Count documents</td>
+                        <td>COUNT</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="mongo-command">
+<pre><span class="comment">// Basic aggregation example</span>
+<span class="prompt">></span> db.orders.aggregate([
+  {
+    $match: { status: "completed" }  <span class="comment">// Filter</span>
+  },
+  {
+    $group: {                         <span class="comment">// Group by customer</span>
+      _id: "$customerId",
+      totalSpent: { $sum: "$total" },
+      orderCount: { $sum: 1 },
+      avgOrderValue: { $avg: "$total" }
+    }
+  },
+  {
+    $sort: { totalSpent: -1 }        <span class="comment">// Sort by total spent</span>
+  },
+  {
+    $limit: 10                        <span class="comment">// Top 10 customers</span>
+  }
+])
+
+<span class="comment">// Result:</span>
+[
+  {
+    "_id": ObjectId("507f1f77bcf86cd799439011"),
+    "totalSpent": 2547.98,
+    "orderCount": 12,
+    "avgOrderValue": 212.33
+  },
+  ...
+]
+</pre>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 1: Sales Report by Category</h5>
+                  <div class="mongo-command">
+<pre><span class="prompt">></span> db.products.aggregate([
+  {
+    $match: {
+      "sales.date": {
+        $gte: ISODate("2025-01-01"),
+        $lt: ISODate("2025-12-31")
+      }
+    }
+  },
+  {
+    $unwind: "$sales"  <span class="comment">// Deconstruct sales array</span>
+  },
+  {
+    $group: {
+      _id: "$category",
+      totalRevenue: { $sum: { $multiply: ["$sales.quantity", "$price"] } },
+      totalUnitsSold: { $sum: "$sales.quantity" },
+      avgPrice: { $avg: "$price" }
+    }
+  },
+  {
+    $sort: { totalRevenue: -1 }
+  },
+  {
+    $project: {
+      category: "$_id",
+      totalRevenue: { $round: ["$totalRevenue", 2] },
+      totalUnitsSold: 1,
+      avgPrice: { $round: ["$avgPrice", 2] },
+      _id: 0
+    }
+  }
+])
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 2: User Activity Analysis</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Find most active users in last 30 days</span>
+<span class="prompt">></span> db.activities.aggregate([
+  {
+    $match: {
+      timestamp: {
+        $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      }
+    }
+  },
+  {
+    $group: {
+      _id: "$userId",
+      activityCount: { $sum: 1 },
+      lastActivity: { $max: "$timestamp" },
+      activityTypes: { $addToSet: "$type" }
+    }
+  },
+  {
+    $lookup: {
+      from: "users",
+      localField: "_id",
+      foreignField: "_id",
+      as: "userInfo"
+    }
+  },
+  {
+    $unwind: "$userInfo"
+  },
+  {
+    $project: {
+      userId: "$_id",
+      username: "$userInfo.username",
+      email: "$userInfo.email",
+      activityCount: 1,
+      lastActivity: 1,
+      activityTypes: 1,
+      _id: 0
+    }
+  },
+  {
+    $sort: { activityCount: -1 }
+  },
+  {
+    $limit: 20
+  }
+])
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example 3: E-commerce Analytics</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Product performance metrics</span>
+<span class="prompt">></span> db.orders.aggregate([
+  {
+    $unwind: "$items"
+  },
+  {
+    $group: {
+      _id: "$items.productId",
+      totalQuantitySold: { $sum: "$items.quantity" },
+      totalRevenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } },
+      orderCount: { $sum: 1 },
+      avgQuantityPerOrder: { $avg: "$items.quantity" },
+      uniqueCustomers: { $addToSet: "$customerId" }
+    }
+  },
+  {
+    $lookup: {
+      from: "products",
+      localField: "_id",
+      foreignField: "_id",
+      as: "productInfo"
+    }
+  },
+  {
+    $unwind: "$productInfo"
+  },
+  {
+    $project: {
+      productName: "$productInfo.name",
+      category: "$productInfo.category",
+      totalQuantitySold: 1,
+      totalRevenue: { $round: ["$totalRevenue", 2] },
+      orderCount: 1,
+      avgQuantityPerOrder: { $round: ["$avgQuantityPerOrder", 2] },
+      uniqueCustomerCount: { $size: "$uniqueCustomers" },
+      _id: 0
+    }
+  },
+  {
+    $sort: { totalRevenue: -1 }
+  }
+])
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">10.2 Indexing</h3>
+                                <div class="definition-box">
+                  <p>
+                    <strong>Indexes</strong> are special data structures that store a small portion of data in 
+                    an easy-to-traverse form. They dramatically improve query performance.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Benefits of Indexes:</strong></p>
+                  <ul>
+                    <li>⚡ Faster queries (can be 100x-1000x faster)</li>
+                    <li>📊 Efficient sorting</li>
+                    <li>🎯 Support for unique constraints</li>
+                    <li>🔍 Full-text search capabilities</li>
+                  </ul>
+                  <p><strong>Costs of Indexes:</strong></p>
+                  <ul>
+                    <li>💾 Additional disk space</li>
+                    <li>⏱️ Slower write operations (insert, update, delete)</li>
+                    <li>🔄 Maintenance overhead</li>
+                  </ul>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Index Types</h4>
+                  <table class="comparison-table">
+                    <thead>
+                      <tr>
+                        <th>Index Type</th>
+                        <th>Description</th>
+                        <th>Use Case</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Single Field</strong></td>
+                        <td>Index on one field</td>
+                        <td>Query/sort by single field</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Compound</strong></td>
+                        <td>Index on multiple fields</td>
+                        <td>Query with multiple conditions</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Multikey</strong></td>
+                        <td>Index on array fields</td>
+                        <td>Query array contents</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Text</strong></td>
+                        <td>Full-text search</td>
+                        <td>Search text content</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Geospatial</strong></td>
+                        <td>Location-based queries</td>
+                        <td>Find nearby locations</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Hashed</strong></td>
+                        <td>Hash of field value</td>
+                        <td>Even distribution for sharding</td>
+                      </tr>
+                      <tr>
+                        <td><strong>TTL</strong></td>
+                        <td>Auto-delete after time</td>
+                        <td>Expire old data automatically</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Unique</strong></td>
+                        <td>Enforce uniqueness</td>
+                        <td>Prevent duplicate values</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="mongo-command">
+<pre><span class="comment">// Create single field index</span>
+<span class="prompt">></span> db.users.createIndex({ email: 1 })  <span class="comment">// 1 = ascending, -1 = descending</span>
+
+<span class="comment">// Create unique index</span>
+<span class="prompt">></span> db.users.createIndex({ email: 1 }, { unique: true })
+
+<span class="comment">// Create compound index (multiple fields)</span>
+<span class="prompt">></span> db.orders.createIndex({ customerId: 1, orderDate: -1 })
+
+<span class="comment">// Create text index for search</span>
+<span class="prompt">></span> db.articles.createIndex({ title: "text", content: "text" })
+
+<span class="comment">// Create TTL index (auto-delete after 24 hours)</span>
+<span class="prompt">></span> db.sessions.createIndex(
+  { createdAt: 1 },
+  { expireAfterSeconds: 86400 }
+)
+
+<span class="comment">// Create index on nested field</span>
+<span class="prompt">></span> db.users.createIndex({ "address.city": 1 })
+
+<span class="comment">// Create multikey index (on array field)</span>
+<span class="prompt">></span> db.products.createIndex({ tags: 1 })
+
+<span class="comment">// Create sparse index (only index documents with field)</span>
+<span class="prompt">></span> db.users.createIndex({ phone: 1 }, { sparse: true })
+
+<span class="comment">// Create partial index (index subset of documents)</span>
+<span class="prompt">></span> db.orders.createIndex(
+  { status: 1, orderDate: -1 },
+  { partialFilterExpression: { status: { $in: ["pending", "processing"] } } }
+)
+
+<span class="comment">// List all indexes on collection</span>
+<span class="prompt">></span> db.users.getIndexes()
+
+<span class="comment">// Drop index</span>
+<span class="prompt">></span> db.users.dropIndex("email_1")
+<span class="prompt">></span> db.users.dropIndex({ email: 1 })
+
+<span class="comment">// Drop all indexes (except _id)</span>
+<span class="prompt">></span> db.users.dropIndexes()
+
+<span class="comment">// View index statistics</span>
+<span class="prompt">></span> db.users.stats().indexSizes
+
+<span class="comment">// Explain query execution (check if index is used)</span>
+<span class="prompt">></span> db.users.find({ email: "alice@example.com" }).explain("executionStats")
+</pre>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Index Performance Comparison</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Without index - full collection scan</span>
+<span class="prompt">></span> db.users.find({ email: "alice@example.com" }).explain("executionStats")
+{
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 1,
+    "executionTimeMillis": 156,
+    "totalDocsExamined": 1000000,  <span class="comment">// Scanned all docs!</span>
+    "totalKeysExamined": 0
+  }
+}
+
+<span class="comment">// Create index</span>
+<span class="prompt">></span> db.users.createIndex({ email: 1 })
+
+<span class="comment">// With index - much faster!</span>
+<span class="prompt">></span> db.users.find({ email: "alice@example.com" }).explain("executionStats")
+{
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 1,
+    "executionTimeMillis": 2,      <span class="comment">// 78x faster!</span>
+    "totalDocsExamined": 1,         <span class="comment">// Only examined 1 doc</span>
+    "totalKeysExamined": 1
+  }
+}
+</pre>
+                  </div>
+                </div>
+
+                <div class="warning-box">
+                  <strong>Index Best Practices:</strong>
+                  <ul>
+                    <li>✅ Create indexes for frequently queried fields</li>
+                    <li>✅ Use compound indexes for queries with multiple conditions</li>
+                    <li>✅ Index fields used in sorting</li>
+                    <li>✅ Monitor index usage with explain()</li>
+                    <li>⚠️ Don't over-index - each index slows writes</li>
+                    <li>⚠️ Order matters in compound indexes (query must use leftmost fields)</li>
+                    <li>⚠️ Remove unused indexes</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">10.3 Transactions</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    MongoDB supports <strong>multi-document ACID transactions</strong> (since version 4.0). 
+                    Transactions ensure that multiple operations succeed or fail together.
+                  </p>
+                </div>
+
+                <div class="mongo-command">
+<pre><span class="comment">// Start a transaction</span>
+<span class="prompt">></span> const session = db.getMongo().startSession()
+<span class="prompt">></span> session.startTransaction()
+
+<span class="comment">// Perform operations within transaction</span>
+<span class="prompt">></span> const ordersCollection = session.getDatabase("ecommerce").orders
+<span class="prompt">></span> const productsCollection = session.getDatabase("ecommerce").products
+
+<span class="comment">// Deduct inventory</span>
+<span class="prompt">></span> productsCollection.updateOne(
+  { _id: "PROD-123", stock: { $gte: 1 } },
+  { $inc: { stock: -1 } },
+  { session: session }
+)
+
+<span class="comment">// Create order</span>
+<span class="prompt">></span> ordersCollection.insertOne(
+  {
+    orderId: "ORD-001",
+    productId: "PROD-123",
+    quantity: 1,
+    customerId: "USER-456",
+    createdAt: new Date()
+  },
+  { session: session }
+)
+
+<span class="comment">// Commit transaction (all operations succeed)</span>
+<span class="prompt">></span> session.commitTransaction()
+<span class="prompt">></span> session.endSession()
+
+<span class="comment">// Or abort transaction (rollback all operations)</span>
+<span class="comment">// session.abortTransaction()</span>
+<span class="comment">// session.endSession()</span>
+</pre>
+                </div>
+
+                <div class="example-box">
+                  <h5>Example: Bank Transfer with Transaction</h5>
+                  <div class="mongo-command">
+<pre><span class="comment">// Transfer money between accounts</span>
+<span class="prompt">></span> const session = db.getMongo().startSession()
+<span class="prompt">></span> session.startTransaction()
+
+try {
+  const accounts = session.getDatabase("bank").accounts
+  
+  <span class="comment">// Deduct from sender</span>
+  const deductResult = accounts.updateOne(
+    { accountId: "ACC-001", balance: { $gte: 100 } },
+    { $inc: { balance: -100 } },
+    { session: session }
+  )
+  
+  if (deductResult.modifiedCount === 0) {
+    throw new Error("Insufficient funds")
+  }
+  
+  <span class="comment">// Add to recipient</span>
+  accounts.updateOne(
+    { accountId: "ACC-002" },
+    { $inc: { balance: 100 } },
+    { session: session }
+  )
+  
+  <span class="comment">// Both operations succeed</span>
+  session.commitTransaction()
+  print("Transfer successful")
+  
+} catch (error) {
+  <span class="comment">// Rollback if any operation fails</span>
+  session.abortTransaction()
+  print("Transfer failed: " + error.message)
+  
+} finally {
+  session.endSession()
+}
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">10.4 Text Search</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Create text index</span>
+<span class="prompt">></span> db.articles.createIndex({ title: "text", content: "text" })
+
+<span class="comment">// Basic text search</span>
+<span class="prompt">></span> db.articles.find({ $text: { $search: "mongodb" } })
+
+<span class="comment">// Search for phrase</span>
+<span class="prompt">></span> db.articles.find({ $text: { $search: "\"NoSQL database\"" } })
+
+<span class="comment">// Search with multiple terms (OR)</span>
+<span class="prompt">></span> db.articles.find({ $text: { $search: "mongodb nosql" } })
+
+<span class="comment">// Search excluding terms</span>
+<span class="prompt">></span> db.articles.find({ $text: { $search: "mongodb -sql" } })
+
+<span class="comment">// Text search with relevance score</span>
+<span class="prompt">></span> db.articles.find(
+  { $text: { $search: "mongodb" } },
+  { score: { $meta: "textScore" } }
+).sort({ score: { $meta: "textScore" } })
+
+<span class="comment">// Case-insensitive search</span>
+<span class="prompt">></span> db.articles.find({ $text: { $search: "MongoDB", $caseSensitive: false } })
+
+<span class="comment">// Language-specific search</span>
+<span class="prompt">></span> db.articles.find({ $text: { $search: "database", $language: "english" } })
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">10.5 Geospatial Queries</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Create 2dsphere index for location data</span>
+<span class="prompt">></span> db.places.createIndex({ location: "2dsphere" })
+
+<span class="comment">// Insert location data</span>
+<span class="prompt">></span> db.places.insertOne({
+  name: "Central Park",
+  location: {
+    type: "Point",
+    coordinates: [-73.968285, 40.785091]  <span class="comment">// [longitude, latitude]</span>
+  }
+})
+
+<span class="comment">// Find places near a location</span>
+<span class="prompt">></span> db.places.find({
+  location: {
+    $near: {
+      $geometry: {
+        type: "Point",
+        coordinates: [-73.97, 40.78]
+      },
+      $maxDistance: 1000  <span class="comment">// meters</span>
+    }
+  }
+})
+
+<span class="comment">// Find places within radius</span>
+<span class="prompt">></span> db.places.find({
+  location: {
+    $geoWithin: {
+      $centerSphere: [[-73.97, 40.78], 5/3963.2]  <span class="comment">// 5 miles</span>
+    }
+  }
+})
+
+<span class="comment">// Find places within polygon</span>
+<span class="prompt">></span> db.places.find({
+  location: {
+    $geoWithin: {
+      $geometry: {
+        type: "Polygon",
+        coordinates: [[
+          [-73.99, 40.79],
+          [-73.95, 40.79],
+          [-73.95, 40.76],
+          [-73.99, 40.76],
+          [-73.99, 40.79]
+        ]]
+      }
+    }
+  }
+})
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">10.6 Change Streams</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Change Streams</strong> allow applications to access real-time data changes 
+                    without polling. Perfect for reactive applications and event-driven architectures.
+                  </p>
+                </div>
+
+                <div class="mongo-command">
+<pre><span class="comment">// Watch for changes in collection</span>
+<span class="prompt">></span> const changeStream = db.orders.watch()
+
+<span class="comment">// Process changes</span>
+<span class="prompt">></span> changeStream.on("change", (change) => {
+  print(JSON.stringify(change))
+})
+
+<span class="comment">// Watch specific operations</span>
+<span class="prompt">></span> const changeStream = db.orders.watch([
+  { $match: { operationType: "insert" } }
+])
+
+<span class="comment">// Watch with filter</span>
+<span class="prompt">></span> const changeStream = db.orders.watch([
+  {
+    $match: {
+      "fullDocument.status": "pending",
+      "fullDocument.total": { $gte: 1000 }
+    }
+  }
+])
+
+<span class="comment">// Close change stream</span>
+<span class="prompt">></span> changeStream.close()
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">10.7 Performance Optimization Tips</h3>
+                
+                <div class="component-grid">
+                  <div class="component-card">
+                    <h4>1️⃣ Use Indexes</h4>
+                    <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
+                      Create indexes on frequently queried fields. Use compound indexes for multi-field queries.
+                    </p>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>2️⃣ Projection</h4>
+                    <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
+                      Only return needed fields. Reduces network transfer and processing time.
+                    </p>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>3️⃣ Limit Results</h4>
+                    <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
+                      Use limit() and pagination. Don't load entire collections.
+                    </p>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>4️⃣ Embed vs Reference</h4>
+                    <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
+                      Embed data accessed together. Reference data accessed independently.
+                    </p>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>5️⃣ Aggregation</h4>
+                    <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
+                      Use $match early in pipeline. Use indexes in aggregation.
+                    </p>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>6️⃣ Connection Pooling</h4>
+                    <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
+                      Reuse connections. Configure appropriate pool size.
+                    </p>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>7️⃣ Write Concerns</h4>
+                    <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
+                      Adjust based on requirements. Lower for logs, higher for critical data.
+                    </p>
+                  </div>
+                  
+                  <div class="component-card">
+                    <h4>8️⃣ Monitor Performance</h4>
+                    <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
+                      Use explain(), database profiler, and monitoring tools regularly.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">10.8 Common MongoDB Patterns</h3>
+                
+                <div class="example-box">
+                  <h5>Pattern 1: Polymorphic Pattern</h5>
+                  <div class="content-box">
+                    <p>Store similar but different types of documents in same collection.</p>
+                    <div class="code-box">
+<pre>{
+  "_id": 1,
+  "type": "book",
+  "title": "MongoDB Guide",
+  "author": "John Doe",
+  "pages": 350
+}
+
+{
+  "_id": 2,
+  "type": "video",
+  "title": "MongoDB Tutorial",
+  "duration": 7200,
+  "resolution": "1080p"
+}
+
+{
+  "_id": 3,
+  "type": "article",
+  "title": "NoSQL Basics",
+  "wordCount": 2500,
+  "readTime": 12
+}
+
+<span class="comment">// Query specific type</span>
+db.content.find({ type: "book" })
+</pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Pattern 2: Bucket Pattern</h5>
+                  <div class="content-box">
+                    <p>Group time-series data into buckets to reduce document count.</p>
+                    <div class="code-box">
+<pre><span class="comment">// Instead of one document per sensor reading:</span>
+{ sensorId: "A1", temp: 20.5, timestamp: ISODate("2025-10-18T10:00:00Z") }
+{ sensorId: "A1", temp: 21.0, timestamp: ISODate("2025-10-18T10:01:00Z") }
+...
+
+<span class="comment">// Use bucket pattern (hourly bucket):</span>
+{
+  sensorId: "A1",
+  date: ISODate("2025-10-18T10:00:00Z"),
+  readings: [
+    { temp: 20.5, minute: 0 },
+    { temp: 21.0, minute: 1 },
+    { temp: 21.2, minute: 2 },
+    ...
+  ],
+  count: 60,
+  avgTemp: 21.5
+}
+</pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Pattern 3: Computed Pattern</h5>
+                  <div class="content-box">
+                    <p>Pre-calculate expensive computations and store results.</p>
+                    <div class="code-box">
+<pre>{
+  "_id": "PROD-123",
+  "name": "Laptop",
+  "reviews": [...],  <span class="comment">// Array of review objects</span>
+  
+  <span class="comment">// Computed fields (updated on review submission)</span>
+  "reviewCount": 247,
+  "avgRating": 4.6,
+  "ratingDistribution": {
+    "5": 150,
+    "4": 67,
+    "3": 20,
+    "2": 7,
+    "1": 3
+  }
+}
+
+<span class="comment">// Fast queries without aggregation!</span>
+db.products.find({ avgRating: { $gte: 4.5 } })
+</pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Pattern 4: Extended Reference Pattern</h5>
+                  <div class="content-box">
+                    <p>Store most-accessed fields with reference for better performance.</p>
+                    <div class="code-box">
+<pre><span class="comment">// Order document with extended customer reference</span>
+{
+  "_id": ObjectId("..."),
+  "orderId": "ORD-001",
+  "customer": {
+    "id": ObjectId("507f1f77bcf86cd799439011"),
+    "name": "Alice Johnson",        <span class="comment">// Frequently needed</span>
+    "email": "alice@example.com"    <span class="comment">// Frequently needed</span>
+    <span class="comment">// Full customer details in customers collection</span>
+  },
+  "items": [...],
+  "total": 299.99
+}
+
+<span class="comment">// Benefits:</span>
+<span class="comment">// ✅ No join needed for common queries (customer name/email)</span>
+<span class="comment">// ✅ Can still fetch full customer details if needed</span>
+</pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">10.9 Useful Commands Reference</h3>
+                
+                <div class="mongo-command">
+<pre><span class="comment">// Database commands</span>
+<span class="prompt">></span> db.stats()                    <span class="comment">// Database statistics</span>
+<span class="prompt">></span> db.serverStatus()             <span class="comment">// Server status</span>
+<span class="prompt">></span> db.currentOp()                <span class="comment">// Current operations</span>
+
+<span class="comment">// Collection commands</span>
+<span class="prompt">></span> db.collection.stats()         <span class="comment">// Collection statistics</span>
+<span class="prompt">></span> db.collection.dataSize()      <span class="comment">// Data size</span>
+<span class="prompt">></span> db.collection.totalIndexSize() <span class="comment">// Index size</span>
+<span class="prompt">></span> db.collection.renameCollection("newName") <span class="comment">// Rename collection</span>
+
+<span class="comment">// Performance profiling</span>
+<span class="prompt">></span> db.setProfilingLevel(2)       <span class="comment">// Profile all operations</span>
+<span class="prompt">></span> db.setProfilingLevel(1, 100)  <span class="comment">// Profile slow operations (>100ms)</span>
+<span class="prompt">></span> db.system.profile.find().limit(5).sort({ ts: -1 }).pretty()
+
+<span class="comment">// Backup and restore (command line)</span>
+$ mongodump --db myDatabase --out /backup/
+$ mongorestore --db myDatabase /backup/myDatabase/
+
+<span class="comment">// Import/Export JSON</span>
+$ mongoexport --db myDatabase --collection users --out users.json
+$ mongoimport --db myDatabase --collection users --file users.json
+
+<span class="comment">// Validate collection</span>
+<span class="prompt">></span> db.collection.validate()
+
+<span class="comment">// Repair database</span>
+<span class="prompt">></span> db.repairDatabase()
+
+<span class="comment">// Compact collection (reclaim space)</span>
+<span class="prompt">></span> db.runCommand({ compact: "collectionName" })
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }
+
+      function closeSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      }
+
+      // Close sidebar when clicking a link
+      document.querySelectorAll('.sidebar a').forEach(link => {
+        link.addEventListener('click', () => {
+          closeSidebar();
+        });
+      });
+    </script>
+  </body>
+</html>
