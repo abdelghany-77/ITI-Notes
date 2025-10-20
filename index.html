@@ -289,6 +289,10 @@
         background: linear-gradient(180deg, #68a063, #5a8f56);
       }
 
+      .course-card.mysql::before {
+        background: linear-gradient(180deg, #00758f, #00546b);
+      }
+
       .course-icon-section {
         flex: 0 0 120px;
         display: flex;
@@ -383,6 +387,10 @@
 
       .course-card.nodejs .course-icon {
         color: #68a063;
+      }
+
+      .course-card.mysql .course-icon {
+        color: #00758f;
       }
 
       .course-title {
@@ -533,6 +541,10 @@
 
       .course-card.nodejs .course-link {
         background: linear-gradient(135deg, #68a063, #5a8f56);
+      }
+
+      .course-card.mysql .course-link {
+        background: linear-gradient(135deg, #00758f, #00546b);
       }
 
       .course-link:hover {
@@ -1054,6 +1066,9 @@
           >
           <a href="Notes/nodejs-web-development-notes.html" class="quick-link"
             >🟢 Node.js Backend</a
+          >
+          <a href="Notes/mysql-notes.html" class="quick-link"
+            >🐬 MySQL Database</a
           >
         </div>
       </div>
@@ -1650,6 +1665,36 @@
                 href="Notes/nodejs-web-development-notes.html"
                 class="course-link"
               >
+                Access Notes
+              </a>
+            </div>
+          </div>
+
+          <div
+            class="course-card mysql"
+            data-category="management"
+            data-keywords="mysql database sql relational rdbms queries joins indexing stored procedures triggers views transactions normalization mariadb"
+          >
+            <div class="course-tags">
+              <span class="course-tag">Management</span>
+              <span class="course-tag">Database</span>
+            </div>
+            <div class="course-icon-section">
+              <span class="course-icon">🐬</span>
+            </div>
+            <div class="course-main-content">
+              <div class="course-header">
+                <h3 class="course-title">MySQL Database</h3>
+                <p class="course-subtitle">Relational Database Management System</p>
+              </div>
+              <div class="course-stats">
+                <span class="course-stat">📚 SQL Mastery</span>
+                <span class="course-stat">⏱️ RDBMS</span>
+                <span class="course-stat">🎯 Data Management</span>
+              </div>
+            </div>
+            <div class="course-action-section">
+              <a href="Notes/mysql-notes.html" class="course-link">
                 Access Notes
               </a>
             </div>
