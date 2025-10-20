@@ -371,6 +371,7 @@
         font-family: 'Courier New', monospace;
         overflow-x: auto;
         border-left: 4px solid #005a6f;
+        font-size: 19px;
       }
 
       .sql-command pre {
@@ -674,33 +675,33 @@
                 <h3 class="section-title">1.2 MySQL Architecture</h3>
                 
                 <div class="code-box">
-<pre>
+<pre style = "text-align:center;">
 <strong>MySQL Architecture Layers:</strong>
 
 ┌─────────────────────────────────────────────────────────┐
 │              Client Layer (Applications)                │
-│  MySQL Workbench, PHP, Python, Java, Node.js, etc.     │
+│  MySQL Workbench, PHP, Python, Java, Node.js, etc.      │
 └────────────────────┬────────────────────────────────────┘
-                     │
+                     
 ┌────────────────────┴────────────────────────────────────┐
 │                Connection Pool                          │
 │  (Manages client connections, authentication)           │
 └────────────────────┬────────────────────────────────────┘
-                     │
+                     
 ┌────────────────────┴────────────────────────────────────┐
 │               SQL Interface Layer                       │
 │  - Query Parser (syntax check)                          │
 │  - Query Optimizer (find best execution plan)           │
 │  - Query Executor                                       │
 └────────────────────┬────────────────────────────────────┘
-                     │
+                     
 ┌────────────────────┴────────────────────────────────────┐
 │                 Storage Engine Layer                    │
 │  InnoDB (default), MyISAM, Memory, Archive, etc.        │
 │  - Handles data storage and retrieval                   │
 │  - Manages transactions, locking, indexing              │
 └────────────────────┬────────────────────────────────────┘
-                     │
+                     
 ┌────────────────────┴────────────────────────────────────┐
 │            Physical Storage (File System)               │
 │  Data files, Index files, Log files                     │
@@ -1125,44 +1126,44 @@ Bye
                 <h3 class="section-title">2.2 Entity-Relationship (ER) Diagram</h3>
                 
                 <div class="code-box">
-<pre>
+<pre style = "text-align:center;">
 <strong>ER Diagram Components:</strong>
 
 ┌─────────────────────────────────────────────────────────┐
 │                    ENTITY (Table)                       │
-│  Represents a real-world object (Customer, Product)    │
+│  Represents a real-world object (Customer, Product)     │
 │                                                         │
-│  ┌─────────────┐                                       │
-│  │  CUSTOMER   │                                       │
-│  ├─────────────┤                                       │
-│  │ customer_id │ ← Primary Key (PK)                    │
-│  │ name        │                                       │
-│  │ email       │                                       │
-│  └─────────────┘                                       │
+│  ┌─────────────┐                                        │
+│  │  CUSTOMER   │                                        │
+│  ├─────────────┤                                        │
+│  │ customer_id │ ← Primary Key (PK)                     │
+│  │ name        │                                        │
+│  │ email       │                                        │
+│  └─────────────┘                                        │
 └─────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────┐
 │                   RELATIONSHIP                          │
-│  Connects entities (Customer PLACES Order)             │
+│  Connects entities (Customer PLACES Order)              │
 │                                                         │
-│  Customer ────< Places >──── Order                     │
-│   (One)                      (Many)                    │
+│  Customer ────< Places >──── Order                      │
+│   (One)                      (Many)                     │
 │                                                         │
-│  Cardinality Types:                                    │
-│  • One-to-One (1:1)                                    │
-│  • One-to-Many (1:N) - Most common                    │
-│  • Many-to-Many (M:N) - Requires junction table       │
+│  Cardinality Types:                                     │
+│  • One-to-One (1:1)                                     │
+│  • One-to-Many (1:N) - Most common                      │
+│  • Many-to-Many (M:N) - Requires junction table         │
 └─────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────┐
 │                    ATTRIBUTE (Column)                   │
-│  Properties of an entity                               │
+│  Properties of an entity                                │
 │                                                         │
-│  Types:                                                │
-│  • Simple: Cannot be divided (age, name)              │
-│  • Composite: Can be divided (address → street, city) │
-│  • Derived: Calculated from other attributes (age)    │
-│  • Multi-valued: Multiple values (phone numbers)      │
+│  Types:                                                 │
+│  • Simple: Cannot be divided (age, name)                │
+│  • Composite: Can be divided (address → street, city)   │
+│  • Derived: Calculated from other attributes (age)      │
+│  • Multi-valued: Multiple values (phone numbers)        │
 └─────────────────────────────────────────────────────────┘
 </pre>
                 </div>
@@ -1170,7 +1171,7 @@ Bye
                 <div class="example-box">
                   <h5>Example: E-commerce Database Design</h5>
                   <div class="code-box">
-<pre>
+<pre style = "text-align:center;">
 CUSTOMERS                    ORDERS                      PRODUCTS
 ┌─────────────┐             ┌─────────────┐            ┌─────────────┐
 │ customer_id │◄─────┐      │ order_id    │      ┌────►│ product_id  │
@@ -1188,7 +1189,7 @@ CUSTOMERS                    ORDERS                      PRODUCTS
                            │ quantity    │
                            │ price       │
                            └─────────────┘
-                         (Junction Table)
+                          (Junction Table)
 </pre>
                   </div>
                 </div>
@@ -1270,7 +1271,7 @@ CUSTOMERS                    ORDERS                      PRODUCTS
                 <div class="example-box">
                   <h5>Example: Normalization Process</h5>
                   <div class="code-box">
-<pre><span class="comment">-- Unnormalized (0NF)</span>
+<pre style = "text-align:center;"><span class="comment">-- Unnormalized (0NF)</span>
 Orders Table:
 ┌──────────┬───────────┬──────────────────────────────────┬─────────┐
 │ order_id │ customer  │ products                         │ total   │
@@ -3514,7 +3515,7 @@ FROM products;
                 </div>
 
                 <div class="code-box">
-<pre>
+<pre style = "text-align:center;">
 <strong>Join Visualization:</strong>
 
 Table A (Employees)          Table B (Departments)
@@ -4070,7 +4071,7 @@ ORDER BY total_revenue DESC;
                 </div>
 
                 <div class="code-box">
-<pre>
+<pre style = "text-align:center;">
 <strong>B-Tree Index Structure (Most Common):</strong>
 
                     Root Node
