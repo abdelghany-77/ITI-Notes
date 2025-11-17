@@ -1,0 +1,3420 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PHP Programming Study Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* Layout Container */
+      .layout-container {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100vh;
+        background: linear-gradient(
+          180deg,
+          rgba(155, 89, 182, 0.95) 0%,
+          rgba(142, 68, 173, 0.95) 100%
+        );
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .sidebar-header {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1002;
+      }
+
+      .sidebar-header h3 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+        font-weight: 700;
+      }
+
+      .sidebar-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .sidebar-content {
+        padding: 20px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar li {
+        margin-bottom: 8px;
+      }
+
+      .sidebar a {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 15px;
+        display: block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+      }
+
+      .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-left-color: #f39c12;
+        transform: translateX(5px);
+      }
+
+      .sidebar a.active {
+        background: rgba(255, 255, 255, 0.2);
+        border-left-color: #f39c12;
+      }
+
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        padding: 20px;
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+        overflow-x: auto;
+      }
+
+      .main-content.sidebar-open {
+        margin-left: 300px;
+      }
+
+      /* Header */
+      .header {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Toggle Button */
+      .sidebar-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        font-size: 18px;
+        box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
+        transition: all 0.3s ease;
+        z-index: 1002;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .sidebar-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
+      }
+
+      /* Back to Main Page Button */
+      .back-to-main-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 14px;
+        box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
+        transition: all 0.3s ease;
+        z-index: 1002;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-to-main-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
+        text-decoration: none;
+        color: white;
+      }
+
+      .back-to-main-btn span {
+        font-size: 16px;
+      }
+
+      /* Course Outline */
+      .course-outline {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        border-left: 5px solid #9b59b6;
+      }
+
+      .course-outline h2 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
+
+      .lesson-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .lesson-item {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-left: 4px solid #9b59b6;
+      }
+
+      .lesson-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Lesson Sections */
+      .lesson {
+        background: white;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .lesson:hover {
+        transform: translateY(-5px);
+      }
+
+      .lesson-header {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        color: white;
+        padding: 20px;
+        position: relative;
+      }
+
+      .lesson-header::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #9b59b6, #f39c12, #2ecc71, #3498db);
+      }
+
+      .lesson-header h2 {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+      }
+
+      .lesson-content {
+        padding: 25px;
+      }
+
+      .section {
+        margin-bottom: 25px;
+      }
+
+      .section-title {
+        color: #2c3e50;
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #ecf0f1;
+        position: relative;
+      }
+
+      .section-title::before {
+        content: "▶";
+        color: #9b59b6;
+        margin-right: 10px;
+        font-size: 0.8em;
+      }
+
+      .subsection {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+
+      .subsection-title {
+        color: #34495e;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      /* Content Boxes */
+      .definition-box {
+        background: linear-gradient(135deg, #e8f5e8, #d4f4d4);
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #2ecc71;
+        margin-bottom: 15px;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #f39c12;
+        margin-bottom: 15px;
+      }
+
+      .warning-box {
+        background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #f39c12;
+        margin-bottom: 15px;
+      }
+
+      .code-box {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 15px 0;
+        font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+        overflow-x: auto;
+        position: relative;
+        border: 1px solid #3e3e3e;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .code-box::before {
+        content: "PHP";
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        background: #007acc;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-size: 0.75em;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+      }
+
+      .code-box pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        line-height: 1.5;
+        font-size: 1.5em;
+      }
+
+      .example-box {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #ecf0f1;
+        margin-bottom: 15px;
+      }
+
+      .example-box h5 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+
+      /* Component Grid */
+      .component-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin: 15px 0;
+      }
+
+      .component-card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-top: 3px solid #9b59b6;
+        transition: transform 0.3s ease;
+      }
+
+      .component-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .component-card h4 {
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+      }
+
+      .component-card p {
+        color: #7f8c8d;
+        font-size: 0.9em;
+        line-height: 1.4;
+      }
+
+      /* Content Box */
+      .content-box {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #ecf0f1;
+        margin-bottom: 15px;
+      }
+
+      /* Lists */
+      .feature-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        margin: 15px 0;
+      }
+
+      .feature-item {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: 500;
+      }
+
+      /* Tables */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ecf0f1;
+      }
+
+      .data-table th {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        color: white;
+        font-weight: 600;
+      }
+
+      .data-table tr:nth-child(even) {
+        background: #f8f9fa;
+      }
+
+      .data-table tr:hover {
+        background: #e8f5e8;
+      }
+
+      /* Footer */
+      .footer {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        text-align: center;
+        padding: 25px;
+        border-radius: 12px;
+        margin-top: 30px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 250px;
+        }
+
+        .main-content.sidebar-open {
+          margin-left: 250px;
+        }
+
+        .header h1 {
+          font-size: 2em;
+        }
+
+        .lesson-list {
+          grid-template-columns: 1fr;
+        }
+
+        .component-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .feature-list {
+          grid-template-columns: 1fr;
+        }
+
+        .data-table {
+          font-size: 0.9em;
+        }
+
+        .data-table th,
+        .data-table td {
+          padding: 8px 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .sidebar {
+          width: 200px;
+        }
+
+        .main-content.sidebar-open {
+          margin-left: 200px;
+        }
+
+        .header {
+          padding: 20px;
+        }
+
+        .header h1 {
+          font-size: 1.8em;
+        }
+
+        .lesson-header h2 {
+          font-size: 1.5em;
+        }
+      }
+
+      /* Scroll to Top Button */
+      .scroll-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+        box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .scroll-to-top.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .scroll-to-top:hover {
+        background: linear-gradient(135deg, #8e44ad, #6c3483);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
+      }
+
+      /* VS Code Dark Theme Syntax Highlighting */
+      .php-keyword {
+        color: #569cd6;
+        font-weight: bold;
+      }
+
+      .php-string {
+        color: #ce9178;
+      }
+
+      .php-comment {
+        color: #6a9955;
+        font-style: italic;
+      }
+
+      .php-variable {
+        color: #9cdcfe;
+      }
+
+      .php-function {
+        color: #dcdcaa;
+      }
+
+      .php-class {
+        color: #4ec9b0;
+      }
+
+      .php-number {
+        color: #b5cea8;
+      }
+
+      .php-operator {
+        color: #d4d4d4;
+      }
+
+      .php-property {
+        color: #9cdcfe;
+      }
+
+      .php-method {
+        color: #dcdcaa;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3>📚 PHP Study Guide</h3>
+        <p>Complete Programming Course</p>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li><a href="#introduction">Introduction to PHP</a></li>
+          <li><a href="#basics">PHP Basics & Syntax</a></li>
+          <li><a href="#variables">Variables & Data Types</a></li>
+          <li><a href="#operators">Operators & Expressions</a></li>
+          <li><a href="#control">Control Structures</a></li>
+          <li><a href="#functions">Functions</a></li>
+          <li><a href="#closures">Closures</a></li>
+          <li><a href="#oop">Object-Oriented PHP</a></li>
+          <li><a href="#inheritance">Inheritance</a></li>
+          <li><a href="#abstract-interfaces">Abstract Classes & Interfaces</a></li>
+          <li><a href="#advanced-oop">Advanced OOP Concepts</a></li>
+          <li><a href="#traits">Traits</a></li>
+          <li><a href="#namespaces">📦 Namespaces</a></li>
+          <li><a href="#error-handling">🚨 Error Handling</a></li>
+          <li><a href="#file-operations">📁 File Operations</a></li>
+          <li><a href="#sessions-cookies">🍪 Sessions & Cookies</a></li>
+          <li><a href="#database-integration">🗄️ Database Integration</a></li>
+          <li><a href="#security">🔒 Security Best Practices</a></li>
+          <li><a href="#frameworks">🚀 PHP Frameworks</a></li>
+          <li><a href="#projects">💡 Practical Projects</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="layout-container">
+      <main class="main-content" id="mainContent">
+        <!-- Toggle Button -->
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+        <!-- Back to Main Page Button -->
+        <a href="../index.html" class="back-to-main-btn">
+          <span>🏠</span>
+        </a>
+
+        <!-- Header -->
+        <header class="header">
+          <h1>🐘 PHP Programming Study Notes</h1>
+          <p>Complete Guide to Server-Side Web Development</p>
+        </header>
+
+        <!-- Course Outline -->
+        <section class="course-outline">
+          <h2>📋 Course Overview</h2>
+          <p>
+            This comprehensive PHP study guide covers everything from basic syntax
+            to advanced concepts like OOP, database integration, and security.
+            Perfect for beginners and intermediate developers.
+          </p>
+
+          <div class="lesson-list">
+            <div class="lesson-item">
+              <h3>Day 1-2: PHP Fundamentals</h3>
+              <p>Installation, syntax, variables, operators, control structures</p>
+            </div>
+            <div class="lesson-item">
+              <h3>Day 3: Functions & Closures</h3>
+              <p>User-defined functions, closures, variable arguments, call by reference</p>
+            </div>
+            <div class="lesson-item">
+              <h3>Day 4: OOP Basics</h3>
+              <p>Classes, objects, access modifiers, constructors, static methods</p>
+            </div>
+            <div class="lesson-item">
+              <h3>Day 5: Advanced OOP</h3>
+              <p>Inheritance, polymorphism, abstract classes, interfaces, traits, namespaces</p>
+            </div>
+            <div class="lesson-item">
+              <h3>Advanced Topics</h3>
+              <p>Error handling, file operations, sessions & cookies, database integration</p>
+            </div>
+            <div class="lesson-item">
+              <h3>Security & Frameworks</h3>
+              <p>Security best practices, PHP frameworks, practical projects</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 1: Introduction to PHP -->
+        <section class="lesson" id="introduction">
+          <div class="lesson-header">
+            <h2>📖 Lesson 1: Introduction to PHP</h2>
+            <p>What is PHP and why it's important for web development</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">1.1 What is PHP?</h3>
+              <div class="definition-box">
+                <p>
+                  <strong>PHP (Hypertext Preprocessor)</strong> is a popular open-source
+                  server-side scripting language designed specifically for web development.
+                  It can be embedded directly into HTML and is used to create dynamic web pages.
+                </p>
+              </div>
+
+              <div class="highlight-box">
+                <p><strong>Key Features:</strong></p>
+                <ul>
+                  <li>Server-side scripting language</li>
+                  <li>Open-source and free</li>
+                  <li>Cross-platform compatibility</li>
+                  <li>Large community and ecosystem</li>
+                  <li>Easy integration with databases</li>
+                  <li>Rich built-in functions</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">1.2 PHP vs Other Languages</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>PHP</h4>
+                  <p>Server-side, web-focused, easy to learn, vast hosting support</p>
+                </div>
+                <div class="component-card">
+                  <h4>JavaScript (Node.js)</h4>
+                  <p>Full-stack capable, event-driven, single-threaded with async</p>
+                </div>
+                <div class="component-card">
+                  <h4>Python</h4>
+                  <p>General-purpose, clean syntax, strong in data science and AI</p>
+                </div>
+                <div class="component-card">
+                  <h4>Java</h4>
+                  <p>Enterprise-grade, strongly typed, excellent for large applications</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">1.3 Setting Up PHP Environment</h3>
+              <div class="subsection">
+                <h4 class="subsection-title">XAMPP Installation</h4>
+                <div class="content-box">
+                  <p>XAMPP is a free and open-source cross-platform web server solution stack package.</p>
+                  <ol>
+                    <li>Download XAMPP from apachefriends.org</li>
+                    <li>Run the installer as administrator</li>
+                    <li>Start Apache and MySQL services</li>
+                    <li>Place PHP files in htdocs folder</li>
+                    <li>Access via localhost in browser</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h4 class="subsection-title">Basic PHP File Structure</h4>
+                <div class="example-box">
+                  <h5>hello.php</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;My First PHP Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;
+        &lt;?php
+            echo "Hello, World!";
+        ?&gt;
+    &lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 2: PHP Basics & Syntax -->
+        <section class="lesson" id="basics">
+          <div class="lesson-header">
+            <h2>💻 Lesson 2: PHP Basics & Syntax</h2>
+            <p>Understanding PHP syntax, comments, and basic structure</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">2.1 PHP Syntax Basics</h3>
+              <div class="definition-box">
+                <p>
+                  PHP code is enclosed within <code>&lt;?php ?&gt;</code> tags and can be embedded
+                  anywhere in HTML. PHP statements end with semicolons (;).
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>PHP Code Structure</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+    // This is a PHP comment
+    echo "Hello, PHP!";  // Output text
+
+    /* Multi-line
+       comment */
+
+    # Another comment style
+    print "Alternative output method";
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">2.2 PHP Tags</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>&lt;?php ?&gt;</h4>
+                  <p>Standard PHP opening/closing tags</p>
+                </div>
+                <div class="component-card">
+                  <h4>&lt;?= ?&gt;</h4>
+                  <p>Short echo tag (same as &lt;?php echo ?&gt;)</p>
+                </div>
+                <div class="component-card">
+                  <h4>&lt;? ?&gt;</h4>
+                  <p>Short tags (may not work on all servers)</p>
+                </div>
+                <div class="component-card">
+                  <h4>&lt;% %&gt;</h4>
+                  <p>ASP-style tags (deprecated)</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">2.3 Comments in PHP</h3>
+              <div class="example-box">
+                <h5>Comment Types</h5>
+                <div class="code-box">
+                  <pre>
+// Single line comment
+
+# Another single line comment
+
+/*
+   Multi-line comment
+   Can span multiple lines
+*/
+
+/**
+ * Documentation comment
+ * @param string $name User name
+ * @return string Greeting message
+ */
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 3: Variables & Data Types -->
+        <section class="lesson" id="variables">
+          <div class="lesson-header">
+            <h2>🔢 Lesson 3: Variables & Data Types</h2>
+            <p>Understanding PHP variables, data types, and type juggling</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">3.1 PHP Variables</h3>
+              <div class="definition-box">
+                <p>
+                  Variables in PHP are represented by a dollar sign ($) followed by the variable name.
+                  Variable names are case-sensitive and must start with a letter or underscore.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Variable Declaration & Assignment</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+    $name = "John Doe";        // String
+    $age = 25;                 // Integer
+    $height = 5.9;            // Float
+    $is_student = true;       // Boolean
+    $courses = array("PHP", "MySQL", "HTML");  // Array
+
+    echo "Name: " . $name;
+    echo "Age: " . $age;
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">3.2 Data Types</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>String</h4>
+                  <p>Sequence of characters: "Hello", 'World'</p>
+                </div>
+                <div class="component-card">
+                  <h4>Integer</h4>
+                  <p>Whole numbers: 42, -15, 0</p>
+                </div>
+                <div class="component-card">
+                  <h4>Float/Double</h4>
+                  <p>Decimal numbers: 3.14, -0.5</p>
+                </div>
+                <div class="component-card">
+                  <h4>Boolean</h4>
+                  <p>True or false values</p>
+                </div>
+                <div class="component-card">
+                  <h4>Array</h4>
+                  <p>Ordered collection of values</p>
+                </div>
+                <div class="component-card">
+                  <h4>Object</h4>
+                  <p>Instance of a class</p>
+                </div>
+                <div class="component-card">
+                  <h4>NULL</h4>
+                  <p>Variable with no value assigned</p>
+                </div>
+                <div class="component-card">
+                  <h4>Resource</h4>
+                  <p>Reference to external resource</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">3.3 Type Juggling</h3>
+              <div class="example-box">
+                <h5>Automatic Type Conversion</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+    $number = "5";        // String
+    $result = $number + 3; // Becomes integer 8
+
+    $bool = true;
+    $str = $bool . " text";  // "1 text"
+
+    var_dump($result);    // int(8)
+    var_dump($str);       // string(6) "1 text"
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">3.4 Variable Scope</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Local Scope</h4>
+                  <p>Variables declared inside functions</p>
+                </div>
+                <div class="component-card">
+                  <h4>Global Scope</h4>
+                  <p>Variables declared outside functions</p>
+                </div>
+                <div class="component-card">
+                  <h4>Static Variables</h4>
+                  <p>Retain value between function calls</p>
+                </div>
+                <div class="component-card">
+                  <h4>Superglobal</h4>
+                  <p>Built-in variables always accessible</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 4: Operators & Expressions -->
+        <section class="lesson" id="operators">
+          <div class="lesson-header">
+            <h2>⚡ Lesson 4: Operators & Expressions</h2>
+            <p>Understanding PHP operators for calculations and comparisons</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">4.1 Arithmetic Operators</h3>
+              <div class="data-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Operator</th>
+                      <th>Description</th>
+                      <th>Example</th>
+                      <th>Result</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>+</td>
+                      <td>Addition</td>
+                      <td>$a + $b</td>
+                      <td>Sum of $a and $b</td>
+                    </tr>
+                    <tr>
+                      <td>-</td>
+                      <td>Subtraction</td>
+                      <td>$a - $b</td>
+                      <td>Difference of $a and $b</td>
+                    </tr>
+                    <tr>
+                      <td>*</td>
+                      <td>Multiplication</td>
+                      <td>$a * $b</td>
+                      <td>Product of $a and $b</td>
+                    </tr>
+                    <tr>
+                      <td>/</td>
+                      <td>Division</td>
+                      <td>$a / $b</td>
+                      <td>Quotient of $a and $b</td>
+                    </tr>
+                    <tr>
+                      <td>%</td>
+                      <td>Modulus</td>
+                      <td>$a % $b</td>
+                      <td>Remainder of $a divided by $b</td>
+                    </tr>
+                    <tr>
+                      <td>**</td>
+                      <td>Exponentiation</td>
+                      <td>$a ** $b</td>
+                      <td>$a raised to the power of $b</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">4.2 Comparison Operators</h3>
+              <div class="data-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Operator</th>
+                      <th>Description</th>
+                      <th>Example</th>
+                      <th>Result</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>==</td>
+                      <td>Equal</td>
+                      <td>$a == $b</td>
+                      <td>true if $a equals $b</td>
+                    </tr>
+                    <tr>
+                      <td>===</td>
+                      <td>Identical</td>
+                      <td>$a === $b</td>
+                      <td>true if $a equals $b and same type</td>
+                    </tr>
+                    <tr>
+                      <td>!=</td>
+                      <td>Not equal</td>
+                      <td>$a != $b</td>
+                      <td>true if $a not equal to $b</td>
+                    </tr>
+                    <tr>
+                      <td>&lt;&gt;</td>
+                      <td>Not equal</td>
+                      <td>$a &lt;&gt; $b</td>
+                      <td>true if $a not equal to $b</td>
+                    </tr>
+                    <tr>
+                      <td>!==</td>
+                      <td>Not identical</td>
+                      <td>$a !== $b</td>
+                      <td>true if $a not equal to $b or different types</td>
+                    </tr>
+                    <tr>
+                      <td>&lt;</td>
+                      <td>Less than</td>
+                      <td>$a &lt; $b</td>
+                      <td>true if $a less than $b</td>
+                    </tr>
+                    <tr>
+                      <td>&gt;</td>
+                      <td>Greater than</td>
+                      <td>$a &gt; $b</td>
+                      <td>true if $a greater than $b</td>
+                    </tr>
+                    <tr>
+                      <td>&lt;=</td>
+                      <td>Less than or equal</td>
+                      <td>$a &lt;= $b</td>
+                      <td>true if $a less than or equal to $b</td>
+                    </tr>
+                    <tr>
+                      <td>&gt;=</td>
+                      <td>Greater than or equal</td>
+                      <td>$a &gt;= $b</td>
+                      <td>true if $a greater than or equal to $b</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">4.3 Assignment Operators</h3>
+              <div class="example-box">
+                <h5>Assignment Operators</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+    $a = 10;        // Basic assignment
+    $a += 5;        // $a = $a + 5 (15)
+    $a -= 3;        // $a = $a - 3 (12)
+    $a *= 2;        // $a = $a * 2 (24)
+    $a /= 4;        // $a = $a / 4 (6)
+    $a %= 5;        // $a = $a % 5 (1)
+    $a .= "text";   // $a = $a . "text" ("1text")
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 6: Functions -->
+        <section class="lesson" id="functions">
+          <div class="lesson-header">
+            <h2>🔧 Lesson 6: Functions</h2>
+            <p>Defining, calling, and working with functions in PHP</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">6.1 Defining Functions</h3>
+              <div class="definition-box">
+                <p>
+                  Functions in PHP are defined using the <code>function</code> keyword.
+                  Function names are not case-sensitive, but cannot start with a digit.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Basic Function Definition</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+function getSum($x, $y) {
+    $z = $x + $y;
+    echo 'Sum of x and y is ' . $z . "&lt;br&gt;";
+}
+
+// Function names are case-insensitive
+getSum(55, 55);  // Works
+getsum(5, 10);   // Also works
+?&gt;
+</pre>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h4 class="subsection-title">Deleting Functions</h4>
+                <div class="example-box">
+                  <h5>Using unset() to Delete Functions</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;?php
+function myFunction() {
+    echo "Hello World!";
+}
+
+myFunction();  // Works
+
+// Delete the function
+unset($myFunction);
+
+myFunction();  // Fatal error: function not found
+?&gt;
+</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">6.2 Function Parameters & Return</h3>
+              <div class="subsection">
+                <h4 class="subsection-title">Optional Parameters</h4>
+                <div class="example-box">
+                  <h5>Functions with Default Values</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;?php
+function add($x, $y = 1) {
+    $z = $x + $y;
+    echo 'Sum of x and y is ' . $z . "&lt;br&gt;";
+}
+
+add(6);      // Uses default y=1, outputs: Sum of x and y is 7
+add(6, 7);   // Uses provided y=7, outputs: Sum of x and y is 13
+?&gt;
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h4 class="subsection-title">Variable Length Arguments</h4>
+                <div class="example-box">
+                  <h5>Using ... Token for Variable Arguments</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;?php
+function getSum($op1, ...$op2) {
+    foreach ($op2 as $op) {
+        $op1 += $op;
+    }
+    return $op1;
+}
+
+echo getSum(1, 2, 3, 6);  // Outputs: 12
+?&gt;
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h4 class="subsection-title">Return Keyword</h4>
+                <div class="example-box">
+                  <h5>Using return to Exit Function</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;?php
+function mul($x, $y) {
+    return $x * $y;
+    echo 'This line will never be executed';
+}
+
+$result = mul(5, 6);
+echo $result . "&lt;br&gt;";  // Outputs: 30
+?&gt;
+</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">6.3 Call by Value vs Call by Reference</h3>
+              <div class="subsection">
+                <h4 class="subsection-title">Call by Value</h4>
+                <div class="example-box">
+                  <h5>Original Value Unchanged</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;?php
+function incrementFun($value, $amount = 1) {
+    $value = $value + $amount;
+}
+
+$value = 10;
+incrementFun($value);
+var_dump($value);  // Outputs: int(10) - unchanged
+?&gt;
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h4 class="subsection-title">Call by Reference</h4>
+                <div class="example-box">
+                  <h5>Original Value Modified</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;?php
+function incrementFun(&$value, $amount = 1) {
+    $value = $value + $amount;
+}
+
+$value = 10;
+incrementFun($value);
+var_dump($value);  // Outputs: int(11) - modified
+?&gt;
+</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 7: Closures -->
+        <section class="lesson" id="closures">
+          <div class="lesson-header">
+            <h2>🔒 Lesson 7: Closures</h2>
+            <p>Anonymous functions and closures in PHP</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">7.1 What are Closures?</h3>
+              <div class="definition-box">
+                <p>
+                  A closure is the PHP equivalent of an anonymous function - a function
+                  that does not have a name. Closures are objects of the Closure class.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Basic Closure Example</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+$greet = function($name) {
+    printf("Hello %s\r\n", $name);
+};  // Semicolon is required
+
+$greet('World');  // Outputs: Hello World
+var_dump(is_callable($greet));  // bool(true)
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">7.2 Closures and External Variables</h3>
+              <div class="highlight-box">
+                <p>
+                  Use the <code>use</code> keyword to access variables from the outer scope.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Using External Variables</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+$quantity = 1;
+
+$calculator = function($number) use($quantity) {
+    return $number + $quantity;
+};
+
+var_dump($calculator(7));  // int(8)
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">7.3 Binding Closures to Classes</h3>
+              <div class="subsection">
+                <h4 class="subsection-title">Using bindTo()</h4>
+                <div class="example-box">
+                  <h5>Binding to Public Properties</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;?php
+$myClosure = function() {
+    echo $this->property . "&lt;br&gt;";
+};
+
+class MyClass {
+    public $property;
+
+    function __construct($propertyValue) {
+        $this->property = $propertyValue;
+    }
+}
+
+$objClass = new MyClass("Hello from closure");
+$myBoundClosure = $myClosure->bindTo($objClass);
+$myBoundClosure();  // Outputs: Hello from closure
+?&gt;
+</pre>
+                  </div>
+                </div>
+
+                <div class="example-box">
+                  <h5>Binding to Private Properties</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;?php
+$myClosure = function() {
+    echo $this->property . "&lt;br&gt;";
+};
+
+class MyClass {
+    private $property;
+
+    function __construct($propertyValue) {
+        $this->property = $propertyValue;
+    }
+}
+
+$objClass = new MyClass("Hello from closure");
+$myBoundClosure = $myClosure->bindTo($objClass, MyClass::class);
+$myBoundClosure();  // Outputs: Hello from closure
+?&gt;
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h4 class="subsection-title">Using call() Method (PHP 7+)</h4>
+                <div class="example-box">
+                  <h5>Direct Closure Call</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;?php
+$myClosure = function() {
+    echo $this->property . "&lt;br&gt;";
+};
+
+class MyClass {
+    private $property;
+
+    function __construct($propertyValue) {
+        $this->property = $propertyValue;
+    }
+}
+
+$objClass = new MyClass("Hello from closure using call");
+$myClosure->call($objClass);  // Outputs: Hello from closure using call
+?&gt;
+</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">7.4 Closures Inside Classes</h3>
+              <div class="example-box">
+                <h5>Defining Closure in Class Method</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class NewClass {
+    private $prop;
+
+    function __construct($propertyValue) {
+        $this->prop = $propertyValue;
+    }
+
+    function display() {
+        return function() {
+            echo $this->prop . "&lt;br&gt;";
+        };
+    }
+}
+
+$obj = new NewClass("Hello World");
+$display = $obj->display();
+$display();  // Outputs: Hello World
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 8: Object-Oriented Programming -->
+        <section class="lesson" id="oop">
+          <div class="lesson-header">
+            <h2>🏗️ Lesson 8: Object-Oriented Programming</h2>
+            <p>Classes, objects, inheritance, and OOP principles in PHP</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">8.1 OOP Principles</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Encapsulation</h4>
+                  <p>Binds data and functions together, keeping them safe from outside interference</p>
+                </div>
+                <div class="component-card">
+                  <h4>Inheritance</h4>
+                  <p>Allows classes to be arranged in hierarchy representing "is-a-type-of" relationships</p>
+                </div>
+                <div class="component-card">
+                  <h4>Polymorphism</h4>
+                  <p>Ability to take more than one form - same interface, different implementations</p>
+                </div>
+                <div class="component-card">
+                  <h4>Abstraction</h4>
+                  <p>Hides complexity by showing only necessary details to the user</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">8.2 Classes and Objects</h3>
+              <div class="definition-box">
+                <p>
+                  Classes are blueprints for objects. Objects are instances of classes.
+                  Classes can have properties (attributes) and methods (functions).
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Basic Class Definition</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class Person {
+    public $name;  // Public property
+
+    function sayHello() {
+        echo "Hello " . $this->name;
+    }
+}
+
+$p = new Person();
+$p->name = "Noha";
+$p->sayHello();  // Outputs: Hello Noha
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">8.3 Access Modifiers</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Public</h4>
+                  <p>Accessible from inside and outside the class (default for methods)</p>
+                </div>
+                <div class="component-card">
+                  <h4>Private</h4>
+                  <p>Accessible only from inside the class, not inherited</p>
+                </div>
+                <div class="component-card">
+                  <h4>Protected</h4>
+                  <p>Accessible from inside the class and subclasses</p>
+                </div>
+                <div class="component-card">
+                  <h4>Static</h4>
+                  <p>Belongs to the class, not instances</p>
+                </div>
+              </div>
+
+              <div class="example-box">
+                <h5>Access Modifiers Example</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class Person {
+    public $name;
+    private $first_name;
+    protected $last_name;
+
+    private function sayHello() {
+        echo "Hello " . $this->first_name;
+    }
+}
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">8.4 Constructors and Destructors</h3>
+              <div class="subsection">
+                <h4 class="subsection-title">Constructor</h4>
+                <div class="example-box">
+                  <h5>__construct() Method</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;?php
+class Person {
+    private $first_name;
+    private $last_name;
+
+    function __construct($first_name, $last_name) {
+        $this->first_name = $first_name;
+        $this->last_name = $last_name;
+    }
+}
+
+$p = new Person("Noha", "Shehab");
+?&gt;
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h4 class="subsection-title">Destructor</h4>
+                <div class="example-box">
+                  <h5>__destruct() Method</h5>
+                  <div class="code-box">
+                    <pre>
+&lt;?php
+class Person {
+    function __destruct() {
+        echo "&lt;br&gt; Destructing object";
+    }
+}
+
+$p = new Person("Noha", "Shehab");
+// Object will be destroyed when script ends
+unset($p);  // Explicit destruction
+?&gt;
+</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">8.5 Magic Methods (__get & __set)</h3>
+              <div class="example-box">
+                <h5>Dynamic Getters and Setters</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class Person {
+    function __set($name, $value) {
+        $this->$name = $value;
+    }
+
+    function __get($name) {
+        return $this->$name;
+    }
+}
+
+$p = new Person();
+$p->__set("track", "opensource");
+echo $p->__get("track");  // Outputs: opensource
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">8.6 Static Methods and Properties</h3>
+              <div class="example-box">
+                <h5>Static Members</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class Math {
+    const PI = 3.14159;
+    static $mul = 1;
+
+    static function squared($input) {
+        return $input * $input;
+    }
+
+    function testSelf() {
+        echo self::PI;
+    }
+}
+
+echo Math::squared(8);  // Outputs: 64
+?&gt;
+</pre>
+                </div>
+              </div>
+
+              <div class="highlight-box">
+                <p>
+                  <strong>$this</strong> refers to the current object instance<br>
+                  <strong>self</strong> refers to the current class (use self::$member for static members)
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 9: Inheritance -->
+        <section class="lesson" id="inheritance">
+          <div class="lesson-header">
+            <h2>📈 Lesson 9: Inheritance</h2>
+            <p>Creating class hierarchies and extending functionality</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">9.1 Basic Inheritance</h3>
+              <div class="definition-box">
+                <p>
+                  PHP supports single inheritance using the <code>extends</code> keyword.
+                  Child classes inherit properties and methods from parent classes.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Inheritance Example</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class Person {
+    public $name;
+
+    public function callingPerson() {
+        echo "I am a person";
+    }
+}
+
+class Student extends Person {
+    public $level;
+
+    public function callingStudent() {
+        echo "I am a student";
+    }
+}
+
+$std = new Student();
+$std->name = "Omar";
+$std->level = 1;
+$std->callingPerson();   // Inherited method
+$std->callingStudent();  // Own method
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">9.2 Parent Constructor</h3>
+              <div class="example-box">
+                <h5>Calling Parent Constructor</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class Person {
+    public $name;
+
+    public function __construct() {
+        echo "Creating a person ";
+    }
+}
+
+class Student extends Person {
+    public $level;
+
+    public function __construct() {
+        parent::__construct();  // Call parent constructor
+        echo "Creating a student";
+    }
+}
+
+$std = new Student();  // Outputs: Creating a person Creating a student
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">9.3 Method Overriding</h3>
+              <div class="example-box">
+                <h5>Overriding Parent Methods</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class Person {
+    public $name;
+
+    public function say_hello() {
+        echo "Hello person";
+    }
+}
+
+class Student extends Person {
+    public $level;
+
+    public function say_hello() {
+        echo "Hello student";  // Override parent method
+    }
+}
+
+$person = new Person();
+$student = new Student();
+
+$person->say_hello();   // Outputs: Hello person
+$student->say_hello();  // Outputs: Hello student
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">9.4 Final Keyword</h3>
+              <div class="highlight-box">
+                <p>
+                  <strong>final</strong> methods cannot be overridden<br>
+                  <strong>final</strong> classes cannot be extended
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Final Methods and Classes</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class Machine {
+    public $brand;
+
+    function sayHello() {
+        echo "Hello I am a machine";
+    }
+}
+
+class Transportation extends Machine {
+    public $type;
+
+    final function canMove() {
+        echo "I can move";
+    }
+}
+
+final class Car extends Transportation {
+    public $model;
+
+    function sayHello() {
+        parent::sayHello();
+        echo " Called from the Car class";
+    }
+
+    // This would cause error:
+    // function canMove() { }  // Cannot override final method
+}
+
+// This would cause error:
+// class SportsCar extends Car { }  // Cannot extend final class
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 10: Abstract Classes and Interfaces -->
+        <section class="lesson" id="abstract-interfaces">
+          <div class="lesson-header">
+            <h2>📋 Lesson 10: Abstract Classes & Interfaces</h2>
+            <p>Abstract classes, interfaces, and polymorphism</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">10.1 Abstract Classes</h3>
+              <div class="definition-box">
+                <p>
+                  Abstract classes contain abstract methods that must be implemented
+                  by child classes. Abstract classes cannot be instantiated directly.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Abstract Class Example</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+abstract class Base {
+    function __construct() {
+        echo "&lt;br&gt; &lt;b&gt; This is abstract class constructor ";
+    }
+
+    // Abstract method - no body
+    abstract function printdata();
+}
+
+class Derived extends Base {
+    function __construct() {
+        echo "&lt;br&gt; &lt;b&gt; Derived class constructor";
+        parent::__construct();
+    }
+
+    function printdata() {
+        echo "&lt;br&gt; &lt;b&gt; Derived class printdata function";
+    }
+}
+
+$b1 = new Derived();  // Cannot instantiate Base directly
+$b1->printdata();
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">10.2 Interfaces</h3>
+              <div class="definition-box">
+                <p>
+                  Interfaces specify methods that classes must implement without providing
+                  the implementation. Classes can implement multiple interfaces.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Interface Example</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+interface Transportation {
+    public function setModel($model);
+    public function setYear($year);
+}
+
+class Car implements Transportation {
+    public $model;
+    public $year;
+
+    public function setModel($model) {
+        $this->model = $model;
+    }
+
+    public function setYear($year) {
+        $this->year = $year;
+    }
+}
+
+$car = new Car();
+$car->setModel("Toyota");
+$car->setYear(2023);
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">10.3 Interfaces vs Abstract Classes</h3>
+              <div class="data-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Feature</th>
+                      <th>Abstract Classes</th>
+                      <th>Interfaces</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Properties</td>
+                      <td>Can have properties</td>
+                      <td>Cannot have properties</td>
+                    </tr>
+                    <tr>
+                      <td>Method Visibility</td>
+                      <td>Public or protected</td>
+                      <td>Only public</td>
+                    </tr>
+                    <tr>
+                      <td>Method Implementation</td>
+                      <td>Can have implemented methods</td>
+                      <td>All methods are abstract</td>
+                    </tr>
+                    <tr>
+                      <td>Multiple Inheritance</td>
+                      <td>Not supported</td>
+                      <td>Supported</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">10.4 Anonymous Classes</h3>
+              <div class="example-box">
+                <h5>Anonymous Class Implementation</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+interface DisplayMsg {
+    public function printMsg(string $msg);
+}
+
+class Application {
+    private $displayer;
+
+    public function getDisplayer(): DisplayMsg {
+        return $this->displayer;
+    }
+
+    public function setPrinter(DisplayMsg $dismsg) {
+        $this->displayer = $dismsg;
+    }
+}
+
+$app = new Application();
+$app->setPrinter(new class implements DisplayMsg {
+    public function printMsg(string $msg) {
+        echo($msg) . "&lt;br&gt;";
+    }
+});
+
+$app->getDisplayer()->printMsg("My first Log Message using anonymous class");
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 11: Advanced OOP Concepts -->
+        <section class="lesson" id="advanced-oop">
+          <div class="lesson-header">
+            <h2>🔍 Lesson 11: Advanced OOP Concepts</h2>
+            <p>Reflection, polymorphism, cloning, and traits</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">11.1 Reflection Classes</h3>
+              <div class="definition-box">
+                <p>
+                  Reflection allows a program to inspect and modify its own structure at runtime.
+                  This is also called "introspection".
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Using Reflection</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class OpenSource {
+    private $instructor;
+    protected $sub_tracks;
+    public $list_of_courses;
+    const PI = 3.1415;
+
+    public function __construct() {
+        $this->instructor = "Noha";
+        $this->sub_tracks = "Application";
+        $this->list_of_courses = ["Python", "PHP", "Scala", "Laravel", "Admin"];
+    }
+
+    public function getInstructor() {
+        return $this->instructor;
+    }
+
+    public function setInstructor($instructor) {
+        $this->instructor = $instructor;
+    }
+
+    private function getsub_tracks() {
+        return $this->sub_tracks;
+    }
+}
+
+$reflection_class = new ReflectionClass("OpenSource");
+foreach ($reflection_class->getMethods() as $method) {
+    echo $method->getName() . "&lt;br&gt;";
+}
+?&gt;
+</pre>
+                </div>
+              </div>
+
+              <div class="highlight-box">
+                <p><strong>When to use Reflection:</strong></p>
+                <ul>
+                  <li>Unit testing applications</li>
+                  <li>Getting information about unknown classes</li>
+                  <li>Dynamic code analysis</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">11.2 Polymorphism</h3>
+              <div class="definition-box">
+                <p>
+                  Polymorphism allows objects of different classes to respond differently
+                  to the same message. Achieved through interfaces or abstract classes.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Method Overriding (Dynamic Binding)</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+interface Animals {
+    public function makeNoise();
+}
+
+class Cat implements Animals {
+    public function makeNoise() {
+        $this->meow();
+    }
+
+    function meow() {
+        echo '&lt;br&gt; meow';
+    }
+}
+
+class Dog implements Animals {
+    public function makeNoise() {
+        $this->bark();
+    }
+
+    function bark() {
+        echo '&lt;br&gt; bark';
+    }
+}
+
+$cat = new Cat();
+$dog = new Dog();
+
+$cat->makeNoise();  // Outputs: meow
+$dog->makeNoise();  // Outputs: bark
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">11.3 Dynamic Overloading</h3>
+              <div class="example-box">
+                <h5>Using __call and __callStatic</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class phpClass {
+    public function __call($name, $arguments) {
+        echo "Calling object method '$name' " . implode(', ', $arguments) . "&lt;br&gt;";
+    }
+
+    public static function __callStatic($name, $arguments) {
+        echo "Calling static method '$name' " . implode(', ', $arguments) . "&lt;br&gt;";
+    }
+}
+
+$obj = new phpClass();
+$obj->runTest('in object context');
+phpClass::runTest('in static context');
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">11.4 Object Cloning</h3>
+              <div class="definition-box">
+                <p>
+                  Object cloning creates a copy of an object using the <code>clone</code> keyword.
+                  PHP does shallow copying by default. Use <code>__clone()</code> for deep copying.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Basic Object Cloning</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+class Product {
+    public $name;
+    public $category;
+}
+
+$objProduct = new Product();
+$objProduct->name = "Apple";
+$objProduct->category = "Fruit";
+
+// Clone the object
+$objCloned = clone $objProduct;
+$objCloned->name = "Orange";
+
+print_r($objProduct);  // Original: Apple, Fruit
+print_r($objCloned);   // Clone: Orange, Fruit
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 12: Traits -->
+        <section class="lesson" id="traits">
+          <div class="lesson-header">
+            <h2>🔧 Lesson 12: Traits</h2>
+            <p>Code reuse through traits in PHP</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">12.1 What are Traits?</h3>
+              <div class="definition-box">
+                <p>
+                  Traits are a mechanism for code reuse in single inheritance languages like PHP.
+                  They allow you to "copy and paste" functionality into classes. Multiple traits can be used in a single class.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Basic Trait Usage</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+trait Hello {
+    public function sayHello() {
+        echo ' &lt;br&gt; Hello ';
+    }
+}
+
+trait World {
+    public function sayWorld() {
+        echo 'World';
+    }
+}
+
+class MyHelloWorld {
+    use Hello, World;
+
+    public function sayExclamationMark() {
+        echo '!';
+    }
+}
+
+$o = new MyHelloWorld();
+$o->sayHello();           // Outputs: Hello
+$o->sayWorld();           // Outputs: World
+$o->sayExclamationMark(); // Outputs: !
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">12.2 Include and Require</h3>
+              <div class="highlight-box">
+                <p>
+                  <code>include()</code> and <code>require()</code> load external files.<br>
+                  <code>include_once()</code> and <code>require_once()</code> ensure files are loaded only once.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>File Inclusion</h5>
+                <div class="code-box">
+                  <pre>
+&lt;?php
+// Include a file (warning if not found)
+include('functions.php');
+
+// Require a file (fatal error if not found)
+require('config.php');
+
+// Include only once
+include_once('database.php');
+require_once('utilities.php');
+?&gt;
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 14: Error Handling -->
+        <section class="lesson" id="error-handling">
+          <div class="lesson-header">
+            <h2>🚨 Lesson 14: Error Handling</h2>
+            <p>Managing errors and exceptions in PHP applications</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">14.1 Error Types</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Parse Errors</h4>
+                  <p>Syntax errors that prevent script execution</p>
+                </div>
+                <div class="component-card">
+                  <h4>Fatal Errors</h4>
+                  <p>Critical errors that stop script execution</p>
+                </div>
+                <div class="component-card">
+                  <h4>Warning Errors</h4>
+                  <p>Non-critical errors that allow continuation</p>
+                </div>
+                <div class="component-card">
+                  <h4>Notice Errors</h4>
+                  <p>Minor issues like undefined variables</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">14.2 Try-Catch Blocks</h3>
+              <div class="example-box">
+                <h5>Exception Handling</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">try</span> {
+    <span class="php-comment">// Code that might throw an exception</span>
+    <span class="php-variable">$result</span> = <span class="php-number">10</span> / <span class="php-number">0</span>;
+    <span class="php-keyword">echo</span> <span class="php-string">"Result: "</span> . <span class="php-variable">$result</span>;
+} <span class="php-keyword">catch</span> (Exception <span class="php-variable">$e</span>) {
+    <span class="php-comment">// Handle the exception</span>
+    <span class="php-keyword">echo</span> <span class="php-string">"Error: "</span> . <span class="php-variable">$e</span>->getMessage();
+} <span class="php-keyword">finally</span> {
+    <span class="php-comment">// Always executed</span>
+    <span class="php-keyword">echo</span> <span class="php-string">"Finally block executed"</span>;
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">14.3 Custom Exceptions</h3>
+              <div class="example-box">
+                <h5>Creating Custom Exception Classes</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">class</span> <span class="php-class">CustomException</span> <span class="php-keyword">extends</span> Exception {
+    <span class="php-keyword">public</span> <span class="php-keyword">function</span> <span class="php-method">errorMessage</span>() {
+        <span class="php-keyword">return</span> <span class="php-string">'Custom Error: '</span> . <span class="php-variable">$this</span>->getMessage();
+    }
+}
+
+<span class="php-keyword">try</span> {
+    <span class="php-keyword">throw</span> <span class="php-keyword">new</span> <span class="php-class">CustomException</span>(<span class="php-string">"Something went wrong"</span>);
+} <span class="php-keyword">catch</span> (CustomException <span class="php-variable">$e</span>) {
+    <span class="php-keyword">echo</span> <span class="php-variable">$e</span>->errorMessage();
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">14.4 Error Reporting</h3>
+              <div class="example-box">
+                <h5>Configuring Error Display</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Display all errors during development</span>
+<span class="php-function">ini_set</span>(<span class="php-string">'display_errors'</span>, <span class="php-number">1</span>);
+<span class="php-function">ini_set</span>(<span class="php-string">'display_startup_errors'</span>, <span class="php-number">1</span>);
+<span class="php-function">error_reporting</span>(E_ALL);
+
+<span class="php-comment">// Log errors to file in production</span>
+<span class="php-function">ini_set</span>(<span class="php-string">'log_errors'</span>, <span class="php-number">1</span>);
+<span class="php-function">ini_set</span>(<span class="php-string">'error_log'</span>, <span class="php-string">'/path/to/error.log'</span>);
+
+<span class="php-comment">// Custom error handler</span>
+<span class="php-keyword">function</span> <span class="php-function">customError</span>(<span class="php-variable">$errno</span>, <span class="php-variable">$errstr</span>) {
+    <span class="php-keyword">echo</span> <span class="php-string">"&lt;b&gt;Custom Error:&lt;/b&gt; [$errno] $errstr&lt;br&gt;"</span>;
+}
+
+<span class="php-function">set_error_handler</span>(<span class="php-string">"customError"</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 15: File Operations -->
+        <section class="lesson" id="file-operations">
+          <div class="lesson-header">
+            <h2>📁 Lesson 15: File Operations</h2>
+            <p>Reading, writing, and manipulating files in PHP</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">15.1 Basic File Functions</h3>
+              <div class="data-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Function</th>
+                      <th>Description</th>
+                      <th>Example</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>fopen()</td>
+                      <td>Open a file</td>
+                      <td>$file = fopen("test.txt", "r")</td>
+                    </tr>
+                    <tr>
+                      <td>fread()</td>
+                      <td>Read from file</td>
+                      <td>$content = fread($file, filesize("test.txt"))</td>
+                    </tr>
+                    <tr>
+                      <td>fwrite()</td>
+                      <td>Write to file</td>
+                      <td>fwrite($file, "Hello World")</td>
+                    </tr>
+                    <tr>
+                      <td>fclose()</td>
+                      <td>Close file</td>
+                      <td>fclose($file)</td>
+                    </tr>
+                    <tr>
+                      <td>file_get_contents()</td>
+                      <td>Read entire file</td>
+                      <td>$content = file_get_contents("test.txt")</td>
+                    </tr>
+                    <tr>
+                      <td>file_put_contents()</td>
+                      <td>Write to file</td>
+                      <td>file_put_contents("test.txt", "Hello World")</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">15.2 File Modes</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>r</h4>
+                  <p>Read only, pointer at beginning</p>
+                </div>
+                <div class="component-card">
+                  <h4>r+</h4>
+                  <p>Read/write, pointer at beginning</p>
+                </div>
+                <div class="component-card">
+                  <h4>w</h4>
+                  <p>Write only, truncate file</p>
+                </div>
+                <div class="component-card">
+                  <h4>w+</h4>
+                  <p>Read/write, truncate file</p>
+                </div>
+                <div class="component-card">
+                  <h4>a</h4>
+                  <p>Write only, append to end</p>
+                </div>
+                <div class="component-card">
+                  <h4>a+</h4>
+                  <p>Read/write, append to end</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">15.3 File Upload Handling</h3>
+              <div class="example-box">
+                <h5>HTML Form for File Upload</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">&lt;!-- HTML Form --&gt;</span>
+&lt;form action=<span class="php-string">"upload.php"</span> method=<span class="php-string">"post"</span> enctype=<span class="php-string">"multipart/form-data"</span>&gt;
+    &lt;input type=<span class="php-string">"file"</span> name=<span class="php-string">"fileToUpload"</span>&gt;
+    &lt;input type=<span class="php-string">"submit"</span> value=<span class="php-string">"Upload File"</span>&gt;
+&lt;/form&gt;
+</pre>
+                </div>
+              </div>
+
+              <div class="example-box">
+                <h5>PHP File Upload Handler</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">if</span> (<span class="php-function">isset</span>(<span class="php-variable">$_FILES</span>[<span class="php-string">"fileToUpload"</span>])) {
+    <span class="php-variable">$target_dir</span> = <span class="php-string">"uploads/"</span>;
+    <span class="php-variable">$target_file</span> = <span class="php-variable">$target_dir</span> . <span class="php-function">basename</span>(<span class="php-variable">$_FILES</span>[<span class="php-string">"fileToUpload"</span>][<span class="php-string">"name"</span>]);
+
+    <span class="php-keyword">if</span> (<span class="php-function">move_uploaded_file</span>(<span class="php-variable">$_FILES</span>[<span class="php-string">"fileToUpload"</span>][<span class="php-string">"tmp_name"</span>], <span class="php-variable">$target_file</span>)) {
+        <span class="php-keyword">echo</span> <span class="php-string">"File uploaded successfully."</span>;
+    } <span class="php-keyword">else</span> {
+        <span class="php-keyword">echo</span> <span class="php-string">"Error uploading file."</span>;
+    }
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">15.4 Directory Operations</h3>
+              <div class="example-box">
+                <h5>Working with Directories</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Create directory</span>
+<span class="php-function">mkdir</span>(<span class="php-string">"new_folder"</span>);
+
+<span class="php-comment">// Check if directory exists</span>
+<span class="php-keyword">if</span> (<span class="php-function">is_dir</span>(<span class="php-string">"new_folder"</span>)) {
+    <span class="php-keyword">echo</span> <span class="php-string">"Directory exists"</span>;
+}
+
+<span class="php-comment">// List directory contents</span>
+<span class="php-variable">$files</span> = <span class="php-function">scandir</span>(<span class="php-string">"."</span>);
+<span class="php-keyword">foreach</span> (<span class="php-variable">$files</span> <span class="php-keyword">as</span> <span class="php-variable">$file</span>) {
+    <span class="php-keyword">if</span> (<span class="php-variable">$file</span> != <span class="php-string">"."</span> && <span class="php-variable">$file</span> != <span class="php-string">".."</span>) {
+        <span class="php-keyword">echo</span> <span class="php-variable">$file</span> . <span class="php-string">"&lt;br&gt;"</span>;
+    }
+}
+
+<span class="php-comment">// Remove directory</span>
+<span class="php-function">rmdir</span>(<span class="php-string">"new_folder"</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 16: Sessions & Cookies -->
+        <section class="lesson" id="sessions-cookies">
+          <div class="lesson-header">
+            <h2>🍪 Lesson 16: Sessions & Cookies</h2>
+            <p>Managing user state with sessions and cookies</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">16.1 Cookies</h3>
+              <div class="definition-box">
+                <p>
+                  Cookies are small text files stored on the client-side to maintain state
+                  between HTTP requests. They're sent with every request to the server.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Setting and Getting Cookies</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Set a cookie (expires in 1 hour)</span>
+<span class="php-function">setcookie</span>(<span class="php-string">"username"</span>, <span class="php-string">"JohnDoe"</span>, <span class="php-function">time</span>() + <span class="php-number">3600</span>, <span class="php-string">"/"</span>);
+
+<span class="php-comment">// Set cookie with more options</span>
+<span class="php-function">setcookie</span>(<span class="php-string">"user_id"</span>, <span class="php-string">"123"</span>, [
+    <span class="php-string">'expires'</span> => <span class="php-function">time</span>() + <span class="php-number">86400</span>,  <span class="php-comment">// 24 hours</span>
+    <span class="php-string">'path'</span> => <span class="php-string">'/'</span>,
+    <span class="php-string">'domain'</span> => <span class="php-string">''</span>,
+    <span class="php-string">'secure'</span> => <span class="php-keyword">true</span>,
+    <span class="php-string">'httponly'</span> => <span class="php-keyword">true</span>,
+    <span class="php-string">'samesite'</span> => <span class="php-string">'Strict'</span>
+]);
+
+<span class="php-comment">// Get cookie value</span>
+<span class="php-keyword">if</span> (<span class="php-function">isset</span>(<span class="php-variable">$_COOKIE</span>[<span class="php-string">'username'</span>])) {
+    <span class="php-variable">$username</span> = <span class="php-variable">$_COOKIE</span>[<span class="php-string">'username'</span>];
+    <span class="php-keyword">echo</span> <span class="php-string">"Welcome back, "</span> . <span class="php-variable">$username</span>;
+}
+
+<span class="php-comment">// Delete cookie</span>
+<span class="php-function">setcookie</span>(<span class="php-string">"username"</span>, <span class="php-string">""</span>, <span class="php-function">time</span>() - <span class="php-number">3600</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">16.2 Sessions</h3>
+              <div class="definition-box">
+                <p>
+                  Sessions store user data on the server-side. A session ID is stored in a cookie
+                  on the client-side to identify the user across multiple requests.
+                </p>
+              </div>
+
+              <div class="example-box">
+                <h5>Working with Sessions</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Start session</span>
+<span class="php-function">session_start</span>();
+
+<span class="php-comment">// Store session data</span>
+<span class="php-variable">$_SESSION</span>[<span class="php-string">'username'</span>] = <span class="php-string">'JohnDoe'</span>;
+<span class="php-variable">$_SESSION</span>[<span class="php-string">'user_id'</span>] = <span class="php-number">123</span>;
+<span class="php-variable">$_SESSION</span>[<span class="php-string">'cart'</span>] = [<span class="php-string">'item1'</span>, <span class="php-string">'item2'</span>];
+
+<span class="php-comment">// Retrieve session data</span>
+<span class="php-keyword">if</span> (<span class="php-function">isset</span>(<span class="php-variable">$_SESSION</span>[<span class="php-string">'username'</span>])) {
+    <span class="php-variable">$username</span> = <span class="php-variable">$_SESSION</span>[<span class="php-string">'username'</span>];
+    <span class="php-keyword">echo</span> <span class="php-string">"Logged in as: "</span> . <span class="php-variable">$username</span>;
+}
+
+<span class="php-comment">// Modify session data</span>
+<span class="php-variable">$_SESSION</span>[<span class="php-string">'cart'</span>][] = <span class="php-string">'item3'</span>;
+
+<span class="php-comment">// Remove specific session variable</span>
+<span class="php-function">unset</span>(<span class="php-variable">$_SESSION</span>[<span class="php-string">'cart'</span>]);
+
+<span class="php-comment">// Destroy entire session</span>
+<span class="php-function">session_destroy</span>();
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">16.3 Session Security</h3>
+              <div class="warning-box">
+                <p><strong>Security Best Practices:</strong></p>
+                <ul>
+                  <li>Always call session_start() at the beginning of your scripts</li>
+                  <li>Use session_regenerate_id() after login to prevent session fixation</li>
+                  <li>Set session.cookie_httponly to prevent XSS attacks</li>
+                  <li>Use session.cookie_secure for HTTPS-only sites</li>
+                  <li>Implement session timeout mechanisms</li>
+                  <li>Store sensitive data in sessions, not cookies</li>
+                </ul>
+              </div>
+
+              <div class="example-box">
+                <h5>Secure Session Configuration</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Configure secure session settings</span>
+<span class="php-function">ini_set</span>(<span class="php-string">'session.cookie_httponly'</span>, <span class="php-number">1</span>);
+<span class="php-function">ini_set</span>(<span class="php-string">'session.cookie_secure'</span>, <span class="php-number">1</span>);
+<span class="php-function">ini_set</span>(<span class="php-string">'session.use_only_cookies'</span>, <span class="php-number">1</span>);
+
+<span class="php-function">session_start</span>();
+
+<span class="php-comment">// Regenerate session ID after login</span>
+<span class="php-keyword">if</span> (<span class="php-function">isset</span>(<span class="php-variable">$_SESSION</span>[<span class="php-string">'logged_in'</span>])) {
+    <span class="php-function">session_regenerate_id</span>(<span class="php-keyword">true</span>);
+}
+
+<span class="php-comment">// Session timeout (30 minutes)</span>
+<span class="php-variable">$timeout</span> = <span class="php-number">1800</span>; <span class="php-comment">// 30 minutes in seconds</span>
+<span class="php-keyword">if</span> (<span class="php-function">isset</span>(<span class="php-variable">$_SESSION</span>[<span class="php-string">'last_activity'</span>]) &&
+    (<span class="php-function">time</span>() - <span class="php-variable">$_SESSION</span>[<span class="php-string">'last_activity'</span>]) > <span class="php-variable">$timeout</span>) {
+    <span class="php-function">session_destroy</span>();
+    <span class="php-function">header</span>(<span class="php-string">'Location: login.php'</span>);
+}
+<span class="php-variable">$_SESSION</span>[<span class="php-string">'last_activity'</span>] = <span class="php-function">time</span>();
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 17: Database Integration (MySQL) -->
+        <section class="lesson" id="database-integration">
+          <div class="lesson-header">
+            <h2>🗄️ Lesson 17: Database Integration</h2>
+            <p>Connecting to and working with MySQL databases</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">17.1 MySQLi Connection</h3>
+              <div class="example-box">
+                <h5>Connecting to MySQL Database</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// MySQLi Object-Oriented</span>
+<span class="php-variable">$servername</span> = <span class="php-string">"localhost"</span>;
+<span class="php-variable">$username</span> = <span class="php-string">"root"</span>;
+<span class="php-variable">$password</span> = <span class="php-string">"password"</span>;
+<span class="php-variable">$dbname</span> = <span class="php-string">"my_database"</span>;
+
+<span class="php-variable">$conn</span> = <span class="php-keyword">new</span> mysqli(<span class="php-variable">$servername</span>, <span class="php-variable">$username</span>, <span class="php-variable">$password</span>, <span class="php-variable">$dbname</span>);
+
+<span class="php-keyword">if</span> (<span class="php-variable">$conn</span>->connect_error) {
+    <span class="php-keyword">die</span>(<span class="php-string">"Connection failed: "</span> . <span class="php-variable">$conn</span>->connect_error);
+}
+<span class="php-keyword">echo</span> <span class="php-string">"Connected successfully"</span>;
+
+<span class="php-comment">// Procedural style</span>
+<span class="php-variable">$conn</span> = <span class="php-function">mysqli_connect</span>(<span class="php-variable">$servername</span>, <span class="php-variable">$username</span>, <span class="php-variable">$password</span>, <span class="php-variable">$dbname</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">17.2 CRUD Operations</h3>
+              <div class="subsection">
+                <h4 class="subsection-title">Create (INSERT)</h4>
+                <div class="example-box">
+                  <h5>Inserting Data</h5>
+                  <div class="code-box">
+                    <pre>
+<span class="php-variable">$sql</span> = <span class="php-string">"INSERT INTO users (name, email, age) VALUES (?, ?, ?)"</span>;
+<span class="php-variable">$stmt</span> = <span class="php-variable">$conn</span>->prepare(<span class="php-variable">$sql</span>);
+<span class="php-variable">$stmt</span>->bind_param(<span class="php-string">"ssi"</span>, <span class="php-variable">$name</span>, <span class="php-variable">$email</span>, <span class="php-variable">$age</span>);
+
+<span class="php-variable">$name</span> = <span class="php-string">"John Doe"</span>;
+<span class="php-variable">$email</span> = <span class="php-string">"john@example.com"</span>;
+<span class="php-variable">$age</span> = <span class="php-number">25</span>;
+
+<span class="php-keyword">if</span> (<span class="php-variable">$stmt</span>->execute()) {
+    <span class="php-keyword">echo</span> <span class="php-string">"New record created successfully"</span>;
+} <span class="php-keyword">else</span> {
+    <span class="php-keyword">echo</span> <span class="php-string">"Error: "</span> . <span class="php-variable">$stmt</span>->error;
+}
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h4 class="subsection-title">Read (SELECT)</h4>
+                <div class="example-box">
+                  <h5>Reading Data</h5>
+                  <div class="code-box">
+                    <pre>
+<span class="php-variable">$sql</span> = <span class="php-string">"SELECT id, name, email FROM users WHERE age > ?"</span>;
+<span class="php-variable">$stmt</span> = <span class="php-variable">$conn</span>->prepare(<span class="php-variable">$sql</span>);
+<span class="php-variable">$stmt</span>->bind_param(<span class="php-string">"i"</span>, <span class="php-variable">$age</span>);
+<span class="php-variable">$age</span> = <span class="php-number">18</span>;
+<span class="php-variable">$stmt</span>->execute();
+
+<span class="php-variable">$result</span> = <span class="php-variable">$stmt</span>->get_result();
+
+<span class="php-keyword">if</span> (<span class="php-variable">$result</span>->num_rows > <span class="php-number">0</span>) {
+    <span class="php-keyword">while</span> (<span class="php-variable">$row</span> = <span class="php-variable">$result</span>->fetch_assoc()) {
+        <span class="php-keyword">echo</span> <span class="php-string">"ID: "</span> . <span class="php-variable">$row</span>[<span class="php-string">"id"</span>] . <span class="php-string">" - Name: "</span> . <span class="php-variable">$row</span>[<span class="php-string">"name"</span>] . <span class="php-string">"&lt;br&gt;"</span>;
+    }
+} <span class="php-keyword">else</span> {
+    <span class="php-keyword">echo</span> <span class="php-string">"No results found"</span>;
+}
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h4 class="subsection-title">Update</h4>
+                <div class="example-box">
+                  <h5>Updating Data</h5>
+                  <div class="code-box">
+                    <pre>
+<span class="php-variable">$sql</span> = <span class="php-string">"UPDATE users SET email = ? WHERE id = ?"</span>;
+<span class="php-variable">$stmt</span> = <span class="php-variable">$conn</span>->prepare(<span class="php-variable">$sql</span>);
+<span class="php-variable">$stmt</span>->bind_param(<span class="php-string">"si"</span>, <span class="php-variable">$email</span>, <span class="php-variable">$id</span>);
+
+<span class="php-variable">$email</span> = <span class="php-string">"newemail@example.com"</span>;
+<span class="php-variable">$id</span> = <span class="php-number">1</span>;
+
+<span class="php-keyword">if</span> (<span class="php-variable">$stmt</span>->execute()) {
+    <span class="php-keyword">echo</span> <span class="php-string">"Record updated successfully"</span>;
+} <span class="php-keyword">else</span> {
+    <span class="php-keyword">echo</span> <span class="php-string">"Error updating record: "</span> . <span class="php-variable">$stmt</span>->error;
+}
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h4 class="subsection-title">Delete</h4>
+                <div class="example-box">
+                  <h5>Deleting Data</h5>
+                  <div class="code-box">
+                    <pre>
+<span class="php-variable">$sql</span> = <span class="php-string">"DELETE FROM users WHERE id = ?"</span>;
+<span class="php-variable">$stmt</span> = <span class="php-variable">$conn</span>->prepare(<span class="php-variable">$sql</span>);
+<span class="php-variable">$stmt</span>->bind_param(<span class="php-string">"i"</span>, <span class="php-variable">$id</span>);
+
+<span class="php-variable">$id</span> = <span class="php-number">1</span>;
+
+<span class="php-keyword">if</span> (<span class="php-variable">$stmt</span>->execute()) {
+    <span class="php-keyword">echo</span> <span class="php-string">"Record deleted successfully"</span>;
+} <span class="php-keyword">else</span> {
+    <span class="php-keyword">echo</span> <span class="php-string">"Error deleting record: "</span> . <span class="php-variable">$stmt</span>->error;
+}
+</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">17.3 PDO (PHP Data Objects)</h3>
+              <div class="example-box">
+                <h5>PDO Connection and Usage</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">try</span> {
+    <span class="php-variable">$pdo</span> = <span class="php-keyword">new</span> PDO(<span class="php-string">"mysql:host=localhost;dbname=my_database"</span>, <span class="php-string">"root"</span>, <span class="php-string">"password"</span>);
+    <span class="php-variable">$pdo</span>->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    <span class="php-comment">// INSERT with PDO</span>
+    <span class="php-variable">$stmt</span> = <span class="php-variable">$pdo</span>->prepare(<span class="php-string">"INSERT INTO users (name, email) VALUES (?, ?)"</span>);
+    <span class="php-variable">$stmt</span>->execute([<span class="php-string">"John Doe"</span>, <span class="php-string">"john@example.com"</span>]);
+
+    <span class="php-comment">// SELECT with PDO</span>
+    <span class="php-variable">$stmt</span> = <span class="php-variable">$pdo</span>->query(<span class="php-string">"SELECT * FROM users"</span>);
+    <span class="php-keyword">while</span> (<span class="php-variable">$row</span> = <span class="php-variable">$stmt</span>->fetch(PDO::FETCH_ASSOC)) {
+        <span class="php-keyword">echo</span> <span class="php-variable">$row</span>[<span class="php-string">'name'</span>] . <span class="php-string">" - "</span> . <span class="php-variable">$row</span>[<span class="php-string">'email'</span>] . <span class="php-string">"&lt;br&gt;"</span>;
+    }
+
+} <span class="php-keyword">catch</span> (PDOException <span class="php-variable">$e</span>) {
+    <span class="php-keyword">echo</span> <span class="php-string">"Connection failed: "</span> . <span class="php-variable">$e</span>->getMessage();
+}
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 18: Security Best Practices -->
+        <section class="lesson" id="security">
+          <div class="lesson-header">
+            <h2>🔒 Lesson 18: Security Best Practices</h2>
+            <p>Protecting your PHP applications from common vulnerabilities</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">18.1 SQL Injection Prevention</h3>
+              <div class="warning-box">
+                <p><strong>SQL Injection</strong> occurs when user input is not properly sanitized and gets executed as SQL code.</p>
+              </div>
+
+              <div class="example-box">
+                <h5>Vulnerable Code (Don't Do This)</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// VULNERABLE - Never do this!</span>
+<span class="php-variable">$username</span> = <span class="php-variable">$_POST</span>[<span class="php-string">'username'</span>];
+<span class="php-variable">$sql</span> = <span class="php-string">"SELECT * FROM users WHERE username = '$username'"</span>;
+<span class="php-variable">$result</span> = <span class="php-function">mysqli_query</span>(<span class="php-variable">$conn</span>, <span class="php-variable">$sql</span>);
+</pre>
+                </div>
+              </div>
+
+              <div class="example-box">
+                <h5>Secure Code (Use Prepared Statements)</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// SECURE - Use prepared statements</span>
+<span class="php-variable">$stmt</span> = <span class="php-variable">$conn</span>->prepare(<span class="php-string">"SELECT * FROM users WHERE username = ?"</span>);
+<span class="php-variable">$stmt</span>->bind_param(<span class="php-string">"s"</span>, <span class="php-variable">$_POST</span>[<span class="php-string">'username'</span>]);
+<span class="php-variable">$stmt</span>->execute();
+<span class="php-variable">$result</span> = <span class="php-variable">$stmt</span>->get_result();
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">18.2 XSS (Cross-Site Scripting) Prevention</h3>
+              <div class="warning-box">
+                <p><strong>XSS</strong> occurs when malicious scripts are injected into web pages viewed by other users.</p>
+              </div>
+
+              <div class="example-box">
+                <h5>Preventing XSS Attacks</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Escape output to prevent XSS</span>
+<span class="php-variable">$user_input</span> = <span class="php-string">"&lt;script&gt;alert('XSS')&lt;/script&gt;"</span>;
+
+<span class="php-comment">// Method 1: htmlspecialchars()</span>
+<span class="php-variable">$safe_output</span> = <span class="php-function">htmlspecialchars</span>(<span class="php-variable">$user_input</span>, ENT_QUOTES, <span class="php-string">'UTF-8'</span>);
+<span class="php-keyword">echo</span> <span class="php-variable">$safe_output</span>; <span class="php-comment">// Safe to display</span>
+
+<span class="php-comment">// Method 2: Use prepared statements for database</span>
+<span class="php-variable">$stmt</span> = <span class="php-variable">$pdo</span>->prepare(<span class="php-string">"INSERT INTO comments (user_id, comment) VALUES (?, ?)"</span>);
+<span class="php-variable">$stmt</span>->execute([<span class="php-variable">$user_id</span>, <span class="php-variable">$comment</span>]);
+
+<span class="php-comment">// Method 3: Filter input</span>
+<span class="php-variable">$clean_email</span> = <span class="php-function">filter_var</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'email'</span>], FILTER_SANITIZE_EMAIL);
+<span class="php-variable">$clean_email</span> = <span class="php-function">filter_var</span>(<span class="php-variable">$clean_email</span>, FILTER_VALIDATE_EMAIL);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">18.3 CSRF (Cross-Site Request Forgery) Protection</h3>
+              <div class="example-box">
+                <h5>CSRF Token Implementation</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-function">session_start</span>();
+
+<span class="php-comment">// Generate CSRF token</span>
+<span class="php-keyword">if</span> (!<span class="php-function">isset</span>(<span class="php-variable">$_SESSION</span>[<span class="php-string">'csrf_token'</span>])) {
+    <span class="php-variable">$_SESSION</span>[<span class="php-string">'csrf_token'</span>] = <span class="php-function">bin2hex</span>(<span class="php-function">random_bytes</span>(<span class="php-number">32</span>));
+}
+
+<span class="php-comment">// In your HTML form</span>
+<span class="php-keyword">echo</span> <span class="php-string">'&lt;input type="hidden" name="csrf_token" value="'</span> . <span class="php-variable">$_SESSION</span>[<span class="php-string">'csrf_token'</span>] . <span class="php-string">'"&gt;'</span>;
+
+<span class="php-comment">// Verify CSRF token on form submission</span>
+<span class="php-keyword">if</span> (<span class="php-variable">$_SERVER</span>[<span class="php-string">'REQUEST_METHOD'</span>] === <span class="php-string">'POST'</span>) {
+    <span class="php-keyword">if</span> (!<span class="php-function">isset</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'csrf_token'</span>]) ||
+        <span class="php-variable">$_POST</span>[<span class="php-string">'csrf_token'</span>] !== <span class="php-variable">$_SESSION</span>[<span class="php-string">'csrf_token'</span>]) {
+        <span class="php-keyword">die</span>(<span class="php-string">'CSRF token validation failed'</span>);
+    }
+    <span class="php-comment">// Process the form</span>
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">18.4 Password Security</h3>
+              <div class="example-box">
+                <h5>Secure Password Handling</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Hash passwords securely</span>
+<span class="php-variable">$password</span> = <span class="php-variable">$_POST</span>[<span class="php-string">'password'</span>];
+<span class="php-variable">$hashed_password</span> = <span class="php-function">password_hash</span>(<span class="php-variable">$password</span>, PASSWORD_DEFAULT);
+
+<span class="php-comment">// Store $hashed_password in database</span>
+
+<span class="php-comment">// Verify password</span>
+<span class="php-variable">$stored_hash</span> = <span class="php-string">'$2y$10$...';</span> <span class="php-comment">// From database</span>
+<span class="php-keyword">if</span> (<span class="php-function">password_verify</span>(<span class="php-variable">$password</span>, <span class="php-variable">$stored_hash</span>)) {
+    <span class="php-comment">// Password is correct</span>
+    <span class="php-keyword">echo</span> <span class="php-string">"Login successful"</span>;
+} <span class="php-keyword">else</span> {
+    <span class="php-keyword">echo</span> <span class="php-string">"Invalid password"</span>;
+}
+
+<span class="php-comment">// Check if password needs rehashing (for future algorithm changes)</span>
+<span class="php-keyword">if</span> (<span class="php-function">password_needs_rehash</span>(<span class="php-variable">$stored_hash</span>, PASSWORD_DEFAULT)) {
+    <span class="php-variable">$new_hash</span> = <span class="php-function">password_hash</span>(<span class="php-variable">$password</span>, PASSWORD_DEFAULT);
+    <span class="php-comment">// Update database with new hash</span>
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">18.5 File Upload Security</h3>
+              <div class="example-box">
+                <h5>Secure File Upload</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">if</span> (<span class="php-function">isset</span>(<span class="php-variable">$_FILES</span>[<span class="php-string">'uploaded_file'</span>])) {
+    <span class="php-variable">$file</span> = <span class="php-variable">$_FILES</span>[<span class="php-string">'uploaded_file'</span>];
+
+    <span class="php-comment">// Check for upload errors</span>
+    <span class="php-keyword">if</span> (<span class="php-variable">$file</span>[<span class="php-string">'error'</span>] !== UPLOAD_ERR_OK) {
+        <span class="php-keyword">die</span>(<span class="php-string">'Upload failed'</span>);
+    }
+
+    <span class="php-comment">// Validate file type</span>
+    <span class="php-variable">$allowed_types</span> = [<span class="php-string">'image/jpeg'</span>, <span class="php-string">'image/png'</span>, <span class="php-string">'image/gif'</span>];
+    <span class="php-keyword">if</span> (!<span class="php-function">in_array</span>(<span class="php-variable">$file</span>[<span class="php-string">'type'</span>], <span class="php-variable">$allowed_types</span>)) {
+        <span class="php-keyword">die</span>(<span class="php-string">'Invalid file type'</span>);
+    }
+
+    <span class="php-comment">// Check file size (max 5MB)</span>
+    <span class="php-keyword">if</span> (<span class="php-variable">$file</span>[<span class="php-string">'size'</span>] > <span class="php-number">5242880</span>) {
+        <span class="php-keyword">die</span>(<span class="php-string">'File too large'</span>);
+    }
+
+    <span class="php-comment">// Generate safe filename</span>
+    <span class="php-variable">$safe_filename</span> = <span class="php-function">uniqid</span>() . <span class="php-string">'_'</span> . <span class="php-function">basename</span>(<span class="php-variable">$file</span>[<span class="php-string">'name'</span>]);
+    <span class="php-variable">$upload_path</span> = <span class="php-string">'/var/www/uploads/'</span> . <span class="php-variable">$safe_filename</span>;
+
+    <span class="php-comment">// Move uploaded file</span>
+    <span class="php-keyword">if</span> (<span class="php-function">move_uploaded_file</span>(<span class="php-variable">$file</span>[<span class="php-string">'tmp_name'</span>], <span class="php-variable">$upload_path</span>)) {
+        <span class="php-keyword">echo</span> <span class="php-string">'File uploaded successfully'</span>;
+    }
+}
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 19: PHP Frameworks -->
+        <section class="lesson" id="frameworks">
+          <div class="lesson-header">
+            <h2>🚀 Lesson 19: PHP Frameworks</h2>
+            <p>Popular PHP frameworks and when to use them</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">19.1 Laravel</h3>
+              <div class="definition-box">
+                <p>
+                  Laravel is a powerful MVC framework with elegant syntax, comprehensive documentation,
+                  and a rich ecosystem of packages and tools.
+                </p>
+              </div>
+
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Features</h4>
+                  <p>Eloquent ORM, Blade templating, Artisan CLI, migrations, authentication</p>
+                </div>
+                <div class="component-card">
+                  <h4>Best For</h4>
+                  <p>Full-stack web applications, APIs, complex business logic</p>
+                </div>
+                <div class="component-card">
+                  <h4>Learning Curve</h4>
+                  <p>Moderate to steep for beginners</p>
+                </div>
+              </div>
+
+              <div class="example-box">
+                <h5>Basic Laravel Route & Controller</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// routes/web.php</span>
+<span class="php-function">Route</span>::get(<span class="php-string">'/users'</span>, [<span class="php-class">UserController</span>::<span class="php-keyword">class</span>, <span class="php-string">'index'</span>]);
+
+<span class="php-comment">// app/Http/Controllers/UserController.php</span>
+<span class="php-keyword">class</span> <span class="php-class">UserController</span> <span class="php-keyword">extends</span> Controller
+{
+    <span class="php-keyword">public</span> <span class="php-keyword">function</span> <span class="php-method">index</span>()
+    {
+        <span class="php-variable">$users</span> = User::all();
+        <span class="php-keyword">return</span> view(<span class="php-string">'users.index'</span>, compact(<span class="php-string">'users'</span>));
+    }
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">19.2 Symfony</h3>
+              <div class="definition-box">
+                <p>
+                  Symfony is a set of reusable PHP components and a full-stack web framework.
+                  It's highly modular and follows best practices.
+                </p>
+              </div>
+
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Features</h4>
+                  <p>Components, Doctrine ORM, Twig templating, forms, security</p>
+                </div>
+                <div class="component-card">
+                  <h4>Best For</h4>
+                  <p>Enterprise applications, complex systems, reusable components</p>
+                </div>
+                <div class="component-card">
+                  <h4>Learning Curve</h4>
+                  <p>Steep, but very powerful</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">19.3 CodeIgniter</h3>
+              <div class="definition-box">
+                <p>
+                  CodeIgniter is a lightweight PHP framework with small footprint and excellent performance.
+                  It's simple to learn and doesn't require complex configurations.
+                </p>
+              </div>
+
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Features</h4>
+                  <p>MVC architecture, lightweight, fast performance, simple syntax</p>
+                </div>
+                <div class="component-card">
+                  <h4>Best For</h4>
+                  <p>Small to medium applications, rapid development, shared hosting</p>
+                </div>
+                <div class="component-card">
+                  <h4>Learning Curve</h4>
+                  <p>Gentle, great for beginners</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">19.4 Choosing a Framework</h3>
+              <div class="data-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Criteria</th>
+                      <th>Laravel</th>
+                      <th>Symfony</th>
+                      <th>CodeIgniter</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Performance</td>
+                      <td>Good</td>
+                      <td>Excellent</td>
+                      <td>Excellent</td>
+                    </tr>
+                    <tr>
+                      <td>Ease of Learning</td>
+                      <td>Medium</td>
+                      <td>Hard</td>
+                      <td>Easy</td>
+                    </tr>
+                    <tr>
+                      <td>Community Size</td>
+                      <td>Large</td>
+                      <td>Large</td>
+                      <td>Medium</td>
+                    </tr>
+                    <tr>
+                      <td>Best Use Case</td>
+                      <td>Full-stack apps</td>
+                      <td>Enterprise</td>
+                      <td>Rapid development</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 20: Practical Projects -->
+        <section class="lesson" id="projects">
+          <div class="lesson-header">
+            <h2>💡 Lesson 20: Practical Projects</h2>
+            <p>Real-world PHP projects to build your skills</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">20.1 Project 1: User Management System</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Features</h4>
+                  <p>User registration, login, profile management, admin panel</p>
+                </div>
+                <div class="component-card">
+                  <h4>Technologies</h4>
+                  <p>PHP, MySQL, HTML/CSS, JavaScript, Sessions</p>
+                </div>
+                <div class="component-card">
+                  <h4>Skills Learned</h4>
+                  <p>Authentication, database design, security, session management</p>
+                </div>
+              </div>
+
+              <div class="example-box">
+                <h5>Basic Login System Structure</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Database connection</span>
+<span class="php-variable">$conn</span> = <span class="php-keyword">new</span> mysqli(<span class="php-string">"localhost"</span>, <span class="php-string">"root"</span>, <span class="php-string">""</span>, <span class="php-string">"user_management"</span>);
+
+<span class="php-comment">// Login function</span>
+<span class="php-keyword">function</span> <span class="php-function">loginUser</span>(<span class="php-variable">$email</span>, <span class="php-variable">$password</span>) {
+    <span class="php-keyword">global</span> <span class="php-variable">$conn</span>;
+    <span class="php-variable">$stmt</span> = <span class="php-variable">$conn</span>->prepare(<span class="php-string">"SELECT id, password FROM users WHERE email = ?"</span>);
+    <span class="php-variable">$stmt</span>->bind_param(<span class="php-string">"s"</span>, <span class="php-variable">$email</span>);
+    <span class="php-variable">$stmt</span>->execute();
+    <span class="php-variable">$result</span> = <span class="php-variable">$stmt</span>->get_result();
+
+    <span class="php-keyword">if</span> (<span class="php-variable">$result</span>->num_rows === <span class="php-number">1</span>) {
+        <span class="php-variable">$user</span> = <span class="php-variable">$result</span>->fetch_assoc();
+        <span class="php-keyword">if</span> (<span class="php-function">password_verify</span>(<span class="php-variable">$password</span>, <span class="php-variable">$user</span>[<span class="php-string">'password'</span>])) {
+            <span class="php-function">session_start</span>();
+            <span class="php-variable">$_SESSION</span>[<span class="php-string">'user_id'</span>] = <span class="php-variable">$user</span>[<span class="php-string">'id'</span>];
+            <span class="php-keyword">return</span> <span class="php-keyword">true</span>;
+        }
+    }
+    <span class="php-keyword">return</span> <span class="php-keyword">false</span>;
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">20.2 Project 2: Blog/CMS System</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Features</h4>
+                  <p>Post creation, categories, comments, user roles, admin dashboard</p>
+                </div>
+                <div class="component-card">
+                  <h4>Technologies</h4>
+                  <p>PHP, MySQL, HTML/CSS, JavaScript, File uploads</p>
+                </div>
+                <div class="component-card">
+                  <h4>Skills Learned</h4>
+                  <p>CRUD operations, file handling, user permissions, content management</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">20.3 Project 3: E-commerce Store</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Features</h4>
+                  <p>Product catalog, shopping cart, checkout, order management, payment integration</p>
+                </div>
+                <div class="component-card">
+                  <h4>Technologies</h4>
+                  <p>PHP, MySQL, HTML/CSS, JavaScript, Payment APIs</p>
+                </div>
+                <div class="component-card">
+                  <h4>Skills Learned</h4>
+                  <p>E-commerce logic, payment processing, complex database relationships</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">20.4 Project 4: REST API</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Features</h4>
+                  <p>CRUD endpoints, authentication, data validation, error handling</p>
+                </div>
+                <div class="component-card">
+                  <h4>Technologies</h4>
+                  <p>PHP, JSON, HTTP methods, API design principles</p>
+                </div>
+                <div class="component-card">
+                  <h4>Skills Learned</h4>
+                  <p>API development, HTTP protocols, data serialization, authentication</p>
+                </div>
+              </div>
+
+              <div class="example-box">
+                <h5>Simple REST API Example</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// api.php</span>
+<span class="php-function">header</span>(<span class="php-string">'Content-Type: application/json'</span>);
+<span class="php-function">header</span>(<span class="php-string">'Access-Control-Allow-Origin: *'</span>);
+<span class="php-function">header</span>(<span class="php-string">'Access-Control-Allow-Methods: GET, POST, PUT, DELETE'</span>);
+
+<span class="php-variable">$method</span> = <span class="php-variable">$_SERVER</span>[<span class="php-string">'REQUEST_METHOD'</span>];
+<span class="php-variable">$request</span> = <span class="php-function">explode</span>(<span class="php-string">'/'</span>, <span class="php-function">trim</span>(<span class="php-variable">$_SERVER</span>[<span class="php-string">'PATH_INFO'</span>],<span class="php-string">'/'</span>));
+
+<span class="php-keyword">switch</span> (<span class="php-variable">$method</span>) {
+    <span class="php-keyword">case</span> <span class="php-string">'GET'</span>:
+        <span class="php-keyword">if</span> (<span class="php-function">isset</span>(<span class="php-variable">$request</span>[<span class="php-number">0</span>])) {
+            <span class="php-comment">// Get specific item</span>
+            <span class="php-variable">$data</span> = getItem(<span class="php-variable">$request</span>[<span class="php-number">0</span>]);
+        } <span class="php-keyword">else</span> {
+            <span class="php-comment">// Get all items</span>
+            <span class="php-variable">$data</span> = getAllItems();
+        }
+        <span class="php-keyword">echo</span> <span class="php-function">json_encode</span>(<span class="php-variable">$data</span>);
+        <span class="php-keyword">break</span>;
+
+    <span class="php-keyword">case</span> <span class="php-string">'POST'</span>:
+        <span class="php-variable">$input</span> = <span class="php-function">json_decode</span>(<span class="php-function">file_get_contents</span>(<span class="php-string">'php://input'</span>), <span class="php-keyword">true</span>);
+        <span class="php-variable">$result</span> = createItem(<span class="php-variable">$input</span>);
+        <span class="php-keyword">echo</span> <span class="php-function">json_encode</span>(<span class="php-variable">$result</span>);
+        <span class="php-keyword">break</span>;
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">20.5 Development Best Practices</h3>
+              <div class="highlight-box">
+                <p><strong>Project Development Tips:</strong></p>
+                <ul>
+                  <li>Plan your database schema before coding</li>
+                  <li>Use version control (Git) from the start</li>
+                  <li>Follow PSR standards for PHP code</li>
+                  <li>Implement proper error handling and logging</li>
+                  <li>Use prepared statements for all database queries</li>
+                  <li>Validate and sanitize all user inputs</li>
+                  <li>Organize code into logical folders (controllers, models, views)</li>
+                  <li>Write unit tests for critical functions</li>
+                  <li>Use meaningful variable and function names</li>
+                  <li>Comment your code and document APIs</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+        <footer class="footer">
+          <p style="margin-bottom: 10px">
+            <strong>Created by:</strong> Abdelghany
+          </p>
+        </footer>
+      </main>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+      // Sidebar toggle functionality
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+
+        sidebar.classList.toggle('open');
+        mainContent.classList.toggle('sidebar-open');
+      }
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('.sidebar a').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+
+          if (targetElement) {
+            targetElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+
+      // Scroll to top functionality
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+
+      // Show/hide scroll to top button
+      window.addEventListener('scroll', function() {
+        const scrollButton = document.querySelector('.scroll-to-top');
+        if (window.pageYOffset > 300) {
+          scrollButton.classList.add('show');
+        } else {
+          scrollButton.classList.remove('show');
+        }
+      });
+
+      // Highlight active section in sidebar
+      window.addEventListener('scroll', function() {
+        const sections = document.querySelectorAll('.lesson');
+        const navLinks = document.querySelectorAll('.sidebar a');
+
+        let current = '';
+
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          if (pageYOffset >= sectionTop - 60) {
+            current = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href').substring(1) === current) {
+            link.classList.add('active');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

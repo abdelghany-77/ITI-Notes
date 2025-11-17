@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WordPress Development Study Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #21759b 0%, #d54e21 100%);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* Layout Container */
+      .layout-container {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100vh;
+        background: linear-gradient(
+          180deg,
+          rgba(33, 117, 155, 0.95) 0%,
+          rgba(213, 78, 33, 0.95) 100%
+        );
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .sidebar-header {
+        background: linear-gradient(135deg, #21759b, #d54e21);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1002;
+      }
+
+      .sidebar-header h3 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+        font-weight: 700;
+      }
+
+      .sidebar-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .sidebar-content {
+        padding: 20px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar li {
+        margin-bottom: 8px;
+      }
+
+      .sidebar a {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 15px;
+        display: block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+      }
+
+      .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-left-color: #f39c12;
+        transform: translateX(5px);
+      }
+
+      .sidebar a.active {
+        background: rgba(255, 255, 255, 0.2);
+        border-left-color: #f39c12;
+      }
+
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        padding: 20px;
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+        overflow-x: auto;
+      }
+
+      .main-content.sidebar-open {
+        margin-left: 300px;
+      }
+
+      /* Header */
+      .header {
+        background: linear-gradient(135deg, #21759b, #d54e21);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+        opacity: 0.3;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Toggle Button */
+      .sidebar-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #21759b, #d54e21);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        font-size: 18px;
+        box-shadow: 0 4px 12px rgba(33, 117, 155, 0.3);
+        transition: all 0.3s ease;
+        z-index: 1002;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .sidebar-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(33, 117, 155, 0.4);
+      }
+
+      /* Back to Main Page Button */
+      .back-to-main-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #21759b, #d54e21);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 14px;
+        box-shadow: 0 4px 12px rgba(33, 117, 155, 0.3);
+        transition: all 0.3s ease;
+        z-index: 1002;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-to-main-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(33, 117, 155, 0.4);
+        text-decoration: none;
+        color: white;
+      }
+
+      .back-to-main-btn span {
+        font-size: 16px;
+      }
+
+      /* Course Outline */
+      .course-outline {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        border-left: 5px solid #21759b;
+      }
+
+      .course-outline h2 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.8em;
+      }
+
+      .course-outline p {
+        color: #555;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+      }
+
+      .lesson-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+      }
+
+      .lesson-item {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #ecf0f1;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .lesson-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .lesson-item h3 {
+        color: #21759b;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+      }
+
+      .lesson-item p {
+        color: #666;
+        font-size: 0.95em;
+      }
+
+      /* Lesson Content */
+      .lesson {
+        background: white;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .lesson-header {
+        background: linear-gradient(135deg, #21759b, #d54e21);
+        color: white;
+        padding: 25px;
+        position: relative;
+      }
+
+      .lesson-header h2 {
+        font-size: 1.8em;
+        margin-bottom: 5px;
+      }
+
+      .lesson-header p {
+        opacity: 0.9;
+        font-size: 1.1em;
+      }
+
+      .lesson-content {
+        padding: 30px;
+      }
+
+      .section {
+        margin-bottom: 30px;
+      }
+
+      .section-title {
+        color: #2c3e50;
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #ecf0f1;
+        padding-bottom: 10px;
+      }
+
+      .subsection {
+        margin: 20px 0;
+        padding-left: 20px;
+        border-left: 3px solid #d54e21;
+      }
+
+      .subsection-title {
+        color: #d54e21;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+      }
+
+      /* Content Components */
+      .definition-box {
+        background: #e8f4fd;
+        border: 1px solid #bee5eb;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+      }
+
+      .definition-box p {
+        color: #0c5460;
+        font-weight: 500;
+      }
+
+      .highlight-box {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+      }
+
+      .highlight-box p {
+        color: #856404;
+        font-weight: 500;
+      }
+
+      .warning-box {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+      }
+
+      .warning-box p {
+        color: #721c24;
+        font-weight: 500;
+      }
+
+      .component-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .component-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #ecf0f1;
+        transition: transform 0.3s ease;
+      }
+
+      .component-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .component-card h4 {
+        color: #21759b;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+
+      .component-card p {
+        color: #666;
+        font-size: 0.9em;
+      }
+
+      .data-table {
+        margin: 20px 0;
+        overflow-x: auto;
+      }
+
+      .data-table table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ecf0f1;
+      }
+
+      .data-table th {
+        background: #21759b;
+        color: white;
+        font-weight: 600;
+      }
+
+      .data-table tr:nth-child(even) {
+        background: #f8f9fa;
+      }
+
+      .data-table tr:hover {
+        background: #e8f4fd;
+      }
+
+      /* Code Styling */
+      .code-box {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 15px 0;
+        font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+        overflow-x: auto;
+        position: relative;
+        border: 1px solid #3e3e3e;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .code-box::before {
+        content: "PHP";
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        background: #007acc;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-size: 0.75em;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+      }
+
+      .code-box pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        line-height: 1.5;
+        font-size: 1.2em;
+      }
+
+      .example-box {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #ecf0f1;
+        margin-bottom: 15px;
+      }
+
+      .example-box h5 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+
+      /* Syntax Highlighting */
+      .php-keyword {
+        color: #569cd6;
+        font-weight: bold;
+      }
+
+      .php-string {
+        color: #ce9178;
+      }
+
+      .php-comment {
+        color: #6a9955;
+        font-style: italic;
+      }
+
+      .php-variable {
+        color: #9cdcfe;
+      }
+
+      .php-function {
+        color: #dcdcaa;
+      }
+
+      .php-class {
+        color: #4ec9b0;
+      }
+
+      .php-method {
+        color: #dcdcaa;
+      }
+
+      .php-property {
+        color: #9cdcfe;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 250px;
+        }
+
+        .main-content.sidebar-open {
+          margin-left: 250px;
+        }
+
+        .header h1 {
+          font-size: 2em;
+        }
+
+        .lesson-list {
+          grid-template-columns: 1fr;
+        }
+
+        .component-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .data-table {
+          font-size: 0.9em;
+        }
+      }
+
+      /* Scrollbar Styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #21759b, #d54e21);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #1a5a7a, #a63d1f);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3>🎨 WordPress Guide</h3>
+        <p>Complete Development Course</p>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li><a href="#introduction">Introduction to WordPress</a></li>
+          <li><a href="#installation">Installation & Setup</a></li>
+          <li><a href="#dashboard">Admin Dashboard</a></li>
+          <li><a href="#themes">Themes & Customization</a></li>
+          <li><a href="#plugins">Plugins Development</a></li>
+          <li><a href="#custom-post-types">Custom Post Types</a></li>
+          <li><a href="#taxonomies">Taxonomies & Terms</a></li>
+          <li><a href="#hooks-api">Hooks & API</a></li>
+          <li><a href="#security">Security Best Practices</a></li>
+          <li><a href="#performance">Performance Optimization</a></li>
+          <li><a href="#deployment">Deployment & Hosting</a></li>
+          <li><a href="#projects">Practical Projects</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="layout-container">
+      <main class="main-content" id="mainContent">
+        <!-- Toggle Button -->
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+        <!-- Back to Main Page Button -->
+        <a href="../index.html" class="back-to-main-btn">
+          <span>🏠</span>
+        </a>
+
+        <!-- Header -->
+        <header class="header">
+          <h1>🎨 WordPress Development Study Notes</h1>
+          <p>Complete Guide to WordPress Development & Customization</p>
+        </header>
+
+        <!-- Course Outline -->
+        <section class="course-outline">
+          <h2>📋 Course Overview</h2>
+          <p>
+            This comprehensive WordPress study guide covers everything from basic installation
+            to advanced theme development, plugin creation, and performance optimization.
+            Perfect for developers looking to master WordPress development.
+          </p>
+
+          <div class="lesson-list">
+            <div class="lesson-item">
+              <h3>Getting Started</h3>
+              <p>WordPress introduction, installation, and admin dashboard overview</p>
+            </div>
+            <div class="lesson-item">
+              <h3>Theme Development</h3>
+              <p>Custom themes, template hierarchy, and WordPress functions</p>
+            </div>
+            <div class="lesson-item">
+              <h3>Plugin Development</h3>
+              <p>Creating plugins, hooks, filters, and custom functionality</p>
+            </div>
+            <div class="lesson-item">
+              <h3>Advanced Features</h3>
+              <p>Custom post types, taxonomies, REST API, and security</p>
+            </div>
+            <div class="lesson-item">
+              <h3>Performance & Deployment</h3>
+              <p>Optimization techniques, hosting, and production deployment</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 1: Introduction to WordPress -->
+        <section class="lesson" id="introduction">
+          <div class="lesson-header">
+            <h2>📖 Lesson 1: Introduction to WordPress</h2>
+            <p>What is WordPress and why it's the most popular CMS</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">1.1 What is WordPress?</h3>
+              <div class="definition-box">
+                <p>
+                  <strong>WordPress</strong> is a free and open-source content management system (CMS)
+                  written in PHP and paired with a MySQL database. It was created by Matt Mullenweg
+                  and Mike Little in 2003 and has since become the most popular CMS in the world,
+                  powering over 40% of all websites on the internet.
+                </p>
+              </div>
+
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Open Source</h4>
+                  <p>Free to use, modify, and distribute under GPL license</p>
+                </div>
+                <div class="component-card">
+                  <h4>User-Friendly</h4>
+                  <p>Intuitive admin interface for non-technical users</p>
+                </div>
+                <div class="component-card">
+                  <h4>Extensible</h4>
+                  <p>Thousands of themes and plugins available</p>
+                </div>
+                <div class="component-card">
+                  <h4>SEO-Friendly</h4>
+                  <p>Built-in SEO features and optimization tools</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">1.2 WordPress Architecture</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Core Files</h4>
+                  <p>wp-admin, wp-content, wp-includes directories</p>
+                </div>
+                <div class="component-card">
+                  <h4>Database</h4>
+                  <p>MySQL database storing posts, users, settings</p>
+                </div>
+                <div class="component-card">
+                  <h4>Themes</h4>
+                  <p>Control visual appearance and layout</p>
+                </div>
+                <div class="component-card">
+                  <h4>Plugins</h4>
+                  <p>Extend functionality without modifying core</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">1.4 WordPress Market Share & Statistics</h3>
+              <div class="data-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Statistic</th>
+                      <th>Value</th>
+                      <th>Source</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Global Market Share</td>
+                      <td>43.2% of all websites</td>
+                      <td>W3Techs (2024)</td>
+                    </tr>
+                    <tr>
+                      <td>CMS Market Share</td>
+                      <td>63.1% of all CMS websites</td>
+                      <td>W3Techs (2024)</td>
+                    </tr>
+                    <tr>
+                      <td>Active Installations</td>
+                      <td>Over 810 million websites</td>
+                      <td>WordPress.org</td>
+                    </tr>
+                    <tr>
+                      <td>Plugin Repository</td>
+                      <td>60,000+ plugins</td>
+                      <td>WordPress.org</td>
+                    </tr>
+                    <tr>
+                      <td>Theme Directory</td>
+                      <td>12,000+ themes</td>
+                      <td>WordPress.org</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">1.5 WordPress Core Components</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>WordPress Core</h4>
+                  <p>Main application files, database structure, and core APIs</p>
+                </div>
+                <div class="component-card">
+                  <h4>wp-admin</h4>
+                  <p>Administration interface for content management</p>
+                </div>
+                <div class="component-card">
+                  <h4>wp-content</h4>
+                  <p>Themes, plugins, uploads, and custom content</p>
+                </div>
+                <div class="component-card">
+                  <h4>wp-includes</h4>
+                  <p>Core WordPress functions and libraries</p>
+                </div>
+                <div class="component-card">
+                  <h4>Database</h4>
+                  <p>MySQL/MariaDB with custom table structure</p>
+                </div>
+                <div class="component-card">
+                  <h4>.htaccess</h4>
+                  <p>Apache configuration for URL rewriting</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 2: Installation & Setup -->
+        <section class="lesson" id="installation">
+          <div class="lesson-header">
+            <h2>⚙️ Lesson 2: Installation & Setup</h2>
+            <p>Setting up WordPress locally and on servers</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">2.1 System Requirements</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>PHP</h4>
+                  <p>Version 7.4 or higher (8.0+ recommended)</p>
+                  <p>Extensions: mysqli, pdo_mysql, mbstring, curl, gd, xml, zip</p>
+                </div>
+                <div class="component-card">
+                  <h4>MySQL</h4>
+                  <p>Version 5.7 or higher (8.0+ recommended)</p>
+                  <p>InnoDB storage engine required</p>
+                </div>
+                <div class="component-card">
+                  <h4>Web Server</h4>
+                  <p>Apache, Nginx, or IIS with mod_rewrite</p>
+                  <p>URL rewriting support required</p>
+                </div>
+                <div class="component-card">
+                  <h4>HTTPS</h4>
+                  <p>SSL certificate for secure connections</p>
+                  <p>Let's Encrypt or commercial certificates</p>
+                </div>
+              </div>
+
+              <div class="highlight-box">
+                <h5>Minimum Hardware Requirements</h5>
+                <ul>
+                  <li><strong>RAM:</strong> 512MB minimum, 1GB+ recommended</li>
+                  <li><strong>Storage:</strong> 1GB for WordPress core, additional space for uploads/media</li>
+                  <li><strong>CPU:</strong> 1GHz+ processor, multiple cores recommended</li>
+                  <li><strong>Network:</strong> Stable internet connection for updates and plugins</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">2.2 Local Development Setup</h3>
+              <div class="subsection">
+                <h4 class="subsection-title">Using XAMPP</h4>
+                <div class="highlight-box">
+                  <p><strong>XAMPP</strong> is a free and open-source cross-platform web server solution stack.</p>
+                  <ol>
+                    <li>Download XAMPP from apachefriends.org</li>
+                    <li>Install and start Apache, MySQL modules</li>
+                    <li>Download WordPress from wordpress.org</li>
+                    <li>Extract to htdocs folder</li>
+                    <li>Create database in phpMyAdmin</li>
+                    <li>Run WordPress installation wizard</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div class="subsection">
+                <h4 class="subsection-title">Using Local by Flywheel</h4>
+                <div class="highlight-box">
+                  <p><strong>Local</strong> is a modern local development environment for WordPress.</p>
+                  <ul>
+                    <li>Download from localwp.com</li>
+                    <li>Create new site with one click</li>
+                    <li>Choose PHP version and web server</li>
+                    <li>Access admin panel automatically</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">2.3 wp-config.php Configuration</h3>
+              <div class="example-box">
+                <h5>WordPress Configuration File</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// ** MySQL settings - You can get this info from your web host ** //</span>
+<span class="php-keyword">define</span>(<span class="php-string">'DB_NAME'</span>, <span class="php-string">'wordpress_db'</span>);
+<span class="php-keyword">define</span>(<span class="php-string">'DB_USER'</span>, <span class="php-string">'wp_user'</span>);
+<span class="php-keyword">define</span>(<span class="php-string">'DB_PASSWORD'</span>, <span class="php-string">'secure_password'</span>);
+<span class="php-keyword">define</span>(<span class="php-string">'DB_HOST'</span>, <span class="php-string">'localhost'</span>);
+
+<span class="php-comment">// ** MySQL database table prefix ** //</span>
+<span class="php-variable">$table_prefix</span> = <span class="php-string">'wp_'</span>;
+
+<span class="php-comment">// ** Authentication Unique Keys and Salts ** //</span>
+<span class="php-keyword">define</span>(<span class="php-string">'AUTH_KEY'</span>, <span class="php-string">'your-unique-key-here'</span>);
+<span class="php-keyword">define</span>(<span class="php-string">'SECURE_AUTH_KEY'</span>, <span class="php-string">'your-secure-key-here'</span>);
+
+<span class="php-comment">// ** WordPress debugging mode ** //</span>
+<span class="php-keyword">define</span>(<span class="php-string">'WP_DEBUG'</span>, <span class="php-keyword">false</span>);
+<span class="php-keyword">define</span>(<span class="php-string">'WP_DEBUG_LOG'</span>, <span class="php-keyword">true</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 3: Admin Dashboard -->
+        <section class="lesson" id="dashboard">
+          <div class="lesson-header">
+            <h2>🎛️ Lesson 3: Admin Dashboard</h2>
+            <p>Understanding the WordPress admin interface</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">3.1 Dashboard Overview</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Posts</h4>
+                  <p>Create and manage blog posts and articles</p>
+                </div>
+                <div class="component-card">
+                  <h4>Pages</h4>
+                  <p>Static content pages like About, Contact</p>
+                </div>
+                <div class="component-card">
+                  <h4>Media</h4>
+                  <p>Upload and manage images, videos, documents</p>
+                </div>
+                <div class="component-card">
+                  <h4>Comments</h4>
+                  <p>Moderate and manage user comments</p>
+                </div>
+                <div class="component-card">
+                  <h4>Appearance</h4>
+                  <p>Themes, menus, widgets, customizer</p>
+                </div>
+                <div class="component-card">
+                  <h4>Plugins</h4>
+                  <p>Install and manage WordPress plugins</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">3.2 User Roles & Permissions</h3>
+              <div class="data-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Role</th>
+                      <th>Capabilities</th>
+                      <th>Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Administrator</td>
+                      <td>Full access to all features</td>
+                      <td>Site owners, developers</td>
+                    </tr>
+                    <tr>
+                      <td>Editor</td>
+                      <td>Publish and manage all posts</td>
+                      <td>Content managers</td>
+                    </tr>
+                    <tr>
+                      <td>Author</td>
+                      <td>Publish and manage own posts</td>
+                      <td>Content writers</td>
+                    </tr>
+                    <tr>
+                      <td>Contributor</td>
+                      <td>Write posts, no publishing</td>
+                      <td>Guest writers</td>
+                    </tr>
+                    <tr>
+                      <td>Subscriber</td>
+                      <td>Read posts, manage profile</td>
+                      <td>Registered users</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">3.3 Settings & Configuration</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>General</h4>
+                  <p>Site title, tagline, timezone, date format</p>
+                </div>
+                <div class="component-card">
+                  <h4>Writing</h4>
+                  <p>Default post category, post formats</p>
+                </div>
+                <div class="component-card">
+                  <h4>Reading</h4>
+                  <p>Front page displays, posts per page</p>
+                </div>
+                <div class="component-card">
+                  <h4>Discussion</h4>
+                  <p>Comment settings, moderation options</p>
+                </div>
+                <div class="component-card">
+                  <h4>Media</h4>
+                  <p>Image sizes, file upload settings</p>
+                </div>
+                <div class="component-card">
+                  <h4>Permalinks</h4>
+                  <p>URL structure for posts and pages</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 4: Themes & Customization -->
+        <section class="lesson" id="themes">
+          <div class="lesson-header">
+            <h2>🎨 Lesson 4: Themes & Customization</h2>
+            <p>Creating and customizing WordPress themes</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">4.1 Theme Structure</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>style.css</h4>
+                  <p>Main stylesheet with theme information</p>
+                </div>
+                <div class="component-card">
+                  <h4>index.php</h4>
+                  <p>Main template file, fallback for all pages</p>
+                </div>
+                <div class="component-card">
+                  <h4>header.php</h4>
+                  <p>Site header, navigation, meta tags</p>
+                </div>
+                <div class="component-card">
+                  <h4>footer.php</h4>
+                  <p>Site footer, closing HTML tags</p>
+                </div>
+                <div class="component-card">
+                  <h4>functions.php</h4>
+                  <p>Theme functions, hooks, custom functionality</p>
+                </div>
+                <div class="component-card">
+                  <h4>page.php</h4>
+                  <p>Template for individual pages</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">4.2 Template Hierarchy</h3>
+              <div class="example-box">
+                <h5>WordPress Template Loading Order</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Single Post Page Loading Order:</span>
+<span class="php-comment">// 1. single-{post-type}-{slug}.php</span>
+<span class="php-comment">// 2. single-{post-type}.php</span>
+<span class="php-comment">// 3. single.php</span>
+<span class="php-comment">// 4. singular.php</span>
+<span class="php-comment">// 5. index.php</span>
+
+<span class="php-comment">// Page Loading Order:</span>
+<span class="php-comment">// 1. Custom template (selected in page editor)</span>
+<span class="php-comment">// 2. page-{slug}.php</span>
+<span class="php-comment">// 3. page-{id}.php</span>
+<span class="php-comment">// 4. page.php</span>
+<span class="php-comment">// 5. singular.php</span>
+<span class="php-comment">// 6. index.php</span>
+
+<span class="php-comment">// Category Archive Loading Order:</span>
+<span class="php-comment">// 1. category-{slug}.php</span>
+<span class="php-comment">// 2. category-{id}.php</span>
+<span class="php-comment">// 3. category.php</span>
+<span class="php-comment">// 4. archive.php</span>
+<span class="php-comment">// 5. index.php</span>
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">4.3 Theme Functions (functions.php)</h3>
+              <div class="example-box">
+                <h5>Basic Theme Functions</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">function</span> <span class="php-function">my_theme_setup</span>() {
+    <span class="php-comment">// Add theme support for various features</span>
+    <span class="php-function">add_theme_support</span>(<span class="php-string">'post-thumbnails'</span>);
+    <span class="php-function">add_theme_support</span>(<span class="php-string">'title-tag'</span>);
+    <span class="php-function">add_theme_support</span>(<span class="php-string">'custom-logo'</span>);
+    <span class="php-function">add_theme_support</span>(<span class="php-string">'html5'</span>, [<span class="php-string">'search-form'</span>, <span class="php-string">'comment-form'</span>]);
+
+    <span class="php-comment">// Register navigation menus</span>
+    <span class="php-function">register_nav_menus</span>([
+        <span class="php-string">'primary'</span> => <span class="php-string">'Primary Menu'</span>,
+        <span class="php-string">'footer'</span> => <span class="php-string">'Footer Menu'</span>
+    ]);
+}
+<span class="php-function">add_action</span>(<span class="php-string">'after_setup_theme'</span>, <span class="php-string">'my_theme_setup'</span>);
+
+<span class="php-comment">// Enqueue styles and scripts</span>
+<span class="php-keyword">function</span> <span class="php-function">my_theme_scripts</span>() {
+    <span class="php-function">wp_enqueue_style</span>(<span class="php-string">'theme-style'</span>, <span class="php-function">get_stylesheet_uri</span>());
+    <span class="php-function">wp_enqueue_script</span>(<span class="php-string">'theme-script'</span>, <span class="php-function">get_template_directory_uri</span>() . <span class="php-string">'/js/script.js'</span>, [<span class="php-string">'jquery'</span>], <span class="php-string">'1.0.0'</span>, <span class="php-keyword">true</span>);
+}
+<span class="php-function">add_action</span>(<span class="php-string">'wp_enqueue_scripts'</span>, <span class="php-string">'my_theme_scripts'</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">4.4 WordPress Loop</h3>
+              <div class="example-box">
+                <h5>The Main WordPress Loop</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">if</span> (<span class="php-function">have_posts</span>()) {
+    <span class="php-keyword">while</span> (<span class="php-function">have_posts</span>()) {
+        <span class="php-function">the_post</span>();
+
+        <span class="php-comment">// Display post content</span>
+        <span class="php-keyword">echo</span> <span class="php-string">'&lt;article&gt;'</span>;
+        <span class="php-keyword">echo</span> <span class="php-string">'&lt;h2&gt;'</span> . <span class="php-function">get_the_title</span>() . <span class="php-string">'&lt;/h2&gt;'</span>;
+        <span class="php-keyword">echo</span> <span class="php-string">'&lt;div class="content"&gt;'</span> . <span class="php-function">get_the_content</span>() . <span class="php-string">'&lt;/div&gt;'</span>;
+        <span class="php-keyword">echo</span> <span class="php-string">'&lt;/article&gt;'</span>;
+    }
+} <span class="php-keyword">else</span> {
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;p&gt;No posts found.&lt;/p&gt;'</span>;
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">4.5 Customizer API</h3>
+              <div class="example-box">
+                <h5>Adding Theme Customizer Options</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">function</span> <span class="php-function">my_theme_customizer</span>(<span class="php-variable">$wp_customize</span>) {
+    <span class="php-comment">// Add section</span>
+    <span class="php-variable">$wp_customize</span>->add_section(<span class="php-string">'my_theme_options'</span>, [
+        <span class="php-string">'title'</span> => <span class="php-string">'Theme Options'</span>,
+        <span class="php-string">'priority'</span> => <span class="php-number">30</span>
+    ]);
+
+    <span class="php-comment">// Add setting</span>
+    <span class="php-variable">$wp_customize</span>->add_setting(<span class="php-string">'primary_color'</span>, [
+        <span class="php-string">'default'</span> => <span class="php-string">'#21759b'</span>,
+        <span class="php-string">'transport'</span> => <span class="php-string">'refresh'</span>
+    ]);
+
+    <span class="php-comment">// Add control</span>
+    <span class="php-variable">$wp_customize</span>->add_control(<span class="php-keyword">new</span> WP_Customize_Color_Control(
+        <span class="php-variable">$wp_customize</span>,
+        <span class="php-string">'primary_color'</span>,
+        [
+            <span class="php-string">'label'</span> => <span class="php-string">'Primary Color'</span>,
+            <span class="php-string">'section'</span> => <span class="php-string">'my_theme_options'</span>
+        ]
+    ));
+}
+<span class="php-function">add_action</span>(<span class="php-string">'customize_register'</span>, <span class="php-string">'my_theme_customizer'</span>);
+
+<span class="php-comment">// Use customizer value in CSS</span>
+<span class="php-variable">$primary_color</span> = <span class="php-function">get_theme_mod</span>(<span class="php-string">'primary_color'</span>, <span class="php-string">'#21759b'</span>);
+<span class="php-keyword">echo</span> <span class="php-string">"&lt;style&gt;.primary { color: </span><span class="php-variable">$primary_color</span><span class="php-string">; }&lt;/style&gt;"</span>;
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 5: Plugins Development -->
+        <section class="lesson" id="plugins">
+          <div class="lesson-header">
+            <h2>🔌 Lesson 5: Plugins Development</h2>
+            <p>Creating custom WordPress plugins</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">5.1 Plugin Structure</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Main Plugin File</h4>
+                  <p>my-plugin.php with plugin header information</p>
+                </div>
+                <div class="component-card">
+                  <h4>Plugin Directory</h4>
+                  <p>Contains all plugin files and assets</p>
+                </div>
+                <div class="component-card">
+                  <h4>README.txt</h4>
+                  <p>Plugin documentation and installation instructions</p>
+                </div>
+                <div class="component-card">
+                  <h4>Assets Folder</h4>
+                  <p>CSS, JavaScript, images for admin interface</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">5.2 Plugin Header</h3>
+              <div class="example-box">
+                <h5>Plugin Header Information</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">/*
+Plugin Name: My Custom Plugin
+Plugin URI: https://example.com/my-custom-plugin
+Description: A brief description of what this plugin does.
+Version: 1.0.0
+Author: Your Name
+Author URI: https://example.com
+License: GPL v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: my-custom-plugin
+Domain Path: /languages
+*/</span>
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">5.3 Activation & Deactivation Hooks</h3>
+              <div class="example-box">
+                <h5>Plugin Lifecycle Hooks</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">function</span> <span class="php-function">my_plugin_activate</span>() {
+    <span class="php-comment">// Create database tables</span>
+    <span class="php-function">my_plugin_create_tables</span>();
+
+    <span class="php-comment">// Set default options</span>
+    <span class="php-function">add_option</span>(<span class="php-string">'my_plugin_version'</span>, <span class="php-string">'1.0.0'</span>);
+    <span class="php-function">add_option</span>(<span class="php-string">'my_plugin_settings'</span>, [<span class="php-string">'enabled'</span> => <span class="php-keyword">true</span>]);
+
+    <span class="php-comment">// Flush rewrite rules</span>
+    <span class="php-function">flush_rewrite_rules</span>();
+}
+<span class="php-function">register_activation_hook</span>(<span class="php-function">__FILE__</span>, <span class="php-string">'my_plugin_activate'</span>);
+
+<span class="php-keyword">function</span> <span class="php-function">my_plugin_deactivate</span>() {
+    <span class="php-comment">// Clean up temporary data</span>
+    <span class="php-function">delete_transient</span>(<span class="php-string">'my_plugin_cache'</span>);
+
+    <span class="php-comment">// Flush rewrite rules</span>
+    <span class="php-function">flush_rewrite_rules</span>();
+}
+<span class="php-function">register_deactivation_hook</span>(<span class="php-function">__FILE__</span>, <span class="php-string">'my_plugin_deactivate'</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">5.4 Admin Menu & Settings</h3>
+              <div class="example-box">
+                <h5>Creating Admin Menu Pages</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">function</span> <span class="php-function">my_plugin_admin_menu</span>() {
+    <span class="php-function">add_menu_page</span>(
+        <span class="php-string">'My Plugin Settings'</span>,     <span class="php-comment">// Page title</span>
+        <span class="php-string">'My Plugin'</span>,             <span class="php-comment">// Menu title</span>
+        <span class="php-string">'manage_options'</span>,        <span class="php-comment">// Capability</span>
+        <span class="php-string">'my-plugin-settings'</span>,    <span class="php-comment">// Menu slug</span>
+        <span class="php-string">'my_plugin_settings_page'</span>, <span class="php-comment">// Callback function</span>
+        <span class="php-string">'dashicons-admin-plugins'</span>, <span class="php-comment">// Icon</span>
+        <span class="php-number">30</span>                        <span class="php-comment">// Position</span>
+    );
+}
+<span class="php-function">add_action</span>(<span class="php-string">'admin_menu'</span>, <span class="php-string">'my_plugin_admin_menu'</span>);
+
+<span class="php-keyword">function</span> <span class="php-function">my_plugin_settings_page</span>() {
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;div class="wrap"&gt;'</span>;
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;h1&gt;My Plugin Settings&lt;/h1&gt;'</span>;
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;form method="post" action="options.php"&gt;'</span>;
+    <span class="php-function">settings_fields</span>(<span class="php-string">'my_plugin_settings'</span>);
+    <span class="php-function">do_settings_sections</span>(<span class="php-string">'my_plugin_settings'</span>);
+    <span class="php-function">submit_button</span>();
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;/form&gt;'</span>;
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;/div&gt;'</span>;
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">5.5 Shortcodes</h3>
+              <div class="example-box">
+                <h5>Creating Custom Shortcodes</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Simple shortcode</span>
+<span class="php-keyword">function</span> <span class="php-function">my_shortcode</span>(<span class="php-variable">$atts</span>) {
+    <span class="php-variable">$atts</span> = <span class="php-function">shortcode_atts</span>([
+        <span class="php-string">'text'</span> => <span class="php-string">'Hello World'</span>,
+        <span class="php-string">'color'</span> => <span class="php-string">'blue'</span>
+    ], <span class="php-variable">$atts</span>);
+
+    <span class="php-keyword">return</span> <span class="php-string">'&lt;span style="color: '</span> . <span class="php-variable">$atts</span>[<span class="php-string">'color'</span>] . <span class="php-string">';"&gt;'</span> . <span class="php-variable">$atts</span>[<span class="php-string">'text'</span>] . <span class="php-string">'&lt;/span&gt;'</span>;
+}
+<span class="php-function">add_shortcode</span>(<span class="php-string">'my_message'</span>, <span class="php-string">'my_shortcode'</span>);
+
+<span class="php-comment">// Usage: [my_message text="Hi there" color="red"]</span>
+
+<span class="php-comment">// Shortcode with content</span>
+<span class="php-keyword">function</span> <span class="php-function">my_box_shortcode</span>(<span class="php-variable">$atts</span>, <span class="php-variable">$content</span> = <span class="php-keyword">null</span>) {
+    <span class="php-keyword">return</span> <span class="php-string">'&lt;div class="my-box"&gt;'</span> . <span class="php-function">do_shortcode</span>(<span class="php-variable">$content</span>) . <span class="php-string">'&lt;/div&gt;'</span>;
+}
+<span class="php-function">add_shortcode</span>(<span class="php-string">'my_box'</span>, <span class="php_function">'my_box_shortcode'</span>);
+
+<span class="php-comment">// Usage: [my_box]Content goes here[/my_box]</span>
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 6: Custom Post Types -->
+        <section class="lesson" id="custom-post-types">
+          <div class="lesson-header">
+            <h2>📝 Lesson 6: Custom Post Types</h2>
+            <p>Creating custom content types in WordPress</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">6.1 Registering Custom Post Types</h3>
+              <div class="example-box">
+                <h5>Basic Custom Post Type Registration</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">function</span> <span class="php-function">create_portfolio_post_type</span>() {
+    <span class="php-variable">$args</span> = [
+        <span class="php-string">'labels'</span> => [
+            <span class="php-string">'name'</span> => <span class="php-string">'Portfolios'</span>,
+            <span class="php-string">'singular_name'</span> => <span class="php-string">'Portfolio'</span>,
+            <span class="php-string">'add_new'</span> => <span class="php-string">'Add New Portfolio'</span>,
+            <span class="php-string">'add_new_item'</span> => <span class="php-string">'Add New Portfolio Item'</span>,
+            <span class="php-string">'edit_item'</span> => <span class="php-string">'Edit Portfolio Item'</span>,
+            <span class="php-string">'new_item'</span> => <span class="php-string">'New Portfolio Item'</span>,
+            <span class="php-string">'view_item'</span> => <span class="php-string">'View Portfolio Item'</span>,
+            <span class="php-string">'search_items'</span> => <span class="php-string">'Search Portfolios'</span>,
+            <span class="php-string">'not_found'</span> => <span class="php-string">'No portfolios found'</span>,
+            <span class="php-string">'not_found_in_trash'</span> => <span class="php-string">'No portfolios found in trash'</span>
+        ],
+        <span class="php-string">'public'</span> => <span class="php-keyword">true</span>,
+        <span class="php-string">'has_archive'</span> => <span class="php-keyword">true</span>,
+        <span class="php-string">'supports'</span> => [<span class="php-string">'title'</span>, <span class="php-string">'editor'</span>, <span class="php-string">'thumbnail'</span>, <span class="php-string">'excerpt'</span>],
+        <span class="php-string">'menu_icon'</span> => <span class="php-string">'dashicons-portfolio'</span>,
+        <span class="php-string">'rewrite'</span> => [<span class="php-string">'slug'</span> => <span class="php-string">'portfolio'</span>],
+        <span class="php-string">'show_in_rest'</span> => <span class="php-keyword">true</span>
+    ];
+
+    <span class="php-function">register_post_type</span>(<span class="php-string">'portfolio'</span>, <span class="php-variable">$args</span>);
+}
+<span class="php-function">add_action</span>(<span class="php-string">'init'</span>, <span class="php-string">'create_portfolio_post_type'</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">6.2 Custom Post Type Parameters</h3>
+              <div class="data-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Parameter</th>
+                      <th>Description</th>
+                      <th>Default</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>public</td>
+                      <td>Whether post type is public</td>
+                      <td>false</td>
+                    </tr>
+                    <tr>
+                      <td>has_archive</td>
+                      <td>Whether to enable archives</td>
+                      <td>false</td>
+                    </tr>
+                    <tr>
+                      <td>supports</td>
+                      <td>Features supported by post type</td>
+                      <td>['title', 'editor']</td>
+                    </tr>
+                    <tr>
+                      <td>menu_icon</td>
+                      <td>Icon for admin menu</td>
+                      <td>null</td>
+                    </tr>
+                    <tr>
+                      <td>rewrite</td>
+                      <td>URL rewrite rules</td>
+                      <td>true</td>
+                    </tr>
+                    <tr>
+                      <td>show_in_rest</td>
+                      <td>Enable REST API support</td>
+                      <td>false</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">6.3 Custom Meta Boxes</h3>
+              <div class="example-box">
+                <h5>Adding Custom Meta Boxes</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">function</span> <span class="php-function">add_portfolio_meta_boxes</span>() {
+    <span class="php-function">add_meta_box</span>(
+        <span class="php-string">'portfolio_details'</span>,           <span class="php-comment">// ID</span>
+        <span class="php-string">'Portfolio Details'</span>,          <span class="php-comment">// Title</span>
+        <span class="php-string">'portfolio_meta_callback'</span>,     <span class="php-comment">// Callback</span>
+        <span class="php-string">'portfolio'</span>,                  <span class="php-comment">// Screen</span>
+        <span class="php-string">'normal'</span>,                     <span class="php-comment">// Context</span>
+        <span class="php-string">'high'</span>                        <span class="php-comment">// Priority</span>
+    );
+}
+<span class="php-function">add_action</span>(<span class="php-string">'add_meta_boxes'</span>, <span class="php-string">'add_portfolio_meta_boxes'</span>);
+
+<span class="php-keyword">function</span> <span class="php-function">portfolio_meta_callback</span>(<span class="php-variable">$post</span>) {
+    <span class="php-variable">$client_name</span> = <span class="php-function">get_post_meta</span>(<span class="php-variable">$post</span>->ID, <span class="php-string">'_client_name'</span>, <span class="php-keyword">true</span>);
+    <span class="php-variable">$project_url</span> = <span class="php-function">get_post_meta</span>(<span class="php-variable">$post</span>->ID, <span class="php-string">'_project_url'</span>, <span class="php-keyword">true</span>);
+
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;label for="client_name"&gt;Client Name:&lt;/label&gt;'</span>;
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;input type="text" id="client_name" name="client_name" value="'</span> . <span class="php-function">esc_attr</span>(<span class="php-variable">$client_name</span>) . <span class="php-string">'" /&gt;&lt;br&gt;'</span>;
+
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;label for="project_url"&gt;Project URL:&lt;/label&gt;'</span>;
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;input type="url" id="project_url" name="project_url" value="'</span> . <span class="php-function">esc_attr</span>(<span class="php-variable">$project_url</span>) . <span class="php-string">'" /&gt;'</span>;
+}
+
+<span class="php-keyword">function</span> <span class="php-function">save_portfolio_meta</span>(<span class="php-variable">$post_id</span>) {
+    <span class="php-keyword">if</span> (<span class="php-function">isset</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'client_name'</span>])) {
+        <span class="php-function">update_post_meta</span>(<span class="php-variable">$post_id</span>, <span class="php-string">'_client_name'</span>, <span class="php-function">sanitize_text_field</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'client_name'</span>]));
+    }
+    <span class="php-keyword">if</span> (<span class="php-function">isset</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'project_url'</span>])) {
+        <span class="php-function">update_post_meta</span>(<span class="php-variable">$post_id</span>, <span class="php-string">'_project_url'</span>, <span class="php-function">esc_url_raw</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'project_url'</span>]));
+    }
+}
+<span class="php-function">add_action</span>(<span class="php-string">'save_post'</span>, <span class="php-string">'save_portfolio_meta'</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 7: Taxonomies & Terms -->
+        <section class="lesson" id="taxonomies">
+          <div class="lesson-header">
+            <h2>🏷️ Lesson 7: Taxonomies & Terms</h2>
+            <p>Organizing content with custom taxonomies</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">7.1 Built-in Taxonomies</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Categories</h4>
+                  <p>Hierarchical taxonomy for posts</p>
+                </div>
+                <div class="component-card">
+                  <h4>Tags</h4>
+                  <p>Non-hierarchical taxonomy for posts</p>
+                </div>
+                <div class="component-card">
+                  <h4>Post Formats</h4>
+                  <p>Special taxonomy for post display</p>
+                </div>
+                <div class="component-card">
+                  <h4>Navigation Menus</h4>
+                  <p>Taxonomy for organizing menu items</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">7.2 Custom Taxonomies</h3>
+              <div class="example-box">
+                <h5>Registering Custom Taxonomy</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">function</span> <span class="php-function">create_portfolio_taxonomies</span>() {
+    <span class="php-comment">// Portfolio Categories (hierarchical)</span>
+    <span class="php-variable">$category_args</span> = [
+        <span class="php-string">'labels'</span> => [
+            <span class="php-string">'name'</span> => <span class="php-string">'Portfolio Categories'</span>,
+            <span class="php-string">'singular_name'</span> => <span class="php-string">'Portfolio Category'</span>,
+            <span class="php-string">'search_items'</span> => <span class="php-string">'Search Categories'</span>,
+            <span class="php-string">'all_items'</span> => <span class="php-string">'All Categories'</span>,
+            <span class="php-string">'parent_item'</span> => <span class="php-string">'Parent Category'</span>,
+            <span class="php-string">'parent_item_colon'</span> => <span class="php-string">'Parent Category:'</span>,
+            <span class="php-string">'edit_item'</span> => <span class="php-string">'Edit Category'</span>,
+            <span class="php-string">'update_item'</span> => <span class="php-string">'Update Category'</span>,
+            <span class="php-string">'add_new_item'</span> => <span class="php-string">'Add New Category'</span>,
+            <span class="php-string">'new_item_name'</span> => <span class="php-string">'New Category Name'</span>
+        ],
+        <span class="php-string">'hierarchical'</span> => <span class="php-keyword">true</span>,
+        <span class="php-string">'public'</span> => <span class="php-keyword">true</span>,
+        <span class="php-string">'show_ui'</span> => <span class="php-keyword">true</span>,
+        <span class="php-string">'show_admin_column'</span> => <span class="php-keyword">true</span>,
+        <span class="php-string">'show_in_rest'</span> => <span class="php-keyword">true</span>,
+        <span class="php-string">'rewrite'</span> => [<span class="php-string">'slug'</span> => <span class="php-string">'portfolio-category'</span>]
+    ];
+
+    <span class="php-function">register_taxonomy</span>(<span class="php-string">'portfolio_category'</span>, [<span class="php-string">'portfolio'</span>], <span class="php-variable">$category_args</span>);
+
+    <span class="php-comment">// Portfolio Tags (non-hierarchical)</span>
+    <span class="php-variable">$tag_args</span> = [
+        <span class="php-string">'labels'</span> => [
+            <span class="php-string">'name'</span> => <span class="php-string">'Portfolio Tags'</span>,
+            <span class="php-string">'singular_name'</span> => <span class="php-string">'Portfolio Tag'</span>
+        ],
+        <span class="php-string">'hierarchical'</span> => <span class="php-keyword">false</span>,
+        <span class="php-string">'public'</span> => <span class="php-keyword">true</span>,
+        <span class="php-string">'show_admin_column'</span> => <span class="php-keyword">true</span>,
+        <span class="php-string">'show_in_rest'</span> => <span class="php-keyword">true</span>
+    ];
+
+    <span class="php-function">register_taxonomy</span>(<span class="php-string">'portfolio_tag'</span>, [<span class="php-string">'portfolio'</span>], <span class="php-variable">$tag_args</span>);
+}
+<span class="php-function">add_action</span>(<span class="php-string">'init'</span>, <span class="php-string">'create_portfolio_taxonomies'</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">7.3 Working with Terms</h3>
+              <div class="example-box">
+                <h5>Getting and Displaying Taxonomy Terms</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Get terms for current post</span>
+<span class="php-variable">$categories</span> = <span class="php-function">get_the_terms</span>(<span class="php-function">get_the_ID</span>(), <span class="php-string">'portfolio_category'</span>);
+<span class="php-keyword">if</span> (<span class="php-variable">$categories</span> && !<span class="php-function">is_wp_error</span>(<span class="php-variable">$categories</span>)) {
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;div class="categories"&gt;'</span>;
+    <span class="php-keyword">foreach</span> (<span class="php-variable">$categories</span> <span class="php-keyword">as</span> <span class="php-variable">$category</span>) {
+        <span class="php-variable">$link</span> = <span class="php-function">get_term_link</span>(<span class="php-variable">$category</span>);
+        <span class="php-keyword">echo</span> <span class="php-string">'&lt;a href="'</span> . <span class="php-variable">$link</span> . <span class="php-string">'"&gt;'</span> . <span class="php-variable">$category</span>->name . <span class="php-string">'&lt;/a&gt;'</span>;
+    }
+    <span class="php-keyword">echo</span> <span class="php-string">'&lt;/div&gt;'</span>;
+}
+
+<span class="php-comment">// Get all terms in a taxonomy</span>
+<span class="php-variable">$all_categories</span> = <span class="php-function">get_terms</span>([
+    <span class="php-string">'taxonomy'</span> => <span class="php-string">'portfolio_category'</span>,
+    <span class="php-string">'hide_empty'</span> => <span class="php-keyword">false</span>
+]);
+
+<span class="php-comment">// Set terms for a post</span>
+<span class="php-function">wp_set_post_terms</span>(<span class="php-variable">$post_id</span>, [<span class="php-string">'web-design'</span>, <span class="php-string">'wordpress'</span>], <span class="php-string">'portfolio_tag'</span>);
+
+<span class="php-comment">// Add new term programmatically</span>
+<span class="php-variable">$term_id</span> = <span class="php-function">wp_insert_term</span>(
+    <span class="php-string">'New Category'</span>,      <span class="php-comment">// Term name</span>
+    <span class="php-string">'portfolio_category'</span>, <span class="php-comment">// Taxonomy</span>
+    [
+        <span class="php-string">'description'</span> => <span class="php-string">'Description of new category'</span>,
+        <span class="php-string">'slug'</span> => <span class="php-string">'new-category'</span>
+    ]
+);
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 8: Hooks & API -->
+        <section class="lesson" id="hooks-api">
+          <div class="lesson-header">
+            <h2>🎣 Lesson 8: Hooks & API</h2>
+            <p>Understanding WordPress hooks and REST API</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">8.1 Action Hooks</h3>
+              <div class="example-box">
+                <h5>Common Action Hooks</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// init - Fires after WordPress has finished loading</span>
+<span class="php-keyword">function</span> <span class="php-function">my_init_function</span>() {
+    <span class="php-comment">// Register post types, taxonomies, etc.</span>
+    <span class="php-function">register_post_type</span>(<span class="php-string">'book'</span>, <span class="php-variable">$args</span>);
+}
+<span class="php-function">add_action</span>(<span class="php-string">'init'</span>, <span class="php-string">'my_init_function'</span>);
+
+<span class="php-comment">// wp_enqueue_scripts - Enqueue styles and scripts</span>
+<span class="php-keyword">function</span> <span class="php-function">my_enqueue_scripts</span>() {
+    <span class="php-function">wp_enqueue_style</span>(<span class="php-string">'my-style'</span>, <span class="php-function">get_stylesheet_uri</span>());
+    <span class="php-function">wp_enqueue_script</span>(<span class="php-string">'my-script'</span>, <span class="php-function">get_template_directory_uri</span>() . <span class="php-string">'/js/script.js'</span>);
+}
+<span class="php-function">add_action</span>(<span class="php-string">'wp_enqueue_scripts'</span>, <span class="php-string">'my_enqueue_scripts'</span>);
+
+<span class="php-comment">// save_post - Fires after a post is saved</span>
+<span class="php-keyword">function</span> <span class="php-function">my_save_post</span>(<span class="php-variable">$post_id</span>) {
+    <span class="php-keyword">if</span> (<span class="php-function">defined</span>(<span class="php-string">'DOING_AUTOSAVE'</span>) && DOING_AUTOSAVE) <span class="php-keyword">return</span>;
+    <span class="php-function">update_post_meta</span>(<span class="php-variable">$post_id</span>, <span class="php-string">'last_modified'</span>, <span class="php-function">current_time</span>(<span class="php-string">'mysql'</span>));
+}
+<span class="php-function">add_action</span>(<span class="php-string">'save_post'</span>, <span class="php-string">'my_save_post'</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">8.2 Filter Hooks</h3>
+              <div class="example-box">
+                <h5>Common Filter Hooks</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// the_content - Modify post content</span>
+<span class="php-keyword">function</span> <span class="php-function">my_content_filter</span>(<span class="php-variable">$content</span>) {
+    <span class="php-variable">$content</span> = <span class="php-function">str_replace</span>(<span class="php-string">'WordPress'</span>, <span class="php-string">'&lt;strong&gt;WordPress&lt;/strong&gt;'</span>, <span class="php-variable">$content</span>);
+    <span class="php-keyword">return</span> <span class="php-variable">$content</span>;
+}
+<span class="php-function">add_filter</span>(<span class="php-string">'the_content'</span>, <span class="php-string">'my_content_filter'</span>);
+
+<span class="php-comment">// excerpt_length - Change excerpt length</span>
+<span class="php-keyword">function</span> <span class="php-function">my_excerpt_length</span>(<span class="php-variable">$length</span>) {
+    <span class="php-keyword">return</span> <span class="php-number">30</span>; <span class="php-comment">// 30 words instead of default 55</span>
+}
+<span class="php-function">add_filter</span>(<span class="php-string">'excerpt_length'</span>, <span class="php-string">'my_excerpt_length'</span>);
+
+<span class="php-comment">// wp_title - Modify page title</span>
+<span class="php-keyword">function</span> <span class="php-function">my_wp_title</span>(<span class="php-variable">$title</span>) {
+    <span class="php-keyword">if</span> (<span class="php-function">is_home</span>()) {
+        <span class="php-keyword">return</span> <span class="php-string">'Home - '</span> . <span class="php-function">get_bloginfo</span>(<span class="php-string">'name'</span>);
+    }
+    <span class="php-keyword">return</span> <span class="php-variable">$title</span>;
+}
+<span class="php-function">add_filter</span>(<span class="php-string">'wp_title'</span>, <span class="php-string">'my_wp_title'</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">8.3 REST API</h3>
+              <div class="example-box">
+                <h5>Creating Custom REST API Endpoints</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Register REST API route</span>
+<span class="php-keyword">function</span> <span class="php-function">register_my_api_routes</span>() {
+    <span class="php-function">register_rest_route</span>(<span class="php-string">'my-plugin/v1'</span>, <span class="php-string">'/posts'</span>, [
+        <span class="php-string">'methods'</span> => <span class="php-string">'GET'</span>,
+        <span class="php-string">'callback'</span> => <span class="php-string">'get_custom_posts'</span>,
+        <span class="php-string">'permission_callback'</span> => <span class="php-string">'__return_true'</span>
+    ]);
+
+    <span class="php-function">register_rest_route</span>(<span class="php-string">'my-plugin/v1'</span>, <span class="php-string">'/posts/(?P&lt;id&gt;\d+)'</span>, [
+        <span class="php-string">'methods'</span> => <span class="php-string">'GET'</span>,
+        <span class="php-string">'callback'</span> => <span class="php-string">'get_custom_post'</span>,
+        <span class="php-string">'args'</span> => [
+            <span class="php-string">'id'</span> => [
+                <span class="php-string">'validate_callback'</span> => <span class="php-keyword">function</span>(<span class="php-variable">$param</span>) {
+                    <span class="php-keyword">return</span> <span class="php-function">is_numeric</span>(<span class="php-variable">$param</span>);
+                }
+            ]
+        ]
+    ]);
+}
+<span class="php-function">add_action</span>(<span class="php-string">'rest_api_init'</span>, <span class="php-string">'register_my_api_routes'</span>);
+
+<span class="php-comment">// API callback functions</span>
+<span class="php-keyword">function</span> <span class="php-function">get_custom_posts</span>(<span class="php-variable">$request</span>) {
+    <span class="php-variable">$posts</span> = <span class="php-function">get_posts</span>([
+        <span class="php-string">'post_type'</span> => <span class="php-string">'portfolio'</span>,
+        <span class="php-string">'posts_per_page'</span> => <span class="php-number">10</span>
+    ]);
+
+    <span class="php-variable">$data</span> = [];
+    <span class="php-keyword">foreach</span> (<span class="php-variable">$posts</span> <span class="php-keyword">as</span> <span class="php-variable">$post</span>) {
+        <span class="php-variable">$data</span>[] = [
+            <span class="php-string">'id'</span> => <span class="php-variable">$post</span>->ID,
+            <span class="php-string">'title'</span> => <span class="php-variable">$post</span>->post_title,
+            <span class="php-string">'content'</span> => <span class="php-variable">$post</span>->post_content,
+            <span class="php-string">'featured_image'</span> => <span class="php-function">get_the_post_thumbnail_url</span>(<span class="php-variable">$post</span>->ID)
+        ];
+    }
+
+    <span class="php-keyword">return</span> <span class="php-keyword">new</span> WP_REST_Response(<span class="php-variable">$data</span>, <span class="php-number">200</span>);
+}
+
+<span class="php-keyword">function</span> <span class="php-function">get_custom_post</span>(<span class="php-variable">$request</span>) {
+    <span class="php-variable">$post_id</span> = <span class="php-variable">$request</span>->get_param(<span class="php-string">'id'</span>);
+    <span class="php-variable">$post</span> = <span class="php-function">get_post</span>(<span class="php-variable">$post_id</span>);
+
+    <span class="php-keyword">if</span> (!<span class="php-variable">$post</span>) {
+        <span class="php-keyword">return</span> <span class="php-keyword">new</span> WP_Error(<span class="php-string">'post_not_found'</span>, <span class="php-string">'Post not found'</span>, [<span class="php-string">'status'</span> => <span class="php-number">404</span>]);
+    }
+
+    <span class="php-keyword">return</span> <span class="php-keyword">new</span> WP_REST_Response([
+        <span class="php-string">'id'</span> => <span class="php-variable">$post</span>->ID,
+        <span class="php-string">'title'</span> => <span class="php-variable">$post</span>->post_title,
+        <span class="php-string">'content'</span> => <span class="php-variable">$post</span>->post_content
+    ], <span class="php-number">200</span>);
+}
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 9: Security Best Practices -->
+        <section class="lesson" id="security">
+          <div class="lesson-header">
+            <h2>🔐 Lesson 9: Security Best Practices</h2>
+            <p>Securing your WordPress websites</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">9.1 Data Sanitization</h3>
+              <div class="example-box">
+                <h5>Sanitizing User Input</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Sanitize text input</span>
+<span class="php-variable">$clean_text</span> = <span class="php-function">sanitize_text_field</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'user_input'</span>]);
+
+<span class="php-comment">// Sanitize email</span>
+<span class="php-variable">$clean_email</span> = <span class="php-function">sanitize_email</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'email'</span>]);
+
+<span class="php-comment">// Sanitize textarea</span>
+<span class="php-variable">$clean_textarea</span> = <span class="php-function">sanitize_textarea_field</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'description'</span>]);
+
+<span class="php-comment">// Sanitize URL</span>
+<span class="php-variable">$clean_url</span> = <span class="php-function">esc_url_raw</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'website'</span>]);
+
+<span class="php-comment">// Sanitize HTML (allow specific tags)</span>
+<span class="php-variable">$allowed_html</span> = [
+    <span class="php-string">'a'</span> => [<span class="php-string">'href'</span> => [], <span class="php-string">'title'</span> => []],
+    <span class="php-string">'br'</span> => [],
+    <span class="php-string">'em'</span> => [],
+    <span class="php-string">'strong'</span> => []
+];
+<span class="php-variable">$clean_html</span> = <span class="php-function">wp_kses</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'content'</span>], <span class="php-variable">$allowed_html</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">9.2 Data Validation</h3>
+              <div class="example-box">
+                <h5>Validating User Input</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Validate email</span>
+<span class="php-keyword">if</span> (!<span class="php-function">is_email</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'email'</span>])) {
+    <span class="php-variable">$errors</span>[] = <span class="php-string">'Invalid email address'</span>;
+}
+
+<span class="php-comment">// Validate required fields</span>
+<span class="php-keyword">if</span> (<span class="php-function">empty</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'name'</span>])) {
+    <span class="php-variable">$errors</span>[] = <span class="php-string">'Name is required'</span>;
+}
+
+<span class="php-comment">// Validate numeric input</span>
+<span class="php-variable">$age</span> = <span class="php-function">intval</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'age'</span>]);
+<span class="php-keyword">if</span> (<span class="php-variable">$age</span> < <span class="php-number">18</span> || <span class="php-variable">$age</span> > <span class="php-number">120</span>) {
+    <span class="php-variable">$errors</span>[] = <span class="php-string">'Age must be between 18 and 120'</span>;
+}
+
+<span class="php-comment">// Validate URL</span>
+<span class="php-keyword">if</span> (!<span class="php-function">filter_var</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'website'</span>], FILTER_VALIDATE_URL)) {
+    <span class="php-variable">$errors</span>[] = <span class="php-string">'Invalid website URL'</span>;
+}
+
+<span class="php-comment">// Custom validation function</span>
+<span class="php-keyword">function</span> <span class="php-function">validate_username</span>(<span class="php-variable">$username</span>) {
+    <span class="php-keyword">if</span> (<span class="php-function">strlen</span>(<span class="php-variable">$username</span>) < <span class="php-number">3</span>) {
+        <span class="php-keyword">return</span> <span class="php-keyword">false</span>;
+    }
+    <span class="php-keyword">if</span> (!<span class="php-function">preg_match</span>(<span class="php-string">'/^[a-zA-Z0-9_]+$/'</span>, <span class="php-variable">$username</span>)) {
+        <span class="php-keyword">return</span> <span class="php-keyword">false</span>;
+    }
+    <span class="php-keyword">return</span> <span class="php-keyword">true</span>;
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">9.3 Nonces & CSRF Protection</h3>
+              <div class="example-box">
+                <h5>Using WordPress Nonces</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Create nonce in form</span>
+<span class="php-variable">$nonce</span> = <span class="php-function">wp_create_nonce</span>(<span class="php-string">'my_form_action'</span>);
+<span class="php-keyword">echo</span> <span class="php-string">'&lt;input type="hidden" name="my_form_nonce" value="'</span> . <span class="php-variable">$nonce</span> . <span class="php-string">'" /&gt;'</span>;
+
+<span class="php-comment">// Verify nonce on form submission</span>
+<span class="php-keyword">if</span> (<span class="php-function">isset</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'my_form_nonce'</span>]) &&
+    <span class="php-function">wp_verify_nonce</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'my_form_nonce'</span>], <span class="php-string">'my_form_action'</span>)) {
+
+    <span class="php-comment">// Nonce is valid, process form</span>
+    <span class="php-function">update_post_meta</span>(<span class="php-variable">$post_id</span>, <span class="php-string">'custom_field'</span>, <span class="php-function">sanitize_text_field</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'custom_field'</span>]));
+
+} <span class="php-keyword">else</span> {
+    <span class="php-comment">// Nonce is invalid</span>
+    <span class="php-function">wp_die</span>(<span class="php-string">'Security check failed'</span>);
+}
+
+<span class="php-comment">// Using nonce in AJAX</span>
+<span class="php-keyword">function</span> <span class="php-function">my_ajax_handler</span>() {
+    <span class="php-function">check_ajax_referer</span>(<span class="php-string">'my_ajax_nonce'</span>, <span class="php-string">'security'</span>);
+
+    <span class="php-comment">// Process AJAX request</span>
+    <span class="php-variable">$response</span> = [<span class="php-string">'success'</span> => <span class="php-keyword">true</span>, <span class="php-string">'message'</span> => <span class="php-string">'Data saved'</span>];
+    <span class="php-function">wp_send_json</span>(<span class="php-variable">$response</span>);
+}
+<span class="php-function">add_action</span>(<span class="php-string">'wp_ajax_my_action'</span>, <span class="php-string">'my_ajax_handler'</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">9.4 SQL Injection Prevention</h3>
+              <div class="example-box">
+                <h5>Using $wpdb Safely</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-keyword">global</span> <span class="php-variable">$wpdb</span>;
+
+<span class="php-comment">// SAFE: Using prepare method</span>
+<span class="php-variable">$user_id</span> = <span class="php-function">intval</span>(<span class="php-variable">$_GET</span>[<span class="php-string">'user_id'</span>]);
+<span class="php-variable">$results</span> = <span class="php-variable">$wpdb</span>->get_results(
+    <span class="php-variable">$wpdb</span>->prepare(
+        <span class="php-string">"SELECT * FROM {$wpdb->users} WHERE ID = %d"</span>,
+        <span class="php-variable">$user_id</span>
+    )
+);
+
+<span class="php-comment">// SAFE: Using placeholders</span>
+<span class="php-variable">$post_title</span> = <span class="php-function">sanitize_text_field</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'title'</span>]);
+<span class="php-variable">$post_content</span> = <span class="php-function">wp_kses_post</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'content'</span>]);
+
+<span class="php-variable">$wpdb</span>->insert(
+    <span class="php-variable">$wpdb->posts</span>,
+    [
+        <span class="php-string">'post_title'</span> => <span class="php-variable">$post_title</span>,
+        <span class="php-string">'post_content'</span> => <span class="php-variable">$post_content</span>,
+        <span class="php-string">'post_status'</span> => <span class="php-string">'publish'</span>
+    ],
+    [<span class="php-string">'%s'</span>, <span class="php-string">'%s'</span>, <span class="php-string">'%s'</span>]
+);
+
+<span class="php-comment">// SAFE: Using get_var with prepare</span>
+<span class="php-variable">$email</span> = <span class="php-function">sanitize_email</span>(<span class="php-variable">$_POST</span>[<span class="php-string">'email'</span>]);
+<span class="php-variable">$user_exists</span> = <span class="php-variable">$wpdb</span>->get_var(
+    <span class="php-variable">$wpdb</span>->prepare(
+        <span class="php-string">"SELECT COUNT(*) FROM {$wpdb->users} WHERE user_email = %s"</span>,
+        <span class="php-variable">$email</span>
+    )
+);
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 10: Performance Optimization -->
+        <section class="lesson" id="performance">
+          <div class="lesson-header">
+            <h2>⚡ Lesson 10: Performance Optimization</h2>
+            <p>Speeding up your WordPress websites</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">10.1 Caching Strategies</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Browser Caching</h4>
+                  <p>Set appropriate cache headers for static assets</p>
+                </div>
+                <div class="component-card">
+                  <h4>Page Caching</h4>
+                  <p>Cache entire HTML pages to reduce server load</p>
+                </div>
+                <div class="component-card">
+                  <h4>Object Caching</h4>
+                  <p>Cache database queries and complex operations</p>
+                </div>
+                <div class="component-card">
+                  <h4>CDN</h4>
+                  <p>Distribute content across global servers</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">10.2 Database Optimization</h3>
+              <div class="example-box">
+                <h5>Optimizing Database Queries</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Use get_posts instead of WP_Query for simple queries</span>
+<span class="php-variable">$recent_posts</span> = <span class="php-function">get_posts</span>([
+    <span class="php-string">'numberposts'</span> => <span class="php-number">5</span>,
+    <span class="php-string">'post_status'</span> => <span class="php-string">'publish'</span>
+]);
+
+<span class="php-comment">// Use meta_query efficiently</span>
+<span class="php-variable">$args</span> = [
+    <span class="php-string">'meta_query'</span> => [
+        [
+            <span class="php-string">'key'</span> => <span class="php-string">'featured'</span>,
+            <span class="php-string">'value'</span> => <span class="php-string">'1'</span>,
+            <span class="php-string">'compare'</span> => <span class="php-string">'='</span>
+        ]
+    ]
+];
+<span class="php-variable">$featured_posts</span> = <span class="php-function">get_posts</span>(<span class="php-variable">$args</span>);
+
+<span class="php-comment">// Cache expensive operations</span>
+<span class="php-variable">$cache_key</span> = <span class="php-string">'complex_calculation'</span>;
+<span class="php-variable">$result</span> = <span class="php-function">wp_cache_get</span>(<span class="php-variable">$cache_key</span>);
+
+<span class="php-keyword">if</span> (<span class="php-variable">$result</span> === <span class="php-keyword">false</span>) {
+    <span class="php-comment">// Perform expensive calculation</span>
+    <span class="php-variable">$result</span> = <span class="php-function">perform_complex_calculation</span>();
+    <span class="php-function">wp_cache_set</span>(<span class="php-variable">$cache_key</span>, <span class="php-variable">$result</span>, <span class="php-string">''</span>, <span class="php-number">3600</span>); <span class="php-comment">// Cache for 1 hour</span>
+}
+
+<span class="php-comment">// Use transients for temporary data</span>
+<span class="php-variable">$api_data</span> = <span class="php-function">get_transient</span>(<span class="php-string">'api_response'</span>);
+<span class="php-keyword">if</span> (<span class="php-variable">$api_data</span> === <span class="php-keyword">false</span>) {
+    <span class="php-variable">$api_data</span> = <span class="php-function">fetch_external_api</span>();
+    <span class="php-function">set_transient</span>(<span class="php-string">'api_response'</span>, <span class="php-variable">$api_data</span>, <span class="php-number">1800</span>); <span class="php-comment">// 30 minutes</span>
+}
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">10.3 Image Optimization</h3>
+              <div class="example-box">
+                <h5>Optimizing Images and Media</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Add custom image sizes</span>
+<span class="php-keyword">function</span> <span class="php-function">my_custom_image_sizes</span>() {
+    <span class="php-function">add_image_size</span>(<span class="php-string">'hero-image'</span>, <span class="php-number">1200</span>, <span class="php-number">600</span>, <span class="php-keyword">true</span>);
+    <span class="php-function">add_image_size</span>(<span class="php-string">'card-thumbnail'</span>, <span class="php-number">400</span>, <span class="php-number">300</span>, <span class="php-keyword">true</span>);
+}
+<span class="php-function">add_action</span>(<span class="php-string">'after_setup_theme'</span>, <span class="php-string">'my_custom_image_sizes'</span>);
+
+<span class="php-comment">// Use responsive images</span>
+<span class="php-variable">$image_id</span> = <span class="php-function">get_post_thumbnail_id</span>();
+<span class="php-variable">$srcset</span> = <span class="php-function">wp_get_attachment_image_srcset</span>(<span class="php-variable">$image_id</span>);
+<span class="php-variable">$sizes</span> = <span class="php-function">wp_get_attachment_image_sizes</span>(<span class="php-variable">$image_id</span>);
+
+<span class="php-keyword">echo</span> <span class="php-string">'&lt;img src="'</span> . <span class="php-function">wp_get_attachment_image_url</span>(<span class="php-variable">$image_id</span>, <span class="php-string">'medium'</span>) . <span class="php-string">'" '</span>;
+<span class="php-keyword">echo</span> <span class="php-string">'srcset="'</span> . <span class="php-variable">$srcset</span> . <span class="php-string">'" '</span>;
+<span class="php-keyword">echo</span> <span class="php-string">'sizes="'</span> . <span class="php-variable">$sizes</span> . <span class="php-string">'" alt="Responsive image" /&gt;'</span>;
+
+<span class="php-comment">// Lazy loading for images</span>
+<span class="php-keyword">function</span> <span class="php-function">add_lazy_loading</span>(<span class="php-variable">$content</span>) {
+    <span class="php-keyword">if</span> (!<span class="php-function">is_admin</span>()) {
+        <span class="php-variable">$content</span> = <span class="php-function">str_replace</span>(<span class="php-string">'&lt;img '</span>, <span class="php-string">'&lt;img loading="lazy" '</span>, <span class="php-variable">$content</span>);
+    }
+    <span class="php-keyword">return</span> <span class="php-variable">$content</span>;
+}
+<span class="php-function">add_filter</span>(<span class="php-string">'the_content'</span>, <span class="php-string">'add_lazy_loading'</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">10.4 Minification & Compression</h3>
+              <div class="example-box">
+                <h5>Minifying CSS and JavaScript</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Enqueue minified assets</span>
+<span class="php-keyword">function</span> <span class="php-function">enqueue_minified_assets</span>() {
+    <span class="php-variable">$version</span> = <span class="php-function">wp_get_theme</span>()->get(<span class="php-string">'Version'</span>);
+
+    <span class="php-function">wp_enqueue_style</span>(
+        <span class="php-string">'main-style'</span>,
+        <span class="php-function">get_template_directory_uri</span>() . <span class="php-string">'/assets/css/main.min.css'</span>,
+        [],
+        <span class="php-variable">$version</span>
+    );
+
+    <span class="php-function">wp_enqueue_script</span>(
+        <span class="php-string">'main-script'</span>,
+        <span class="php-function">get_template_directory_uri</span>() . <span class="php-string">'/assets/js/main.min.js'</span>,
+        [<span class="php-string">'jquery'</span>],
+        <span class="php-variable">$version</span>,
+        <span class="php-keyword">true</span>
+    );
+}
+<span class="php-function">add_action</span>(<span class="php-string">'wp_enqueue_scripts'</span>, <span class="php-string">'enqueue_minified_assets'</span>);
+
+<span class="php-comment">// Enable GZIP compression via .htaccess</span>
+<span class="php-comment">// Add to .htaccess file:</span>
+<span class="php-comment">// &lt;IfModule mod_deflate.c&gt;</span>
+<span class="php-comment">//   AddOutputFilterByType DEFLATE text/plain</span>
+<span class="php-comment">//   AddOutputFilterByType DEFLATE text/html</span>
+<span class="php-comment">//   AddOutputFilterByType DEFLATE text/xml</span>
+<span class="php-comment">//   AddOutputFilterByType DEFLATE text/css</span>
+<span class="php-comment">//   AddOutputFilterByType DEFLATE application/xml</span>
+<span class="php-comment">//   AddOutputFilterByType DEFLATE application/xhtml+xml</span>
+<span class="php-comment">//   AddOutputFilterByType DEFLATE application/rss+xml</span>
+<span class="php-comment">//   AddOutputFilterByType DEFLATE application/javascript</span>
+<span class="php-comment">//   AddOutputFilterByType DEFLATE application/x-javascript</span>
+<span class="php-comment">// &lt;/IfModule&gt;</span>
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 11: Deployment & Hosting -->
+        <section class="lesson" id="deployment">
+          <div class="lesson-header">
+            <h2>🚀 Lesson 11: Deployment & Hosting</h2>
+            <p>Deploying WordPress to production servers</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">11.1 Hosting Options</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Shared Hosting</h4>
+                  <p>Affordable, easy setup, limited resources</p>
+                </div>
+                <div class="component-card">
+                  <h4>VPS Hosting</h4>
+                  <p>More control, scalable, requires technical knowledge</p>
+                </div>
+                <div class="component-card">
+                  <h4>Dedicated Hosting</h4>
+                  <p>Full control, high performance, expensive</p>
+                </div>
+                <div class="component-card">
+                  <h4>Cloud Hosting</h4>
+                  <p>Scalable, reliable, pay-as-you-go pricing</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">11.2 Deployment Checklist</h3>
+              <div class="highlight-box">
+                <p><strong>Pre-Deployment Checklist:</strong></p>
+                <ul>
+                  <li>✅ Update WordPress core, themes, and plugins</li>
+                  <li>✅ Test website functionality on staging environment</li>
+                  <li>✅ Backup database and files</li>
+                  <li>✅ Check file permissions (755 for directories, 644 for files)</li>
+                  <li>✅ Disable debug mode and error reporting</li>
+                  <li>✅ Update site URLs in database</li>
+                  <li>✅ Configure SSL certificate</li>
+                  <li>✅ Set up proper redirects (HTTP to HTTPS)</li>
+                  <li>✅ Optimize database (remove post revisions, spam comments)</li>
+                  <li>✅ Enable caching and CDN</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">11.3 Environment Configuration</h3>
+              <div class="example-box">
+                <h5>Production wp-config.php Settings</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Production configuration</span>
+<span class="php-keyword">define</span>(<span class="php-string">'WP_DEBUG'</span>, <span class="php-keyword">false</span>);
+<span class="php-keyword">define</span>(<span class="php-string">'WP_DEBUG_LOG'</span>, <span class="php-keyword">false</span>);
+<span class="php-keyword">define</span>(<span class="php-string">'WP_DEBUG_DISPLAY'</span>, <span class="php-keyword">false</span>);
+
+<span class="php-comment">// Security settings</span>
+<span class="php-keyword">define</span>(<span class="php-string">'DISALLOW_FILE_EDIT'</span>, <span class="php-keyword">true</span>);
+<span class="php-keyword">define</span>(<span class="php-string">'DISALLOW_FILE_MODS'</span>, <span class="php-keyword">false</span>); <span class="php-comment">// Allow plugin/theme updates</span>
+
+<span class="php-comment">// Performance settings</span>
+<span class="php-keyword">define</span>(<span class="php-string">'WP_CACHE'</span>, <span class="php-keyword">true</span>);
+<span class="php-keyword">define</span>(<span class="php-string">'WP_MEMORY_LIMIT'</span>, <span class="php-string">'256M'</span>);
+<span class="php-keyword">define</span>(<span class="php-string">'WP_MAX_MEMORY_LIMIT'</span>, <span class="php-string">'512M'</span>);
+
+<span class="php-comment">// Content settings</span>
+<span class="php-keyword">define</span>(<span class="php-string">'AUTOSAVE_INTERVAL'</span>, <span class="php-number">300</span>); <span class="php-comment">// 5 minutes</span>
+<span class="php-keyword">define</span>(<span class="php-string">'WP_POST_REVISIONS'</span>, <span class="php-number">5</span>); <span class="php-comment">// Limit revisions</span>
+
+<span class="php-comment">// Update settings</span>
+<span class="php-keyword">define</span>(<span class="php-string">'WP_AUTO_UPDATE_CORE'</span>, <span class="php-keyword">true</span>);
+<span class="php-keyword">define</span>(<span class="php-string">'AUTOMATIC_UPDATER_DISABLED'</span>, <span class="php-keyword">false</span>);
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">11.4 Migration Scripts</h3>
+              <div class="example-box">
+                <h5>Database Migration Script</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Database migration script</span>
+<span class="php-keyword">function</span> <span class="php-function">run_database_migration</span>() {
+    <span class="php-keyword">global</span> <span class="php-variable">$wpdb</span>;
+
+    <span class="php-comment">// Check if migration already run</span>
+    <span class="php-variable">$migration_version</span> = <span class="php-function">get_option</span>(<span class="php-string">'my_plugin_migration_version'</span>, <span class="php-string">'0'</span>);
+
+    <span class="php-keyword">if</span> (<span class="php-function">version_compare</span>(<span class="php-variable">$migration_version</span>, <span class="php-string">'1.1.0'</span>, <span class="php-string">'&lt;'</span>)) {
+        <span class="php-comment">// Run migration for version 1.1.0</span>
+        <span class="php-variable">$sql</span> = <span class="php-string">"ALTER TABLE {$wpdb->prefix}my_table ADD COLUMN new_field VARCHAR(255) DEFAULT ''"</span>;
+        <span class="php-variable">$wpdb</span>->query(<span class="php-variable">$sql</span>);
+
+        <span class="php-comment">// Update migration version</span>
+        <span class="php-function">update_option</span>(<span class="php-string">'my_plugin_migration_version'</span>, <span class="php-string">'1.1.0'</span>);
+    }
+}
+
+<span class="php-comment">// Search and replace URLs</span>
+<span class="php-keyword">function</span> <span class="php-function">update_site_urls</span>(<span class="php-variable">$old_url</span>, <span class="php-variable">$new_url</span>) {
+    <span class="php-keyword">global</span> <span class="php-variable">$wpdb</span>;
+
+    <span class="php-comment">// Update post content</span>
+    <span class="php-variable">$wpdb</span>->query(
+        <span class="php-variable">$wpdb</span>->prepare(
+            <span class="php-string">"UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, %s, %s)"</span>,
+            <span class="php-variable">$old_url</span>,
+            <span class="php-variable">$new_url</span>
+        )
+    );
+
+    <span class="php-comment">// Update post meta</span>
+    <span class="php-variable">$wpdb</span>->query(
+        <span class="php-variable">$wpdb</span>->prepare(
+            <span class="php-string">"UPDATE {$wpdb->postmeta} SET meta_value = REPLACE(meta_value, %s, %s)"</span>,
+            <span class="php-variable">$old_url</span>,
+            <span class="php-variable">$new_url</span>
+        )
+    );
+
+    <span class="php-comment">// Update options</span>
+    <span class="php-variable">$wpdb</span>->query(
+        <span class="php-variable">$wpdb</span>->prepare(
+            <span class="php-string">"UPDATE {$wpdb->options} SET option_value = REPLACE(option_value, %s, %s) WHERE option_name IN ('siteurl', 'home')"</span>,
+            <span class="php-variable">$old_url</span>,
+            <span class="php-variable">$new_url</span>
+        )
+    );
+}
+</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lesson 12: Practical Projects -->
+        <section class="lesson" id="projects">
+          <div class="lesson-header">
+            <h2>💼 Lesson 12: Practical Projects</h2>
+            <p>Real-world WordPress projects to build your skills</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title">12.1 Project 1: Custom Theme Development</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Features</h4>
+                  <p>Responsive design, custom post types, widget areas, theme customizer</p>
+                </div>
+                <div class="component-card">
+                  <h4>Skills Learned</h4>
+                  <p>Theme development, WordPress functions, responsive design, customization</p>
+                </div>
+                <div class="component-card">
+                  <h4>Difficulty</h4>
+                  <p>Intermediate</p>
+                </div>
+              </div>
+
+              <div class="example-box">
+                <h5>Theme Structure Overview</h5>
+                <div class="code-box">
+                  <pre>
+<span class="php-comment">// Theme folder structure:</span>
+<span class="php-comment">// my-custom-theme/</span>
+<span class="php-comment">// ├── style.css (Theme header and main styles)</span>
+<span class="php-comment">// ├── index.php (Main template)</span>
+<span class="php-comment">// ├── header.php (Site header)</span>
+<span class="php-comment">// ├── footer.php (Site footer)</span>
+<span class="php-comment">// ├── functions.php (Theme functions)</span>
+<span class="php-comment">// ├── page.php (Page template)</span>
+<span class="php-comment">// ├── single.php (Single post template)</span>
+<span class="php-comment">// ├── archive.php (Archive template)</span>
+<span class="php-comment">// ├── search.php (Search results)</span>
+<span class="php-comment">// ├── 404.php (404 error page)</span>
+<span class="php-comment">// ├── assets/</span>
+<span class="php-comment">// │   ├── css/</span>
+<span class="php-comment">// │   ├── js/</span>
+<span class="php-comment">// │   └── images/</span>
+<span class="php-comment">// └── template-parts/</span>
+<span class="php-comment">//     ├── content.php</span>
+<span class="php-comment">//     └── navigation.php</span>
+</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">12.2 Project 2: Custom Plugin Development</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Features</h4>
+                  <p>Admin settings page, custom database tables, shortcodes, widgets</p>
+                </div>
+                <div class="component-card">
+                  <h4>Skills Learned</h4>
+                  <p>Plugin architecture, database operations, WordPress APIs, security</p>
+                </div>
+                <div class="component-card">
+                  <h4>Difficulty</h4>
+                  <p>Advanced</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">12.3 Project 3: E-commerce Website</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Features</h4>
+                  <p>WooCommerce integration, custom product types, payment gateways, order management</p>
+                </div>
+                <div class="component-card">
+                  <h4>Skills Learned</h4>
+                  <p>E-commerce development, payment processing, inventory management</p>
+                </div>
+                <div class="component-card">
+                  <h4>Difficulty</h4>
+                  <p>Advanced</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">12.4 Project 4: Membership Site</h3>
+              <div class="component-grid">
+                <div class="component-card">
+                  <h4>Features</h4>
+                  <p>User registration, content restriction, payment integration, user management</p>
+                </div>
+                <div class="component-card">
+                  <h4>Skills Learned</h4>
+                  <p>User management, content restriction, payment processing, role management</p>
+                </div>
+                <div class="component-card">
+                  <h4>Difficulty</h4>
+                  <p>Advanced</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3 class="section-title">12.5 Development Best Practices</h3>
+              <div class="highlight-box">
+                <p><strong>WordPress Development Guidelines:</strong></p>
+                <ul>
+                  <li>✅ Follow WordPress Coding Standards</li>
+                  <li>✅ Use proper hooks and filters</li>
+                  <li>✅ Sanitize and validate all data</li>
+                  <li>✅ Use nonces for security</li>
+                  <li>✅ Optimize database queries</li>
+                  <li>✅ Implement proper error handling</li>
+                  <li>✅ Use transients for caching</li>
+                  <li>✅ Follow semantic versioning</li>
+                  <li>✅ Document your code</li>
+                  <li>✅ Test on multiple environments</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- JavaScript for interactivity -->
+    <script>
+      // Toggle sidebar functionality
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+
+        sidebar.classList.toggle('open');
+        mainContent.classList.toggle('sidebar-open');
+      }
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+
+          if (target) {
+            // Close sidebar on mobile after clicking
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+
+            sidebar.classList.remove('open');
+            mainContent.classList.remove('sidebar-open');
+
+            // Smooth scroll to target
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+
+      // Highlight active section in navigation
+      window.addEventListener('scroll', function() {
+        const sections = document.querySelectorAll('.lesson');
+        const navLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+
+        let currentSection = '';
+
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.clientHeight;
+
+          if (pageYOffset >= sectionTop - sectionHeight / 3) {
+            currentSection = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + currentSection) {
+            link.classList.add('active');
+          }
+        });
+      });
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener('click', function(event) {
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.querySelector('.sidebar-toggle');
+
+        if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
+          sidebar.classList.remove('open');
+          document.getElementById('mainContent').classList.remove('sidebar-open');
+        }
+      });
+    </script>
+  </body>
+</html>
