@@ -6250,232 +6250,45 @@ mysql -u user -p db < backup.sql
                 </div>
               </div>
 
-              <!-- Quick Reference for Day 2 -->
+              <!-- Quick Navigation to Detailed Sections -->
               <div class="section">
-                <h3 class="section-title">Day 2.1: Subqueries Quick Reference</h3>
+                <h3 class="section-title">📖 Detailed Content References</h3>
                 
-                <div class="sql-command">
-<pre><span class="comment">-- Single-row subquery (returns one value)</span>
-<span class="prompt">mysql></span> SELECT first_name, salary 
-FROM employees 
-WHERE salary > (SELECT AVG(salary) FROM employees);
-
-<span class="comment">-- Multi-row subquery with IN</span>
-<span class="prompt">mysql></span> SELECT product_name 
-FROM products 
-WHERE category_id IN (SELECT category_id FROM categories WHERE active = 1);
-
-<span class="comment">-- Subquery with EXISTS</span>
-<span class="prompt">mysql></span> SELECT c.customer_name 
-FROM customers c 
-WHERE EXISTS (
-    SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id
-);
-
-<span class="comment">-- Correlated subquery</span>
-<span class="prompt">mysql></span> SELECT e1.first_name, e1.salary, e1.department_id
-FROM employees e1
-WHERE e1.salary > (
-    SELECT AVG(e2.salary) 
-    FROM employees e2 
-    WHERE e2.department_id = e1.department_id
-);
-
-<span class="comment">-- Subquery in FROM clause (derived table)</span>
-<span class="prompt">mysql></span> SELECT dept_avg.department_id, dept_avg.avg_salary
-FROM (
-    SELECT department_id, AVG(salary) AS avg_salary
-    FROM employees
-    GROUP BY department_id
-) AS dept_avg
-WHERE dept_avg.avg_salary > 60000;
-</pre>
-                </div>
-
-                <div class="highlight-box">
-                  <p><strong>💡 For comprehensive subquery examples, see Module 5, Section 5.6</strong></p>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">Day 2.2: UNION Quick Reference</h3>
-                
-                <div class="sql-command">
-<pre><span class="comment">-- UNION (removes duplicates)</span>
-<span class="prompt">mysql></span> SELECT first_name, last_name FROM employees
-UNION
-SELECT first_name, last_name FROM contractors;
-
-<span class="comment">-- UNION ALL (keeps all records including duplicates)</span>
-<span class="prompt">mysql></span> SELECT product_name, 'In Stock' AS status FROM products WHERE stock > 0
-UNION ALL
-SELECT product_name, 'Out of Stock' AS status FROM products WHERE stock = 0;
-
-<span class="comment">-- UNION with ORDER BY (applies to entire result)</span>
-<span class="prompt">mysql></span> SELECT first_name, last_name, hire_date FROM employees
-UNION
-SELECT first_name, last_name, start_date FROM contractors
-ORDER BY hire_date DESC;
-
-<span class="comment">-- Multiple UNIONs</span>
-<span class="prompt">mysql></span> SELECT 'Employee' AS type, COUNT(*) AS count FROM employees
-UNION
-SELECT 'Customer' AS type, COUNT(*) FROM customers
-UNION
-SELECT 'Product' AS type, COUNT(*) FROM products;
-</pre>
-                </div>
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Topic</th>
+                      <th>Location</th>
+                      <th>What You'll Learn</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Subqueries</strong></td>
+                      <td><a href="#lesson5" style="color: #00758f;">Module 5, Section 5.6</a></td>
+                      <td>Single-row, multi-row, correlated subqueries with IN, EXISTS, ANY, ALL operators</td>
+                    </tr>
+                    <tr>
+                      <td><strong>UNION Operations</strong></td>
+                      <td><a href="#lesson5" style="color: #00758f;">Module 5</a></td>
+                      <td>UNION vs UNION ALL, combining result sets, requirements and best practices</td>
+                    </tr>
+                    <tr>
+                      <td><strong>CTE (Common Table Expressions)</strong></td>
+                      <td><a href="#lesson5" style="color: #00758f;">Module 5, Section 5.7</a></td>
+                      <td>WITH clause, multiple CTEs, recursive CTEs for hierarchical data</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Stored Procedures</strong></td>
+                      <td><a href="#lesson9" style="color: #00758f;">Module 9, Section 9.2</a></td>
+                      <td>IN/OUT/INOUT parameters, variables, control flow (IF, WHILE, CASE), error handling</td>
+                    </tr>
+                  </tbody>
+                </table>
 
                 <div class="warning-box">
-                  <strong>UNION Requirements:</strong>
-                  <ul>
-                    <li>✅ Each SELECT must have same number of columns</li>
-                    <li>✅ Columns must have compatible data types</li>
-                    <li>✅ Column names from first SELECT are used in result</li>
-                    <li>⚠️ UNION removes duplicates (slower), UNION ALL keeps all (faster)</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">Day 2.3: CTE Quick Reference</h3>
-                
-                <div class="sql-command">
-<pre><span class="comment">-- Basic CTE with WITH clause</span>
-<span class="prompt">mysql></span> WITH high_earners AS (
-    SELECT * FROM employees WHERE salary > 70000
-)
-SELECT department_id, COUNT(*) AS high_earner_count
-FROM high_earners
-GROUP BY department_id;
-
-<span class="comment">-- Multiple CTEs</span>
-<span class="prompt">mysql></span> WITH 
-    dept_avg AS (
-        SELECT department_id, AVG(salary) AS avg_salary
-        FROM employees
-        GROUP BY department_id
-    ),
-    high_dept AS (
-        SELECT department_id FROM dept_avg WHERE avg_salary > 60000
-    )
-SELECT e.first_name, e.salary, e.department_id
-FROM employees e
-JOIN high_dept h ON e.department_id = h.department_id;
-
-<span class="comment">-- Recursive CTE (MySQL 8.0+)</span>
-<span class="prompt">mysql></span> WITH RECURSIVE employee_hierarchy AS (
-    <span class="comment">-- Anchor: Top-level employees (no manager)</span>
-    SELECT employee_id, first_name, manager_id, 1 AS level
-    FROM employees
-    WHERE manager_id IS NULL
-    
-    UNION ALL
-    
-    <span class="comment">-- Recursive: Employees with managers</span>
-    SELECT e.employee_id, e.first_name, e.manager_id, eh.level + 1
-    FROM employees e
-    JOIN employee_hierarchy eh ON e.manager_id = eh.employee_id
-)
-SELECT * FROM employee_hierarchy ORDER BY level, employee_id;
-</pre>
-                </div>
-
-                <div class="highlight-box">
-                  <p><strong>💡 For comprehensive CTE examples and recursive queries, see Module 5, Section 5.7</strong></p>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">Day 2.4: Stored Procedures Quick Reference</h3>
-                
-                <div class="sql-command">
-<pre><span class="comment">-- Basic stored procedure</span>
-DELIMITER $$
-CREATE PROCEDURE GetAllEmployees()
-BEGIN
-    SELECT * FROM employees;
-END$$
-DELIMITER ;
-
-<span class="comment">-- Call procedure</span>
-<span class="prompt">mysql></span> CALL GetAllEmployees();
-
-<span class="comment">-- Procedure with IN parameter</span>
-DELIMITER $$
-CREATE PROCEDURE GetEmployeesByDept(IN dept_id INT)
-BEGIN
-    SELECT * FROM employees WHERE department_id = dept_id;
-END$$
-DELIMITER ;
-
-<span class="prompt">mysql></span> CALL GetEmployeesByDept(5);
-
-<span class="comment">-- Procedure with OUT parameter</span>
-DELIMITER $$
-CREATE PROCEDURE GetEmployeeCount(OUT emp_count INT)
-BEGIN
-    SELECT COUNT(*) INTO emp_count FROM employees;
-END$$
-DELIMITER ;
-
-<span class="prompt">mysql></span> CALL GetEmployeeCount(@count);
-<span class="prompt">mysql></span> SELECT @count AS total_employees;
-
-<span class="comment">-- Procedure with INOUT parameter</span>
-DELIMITER $$
-CREATE PROCEDURE ApplySalaryIncrease(INOUT salary DECIMAL(10,2), IN percent INT)
-BEGIN
-    SET salary = salary + (salary * percent / 100);
-END$$
-DELIMITER ;
-
-<span class="prompt">mysql></span> SET @current_salary = 50000;
-<span class="prompt">mysql></span> CALL ApplySalaryIncrease(@current_salary, 10);
-<span class="prompt">mysql></span> SELECT @current_salary;  <span class="comment">-- 55000</span>
-
-<span class="comment">-- Procedure with IF statement</span>
-DELIMITER $$
-CREATE PROCEDURE ClassifyEmployee(IN emp_id INT, OUT classification VARCHAR(20))
-BEGIN
-    DECLARE emp_salary DECIMAL(10,2);
-    
-    SELECT salary INTO emp_salary FROM employees WHERE employee_id = emp_id;
-    
-    IF emp_salary > 80000 THEN
-        SET classification = 'Senior';
-    ELSEIF emp_salary > 50000 THEN
-        SET classification = 'Mid-Level';
-    ELSE
-        SET classification = 'Junior';
-    END IF;
-END$$
-DELIMITER ;
-
-<span class="comment">-- Procedure with WHILE loop</span>
-DELIMITER $$
-CREATE PROCEDURE InsertTestData(IN num_rows INT)
-BEGIN
-    DECLARE counter INT DEFAULT 1;
-    
-    WHILE counter <= num_rows DO
-        INSERT INTO test_table (value) VALUES (counter);
-        SET counter = counter + 1;
-    END WHILE;
-END$$
-DELIMITER ;
-
-<span class="comment">-- View procedures</span>
-<span class="prompt">mysql></span> SHOW PROCEDURE STATUS WHERE Db = 'company';
-<span class="prompt">mysql></span> SHOW CREATE PROCEDURE GetAllEmployees;
-
-<span class="comment">-- Drop procedure</span>
-<span class="prompt">mysql></span> DROP PROCEDURE IF EXISTS GetAllEmployees;
-</pre>
-                </div>
-
-                <div class="highlight-box">
-                  <p><strong>💡 For comprehensive stored procedure examples and advanced techniques, see Module 9, Section 9.2</strong></p>
+                  <strong>💡 Study Tip:</strong> Click the links above to jump to detailed sections with comprehensive examples, 
+                  syntax explanations, and real-world use cases for each topic.
                 </div>
               </div>
 
@@ -6483,13 +6296,12 @@ DELIMITER ;
                 <h3 class="section-title">Day 2 Summary</h3>
                 
                 <div class="highlight-box">
-                  <p><strong>🎯 Key Concepts Mastered:</strong></p>
-                  <ul>
-                    <li>✅ <strong>Subqueries:</strong> Single-row, multi-row, correlated, with IN/EXISTS/ANY/ALL</li>
-                    <li>✅ <strong>UNION:</strong> Combining results with UNION (distinct) and UNION ALL (all records)</li>
-                    <li>✅ <strong>CTE:</strong> WITH clause for temporary named results, recursive CTEs for hierarchies</li>
-                    <li>✅ <strong>Stored Procedures:</strong> IN/OUT/INOUT parameters, variables, control flow, loops</li>
-                  </ul>
+                  <p><strong>🎯 Day 2 Focus Areas:</strong></p>
+                  <p>
+                    Day 2 covers advanced query techniques that build on basic SQL knowledge. All topics are 
+                    explored in depth within the main course modules. Use the reference table above to navigate 
+                    to detailed sections for comprehensive examples and explanations.
+                  </p>
                 </div>
 
                 <table class="comparison-table">
