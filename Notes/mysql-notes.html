@@ -13,11 +13,12 @@
 
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
+        line-height: 1.8;
         color: #333;
         background: linear-gradient(135deg, #00758f 0%, #005a6f 100%);
         min-height: 100vh;
         display: flex;
+        font-size: 17px;
       }
 
       /* Layout Container */
@@ -153,7 +154,7 @@
       }
 
       .container {
-        max-width: 1300px;
+        max-width: 1700px;
         margin: 0 auto;
         padding: 20px;
         background: rgba(255, 255, 255, 0.95);
@@ -188,14 +189,14 @@
       }
 
       .header h1 {
-        font-size: 2.5em;
+        font-size: 3em;
         margin-bottom: 10px;
         position: relative;
         z-index: 1;
       }
 
       .header p {
-        font-size: 1.2em;
+        font-size: 1.4em;
         opacity: 0.9;
         position: relative;
         z-index: 1;
@@ -212,7 +213,7 @@
       .course-outline h2 {
         color: #005a6f;
         margin-bottom: 20px;
-        font-size: 1.8em;
+        font-size: 2.2em;
       }
 
       .lesson-list {
@@ -267,12 +268,13 @@
       }
 
       .lesson-header h2 {
-        font-size: 1.8em;
+        font-size: 2.2em;
         margin-bottom: 10px;
       }
 
       .lesson-content {
         padding: 25px;
+        font-size: 1.05em;
       }
 
       .section {
@@ -281,7 +283,7 @@
 
       .section-title {
         color: #005a6f;
-        font-size: 1.4em;
+        font-size: 1.7em;
         margin-bottom: 15px;
         padding-bottom: 8px;
         border-bottom: 2px solid #ecf0f1;
@@ -302,7 +304,7 @@
 
       .subsection-title {
         color: #34495e;
-        font-size: 1.2em;
+        font-size: 1.4em;
         margin-bottom: 10px;
         font-weight: 600;
       }
@@ -313,6 +315,7 @@
         border-radius: 8px;
         margin: 10px 0;
         border-left: 4px solid #00758f;
+        font-size: 1.05em;
       }
 
       .highlight-box {
@@ -350,16 +353,26 @@
       .code-box {
         background: #1e1e1e;
         color: #d4d4d4;
-        padding: 15px;
+        padding: 20px;
         border-radius: 8px;
-        margin: 10px 0;
-        font-family: 'Courier New', monospace;
+        margin: 15px 0;
+        font-family: 'Consolas', 'Courier New', monospace;
         overflow-x: auto;
+        border-left: 4px solid #007acc;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        line-height: 1.6;
       }
 
       .code-box pre {
         margin: 0;
         white-space: pre-wrap;
+        color: #d4d4d4;
+        font-size: 14px;
+      }
+      
+      .code-box strong {
+        color: #4ec9b0;
+        font-weight: bold;
       }
 
       .sql-command {
@@ -371,7 +384,7 @@
         font-family: 'Courier New', monospace;
         overflow-x: auto;
         border-left: 4px solid #005a6f;
-        font-size: 19px;
+        font-size: 18px;
       }
 
       .sql-command pre {
@@ -394,8 +407,9 @@
       }
 
       li {
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         padding-left: 5px;
+        font-size: 1.05em;
       }
 
       .component-grid {
@@ -548,6 +562,41 @@
           font-size: 0.8rem;
         }
       }
+
+      /* Scroll to Top Button */
+      .scroll-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 55px;
+        height: 55px;
+        background: linear-gradient(135deg, #00758f, #005a6f);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 24px;
+        box-shadow: 0 4px 12px rgba(0, 117, 143, 0.4);
+        transition: all 0.3s ease;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .scroll-to-top.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .scroll-to-top:hover {
+        background: linear-gradient(135deg, #005a6f, #00a6cc);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 117, 143, 0.5);
+      }
     </style>
   </head>
   <body>
@@ -569,31 +618,37 @@
               <a href="#outline" onclick="closeSidebar()">📋 Course Outline</a>
             </li>
             <li>
-              <a href="#lesson1" onclick="closeSidebar()">🗄️ MySQL Fundamentals</a>
+              <a href="#lesson1" onclick="closeSidebar()">🗄️ Module 1: MySQL Fundamentals</a>
             </li>
             <li>
-              <a href="#lesson2" onclick="closeSidebar()">📊 Database Design</a>
+              <a href="#lesson2" onclick="closeSidebar()">📊 Module 2: Database Design</a>
             </li>
             <li>
-              <a href="#lesson3" onclick="closeSidebar()">🔧 DDL Commands</a>
+              <a href="#lesson3" onclick="closeSidebar()">🔧 Module 3: DDL Commands</a>
             </li>
             <li>
-              <a href="#lesson4" onclick="closeSidebar()">📝 DML Commands</a>
+              <a href="#lesson4" onclick="closeSidebar()">📝 Module 4: DML Commands</a>
             </li>
             <li>
-              <a href="#lesson5" onclick="closeSidebar()">🔍 Advanced Queries</a>
+              <a href="#lesson6" onclick="closeSidebar()">🔗 Module 5: Joins & Relationships</a>
             </li>
             <li>
-              <a href="#lesson6" onclick="closeSidebar()">🔗 Joins & Relationships</a>
+              <a href="#lesson5" onclick="closeSidebar()">🔍 Module 6: Advanced Queries</a>
             </li>
             <li>
-              <a href="#lesson7" onclick="closeSidebar()">⚡ Indexes & Performance</a>
+              <a href="#lesson7" onclick="closeSidebar()">⚡ Module 7: Indexes & Performance</a>
             </li>
             <li>
-              <a href="#lesson8" onclick="closeSidebar()">🔐 Security & Users</a>
+              <a href="#lesson8" onclick="closeSidebar()">🔐 Module 8: Security & Users</a>
             </li>
             <li>
-              <a href="#lesson9" onclick="closeSidebar()">🚀 Advanced Topics</a>
+              <a href="#lesson9" onclick="closeSidebar()">🚀 Module 9: Advanced Topics</a>
+            </li>
+            <li>
+              <a href="#day2" onclick="closeSidebar()">📅 Day 2: Subqueries & Procedures</a>
+            </li>
+            <li>
+              <a href="#day3" onclick="closeSidebar()">📅 Day 3: Advanced Features</a>
             </li>
           </ul>
         </div>
@@ -623,10 +678,10 @@
                 <strong>Module 4:</strong> DML (Data Manipulation Language)
               </div>
               <div class="lesson-item">
-                <strong>Module 5:</strong> Advanced Queries & Functions
+                <strong>Module 5:</strong> Joins & Relationships
               </div>
               <div class="lesson-item">
-                <strong>Module 6:</strong> Joins & Relationships
+                <strong>Module 6:</strong> Advanced Queries & Functions
               </div>
               <div class="lesson-item">
                 <strong>Module 7:</strong> Indexes & Performance Optimization
@@ -636,6 +691,12 @@
               </div>
               <div class="lesson-item">
                 <strong>Module 9:</strong> Advanced Topics (Transactions, Views, Stored Procedures)
+              </div>
+              <div class="lesson-item">
+                <strong>Day 2:</strong> Subqueries, UNION, CTE & Stored Procedures
+              </div>
+              <div class="lesson-item">
+                <strong>Day 3:</strong> Transactions, Functions, Triggers & Backup
               </div>
             </div>
           </section>
@@ -6134,9 +6195,1234 @@ mysql -u user -p db < backup.sql
             </div>
           </div>
 
+          <!-- Day 2: Subqueries & Stored Procedures -->
+          <div id="day2" class="lesson">
+            <div class="lesson-header">
+              <h2>📅 Day 2: Subqueries, UNION & Stored Procedures</h2>
+              <p>Advanced Query Techniques and Procedural Programming</p>
+            </div>
+            <div class="lesson-content">
+              
+              <div class="section">
+                <h3 class="section-title">Day 2 Overview</h3>
+                
+                <div class="highlight-box">
+                  <p><strong>Day 2 Topics Covered:</strong></p>
+                  <ul>
+                    <li>📊 <strong>Subqueries:</strong> Nested queries in SELECT, FROM, WHERE clauses</li>
+                    <li>🔗 <strong>UNION:</strong> Combining results from multiple SELECT statements</li>
+                    <li>📋 <strong>CTE (Common Table Expressions):</strong> WITH clause for temporary result sets</li>
+                    <li>⚙️ <strong>Stored Procedures:</strong> Reusable SQL code with parameters and logic</li>
+                  </ul>
+                </div>
+
+                <div class="code-box">
+<pre><strong>Day 2 Learning Path:</strong>
+
+1️⃣ Subqueries
+   • Single-row subqueries (return one value)
+   • Multi-row subqueries (return multiple values)
+   • Correlated subqueries (reference outer query)
+   • Subqueries with IN, EXISTS, ANY, ALL
+
+2️⃣ UNION Operations
+   • UNION (removes duplicates)
+   • UNION ALL (keeps duplicates)
+   • Combining results from different tables
+   • Requirements: same column count and compatible types
+
+3️⃣ Common Table Expressions (CTE)
+   • WITH clause for named temporary results
+   • Recursive CTEs for hierarchical data
+   • Multiple CTEs in single query
+   • Better readability than nested subqueries
+
+4️⃣ Stored Procedures
+   • CREATE PROCEDURE with parameters (IN, OUT, INOUT)
+   • Variables and control flow (IF, WHILE, CASE)
+   • Error handling with handlers
+   • Calling procedures and managing them
+</pre>
+                </div>
+
+                <div class="definition-box">
+                  <p>
+                    <strong>Note:</strong> Detailed examples and comprehensive coverage of these topics 
+                    are provided in <strong>Module 5: Advanced Queries & Functions</strong> (sections 5.6, 5.7) 
+                    and <strong>Module 9: Advanced Topics</strong> (section 9.2 Stored Procedures).
+                  </p>
+                </div>
+              </div>
+
+              <!-- Quick Reference for Day 2 -->
+              <div class="section">
+                <h3 class="section-title">Day 2.1: Subqueries Quick Reference</h3>
+                
+                <div class="sql-command">
+<pre><span class="comment">-- Single-row subquery (returns one value)</span>
+<span class="prompt">mysql></span> SELECT first_name, salary 
+FROM employees 
+WHERE salary > (SELECT AVG(salary) FROM employees);
+
+<span class="comment">-- Multi-row subquery with IN</span>
+<span class="prompt">mysql></span> SELECT product_name 
+FROM products 
+WHERE category_id IN (SELECT category_id FROM categories WHERE active = 1);
+
+<span class="comment">-- Subquery with EXISTS</span>
+<span class="prompt">mysql></span> SELECT c.customer_name 
+FROM customers c 
+WHERE EXISTS (
+    SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id
+);
+
+<span class="comment">-- Correlated subquery</span>
+<span class="prompt">mysql></span> SELECT e1.first_name, e1.salary, e1.department_id
+FROM employees e1
+WHERE e1.salary > (
+    SELECT AVG(e2.salary) 
+    FROM employees e2 
+    WHERE e2.department_id = e1.department_id
+);
+
+<span class="comment">-- Subquery in FROM clause (derived table)</span>
+<span class="prompt">mysql></span> SELECT dept_avg.department_id, dept_avg.avg_salary
+FROM (
+    SELECT department_id, AVG(salary) AS avg_salary
+    FROM employees
+    GROUP BY department_id
+) AS dept_avg
+WHERE dept_avg.avg_salary > 60000;
+</pre>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>💡 For comprehensive subquery examples, see Module 5, Section 5.6</strong></p>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">Day 2.2: UNION Quick Reference</h3>
+                
+                <div class="sql-command">
+<pre><span class="comment">-- UNION (removes duplicates)</span>
+<span class="prompt">mysql></span> SELECT first_name, last_name FROM employees
+UNION
+SELECT first_name, last_name FROM contractors;
+
+<span class="comment">-- UNION ALL (keeps all records including duplicates)</span>
+<span class="prompt">mysql></span> SELECT product_name, 'In Stock' AS status FROM products WHERE stock > 0
+UNION ALL
+SELECT product_name, 'Out of Stock' AS status FROM products WHERE stock = 0;
+
+<span class="comment">-- UNION with ORDER BY (applies to entire result)</span>
+<span class="prompt">mysql></span> SELECT first_name, last_name, hire_date FROM employees
+UNION
+SELECT first_name, last_name, start_date FROM contractors
+ORDER BY hire_date DESC;
+
+<span class="comment">-- Multiple UNIONs</span>
+<span class="prompt">mysql></span> SELECT 'Employee' AS type, COUNT(*) AS count FROM employees
+UNION
+SELECT 'Customer' AS type, COUNT(*) FROM customers
+UNION
+SELECT 'Product' AS type, COUNT(*) FROM products;
+</pre>
+                </div>
+
+                <div class="warning-box">
+                  <strong>UNION Requirements:</strong>
+                  <ul>
+                    <li>✅ Each SELECT must have same number of columns</li>
+                    <li>✅ Columns must have compatible data types</li>
+                    <li>✅ Column names from first SELECT are used in result</li>
+                    <li>⚠️ UNION removes duplicates (slower), UNION ALL keeps all (faster)</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">Day 2.3: CTE Quick Reference</h3>
+                
+                <div class="sql-command">
+<pre><span class="comment">-- Basic CTE with WITH clause</span>
+<span class="prompt">mysql></span> WITH high_earners AS (
+    SELECT * FROM employees WHERE salary > 70000
+)
+SELECT department_id, COUNT(*) AS high_earner_count
+FROM high_earners
+GROUP BY department_id;
+
+<span class="comment">-- Multiple CTEs</span>
+<span class="prompt">mysql></span> WITH 
+    dept_avg AS (
+        SELECT department_id, AVG(salary) AS avg_salary
+        FROM employees
+        GROUP BY department_id
+    ),
+    high_dept AS (
+        SELECT department_id FROM dept_avg WHERE avg_salary > 60000
+    )
+SELECT e.first_name, e.salary, e.department_id
+FROM employees e
+JOIN high_dept h ON e.department_id = h.department_id;
+
+<span class="comment">-- Recursive CTE (MySQL 8.0+)</span>
+<span class="prompt">mysql></span> WITH RECURSIVE employee_hierarchy AS (
+    <span class="comment">-- Anchor: Top-level employees (no manager)</span>
+    SELECT employee_id, first_name, manager_id, 1 AS level
+    FROM employees
+    WHERE manager_id IS NULL
+    
+    UNION ALL
+    
+    <span class="comment">-- Recursive: Employees with managers</span>
+    SELECT e.employee_id, e.first_name, e.manager_id, eh.level + 1
+    FROM employees e
+    JOIN employee_hierarchy eh ON e.manager_id = eh.employee_id
+)
+SELECT * FROM employee_hierarchy ORDER BY level, employee_id;
+</pre>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>💡 For comprehensive CTE examples and recursive queries, see Module 5, Section 5.7</strong></p>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">Day 2.4: Stored Procedures Quick Reference</h3>
+                
+                <div class="sql-command">
+<pre><span class="comment">-- Basic stored procedure</span>
+DELIMITER $$
+CREATE PROCEDURE GetAllEmployees()
+BEGIN
+    SELECT * FROM employees;
+END$$
+DELIMITER ;
+
+<span class="comment">-- Call procedure</span>
+<span class="prompt">mysql></span> CALL GetAllEmployees();
+
+<span class="comment">-- Procedure with IN parameter</span>
+DELIMITER $$
+CREATE PROCEDURE GetEmployeesByDept(IN dept_id INT)
+BEGIN
+    SELECT * FROM employees WHERE department_id = dept_id;
+END$$
+DELIMITER ;
+
+<span class="prompt">mysql></span> CALL GetEmployeesByDept(5);
+
+<span class="comment">-- Procedure with OUT parameter</span>
+DELIMITER $$
+CREATE PROCEDURE GetEmployeeCount(OUT emp_count INT)
+BEGIN
+    SELECT COUNT(*) INTO emp_count FROM employees;
+END$$
+DELIMITER ;
+
+<span class="prompt">mysql></span> CALL GetEmployeeCount(@count);
+<span class="prompt">mysql></span> SELECT @count AS total_employees;
+
+<span class="comment">-- Procedure with INOUT parameter</span>
+DELIMITER $$
+CREATE PROCEDURE ApplySalaryIncrease(INOUT salary DECIMAL(10,2), IN percent INT)
+BEGIN
+    SET salary = salary + (salary * percent / 100);
+END$$
+DELIMITER ;
+
+<span class="prompt">mysql></span> SET @current_salary = 50000;
+<span class="prompt">mysql></span> CALL ApplySalaryIncrease(@current_salary, 10);
+<span class="prompt">mysql></span> SELECT @current_salary;  <span class="comment">-- 55000</span>
+
+<span class="comment">-- Procedure with IF statement</span>
+DELIMITER $$
+CREATE PROCEDURE ClassifyEmployee(IN emp_id INT, OUT classification VARCHAR(20))
+BEGIN
+    DECLARE emp_salary DECIMAL(10,2);
+    
+    SELECT salary INTO emp_salary FROM employees WHERE employee_id = emp_id;
+    
+    IF emp_salary > 80000 THEN
+        SET classification = 'Senior';
+    ELSEIF emp_salary > 50000 THEN
+        SET classification = 'Mid-Level';
+    ELSE
+        SET classification = 'Junior';
+    END IF;
+END$$
+DELIMITER ;
+
+<span class="comment">-- Procedure with WHILE loop</span>
+DELIMITER $$
+CREATE PROCEDURE InsertTestData(IN num_rows INT)
+BEGIN
+    DECLARE counter INT DEFAULT 1;
+    
+    WHILE counter <= num_rows DO
+        INSERT INTO test_table (value) VALUES (counter);
+        SET counter = counter + 1;
+    END WHILE;
+END$$
+DELIMITER ;
+
+<span class="comment">-- View procedures</span>
+<span class="prompt">mysql></span> SHOW PROCEDURE STATUS WHERE Db = 'company';
+<span class="prompt">mysql></span> SHOW CREATE PROCEDURE GetAllEmployees;
+
+<span class="comment">-- Drop procedure</span>
+<span class="prompt">mysql></span> DROP PROCEDURE IF EXISTS GetAllEmployees;
+</pre>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>💡 For comprehensive stored procedure examples and advanced techniques, see Module 9, Section 9.2</strong></p>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">Day 2 Summary</h3>
+                
+                <div class="highlight-box">
+                  <p><strong>🎯 Key Concepts Mastered:</strong></p>
+                  <ul>
+                    <li>✅ <strong>Subqueries:</strong> Single-row, multi-row, correlated, with IN/EXISTS/ANY/ALL</li>
+                    <li>✅ <strong>UNION:</strong> Combining results with UNION (distinct) and UNION ALL (all records)</li>
+                    <li>✅ <strong>CTE:</strong> WITH clause for temporary named results, recursive CTEs for hierarchies</li>
+                    <li>✅ <strong>Stored Procedures:</strong> IN/OUT/INOUT parameters, variables, control flow, loops</li>
+                  </ul>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Concept</th>
+                      <th>When to Use</th>
+                      <th>Performance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Subquery</strong></td>
+                      <td>Dynamic filtering, exists checks</td>
+                      <td>⚠️ Can be slow for large datasets</td>
+                    </tr>
+                    <tr>
+                      <td><strong>JOIN</strong></td>
+                      <td>Combining related tables</td>
+                      <td>✅ Generally faster than subqueries</td>
+                    </tr>
+                    <tr>
+                      <td><strong>CTE</strong></td>
+                      <td>Complex queries, readability</td>
+                      <td>✅ Similar to subqueries, better readability</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Stored Procedure</strong></td>
+                      <td>Reusable logic, multiple operations</td>
+                      <td>✅ Compiled once, executed many times</td>
+                    </tr>
+                    <tr>
+                      <td><strong>UNION</strong></td>
+                      <td>Combine similar data from different sources</td>
+                      <td>⚠️ UNION slower (removes duplicates), UNION ALL faster</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Day 3: Advanced Features -->
+          <div id="day3" class="lesson">
+            <div class="lesson-header">
+              <h2>📅 Day 3: Advanced MySQL Features</h2>
+              <p>Transactions, Built-in Functions, Stored Functions, Triggers, and Backup/Restore</p>
+            </div>
+            <div class="lesson-content">
+              
+              <!-- Transactions Section -->
+              <div class="section">
+                <h3 class="section-title">Day 3.1: Transactions</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    A <strong>Transaction</strong> is a set of SQL statements that execute as a unit. 
+                    Either all statements succeed (COMMIT), or none of them have any effect (ROLLBACK).
+                    Transactions ensure data integrity and consistency.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Example Scenario:</strong> Money Transfer</p>
+                  <p>
+                    Moataz writes a check to Ali for $100. Moataz's account should be decremented by $100 
+                    and Ali's account incremented by the same amount. If a crash occurs between the two operations, 
+                    the transaction ensures either both operations complete or neither does.
+                  </p>
+                </div>
+
+                <div class="sql-command">
+<pre><span class="comment">-- Money transfer example WITHOUT transaction (UNSAFE!)</span>
+<span class="prompt">mysql></span> UPDATE account SET balance = balance - 100 WHERE name = 'Moataz';
+<span class="prompt">mysql></span> UPDATE account SET balance = balance + 100 WHERE name = 'Ali';
+<span class="comment">-- If crash occurs between statements, data is inconsistent!</span>
+
+<span class="comment">-- Money transfer WITH transaction (SAFE)</span>
+<span class="prompt">mysql></span> START TRANSACTION;
+<span class="prompt">mysql></span> UPDATE account SET balance = balance - 100 WHERE name = 'Moataz';
+<span class="prompt">mysql></span> UPDATE account SET balance = balance + 100 WHERE name = 'Ali';
+<span class="prompt">mysql></span> COMMIT;
+<span class="comment">-- Both operations complete or neither does</span>
+
+<span class="comment">-- Create test table</span>
+<span class="prompt">mysql></span> CREATE TABLE t (name CHAR(20), UNIQUE (name)) ENGINE = InnoDB;
+
+<span class="comment">-- Transaction with BEGIN TRANSACTION</span>
+<span class="prompt">mysql></span> BEGIN TRANSACTION;
+<span class="prompt">mysql></span> INSERT INTO t SET name = 'Islam';
+<span class="prompt">mysql></span> INSERT INTO t SET name = 'Moataz';
+<span class="prompt">mysql></span> COMMIT;
+<span class="prompt">mysql></span> SELECT * FROM t;
+
+<span class="comment">-- Transaction with ROLLBACK</span>
+<span class="prompt">mysql></span> START TRANSACTION;
+<span class="prompt">mysql></span> INSERT INTO t SET name = 'Ahmed';
+<span class="prompt">mysql></span> INSERT INTO t SET name = 'Sara';
+<span class="prompt">mysql></span> ROLLBACK;  <span class="comment">-- Undo both inserts</span>
+<span class="prompt">mysql></span> SELECT * FROM t;  <span class="comment">-- Ahmed and Sara not inserted</span>
+
+<span class="comment">-- SAVEPOINT for partial rollback</span>
+<span class="prompt">mysql></span> CREATE TABLE t (i INT);
+<span class="prompt">mysql></span> BEGIN TRANSACTION;
+<span class="prompt">mysql></span> INSERT INTO t VALUES(1);
+<span class="prompt">mysql></span> SAVEPOINT my_savepoint;
+<span class="prompt">mysql></span> INSERT INTO t VALUES(2);
+<span class="prompt">mysql></span> ROLLBACK TO SAVEPOINT my_savepoint;  <span class="comment">-- Only rollback to savepoint</span>
+<span class="prompt">mysql></span> INSERT INTO t VALUES(3);
+<span class="prompt">mysql></span> COMMIT;
+<span class="prompt">mysql></span> SELECT * FROM t;  <span class="comment">-- Shows 1 and 3, not 2</span>
+
+<span class="comment">-- Autocommit mode control</span>
+<span class="prompt">mysql></span> SET autocommit = 0;  <span class="comment">-- Disable autocommit</span>
+<span class="prompt">mysql></span> INSERT INTO t SET name = 'Islam';
+<span class="prompt">mysql></span> INSERT INTO t SET name = 'Moataz';
+<span class="prompt">mysql></span> COMMIT;  <span class="comment">-- Manually commit</span>
+<span class="prompt">mysql></span> SELECT * FROM t;
+<span class="prompt">mysql></span> SET autocommit = 1;  <span class="comment">-- Re-enable autocommit</span>
+</pre>
+                </div>
+
+                <div class="warning-box">
+                  <strong>⚠️ Important Transaction Notes:</strong>
+                  <ul>
+                    <li>Must use transactional storage engine (InnoDB, not MyISAM)</li>
+                    <li>By default, MySQL runs in autocommit mode (each statement commits immediately)</li>
+                    <li>Some statements cause implicit commit (ALTER TABLE, CREATE INDEX, DROP TABLE, etc.)</li>
+                    <li>DDL statements wait for transactions to complete before executing</li>
+                  </ul>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Storage Engine</th>
+                      <th>Transactions</th>
+                      <th>Performance</th>
+                      <th>Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>InnoDB</strong></td>
+                      <td>✅ Full support</td>
+                      <td>Good for concurrent access</td>
+                      <td>Default - use for most tables</td>
+                    </tr>
+                    <tr>
+                      <td><strong>MyISAM</strong></td>
+                      <td>❌ No transactions</td>
+                      <td>Fast for read-only</td>
+                      <td>Legacy - avoid for new tables</td>
+                    </tr>
+                    <tr>
+                      <td><strong>MEMORY</strong></td>
+                      <td>❌ No transactions</td>
+                      <td>Very fast (RAM)</td>
+                      <td>Temporary data, caching</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Built-in Functions Section -->
+              <div class="section">
+                <h3 class="section-title">Day 3.2: Built-in Functions (Advanced)</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Built-in Functions</strong> modify and format result sets. They are categorized into:
+                    Single Row Functions (scalar) that work row-by-row, and Multi-Row Functions (aggregation) 
+                    that work on sets of rows.
+                  </p>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Comparison Functions</h4>
+                  <div class="sql-command">
+<pre><span class="comment">-- ELT() - Return n-th string from list</span>
+<span class="prompt">mysql></span> SELECT ELT(3,'a','b','c','d','e');  <span class="comment">-- 'c'</span>
+<span class="prompt">mysql></span> SELECT ELT(0,'a','b','c','d','e');  <span class="comment">-- NULL</span>
+<span class="prompt">mysql></span> SELECT ELT(6,'a','b','c','d','e');  <span class="comment">-- NULL</span>
+<span class="prompt">mysql></span> SELECT ELT(FIELD('b','a','b','c'),'a','b','c');  <span class="comment">-- 'b'</span>
+
+<span class="comment">-- FIELD() - Find position in list</span>
+<span class="prompt">mysql></span> SELECT FIELD('b','a','b','c');  <span class="comment">-- 2</span>
+<span class="prompt">mysql></span> SELECT FIELD('d','a','b','c');  <span class="comment">-- 0 (not found)</span>
+<span class="prompt">mysql></span> SELECT FIELD(NULL,'a','b','c');  <span class="comment">-- 0</span>
+<span class="prompt">mysql></span> SELECT FIELD(ELT(2,'a','b','c'),'a','b','c');  <span class="comment">-- 2</span>
+
+<span class="comment">-- GREATEST() - Return largest value</span>
+<span class="prompt">mysql></span> SELECT GREATEST(4, 83, 0, 9, -3);  <span class="comment">-- 83</span>
+<span class="prompt">mysql></span> SELECT GREATEST('apple', 'banana', 'cherry');  <span class="comment">-- 'cherry'</span>
+
+<span class="comment">-- LEAST() - Return smallest value</span>
+<span class="prompt">mysql></span> SELECT LEAST(4, 83, 0, 9, -3);  <span class="comment">-- -3</span>
+<span class="prompt">mysql></span> SELECT LEAST('apple', 'banana', 'cherry');  <span class="comment">-- 'apple'</span>
+
+<span class="comment">-- ISNULL() - Test for NULL</span>
+<span class="prompt">mysql></span> SELECT ISNULL(1 * NULL);  <span class="comment">-- 1 (true)</span>
+<span class="prompt">mysql></span> SELECT ISNULL(42);  <span class="comment">-- 0 (false)</span>
+
+<span class="comment">-- STRCMP() - String comparison</span>
+<span class="prompt">mysql></span> SELECT STRCMP('a','a');  <span class="comment">-- 0 (equal)</span>
+<span class="prompt">mysql></span> SELECT STRCMP('a','h');  <span class="comment">-- -1 (first < second)</span>
+<span class="prompt">mysql></span> SELECT STRCMP('h','a');  <span class="comment">-- 1 (first > second)</span>
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Cast Functions</h4>
+                  <div class="sql-command">
+<pre><span class="comment">-- CONVERT() - Convert value to specific type</span>
+<span class="prompt">mysql></span> SELECT CONVERT(20041031, DATE);  <span class="comment">-- 2004-10-31</span>
+<span class="prompt">mysql></span> SELECT CONVERT(20041031, DATETIME);  <span class="comment">-- 2004-10-31 00:00:00</span>
+<span class="prompt">mysql></span> SELECT CONVERT(20041031, TIME);  <span class="comment">-- 00:00:00</span>
+<span class="prompt">mysql></span> SELECT CONVERT('123', SIGNED);  <span class="comment">-- 123 (integer)</span>
+<span class="prompt">mysql></span> SELECT CONVERT('123', UNSIGNED);  <span class="comment">-- 123 (unsigned integer)</span>
+<span class="prompt">mysql></span> SELECT CONVERT('Hello', CHAR(10));  <span class="comment">-- 'Hello' (max 10 chars)</span>
+
+<span class="comment">-- CAST() - Alternative syntax</span>
+<span class="prompt">mysql></span> SELECT CAST('2025-01-15' AS DATE);
+<span class="prompt">mysql></span> SELECT CAST('123.45' AS DECIMAL(5,2));
+<span class="prompt">mysql></span> SELECT CAST('42' AS SIGNED INTEGER);
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Advanced String Functions</h4>
+                  <div class="sql-command">
+<pre><span class="comment">-- ASCII() - Get ASCII value of first character</span>
+<span class="prompt">mysql></span> SELECT ASCII('book');  <span class="comment">-- 98</span>
+<span class="prompt">mysql></span> SELECT ASCII('A');  <span class="comment">-- 65</span>
+
+<span class="comment">-- CHAR_LENGTH() vs LENGTH()</span>
+<span class="prompt">mysql></span> SELECT CHAR_LENGTH('cats and dogs');  <span class="comment">-- 13 (characters)</span>
+<span class="prompt">mysql></span> SELECT LENGTH('cats and dogs');  <span class="comment">-- 13 (bytes)</span>
+<span class="prompt">mysql></span> SELECT CHARACTER_LENGTH('Hello 世界');  <span class="comment">-- 8 characters</span>
+<span class="prompt">mysql></span> SELECT LENGTH('Hello 世界');  <span class="comment">-- 11 bytes (UTF-8)</span>
+
+<span class="comment">-- CHARSET() & COLLATION()</span>
+<span class="prompt">mysql></span> SELECT CHARSET('cats and dogs');  <span class="comment">-- latin1 or utf8mb4</span>
+<span class="prompt">mysql></span> SELECT COLLATION('cats and dogs');  <span class="comment">-- latin1_swedish_ci</span>
+
+<span class="comment">-- CONCAT() & CONCAT_WS()</span>
+<span class="prompt">mysql></span> SELECT CONCAT('cats', ' ', 'and', ' ', 'dogs');  <span class="comment">-- cats and dogs</span>
+<span class="prompt">mysql></span> SELECT CONCAT_WS(' ', 'cats', 'and', 'dogs');  <span class="comment">-- cats and dogs</span>
+<span class="prompt">mysql></span> SELECT CONCAT_WS(', ', 'John', 'Doe', 'USA');  <span class="comment">-- John, Doe, USA</span>
+
+<span class="comment">-- INSTR() & LOCATE()</span>
+<span class="prompt">mysql></span> SELECT INSTR('cats and dogs', 'dogs');  <span class="comment">-- 10</span>
+<span class="prompt">mysql></span> SELECT LOCATE('dogs', 'cats and dogs');  <span class="comment">-- 10</span>
+<span class="prompt">mysql></span> SELECT LOCATE('dogs', 'cats and dogs', 5);  <span class="comment">-- 10 (start from position 5)</span>
+
+<span class="comment">-- FIND_IN_SET() - Find in comma-separated list</span>
+<span class="prompt">mysql></span> SELECT FIND_IN_SET('cow','moose,cow,pig');  <span class="comment">-- 2</span>
+<span class="prompt">mysql></span> SELECT FIND_IN_SET('dog','moose,cow,pig');  <span class="comment">-- 0 (not found)</span>
+
+<span class="comment">-- LCASE(), LOWER(), UCASE(), UPPER()</span>
+<span class="prompt">mysql></span> SELECT LOWER('Cats and Dogs');  <span class="comment">-- cats and dogs</span>
+<span class="prompt">mysql></span> SELECT UPPER('cats and dogs');  <span class="comment">-- CATS AND DOGS</span>
+<span class="prompt">mysql></span> SELECT LCASE('HELLO');  <span class="comment">-- hello</span>
+<span class="prompt">mysql></span> SELECT UCASE('world');  <span class="comment">-- WORLD</span>
+
+<span class="comment">-- LEFT() & RIGHT()</span>
+<span class="prompt">mysql></span> SELECT LEFT('cats and dogs', 4);  <span class="comment">-- cats</span>
+<span class="prompt">mysql></span> SELECT RIGHT('cats and dogs', 4);  <span class="comment">-- dogs</span>
+
+<span class="comment">-- REPEAT() & REVERSE()</span>
+<span class="prompt">mysql></span> SELECT REPEAT('CatsDogs', 3);  <span class="comment">-- CatsDogsCatsDogsCatsDogs</span>
+<span class="prompt">mysql></span> SELECT REVERSE('bad');  <span class="comment">-- dab</span>
+
+<span class="comment">-- SUBSTRING() - Multiple forms</span>
+<span class="prompt">mysql></span> SELECT SUBSTRING('cats and dogs', 10);  <span class="comment">-- dogs</span>
+<span class="prompt">mysql></span> SELECT SUBSTRING('cats and dogs and more dogs', 10, 4);  <span class="comment">-- dogs</span>
+<span class="prompt">mysql></span> SELECT SUBSTR('Hello World', -5);  <span class="comment">-- World (from end)</span>
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Advanced Numeric Functions</h4>
+                  <div class="sql-command">
+<pre><span class="comment">-- ABS() - Absolute value</span>
+<span class="prompt">mysql></span> SELECT ABS(13.5);  <span class="comment">-- 13.5</span>
+<span class="prompt">mysql></span> SELECT ABS(-13.5);  <span class="comment">-- 13.5</span>
+
+<span class="comment">-- CEILING() / CEIL() - Round up</span>
+<span class="prompt">mysql></span> SELECT CEILING(9.327);  <span class="comment">-- 10</span>
+<span class="prompt">mysql></span> SELECT CEILING(3.8);  <span class="comment">-- 4</span>
+<span class="prompt">mysql></span> SELECT CEILING(-3.8);  <span class="comment">-- -3</span>
+
+<span class="comment">-- FLOOR() - Round down</span>
+<span class="prompt">mysql></span> SELECT FLOOR(9.327);  <span class="comment">-- 9</span>
+<span class="prompt">mysql></span> SELECT FLOOR(3.8);  <span class="comment">-- 3</span>
+<span class="prompt">mysql></span> SELECT FLOOR(-3.8);  <span class="comment">-- -4</span>
+
+<span class="comment">-- ROUND() vs TRUNCATE()</span>
+<span class="prompt">mysql></span> SELECT ROUND(4.27943, 2);  <span class="comment">-- 4.28 (rounds)</span>
+<span class="prompt">mysql></span> SELECT TRUNCATE(4.27943, 2);  <span class="comment">-- 4.27 (cuts)</span>
+<span class="prompt">mysql></span> SELECT TRUNCATE(1.23, 0);  <span class="comment">-- 1</span>
+<span class="prompt">mysql></span> SELECT TRUNCATE(1.23, 4);  <span class="comment">-- 1.2300</span>
+
+<span class="comment">-- MOD() - Modulo (remainder)</span>
+<span class="prompt">mysql></span> SELECT MOD(22, 7);  <span class="comment">-- 1</span>
+<span class="prompt">mysql></span> SELECT MOD(10, 3);  <span class="comment">-- 1</span>
+
+<span class="comment">-- POW() / POWER() - Exponentiation</span>
+<span class="prompt">mysql></span> SELECT POW(4, 2);  <span class="comment">-- 16</span>
+<span class="prompt">mysql></span> SELECT POWER(2, 3);  <span class="comment">-- 8</span>
+
+<span class="comment">-- SQRT() - Square root</span>
+<span class="prompt">mysql></span> SELECT SQRT(36);  <span class="comment">-- 6</span>
+<span class="prompt">mysql></span> SELECT SQRT(16);  <span class="comment">-- 4</span>
+
+<span class="comment">-- PI() - Pi constant</span>
+<span class="prompt">mysql></span> SELECT PI();  <span class="comment">-- 3.141593</span>
+
+<span class="comment">-- Trigonometric functions</span>
+<span class="prompt">mysql></span> SELECT SIN(0);  <span class="comment">-- 0</span>
+<span class="prompt">mysql></span> SELECT SIN(PI()/2);  <span class="comment">-- 1</span>
+<span class="prompt">mysql></span> SELECT COS(0);  <span class="comment">-- 1</span>
+<span class="prompt">mysql></span> SELECT TAN(0);  <span class="comment">-- 0</span>
+<span class="prompt">mysql></span> SELECT TAN(PI()/4);  <span class="comment">-- 1</span>
+<span class="prompt">mysql></span> SELECT COT(PI()/4);  <span class="comment">-- 1 (cotangent)</span>
+</pre>
+                  </div>
+                </div>
+
+                <div class="subsection">
+                  <h4 class="subsection-title">Advanced Date/Time Functions</h4>
+                  <div class="sql-command">
+<pre><span class="comment">-- CURDATE(), CURTIME(), NOW()</span>
+<span class="prompt">mysql></span> SELECT CURDATE();  <span class="comment">-- 2025-01-18</span>
+<span class="prompt">mysql></span> SELECT CURTIME();  <span class="comment">-- 16:07:46</span>
+<span class="prompt">mysql></span> SELECT NOW();  <span class="comment">-- 2025-01-18 16:08:00</span>
+
+<span class="comment">-- ADDDATE() / DATE_ADD() - Add intervals</span>
+<span class="prompt">mysql></span> SELECT ADDDATE('2004-11-30 23:59:59', 31);  <span class="comment">-- Add 31 days</span>
+<span class="prompt">mysql></span> SELECT DATE_ADD('2004-11-30', INTERVAL 1 MONTH);
+<span class="prompt">mysql></span> SELECT DATE_ADD(NOW(), INTERVAL 7 DAY);
+<span class="prompt">mysql></span> SELECT DATE_ADD('2025-01-15', INTERVAL 2 YEAR);
+
+<span class="comment">-- DATE(), MONTH(), MONTHNAME(), YEAR()</span>
+<span class="prompt">mysql></span> SELECT DATE('2004-12-31 23:59:59');  <span class="comment">-- 2004-12-31</span>
+<span class="prompt">mysql></span> SELECT MONTH('2004-12-31 23:59:59');  <span class="comment">-- 12</span>
+<span class="prompt">mysql></span> SELECT MONTHNAME('2004-12-31 23:59:59');  <span class="comment">-- December</span>
+<span class="prompt">mysql></span> SELECT YEAR('2004-12-31 23:59:59');  <span class="comment">-- 2004</span>
+
+<span class="comment">-- DATEDIFF() & TIMEDIFF()</span>
+<span class="prompt">mysql></span> SELECT DATEDIFF('2004-12-31', '2003-12-31');  <span class="comment">-- 366 (leap year)</span>
+<span class="prompt">mysql></span> SELECT TIMEDIFF('2004-12-31 23:59:59', '2004-12-30 23:59:59');  <span class="comment">-- 24:00:00</span>
+
+<span class="comment">-- DAY(), DAYNAME(), DAYOFWEEK(), DAYOFYEAR()</span>
+<span class="prompt">mysql></span> SELECT DAY('2004-12-31 23:59:59');  <span class="comment">-- 31</span>
+<span class="prompt">mysql></span> SELECT DAYNAME('2004-12-31 23:59:59');  <span class="comment">-- Friday</span>
+<span class="prompt">mysql></span> SELECT DAYOFWEEK('2004-12-31 23:59:59');  <span class="comment">-- 6 (1=Sunday)</span>
+<span class="prompt">mysql></span> SELECT DAYOFYEAR('2004-12-31 23:59:59');  <span class="comment">-- 366</span>
+
+<span class="comment">-- SECOND(), MINUTE(), HOUR(), TIME()</span>
+<span class="prompt">mysql></span> SELECT SECOND('2004-12-31 23:59:59');  <span class="comment">-- 59</span>
+<span class="prompt">mysql></span> SELECT MINUTE('2004-12-31 23:59:59');  <span class="comment">-- 59</span>
+<span class="prompt">mysql></span> SELECT HOUR('2004-12-31 23:59:59');  <span class="comment">-- 23</span>
+<span class="prompt">mysql></span> SELECT TIME('2004-12-31 23:59:59');  <span class="comment">-- 23:59:59</span>
+</pre>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stored Functions Section -->
+              <div class="section">
+                <h3 class="section-title">Day 3.3: Stored Functions</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Stored Functions</strong> calculate a value to be returned to the caller for use in expressions, 
+                    just like built-in functions (SIN(), COS(), etc.). Unlike stored procedures, functions must return a value 
+                    and can be used directly in SELECT statements.
+                  </p>
+                </div>
+
+                <div class="sql-command">
+<pre><span class="comment">-- Change delimiter for function creation</span>
+<span class="prompt">mysql></span> DELIMITER $$
+
+<span class="comment">-- Basic stored function</span>
+<span class="prompt">mysql></span> CREATE FUNCTION new_function (p_x INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    RETURN (SELECT COUNT(*) FROM tbl WHERE col = p_x);
+END$$
+
+<span class="prompt">mysql></span> DELIMITER ;
+
+<span class="comment">-- Call stored function (use like built-in function)</span>
+<span class="prompt">mysql></span> SELECT new_function(5);
+
+<span class="comment">-- Function with calculation</span>
+DELIMITER $$
+CREATE FUNCTION calculate_age(birth_date DATE)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE age INT;
+    SET age = TIMESTAMPDIFF(YEAR, birth_date, CURDATE());
+    RETURN age;
+END$$
+DELIMITER ;
+
+<span class="comment">-- Use in SELECT statement</span>
+<span class="prompt">mysql></span> SELECT first_name, birth_date, calculate_age(birth_date) AS age 
+FROM employees;
+
+<span class="comment">-- Function with variables and logic</span>
+DELIMITER $$
+CREATE FUNCTION classify_salary(emp_salary DECIMAL(10,2))
+RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN
+    DECLARE result VARCHAR(20);
+    
+    IF emp_salary > 80000 THEN
+        SET result = 'High';
+    ELSEIF emp_salary > 50000 THEN
+        SET result = 'Medium';
+    ELSE
+        SET result = 'Low';
+    END IF;
+    
+    RETURN result;
+END$$
+DELIMITER ;
+
+<span class="prompt">mysql></span> SELECT first_name, salary, classify_salary(salary) AS grade 
+FROM employees;
+
+<span class="comment">-- Function with SELECT INTO</span>
+DELIMITER $$
+CREATE FUNCTION total_products()
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE total_count INT DEFAULT 0;
+    SELECT COUNT(*) INTO total_count FROM products;
+    RETURN total_count;
+END$$
+DELIMITER ;
+
+<span class="prompt">mysql></span> SELECT total_products() AS product_count;
+
+<span class="comment">-- Drop function</span>
+<span class="prompt">mysql></span> DROP FUNCTION IF EXISTS new_function;
+
+<span class="comment">-- View function definition</span>
+<span class="prompt">mysql></span> SHOW CREATE FUNCTION calculate_age;
+</pre>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Variables in Stored Functions:</strong></p>
+                  <ul>
+                    <li><strong>Declaration:</strong> DECLARE variable_name datatype(size) DEFAULT default_value;</li>
+                    <li><strong>Naming:</strong> Use p_ prefix for parameters to distinguish from column names</li>
+                    <li><strong>Scope:</strong> Variables are local to the function/procedure block</li>
+                    <li><strong>Assignment:</strong> Use SET statement or SELECT...INTO</li>
+                  </ul>
+                </div>
+
+                <div class="sql-command">
+<pre><span class="comment">-- Variables example</span>
+DELIMITER $$
+CREATE FUNCTION calculate_discount(price DECIMAL(10,2), discount_pct INT)
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    <span class="comment">-- Declare variables</span>
+    DECLARE discount_amount DECIMAL(10,2) DEFAULT 0;
+    DECLARE final_price DECIMAL(10,2);
+    
+    <span class="comment">-- Calculate discount</span>
+    SET discount_amount = price * discount_pct / 100;
+    SET final_price = price - discount_amount;
+    
+    RETURN final_price;
+END$$
+DELIMITER ;
+
+<span class="prompt">mysql></span> SELECT calculate_discount(100.00, 15) AS discounted_price;  <span class="comment">-- 85.00</span>
+
+<span class="comment">-- WHILE loop in function</span>
+DELIMITER $$
+CREATE FUNCTION factorial(n INT)
+RETURNS BIGINT
+DETERMINISTIC
+BEGIN
+    DECLARE result BIGINT DEFAULT 1;
+    DECLARE counter INT DEFAULT 1;
+    
+    WHILE counter <= n DO
+        SET result = result * counter;
+        SET counter = counter + 1;
+    END WHILE;
+    
+    RETURN result;
+END$$
+DELIMITER ;
+
+<span class="prompt">mysql></span> SELECT factorial(5);  <span class="comment">-- 120</span>
+
+<span class="comment">-- REPEAT...UNTIL loop</span>
+DELIMITER $$
+CREATE FUNCTION sum_to_n(n INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE total INT DEFAULT 0;
+    DECLARE counter INT DEFAULT 1;
+    
+    REPEAT
+        SET total = total + counter;
+        SET counter = counter + 1;
+    UNTIL counter > n
+    END REPEAT;
+    
+    RETURN total;
+END$$
+DELIMITER ;
+
+<span class="prompt">mysql></span> SELECT sum_to_n(10);  <span class="comment">-- 55 (1+2+3+...+10)</span>
+</pre>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Feature</th>
+                      <th>Stored Function</th>
+                      <th>Stored Procedure</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Return Value</strong></td>
+                      <td>✅ Must return single value</td>
+                      <td>❌ Optional OUT parameters</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Usage</strong></td>
+                      <td>In SELECT, WHERE, expressions</td>
+                      <td>Called with CALL statement</td>
+                    </tr>
+                    <tr>
+                      <td><strong>DML Operations</strong></td>
+                      <td>⚠️ Limited (read-only recommended)</td>
+                      <td>✅ Full support (INSERT, UPDATE, DELETE)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Parameters</strong></td>
+                      <td>IN only</td>
+                      <td>IN, OUT, INOUT</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Enhanced Triggers Section -->
+              <div class="section">
+                <h3 class="section-title">Day 3.4: Triggers (Detailed)</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Triggers</strong> are stored procedures that automatically execute when a specific event 
+                    (INSERT, UPDATE, DELETE) occurs on a table. The difference from stored procedures is that triggers 
+                    are activated automatically by database events, not called explicitly.
+                  </p>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Trigger Syntax Components:</strong></p>
+                  <ul>
+                    <li><strong>trigger_time:</strong> BEFORE or AFTER</li>
+                    <li><strong>trigger_event:</strong> INSERT, UPDATE, or DELETE</li>
+                    <li><strong>table_name:</strong> Table the trigger is associated with</li>
+                    <li><strong>FOR EACH ROW:</strong> Executes once for each affected row</li>
+                    <li><strong>OLD:</strong> Refers to existing row before UPDATE/DELETE</li>
+                    <li><strong>NEW:</strong> Refers to new row after INSERT/UPDATE</li>
+                  </ul>
+                </div>
+
+                <div class="sql-command">
+<pre><span class="comment">-- Create audit table for tracking changes</span>
+<span class="prompt">mysql></span> CREATE TABLE employees_audit (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    employeeNumber INT(11) NOT NULL,
+    lastname VARCHAR(50) NOT NULL,
+    changedon DATETIME DEFAULT NULL,
+    action VARCHAR(50) DEFAULT NULL,
+    PRIMARY KEY (id)
+);
+
+<span class="comment">-- BEFORE UPDATE trigger - Track changes</span>
+DELIMITER $$
+CREATE TRIGGER before_employee_update
+BEFORE UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO employees_audit
+    SET action = 'update',
+        employeeNumber = OLD.employeeNumber,
+        lastname = OLD.lastname,
+        changedon = NOW();
+END$$
+DELIMITER ;
+
+<span class="comment">-- Test the trigger</span>
+<span class="prompt">mysql></span> UPDATE employees SET lastname = 'NewName' WHERE employeeNumber = 1;
+<span class="prompt">mysql></span> SELECT * FROM employees_audit;
+
+<span class="comment">-- BEFORE INSERT trigger - Data validation</span>
+DELIMITER $$
+CREATE TRIGGER before_employee_insert
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+    <span class="comment">-- Ensure email is lowercase</span>
+    SET NEW.email = LOWER(NEW.email);
+    
+    <span class="comment">-- Set default hire date if not provided</span>
+    IF NEW.hire_date IS NULL THEN
+        SET NEW.hire_date = CURDATE();
+    END IF;
+    
+    <span class="comment">-- Validate salary</span>
+    IF NEW.salary < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Salary cannot be negative';
+    END IF;
+END$$
+DELIMITER ;
+
+<span class="comment">-- AFTER INSERT trigger - Audit log</span>
+DELIMITER $$
+CREATE TRIGGER after_employee_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO employees_audit (
+        employeeNumber,
+        lastname,
+        action,
+        changedon
+    ) VALUES (
+        NEW.employeeNumber,
+        NEW.lastname,
+        'INSERT',
+        NOW()
+    );
+END$$
+DELIMITER ;
+
+<span class="comment">-- BEFORE DELETE trigger - Prevent deletion</span>
+DELIMITER $$
+CREATE TRIGGER before_employee_delete
+BEFORE DELETE ON employees
+FOR EACH ROW
+BEGIN
+    <span class="comment">-- Prevent deletion of employees with high salary</span>
+    IF OLD.salary > 100000 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Cannot delete high-earning employees';
+    END IF;
+END$$
+DELIMITER ;
+
+<span class="comment">-- AFTER DELETE trigger - Archive deleted data</span>
+DELIMITER $$
+CREATE TRIGGER after_employee_delete
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO employees_audit
+    SET action = 'DELETE',
+        employeeNumber = OLD.employeeNumber,
+        lastname = OLD.lastname,
+        changedon = NOW();
+END$$
+DELIMITER ;
+
+<span class="comment">-- Trigger to maintain denormalized data</span>
+DELIMITER $$
+CREATE TRIGGER update_department_count
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    UPDATE departments
+    SET employee_count = employee_count + 1
+    WHERE department_id = NEW.department_id;
+END$$
+DELIMITER ;
+
+<span class="comment">-- View all triggers</span>
+<span class="prompt">mysql></span> SHOW TRIGGERS;
+<span class="prompt">mysql></span> SHOW TRIGGERS FROM company;
+<span class="prompt">mysql></span> SHOW TRIGGERS LIKE 'employees%';
+
+<span class="comment">-- Drop trigger</span>
+<span class="prompt">mysql></span> DROP TRIGGER IF EXISTS before_employee_update;
+
+<span class="comment">-- Important: To modify a trigger, drop and recreate it</span>
+<span class="prompt">mysql></span> DROP TRIGGER before_employee_update;
+<span class="prompt">mysql></span> CREATE TRIGGER before_employee_update ...  <span class="comment">-- New definition</span>
+</pre>
+                </div>
+
+                <div class="warning-box">
+                  <strong>⚠️ Trigger Best Practices & Warnings:</strong>
+                  <ul>
+                    <li>❌ Triggers execute with EVERY operation - keep them fast and simple</li>
+                    <li>❌ Don't call other triggers (can create infinite loops)</li>
+                    <li>❌ Avoid complex business logic in triggers (use stored procedures)</li>
+                    <li>⚠️ Triggers are "invisible" to developers - document thoroughly</li>
+                    <li>✅ Use for: audit logging, data validation, automatic timestamps</li>
+                    <li>✅ Test thoroughly before deploying to production</li>
+                    <li>✅ Consider performance impact on bulk operations</li>
+                    <li>✅ Use BEFORE triggers for validation, AFTER for logging</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Backup and Restore Section -->
+              <div class="section">
+                <h3 class="section-title">Day 3.5: Backup and Restore</h3>
+                
+                <div class="definition-box">
+                  <p>
+                    <strong>Database Backup</strong> is the process of creating copies of data to protect against 
+                    data loss. <strong>mysqldump</strong> is the primary tool for logical backups, creating SQL files 
+                    that can be used to recreate databases.
+                  </p>
+                </div>
+
+                <div class="sql-command">
+<pre><span class="comment">-- Basic database backup (command line)</span>
+<span class="prompt">$</span> mysqldump --databases sampdb > sampdb.sql
+<span class="prompt">$</span> mysqldump -u root -p company > company_backup.sql
+
+<span class="comment">-- Backup specific tables only</span>
+<span class="prompt">$</span> mysqldump -u root -p company employees departments > tables_backup.sql
+
+<span class="comment">-- Backup all databases</span>
+<span class="prompt">$</span> mysqldump -u root -p --all-databases > all_databases_backup.sql
+
+<span class="comment">-- Backup with compression (save disk space)</span>
+<span class="prompt">$</span> mysqldump -u root -p company | gzip > company_backup.sql.gz
+
+<span class="comment">-- Backup structure only (no data)</span>
+<span class="prompt">$</span> mysqldump -u root -p --no-data company > company_structure.sql
+
+<span class="comment">-- Backup data only (no structure)</span>
+<span class="prompt">$</span> mysqldump -u root -p --no-create-info company > company_data.sql
+
+<span class="comment">-- Full backup with stored procedures, triggers, events</span>
+<span class="prompt">$</span> mysqldump -u root -p \
+  --single-transaction \    <span class="comment"># Consistent backup without locking</span>
+  --routines \              <span class="comment"># Include stored procedures/functions</span>
+  --triggers \              <span class="comment"># Include triggers</span>
+  --events \                <span class="comment"># Include scheduled events</span>
+  company > company_full_backup.sql
+
+<span class="comment">-- Restore database from backup</span>
+<span class="prompt">$</span> mysql -u root -p company < company_backup.sql
+<span class="prompt">$</span> mysql < /tmp/sampdb.sql
+
+<span class="comment">-- Restore compressed backup</span>
+<span class="prompt">$</span> gunzip < company_backup.sql.gz | mysql -u root -p company
+
+<span class="comment">-- Restore all databases</span>
+<span class="prompt">$</span> mysql -u root -p < all_databases_backup.sql
+
+<span class="comment">-- Create database before restore (if doesn't exist)</span>
+<span class="prompt">mysql></span> CREATE DATABASE company;
+<span class="prompt">$</span> mysql -u root -p company < company_backup.sql
+</pre>
+                </div>
+
+                <div class="highlight-box">
+                  <p><strong>Automated Backup Script (Bash):</strong></p>
+                  <div class="code-box">
+<pre>#!/bin/bash
+# Automated MySQL Backup Script
+
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_DIR="/backups/mysql"
+DB_NAME="company"
+DB_USER="backup_user"
+DB_PASS="secure_password"
+
+# Create backup directory
+mkdir -p $BACKUP_DIR
+
+# Perform backup with compression
+mysqldump -u $DB_USER -p$DB_PASS \
+  --single-transaction \
+  --routines \
+  --triggers \
+  --events \
+  $DB_NAME | gzip > $BACKUP_DIR/${DB_NAME}_${DATE}.sql.gz
+
+# Delete backups older than 30 days
+find $BACKUP_DIR -name "*.sql.gz" -mtime +30 -delete
+
+echo "Backup completed: ${DB_NAME}_${DATE}.sql.gz"
+</pre>
+                  </div>
+                </div>
+
+                <div class="warning-box">
+                  <strong>Backup Best Practices:</strong>
+                  <ul>
+                    <li>✅ <strong>Regular Schedule:</strong> Automated daily backups (cron jobs)</li>
+                    <li>✅ <strong>Test Restores:</strong> Regularly test that backups can be restored</li>
+                    <li>✅ <strong>Multiple Locations:</strong> Store backups in different locations (offsite/cloud)</li>
+                    <li>✅ <strong>Compression:</strong> Use gzip to save disk space</li>
+                    <li>✅ <strong>Retention Policy:</strong> Keep daily for 7 days, weekly for 4 weeks, monthly for 1 year</li>
+                    <li>✅ <strong>--single-transaction:</strong> For InnoDB tables (consistent backup without locks)</li>
+                    <li>⚠️ <strong>Security:</strong> Protect backup files (contain sensitive data)</li>
+                    <li>⚠️ <strong>Monitor:</strong> Check backup logs for errors</li>
+                  </ul>
+                </div>
+
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Backup Type</th>
+                      <th>Tool</th>
+                      <th>Speed</th>
+                      <th>Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Logical (SQL)</strong></td>
+                      <td>mysqldump</td>
+                      <td>Slower (creates SQL statements)</td>
+                      <td>Small-medium databases, cross-platform</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Physical (Files)</strong></td>
+                      <td>File copy, MySQL Enterprise Backup</td>
+                      <td>Faster (copies data files)</td>
+                      <td>Large databases, same version/platform</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Binary Logs</strong></td>
+                      <td>mysqlbinlog</td>
+                      <td>Very fast (incremental)</td>
+                      <td>Point-in-time recovery, replication</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- GUI Tools Section -->
+              <div class="section">
+                <h3 class="section-title">Day 3.6: GUI Management Tools</h3>
+                
+                <div class="highlight-box">
+                  <p><strong>Popular MySQL GUI Tools:</strong></p>
+                  <ul>
+                    <li>📊 <strong>MySQL Workbench:</strong> Official GUI tool for database design, SQL development, and administration</li>
+                    <li>🐬 <strong>phpMyAdmin:</strong> Web-based interface for managing MySQL databases</li>
+                    <li>🔧 <strong>HeidiSQL:</strong> Lightweight Windows client for MySQL management</li>
+                    <li>💻 <strong>DBeaver:</strong> Universal database tool supporting multiple databases</li>
+                    <li>🚀 <strong>DataGrip:</strong> JetBrains professional database IDE</li>
+                    <li>📱 <strong>Sequel Pro:</strong> Mac-only MySQL management application</li>
+                  </ul>
+                </div>
+
+                <div class="code-box">
+<pre><strong>MySQL Workbench Features:</strong>
+• Visual database design and modeling
+• SQL editor with syntax highlighting
+• Query execution and result visualization
+• Server administration and monitoring
+• Import/export data with wizards
+• User management and privileges
+• Backup and restore operations
+• Performance monitoring and optimization
+
+<strong>phpMyAdmin Features:</strong>
+• Web-based (no installation required)
+• Database and table management
+• SQL query execution
+• Import/export (SQL, CSV, XML)
+• User and privilege management
+• Visual table designer
+• Database search functionality
+</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">Day 3 Summary</h3>
+                
+                <div class="highlight-box">
+                  <p><strong>🎯 Key Concepts Covered:</strong></p>
+                  <ul>
+                    <li>✅ <strong>Transactions:</strong> ACID properties, COMMIT, ROLLBACK, SAVEPOINT</li>
+                    <li>✅ <strong>Built-in Functions:</strong> Comparison (ELT, FIELD, GREATEST), Cast (CONVERT), String (ASCII, CONCAT, SUBSTRING), Numeric (ROUND, CEILING, FLOOR, trigonometric), Date/Time (CURDATE, ADDDATE, DATEDIFF)</li>
+                    <li>✅ <strong>Stored Functions:</strong> User-defined functions returning values, used like built-in functions</li>
+                    <li>✅ <strong>Triggers:</strong> Automatic execution on INSERT/UPDATE/DELETE, OLD/NEW keywords, audit logging</li>
+                    <li>✅ <strong>Backup & Restore:</strong> mysqldump for logical backups, automated backup scripts, restore procedures</li>
+                    <li>✅ <strong>GUI Tools:</strong> MySQL Workbench, phpMyAdmin, and other management interfaces</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </main>
     </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" onclick="scrollToTop()">↑</button>
 
     <script>
       function toggleSidebar() {
@@ -6152,6 +7438,24 @@ mysql -u user -p db < backup.sql
         sidebar.classList.remove('active');
         overlay.classList.remove('active');
       }
+
+      // Scroll to top function
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+
+      // Show/hide scroll to top button
+      window.addEventListener('scroll', function() {
+        const scrollButton = document.querySelector('.scroll-to-top');
+        if (window.pageYOffset > 300) {
+          scrollButton.classList.add('show');
+        } else {
+          scrollButton.classList.remove('show');
+        }
+      });
 
       // Close sidebar when clicking a link
       document.querySelectorAll('.sidebar a').forEach(link => {
