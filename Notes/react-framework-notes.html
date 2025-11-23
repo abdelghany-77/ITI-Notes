@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React.js Framework Study Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #61dafb 0%, #0088cc 100%);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* Layout Container */
+      .layout-container {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100vh;
+        background: linear-gradient(
+          180deg,
+          rgba(97, 218, 251, 0.95) 0%,
+          rgba(0, 136, 204, 0.95) 100%
+        );
+        backdrop-filter: blur(10px);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .sidebar-header {
+        background: linear-gradient(135deg, #61dafb, #0088cc);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1002;
+      }
+
+      .sidebar-header h3 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+        font-weight: 700;
+      }
+
+      .sidebar-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .sidebar-content {
+        padding: 20px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar li {
+        margin-bottom: 8px;
+      }
+
+      .sidebar a {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 15px;
+        display: block;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+      }
+
+      .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-left-color: #20232a;
+        transform: translateX(5px);
+      }
+
+      /* Toggle Button */
+      .toggle-btn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, #61dafb, #0088cc);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1002;
+        transition: all 0.3s ease;
+      }
+
+      .toggle-btn:hover {
+        background: linear-gradient(135deg, #0088cc, #006699);
+        transform: scale(1.05);
+      }
+
+      /* Overlay */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 30px auto;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Header */
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #61dafb, #0088cc);
+        border-radius: 15px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%
+        );
+        animation: pulse 15s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1) translate(0, 0);
+        }
+        50% {
+          transform: scale(1.1) translate(-10%, -10%);
+        }
+      }
+
+      .header h1 {
+        font-size: 2.8rem;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 1;
+        opacity: 0.95;
+      }
+
+      /* Course Outline */
+      .course-outline {
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 40px;
+        border-left: 6px solid #0088cc;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .course-outline h2 {
+        color: #0088cc;
+        margin-bottom: 25px;
+        font-size: 2rem;
+        text-align: center;
+      }
+
+      .outline-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+      }
+
+      .outline-card {
+        background: white;
+        padding: 18px 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border-left: 4px solid #61dafb;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .outline-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        border-left-color: #0088cc;
+      }
+
+      .outline-card strong {
+        color: #0088cc;
+        font-size: 1.1rem;
+      }
+
+      /* Lesson Section */
+      .lesson {
+        background: white;
+        margin-bottom: 35px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .lesson:hover {
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .lesson-header {
+        background: linear-gradient(135deg, #61dafb, #0088cc);
+        color: white;
+        padding: 25px 30px;
+        position: relative;
+      }
+
+      .lesson-header h2 {
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+      }
+
+      .lesson-header p {
+        font-size: 1.05rem;
+        opacity: 0.95;
+      }
+
+      .lesson-content {
+        padding: 30px;
+      }
+
+      /* Section */
+      .section {
+        margin-bottom: 30px;
+      }
+
+      .section-title {
+        color: #0088cc;
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 3px solid #e1f5fe;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Content Boxes */
+      .content-box {
+        background: #f5f5f5;
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+        border-left: 5px solid #61dafb;
+        line-height: 1.8;
+      }
+
+      .definition-box {
+        background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+        border-left: 5px solid #4caf50;
+        line-height: 1.8;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+        border-left: 5px solid #ff9800;
+        line-height: 1.8;
+      }
+
+      .warning-box {
+        background: linear-gradient(135deg, #ffebee, #ffcdd2);
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+        border-left: 5px solid #f44336;
+        line-height: 1.8;
+      }
+
+      .info-box {
+        background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+        border-left: 5px solid #03a9f4;
+        line-height: 1.8;
+      }
+
+      /* Code Block */
+      .code-box {
+        background: #263238;
+        color: #aed581;
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+        overflow-x: auto;
+        font-family: "Consolas", "Monaco", "Courier New", monospace;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .code-box pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      /* Lists */
+      .content-box ul,
+      .definition-box ul,
+      .highlight-box ul,
+      .warning-box ul,
+      .info-box ul {
+        margin-left: 25px;
+        margin-top: 10px;
+      }
+
+      .content-box li,
+      .definition-box li,
+      .highlight-box li,
+      .warning-box li,
+      .info-box li {
+        margin-bottom: 8px;
+      }
+
+      /* Tables */
+      .comparison-table {
+        overflow-x: auto;
+        margin: 20px 0;
+      }
+
+      .comparison-table table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .comparison-table th {
+        background: linear-gradient(135deg, #61dafb, #0088cc);
+        color: white;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 1.05rem;
+      }
+
+      .comparison-table td {
+        padding: 15px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .comparison-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .comparison-table tr:hover {
+        background: #f5f5f5;
+      }
+
+      /* Back Button */
+      .back-to-main {
+        position: fixed;
+        top: 80px;
+        left: 20px;
+        padding: 12px 20px;
+        background: #20232a;
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1002;
+        transition: all 0.3s ease;
+      }
+
+      .back-to-main:hover {
+        background: #0088cc;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Scroll to Top Button */
+      .scroll-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #61dafb, #0088cc);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+
+      .scroll-top.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .scroll-top:hover {
+        background: linear-gradient(135deg, #0088cc, #006699);
+        transform: translateY(-5px);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          margin: 15px;
+          padding: 20px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .header p {
+          font-size: 1rem;
+        }
+
+        .sidebar {
+          width: 280px;
+        }
+
+        .toggle-btn {
+          top: 10px;
+          left: 10px;
+          padding: 10px 14px;
+        }
+
+        .back-to-main {
+          top: 65px;
+          left: 10px;
+          padding: 10px 16px;
+          font-size: 0.85rem;
+        }
+
+        .outline-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .lesson-header h2 {
+          font-size: 1.5rem;
+        }
+
+        .section-title {
+          font-size: 1.2rem;
+        }
+      }
+
+      code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 0.9rem;
+        color: #d63384;
+      }
+
+      strong {
+        color: #0088cc;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <div class="overlay" onclick="closeSidebar()"></div>
+    <a href="../index.html" class="back-to-main">🏠</a>
+
+    <div class="layout-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h3>⚛️ React Navigation</h3>
+          <p>Jump to any module</p>
+        </div>
+        <div class="sidebar-content">
+          <ul>
+            <li><a onclick="closeSidebar()" href="#outline">📋 Course Outline</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson1">⚛️ React Fundamentals</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson2">🧩 Components & JSX</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson3">🎨 Props & State</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson4">🪝 Hooks Deep Dive</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson5">⏱️ useEffect & Lifecycle</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson6">🔄 Component Communication</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson7">🌐 Context API</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson8">🧭 React Router</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson9">📡 Data Fetching</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson10">📝 Forms & Validation</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson11">🗃️ State Management</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson12">⚡ Performance Optimization</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson13">🧪 Testing</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson14">🔐 Security Best Practices</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson15">♿ Accessibility</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson16">🎨 Styling Solutions</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson17">🌀 Animations</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson18">🧬 Advanced Patterns</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson19">🚀 React 18 Features</a></li>
+            <li><a onclick="closeSidebar()" href="#lesson20">🧱 Next.js Framework</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="container">
+          <!-- Header -->
+          <div class="header">
+            <h1>⚛️ React.js Framework</h1>
+            <p>Comprehensive Study Guide - From Zero to Hero</p>
+          </div>
+
+          <!-- Course Outline -->
+          <section id="outline" class="course-outline">
+            <h2>📋 Complete Course Outline</h2>
+            <div class="outline-grid">
+              <div class="outline-card">
+                <strong>Module 1:</strong> React Fundamentals & Core Concepts
+              </div>
+              <div class="outline-card">
+                <strong>Module 2:</strong> Components & JSX Syntax
+              </div>
+              <div class="outline-card">
+                <strong>Module 3:</strong> Props, State & Data Flow
+              </div>
+              <div class="outline-card">
+                <strong>Module 4:</strong> Hooks Deep Dive
+              </div>
+              <div class="outline-card">
+                <strong>Module 5:</strong> useEffect & Component Lifecycle
+              </div>
+              <div class="outline-card">
+                <strong>Module 6:</strong> Component Communication Patterns
+              </div>
+              <div class="outline-card">
+                <strong>Module 7:</strong> Context API & Global State
+              </div>
+              <div class="outline-card">
+                <strong>Module 8:</strong> React Router & Navigation
+              </div>
+              <div class="outline-card">
+                <strong>Module 9:</strong> Data Fetching & APIs
+              </div>
+              <div class="outline-card">
+                <strong>Module 10:</strong> Forms & Input Validation
+              </div>
+              <div class="outline-card">
+                <strong>Module 11:</strong> Redux & State Management
+              </div>
+              <div class="outline-card">
+                <strong>Module 12:</strong> Performance Optimization
+              </div>
+              <div class="outline-card">
+                <strong>Module 13:</strong> Testing React Applications
+              </div>
+              <div class="outline-card">
+                <strong>Module 14:</strong> Security & Best Practices
+              </div>
+              <div class="outline-card">
+                <strong>Module 15:</strong> Accessibility (a11y)
+              </div>
+              <div class="outline-card">
+                <strong>Module 16:</strong> Styling Solutions
+              </div>
+              <div class="outline-card">
+                <strong>Module 17:</strong> Animations & Transitions
+              </div>
+              <div class="outline-card">
+                <strong>Module 18:</strong> Advanced React Patterns
+              </div>
+              <div class="outline-card">
+                <strong>Module 19:</strong> React 18+ Features
+              </div>
+              <div class="outline-card">
+                <strong>Module 20:</strong> Next.js & Server-Side Rendering
+              </div>
+            </div>
+          </section>
+
+          <!-- Module 1: React Fundamentals -->
+          <div id="lesson1" class="lesson">
+            <div class="lesson-header">
+              <h2>⚛️ Module 1: React Fundamentals</h2>
+              <p>Understanding React's core philosophy and architecture</p>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">📚 What is React?</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>React</strong> is a JavaScript library for building user
+                    interfaces, developed and maintained by Facebook (Meta). It uses a
+                    component-based architecture and declarative programming paradigm to
+                    create interactive UIs efficiently.
+                  </p>
+                </div>
+                <div class="content-box">
+                  <p><strong>Key Features:</strong></p>
+                  <ul>
+                    <li>
+                      <strong>Declarative:</strong> Describe what the UI should look like,
+                      React handles the how
+                    </li>
+                    <li>
+                      <strong>Component-Based:</strong> Build encapsulated components that
+                      manage their own state
+                    </li>
+                    <li>
+                      <strong>Learn Once, Write Anywhere:</strong> React Native for mobile,
+                      React for web
+                    </li>
+                    <li>
+                      <strong>Virtual DOM:</strong> Efficient rendering through DOM diffing
+                      algorithm
+                    </li>
+                    <li>
+                      <strong>Unidirectional Data Flow:</strong> Predictable state
+                      management
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">🎯 Virtual DOM Explained</h3>
+                <div class="info-box">
+                  <p>
+                    The <strong>Virtual DOM</strong> is a lightweight JavaScript
+                    representation of the actual DOM. React uses it to optimize rendering:
+                  </p>
+                  <ul>
+                    <li>
+                      <strong>Step 1:</strong> When state changes, React creates a new
+                      Virtual DOM tree
+                    </li>
+                    <li>
+                      <strong>Step 2:</strong> React compares (diffs) the new Virtual DOM
+                      with the previous one
+                    </li>
+                    <li>
+                      <strong>Step 3:</strong> React calculates the minimum set of changes
+                      needed
+                    </li>
+                    <li>
+                      <strong>Step 4:</strong> React updates only the changed parts in the
+                      real DOM
+                    </li>
+                  </ul>
+                </div>
+                <div class="highlight-box">
+                  <p>
+                    <strong>💡 Performance Benefit:</strong> Direct DOM manipulation is
+                    slow. By batching updates and minimizing DOM operations, React achieves
+                    better performance than traditional approaches.
+                  </p>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">🛠️ Setting Up React</h3>
+                <div class="content-box">
+                  <p><strong>Method 1: Create React App (CRA)</strong></p>
+                </div>
+                <div class="code-box">
+                  <pre>
+# Create new React project
+npx create-react-app my-app
+cd my-app
+npm start
+
+# Project structure:
+# my-app/
+# ├── node_modules/
+# ├── public/
+# │   ├── index.html
+# │   └── favicon.ico
+# ├── src/
+# │   ├── App.js
+# │   ├── App.css
+# │   ├── index.js
+# │   └── index.css
+# ├── package.json
+# └── README.md</pre>
+                </div>
+
+                <div class="content-box">
+                  <p><strong>Method 2: Vite (Modern & Faster)</strong></p>
+                </div>
+                <div class="code-box">
+                  <pre>
+# Create Vite project
+npm create vite@latest my-react-app -- --template react
+cd my-react-app
+npm install
+npm run dev</pre>
+                </div>
+
+                <div class="content-box">
+                  <p><strong>Method 3: CDN (Quick Testing)</strong></p>
+                </div>
+                <div class="code-box">
+                  <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"&gt;&lt;/script&gt;
+  &lt;script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"&gt;&lt;/script&gt;
+  &lt;script src="https://unpkg.com/@babel/standalone/babel.min.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="root"&gt;&lt;/div&gt;
+  &lt;script type="text/babel"&gt;
+    function App() {
+      return &lt;h1&gt;Hello React!&lt;/h1&gt;;
+    }
+    ReactDOM.render(&lt;App /&gt;, document.getElementById('root'));
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">📖 React vs Other Frameworks</h3>
+                <div class="comparison-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Feature</th>
+                        <th>React</th>
+                        <th>Vue</th>
+                        <th>Angular</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Type</td>
+                        <td>Library</td>
+                        <td>Framework</td>
+                        <td>Full Framework</td>
+                      </tr>
+                      <tr>
+                        <td>Learning Curve</td>
+                        <td>Moderate</td>
+                        <td>Easy</td>
+                        <td>Steep</td>
+                      </tr>
+                      <tr>
+                        <td>Language</td>
+                        <td>JSX + JavaScript</td>
+                        <td>Template + JavaScript</td>
+                        <td>TypeScript</td>
+                      </tr>
+                      <tr>
+                        <td>DOM</td>
+                        <td>Virtual DOM</td>
+                        <td>Virtual DOM</td>
+                        <td>Real DOM</td>
+                      </tr>
+                      <tr>
+                        <td>State Management</td>
+                        <td>Redux, Context</td>
+                        <td>Vuex, Pinia</td>
+                        <td>RxJS, Services</td>
+                      </tr>
+                      <tr>
+                        <td>Community</td>
+                        <td>Very Large</td>
+                        <td>Large</td>
+                        <td>Large</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Module 2: Components & JSX -->
+          <div id="lesson2" class="lesson">
+            <div class="lesson-header">
+              <h2>🧩 Module 2: Components & JSX</h2>
+              <p>Building blocks of React applications</p>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">🎯 What are Components?</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>Components</strong> are independent, reusable pieces of UI.
+                    They accept inputs (props) and return React elements describing what
+                    should appear on screen.
+                  </p>
+                </div>
+                <div class="content-box">
+                  <p><strong>Types of Components:</strong></p>
+                  <ul>
+                    <li><strong>Function Components:</strong> Modern, simpler, use hooks</li>
+                    <li>
+                      <strong>Class Components:</strong> Legacy, more boilerplate, have
+                      lifecycle methods
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">📝 Function Components</h3>
+                <div class="code-box">
+                  <pre>
+// Basic Function Component
+function Welcome(props) {
+  return &lt;h1&gt;Hello, {props.name}!&lt;/h1&gt;;
+}
+
+// Arrow Function Component
+const Welcome = (props) =&gt; {
+  return &lt;h1&gt;Hello, {props.name}!&lt;/h1&gt;;
+};
+
+// Implicit Return (for simple components)
+const Welcome = ({ name }) =&gt; &lt;h1&gt;Hello, {name}!&lt;/h1&gt;;
+
+// Usage
+&lt;Welcome name="John" /&gt;</pre>
+                </div>
+                <div class="highlight-box">
+                  <p>
+                    <strong>💡 Best Practice:</strong> Use function components with hooks
+                    for all new code. They're simpler, more readable, and the React team
+                    recommends them.
+                  </p>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">🏛️ Class Components (Legacy)</h3>
+                <div class="code-box">
+                  <pre>
+import React, { Component } from 'react';
+
+class Welcome extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0
+    };
+  }
+
+  componentDidMount() {
+    console.log('Component mounted');
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log('Component updated');
+  }
+
+  componentWillUnmount() {
+    console.log('Component will unmount');
+  }
+
+  render() {
+    return (
+      &lt;div&gt;
+        &lt;h1&gt;Hello, {this.props.name}!&lt;/h1&gt;
+        &lt;p&gt;Count: {this.state.count}&lt;/p&gt;
+        &lt;button onClick={() =&gt; this.setState({ count: this.state.count + 1 })}&gt;
+          Increment
+        &lt;/button&gt;
+      &lt;/div&gt;
+    );
+  }
+}
+
+export default Welcome;</pre>
+                </div>
+                <div class="warning-box">
+                  <p>
+                    <strong>⚠️ Note:</strong> While class components still work, function
+                    components with hooks are the modern standard. Learn classes only for
+                    maintaining legacy code.
+                  </p>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">✨ JSX Syntax</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>JSX (JavaScript XML)</strong> is a syntax extension that looks
+                    like HTML but gets compiled to JavaScript. It allows you to write HTML
+                    structures in the same file as JavaScript code.
+                  </p>
+                </div>
+                <div class="code-box">
+                  <pre>
+// JSX Example
+const element = &lt;h1 className="greeting"&gt;Hello, World!&lt;/h1&gt;;
+
+// Compiles to:
+const element = React.createElement(
+  'h1',
+  { className: 'greeting' },
+  'Hello, World!'
+);
+
+// JSX Rules:
+// 1. Must return single parent element
+const component = (
+  &lt;div&gt;
+    &lt;h1&gt;Title&lt;/h1&gt;
+    &lt;p&gt;Paragraph&lt;/p&gt;
+  &lt;/div&gt;
+);
+
+// 2. Use React.Fragment or &lt;&gt;&lt;/&gt; for multiple elements
+const component = (
+  &lt;&gt;
+    &lt;h1&gt;Title&lt;/h1&gt;
+    &lt;p&gt;Paragraph&lt;/p&gt;
+  &lt;/&gt;
+);
+
+// 3. JavaScript expressions in curly braces
+const name = "John";
+const element = &lt;h1&gt;Hello, {name}!&lt;/h1&gt;;
+
+// 4. Use className instead of class
+const element = &lt;div className="container"&gt;Content&lt;/div&gt;;
+
+// 5. Use htmlFor instead of for
+const label = &lt;label htmlFor="name"&gt;Name:&lt;/label&gt;;
+
+// 6. Self-closing tags must have /
+const image = &lt;img src="photo.jpg" alt="Photo" /&gt;;
+const input = &lt;input type="text" /&gt;;</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">🔧 JSX Advanced Features</h3>
+                <div class="code-box">
+                  <pre>
+// Conditional Rendering
+const Greeting = ({ isLoggedIn }) =&gt; (
+  &lt;div&gt;
+    {isLoggedIn ? &lt;h1&gt;Welcome back!&lt;/h1&gt; : &lt;h1&gt;Please sign in&lt;/h1&gt;}
+  &lt;/div&gt;
+);
+
+// Conditional Rendering with &&
+const Notification = ({ hasMessages }) =&gt; (
+  &lt;div&gt;
+    {hasMessages && &lt;p&gt;You have new messages!&lt;/p&gt;}
+  &lt;/div&gt;
+);
+
+// Rendering Lists
+const TodoList = ({ todos }) =&gt; (
+  &lt;ul&gt;
+    {todos.map(todo =&gt; (
+      &lt;li key={todo.id}&gt;{todo.text}&lt;/li&gt;
+    ))}
+  &lt;/ul&gt;
+);
+
+// Inline Styles
+const StyledDiv = () =&gt; (
+  &lt;div style={{ 
+    backgroundColor: 'blue', 
+    color: 'white',
+    padding: '20px',
+    borderRadius: '8px'
+  }}&gt;
+    Styled Content
+  &lt;/div&gt;
+);
+
+// Spread Attributes
+const props = { id: 'user', className: 'active' };
+const element = &lt;div {...props}&gt;Content&lt;/div&gt;;
+
+// Children Prop
+const Card = ({ children }) =&gt; (
+  &lt;div className="card"&gt;
+    {children}
+  &lt;/div&gt;
+);
+
+// Usage
+&lt;Card&gt;
+  &lt;h2&gt;Title&lt;/h2&gt;
+  &lt;p&gt;Description&lt;/p&gt;
+&lt;/Card&gt;</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">⚠️ Common JSX Mistakes</h3>
+                <div class="warning-box">
+                  <ul>
+                    <li>
+                      <strong>Using class instead of className:</strong> Will cause warnings
+                    </li>
+                    <li>
+                      <strong>Forgetting to close tags:</strong> All tags must be closed or
+                      self-closing
+                    </li>
+                    <li>
+                      <strong>Missing keys in lists:</strong> Required for React's
+                      reconciliation
+                    </li>
+                    <li>
+                      <strong>Direct if statements:</strong> Use ternary or && operators
+                      instead
+                    </li>
+                    <li>
+                      <strong>Modifying props:</strong> Props are read-only, never mutate
+                      them
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Module 3: Props & State -->
+          <div id="lesson3" class="lesson">
+            <div class="lesson-header">
+              <h2>🎨 Module 3: Props & State</h2>
+              <p>Managing data in React components</p>
+            </div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">📦 Props (Properties)</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>Props</strong> are arguments passed into React components. They
+                    are read-only and flow from parent to child (unidirectional data flow).
+                  </p>
+                </div>
+                <div class="code-box">
+                  <pre>
+// Passing Props
+function App() {
+  return (
+    &lt;div&gt;
+      &lt;Welcome name="Alice" age={25} isActive={true} /&gt;
+      &lt;Welcome name="Bob" age={30} isActive={false} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Receiving Props
+function Welcome(props) {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Hello, {props.name}!&lt;/h1&gt;
+      &lt;p&gt;Age: {props.age}&lt;/p&gt;
+      &lt;p&gt;Status: {props.isActive ? 'Active' : 'Inactive'}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Destructuring Props (Preferred)
+function Welcome({ name, age, isActive }) {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Hello, {name}!&lt;/h1&gt;
+      &lt;p&gt;Age: {age}&lt;/p&gt;
+      &lt;p&gt;Status: {isActive ? 'Active' : 'Inactive'}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Default Props
+function Welcome({ name = "Guest", age = 0 }) {
+  return &lt;h1&gt;Hello, {name}, Age: {age}&lt;/h1&gt;;
+}
+
+// Prop Types (Type Checking)
+import PropTypes from 'prop-types';
+
+Welcome.propTypes = {
+  name: PropTypes.string.isRequired,
+  age: PropTypes.number,
+  isActive: PropTypes.bool
+};
+
+Welcome.defaultProps = {
+  age: 18,
+  isActive: false
+};</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">🔄 State Management</h3>
+                <div class="definition-box">
+                  <p>
+                    <strong>State</strong> is data that changes over time within a
+                    component. Unlike props, state is managed within the component and can
+                    be updated.
+                  </p>
+                </div>
+                <div class="code-box">
+                  <pre>
+import { useState } from 'react';
+
+// Basic State Example
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Count: {count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;Increment&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(count - 1)}&gt;Decrement&lt;/button&gt;
+      &lt;button onClick={() =&gt; setCount(0)}&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Multiple State Variables
+function Form() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [age, setAge] = useState(0);
+
+  return (
+    &lt;form&gt;
+      &lt;input 
+        value={name} 
+        onChange={(e) =&gt; setName(e.target.value)} 
+        placeholder="Name"
+      /&gt;
+      &lt;input 
+        value={email} 
+        onChange={(e) =&gt; setEmail(e.target.value)} 
+        placeholder="Email"
+      /&gt;
+      &lt;input 
+        type="number"
+        value={age} 
+        onChange={(e) =&gt; setAge(Number(e.target.value))} 
+      /&gt;
+    &lt;/form&gt;
+  );
+}
+
+// Object State
+function UserProfile() {
+  const [user, setUser] = useState({
+    name: '',
+    email: '',
+    age: 0
+  });
+
+  const updateUser = (field, value) =&gt; {
+    setUser(prevUser =&gt; ({
+      ...prevUser,
+      [field]: value
+    }));
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;input 
+        value={user.name}
+        onChange={(e) =&gt; updateUser('name', e.target.value)}
+      /&gt;
+      &lt;input 
+        value={user.email}
+        onChange={(e) =&gt; updateUser('email', e.target.value)}
+      /&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Array State
+function TodoList() {
+  const [todos, setTodos] = useState([]);
+  const [input, setInput] = useState('');
+
+  const addTodo = () =&gt; {
+    setTodos([...todos, { id: Date.now(), text: input }]);
+    setInput('');
+  };
+
+  const removeTodo = (id) =&gt; {
+    setTodos(todos.filter(todo =&gt; todo.id !== id));
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;input 
+        value={input}
+        onChange={(e) =&gt; setInput(e.target.value)}
+      /&gt;
+      &lt;button onClick={addTodo}&gt;Add&lt;/button&gt;
+      &lt;ul&gt;
+        {todos.map(todo =&gt; (
+          &lt;li key={todo.id}&gt;
+            {todo.text}
+            &lt;button onClick={() =&gt; removeTodo(todo.id)}&gt;Delete&lt;/button&gt;
+          &lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}</pre>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">⚖️ Props vs State</h3>
+                <div class="comparison-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Aspect</th>
+                        <th>Props</th>
+                        <th>State</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Definition</td>
+                        <td>Data passed from parent</td>
+                        <td>Data managed within component</td>
+                      </tr>
+                      <tr>
+                        <td>Mutability</td>
+                        <td>Read-only (immutable)</td>
+                        <td>Can be changed with setState</td>
+                      </tr>
+                      <tr>
+                        <td>Ownership</td>
+                        <td>Owned by parent</td>
+                        <td>Owned by component</td>
+                      </tr>
+                      <tr>
+                        <td>Update Trigger</td>
+                        <td>Parent re-renders</td>
+                        <td>setState call</td>
+                      </tr>
+                      <tr>
+                        <td>Use Case</td>
+                        <td>Component configuration</td>
+                        <td>Interactive/dynamic data</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3 class="section-title">🎯 Best Practices</h3>
+                <div class="highlight-box">
+                  <ul>
+                    <li>
+                      <strong>Immutability:</strong> Never mutate state directly, always use
+                      setState
+                    </li>
+                    <li>
+                      <strong>Functional Updates:</strong> Use function form when new state
+                      depends on previous
+                    </li>
+                    <li>
+                      <strong>Lift State Up:</strong> Move shared state to closest common
+                      ancestor
+                    </li>
+                    <li>
+                      <strong>Single Source of Truth:</strong> Don't duplicate state across
+                      components
+                    </li>
+                    <li>
+                      <strong>Derived State:</strong> Calculate values from existing state
+                      instead of storing them
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+  <script>
+    function toggleSidebar(){const s=document.getElementById('sidebar');const o=document.querySelector('.overlay');s.classList.toggle('active');o.classList.toggle('active');}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('active');document.querySelector('.overlay').classList.remove('active');}
+    function scrollTopSmooth(){window.scrollTo({top:0,behavior:'smooth'});} 
+    window.addEventListener('scroll',()=>{const b=document.querySelector('.top-btn'); if(window.pageYOffset>300){b.classList.add('show')} else {b.classList.remove('show')}});
+  </script>
+</body>
+</html>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Manual Fetch Pattern</h3><div class="code-box"><pre>useEffect(()=>{
+            <div class="lesson-list">
+              <div class="lesson-item"><strong>Module 1:</strong> Foundations & JSX</div>
+              <div class="lesson-item"><strong>Module 2:</strong> State & Hooks</div>
+              <div class="lesson-item"><strong>Module 3:</strong> Component Communication</div>
+              <div class="lesson-item"><strong>Module 4:</strong> Effects & Lifecycle</div>
+              <div class="lesson-item"><strong>Module 5:</strong> Routing & Navigation</div>
+              <div class="lesson-item"><strong>Module 6:</strong> Data Fetching & APIs</div>
+              <div class="lesson-item"><strong>Module 7:</strong> Global State (Context vs Redux)</div>
+              <div class="lesson-item"><strong>Module 8:</strong> Performance & Optimization</div>
+              <div class="lesson-item"><strong>Module 9:</strong> Forms & Validation</div>
+              <div class="lesson-item"><strong>Module 10:</strong> Testing (Jest / RTL / Cypress)</div>
+              <div class="lesson-item"><strong>Module 11:</strong> Advanced Patterns & Architecture</div>
+              <div class="section"><h3 class="section-title">React Query</h3><div class="content-box"><ul><li>Caching, stale status, retries, background refetch.</li><li>Simplifies loading/error state.</li></ul></div><div class="code-box"><pre>const { data, isLoading, isError } = useQuery(['todos'], fetchTodos, { staleTime:5000 });</pre></div></div>
+              <div class="section"><h3 class="section-title">Suspense Future</h3><div class="definition-box"><p>Data frameworks integrate with Suspense for fallback-based loading boundaries.</p></div></div>
+            </div>
+          </div>
+
+          <!-- Module 7: Global State -->
+          <div id="lesson7" class="lesson">
+            <div class="lesson-header"><h2>🗃️ Module 7: Global State Management</h2><p>Context vs libraries</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Strategies</h3><div class="comparison-table"><table><thead><tr><th>Approach</th><th>Best For</th><th>Notes</th></tr></thead><tbody><tr><td>Context+Reducer</td><td>Small domains</td><td>Manual perf tuning</td></tr><tr><td>Redux Toolkit</td><td>Complex flows</td><td>DevTools & middleware</td></tr><tr><td>Zustand</td><td>Simple store</td><td>Minimal boilerplate</td></tr><tr><td>Jotai/Recoil</td><td>Atomic pieces</td><td>Fine-grained updates</td></tr></tbody></table></div></div>
+              <div class="section"><h3 class="section-title">Redux Slice</h3><div class="code-box"><pre>import { createSlice } from '@reduxjs/toolkit';
+              <div class="lesson-item"><strong>Module 12:</strong> Tooling, Build & Deployment</div>
+              <div class="lesson-item"><strong>Module 13:</strong> Security & Authentication</div>
+              <div class="lesson-item"><strong>Module 14:</strong> Accessibility (A11y)</div>
+              <div class="lesson-item"><strong>Module 15:</strong> Internationalization (i18n)</div>
+              <div class="lesson-item"><strong>Module 16:</strong> Styling Approaches</div>
+              <div class="lesson-item"><strong>Module 17:</strong> Animations & UX Enhancements</div>
+              <div class="lesson-item"><strong>Module 18:</strong> React 18 & Future</div>
+              <div class="section"><h3 class="section-title">Performance Tips</h3><div class="highlight-box"><ul><li>Memoize selectors; avoid storing derived data.</li><li>Split large contexts into focused providers.</li></ul></div></div>
+            </div>
+          </div>
+
+          <!-- Module 8: Performance -->
+          <div id="lesson8" class="lesson">
+            <div class="lesson-header"><h2>⚡ Module 8: Performance & Optimization</h2><p>Keeping UI responsive</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Memoization</h3><div class="content-box"><ul><li><code>React.memo</code> for pure components.</li><li><code>useMemo</code> for expensive calculations.</li><li><code>useCallback</code> for stable handler identities.</li></ul></div></div>
+              <div class="section"><h3 class="section-title">Concurrent Features</h3><div class="highlight-box"><p><code>useTransition</code> marks non-urgent updates; <code>useDeferredValue</code> defers derived work.</p></div><div class="code-box"><pre>const [isPending, startTransition] = useTransition();
+              <div class="lesson-item"><strong>Module 19:</strong> Next.js & Server Rendering</div>
+              <div class="section"><h3 class="section-title">Avoid Re-render Traps</h3><div class="warning-box"><ul><li>Large frequently changing objects in context.</li><li>Premature memoization without profiling.</li></ul></div></div>
+            </div>
+          </div>
+
+          <!-- Module 9: Forms -->
+          <div id="lesson9" class="lesson">
+            <div class="lesson-header"><h2>📝 Module 9: Forms & Validation</h2><p>Managing user input</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Controlled vs Uncontrolled</h3><div class="definition-box"><p>Controlled: React state drives value. Uncontrolled: DOM retains state accessed via ref.</p></div></div>
+              <div class="section"><h3 class="section-title">React Hook Form</h3><div class="code-box"><pre>import { useForm } from 'react-hook-form';
+              <div class="lesson-item"><strong>Module 20:</strong> Project Structure & Best Practices</div>
+            </div>
+          </section>
+
+          <!-- Module 1 -->
+          <div id="lesson1" class="lesson">
+            <div class="lesson-header"><h2>⚛️ Module 1: Foundations & JSX</h2><p>Core concepts: components, Virtual DOM, rendering</p></div>
+            <div class="lesson-content">
+              <div class="section">
+                <h3 class="section-title">What is React?</h3>
+              <div class="section"><h3 class="section-title">Schema Validation</h3><div class="content-box"><p>Use Yup/Zod for centralized rules & consistent errors.</p></div></div>
+            </div>
+          </div>
+
+          <!-- Module 10: Testing -->
+          <div id="lesson10" class="lesson">
+            <div class="lesson-header"><h2>🧪 Module 10: Testing Strategy</h2><p>Confidence via automation</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Testing Pyramid</h3><div class="content-box"><ul><li>Unit: pure logic.</li><li>Integration: component interactions.</li><li>E2E: user flows (Cypress/Playwright).</li></ul></div></div>
+              <div class="section"><h3 class="section-title">React Testing Library</h3><div class="code-box"><pre>render(<Counter />);
+                <div class="definition-box"><p><strong>React</strong> is a declarative, component-based JavaScript library for building user interfaces. Its efficiency comes from the <strong>Virtual DOM</strong> diffing and minimal real DOM mutations.</p></div>
+                <div class="highlight-box"><p><strong>Virtual DOM Flow:</strong> State Change → Re-render Virtual Tree → Diff vs Previous → Minimal Patch to Real DOM.</p></div>
+              <div class="section"><h3 class="section-title">Mocking APIs</h3><div class="content-box"><p>Use MSW for realistic network mocks in integration tests.</p></div></div>
+            </div>
+          </div>
+
+          <!-- Module 11: Advanced Patterns -->
+          <div id="lesson11" class="lesson">
+            <div class="lesson-header"><h2>🚀 Module 11: Advanced Patterns</h2><p>Reusable architectures & APIs</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Render Props & HOCs</h3><div class="content-box"><p>Legacy reuse; modern approach uses hooks + composition.</p></div></div>
+              <div class="section"><h3 class="section-title">Compound Components</h3><div class="definition-box"><p>Flexible parent coordinates subcomponents via internal context (Tabs, Accordion).</p></div></div>
+              <div class="section"><h3 class="section-title">Error Boundaries</h3><div class="warning-box"><p>Catch render errors in subtree (class-based). Provide fallback UI.</p></div></div>
+              <div class="section"><h3 class="section-title">Portals</h3><div class="highlight-box"><p>Render modals & tooltips outside main DOM hierarchy with <code>createPortal</code>.</p></div></div>
+            </div>
+          </div>
+
+          <!-- Module 12: Tooling -->
+          <div id="lesson12" class="lesson">
+            <div class="lesson-header"><h2>🛠️ Module 12: Tooling & Build</h2><p>Maintaining code quality</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Linting & Formatting</h3><div class="content-box"><ul><li>ESLint (Airbnb/TS + react-hooks).</li><li>Prettier integrated in CI.</li></ul></div></div>
+              <div class="section"><h3 class="section-title">Husky & Lint-Staged</h3><div class="definition-box"><p>Run checks pre-commit on staged files.</p></div></div>
+              <div class="section"><h3 class="section-title">Path Aliases</h3><div class="content-box"><p>Use <code>jsconfig.json</code>/<code>tsconfig.json</code> for simplified imports.</p></div></div>
+            </div>
+          </div>
+
+          <!-- Module 13: Security & Auth -->
+          <div id="lesson13" class="lesson">
+            <div class="lesson-header"><h2>🔐 Module 13: Security & Auth</h2><p>Protecting data & sessions</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Authentication</h3><div class="content-box"><ul><li>httpOnly cookies for JWT mitigate XSS.</li><li>OAuth/OIDC for delegated identity providers.</li></ul></div></div>
+              <div class="section"><h3 class="section-title">Prevent XSS</h3><div class="warning-box"><p>Avoid <code>dangerouslySetInnerHTML</code> unless sanitized; enforce CSP; validate input.</p></div></div>
+              <div class="section"><h3 class="section-title">Authorization</h3><div class="content-box"><p>Server-side enforcement; UI hides unauthorized actions but must not rely on client only.</p></div></div>
+            </div>
+          </div>
+
+          <!-- Module 14: Accessibility -->
+          <div id="lesson14" class="lesson">
+            <div class="lesson-header"><h2>♿ Module 14: Accessibility (A11y)</h2><p>Inclusive interfaces</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Semantic HTML</h3><div class="content-box"><p>Use native elements for built-in keyboard & screen reader support.</p></div></div>
+              <div class="section"><h3 class="section-title">ARIA Usage</h3><div class="definition-box"><p>Add roles only when semantics missing; test with screen readers.</p></div></div>
+              <div class="section"><h3 class="section-title">Focus Management</h3><div class="highlight-box"><p>Restore focus after modal close; keep visible focus outlines.</p></div></div>
+            </div>
+          </div>
+
+          <!-- Module 15: Internationalization -->
+          <div id="lesson15" class="lesson">
+            <div class="lesson-header"><h2>🌍 Module 15: Internationalization (i18n)</h2><p>Multi-language support</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Libraries</h3><div class="content-box"><p><code>i18next</code>, <code>react-intl</code>, <code>formatjs</code> for pluralization & formatting.</p></div></div>
+              <div class="section"><h3 class="section-title">Best Practices</h3><div class="highlight-box"><ul><li>No string concatenation—use interpolation placeholders.</li><li>Extract messages for translators; always have fallback.</li></ul></div></div>
+            </div>
+          </div>
+
+          <!-- Module 16: Styling -->
+          <div id="lesson16" class="lesson">
+            <div class="lesson-header"><h2>🧩 Module 16: Styling Approaches</h2><p>Techniques for scalable UI</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">CSS Modules</h3><div class="content-box"><p>Local scoping prevents collisions; good default choice.</p></div></div>
+              <div class="section"><h3 class="section-title">Styled Components / Emotion</h3><div class="definition-box"><p>Dynamic styling with props; consider runtime cost in huge lists.</p></div></div>
+              <div class="section"><h3 class="section-title">Utility Frameworks</h3><div class="highlight-box"><p>Tailwind speeds iteration; maintain design tokens for consistency.</p></div></div>
+            </div>
+          </div>
+
+          <!-- Module 17: Animations -->
+          <div id="lesson17" class="lesson">
+            <div class="lesson-header"><h2>🌀 Module 17: Animations & UX</h2><p>Enhancing interaction</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Framer Motion</h3><div class="code-box"><pre><motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} /></pre></div></div>
+              <div class="section"><h3 class="section-title">React Transition Group</h3><div class="content-box"><p>Transitions for mount/unmount of components and lists.</p></div></div>
+              <div class="section"><h3 class="section-title">Performance Tips</h3><div class="warning-box"><p>Prefer transforms & opacity to avoid layout thrashing.</p></div></div>
+            </div>
+          </div>
+
+          <!-- Module 18: React 18 Features -->
+          <div id="lesson18" class="lesson">
+            <div class="lesson-header"><h2>🧬 Module 18: React 18 & Beyond</h2><p>New capabilities & APIs</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">Automatic Batching</h3><div class="content-box"><p>Async context updates now batch reducing renders.</p></div></div>
+              <div class="section"><h3 class="section-title">useId</h3><div class="definition-box"><p>Generate stable IDs for accessibility across SSR + hydration.</p></div></div>
+              <div class="section"><h3 class="section-title">Transitions</h3><div class="highlight-box"><p>Mark non-urgent updates with <code>useTransition</code> for responsiveness.</p></div></div>
+              <div class="section"><h3 class="section-title">useDeferredValue</h3><div class="content-box"><p>Defer expensive derivations for rapidly changing inputs.</p></div></div>
+            </div>
+          </div>
+
+          <!-- Module 19: Next.js Overview -->
+          <div id="lesson19" class="lesson">
+            <div class="lesson-header"><h2>🧱 Module 19: Next.js & SSR</h2><p>Framework for hybrid rendering</p></div>
+            <div class="lesson-content">
+              <div class="section"><h3 class="section-title">File-Based Routing</h3><div class="content-box"><p>Pages or App Router (<code>app/</code>) generates routes automatically.</p></div></div>
+              <div class="section"><h3 class="section-title">Data Fetching</h3><div class="definition-box"><p>Server Components fetch directly (smaller bundle). Use caching strategies & <code>generateStaticParams</code>.</p></div></div>
+              <div class="section"><h3 class="section-title">Optimizations</h3><div class="highlight-box"><p><code>next/image</code>, <code>next/font</code>, dynamic imports for performance budgets.</p></div></div>
+              <div class="section"><h3 class="section-title">API Routes</h3><div class="content-box"><p>Serverless endpoints (<code>app/api</code>) for lightweight backend logic.</p></div></div>
+            </div>
+          </div>
+          <!-- Old duplicated content removed -->
+        </div>
+      </div>
+    </main>
+  </div>
+  <button class="top-btn" onclick="scrollTopSmooth()">↑</button>
+  <script>
+    function toggleSidebar(){const s=document.getElementById('sidebar');const o=document.querySelector('.overlay');s.classList.toggle('active');o.classList.toggle('active');}
+    function closeSidebar(){document.getElementById('sidebar').classList.remove('active');document.querySelector('.overlay').classList.remove('active');}
+    function scrollTopSmooth(){window.scrollTo({top:0,behavior:'smooth'});} 
+    window.addEventListener('scroll',()=>{const b=document.querySelector('.top-btn'); if(window.pageYOffset>300){b.classList.add('show')} else {b.classList.remove('show')}});
+  </script>
+</body>
+</html>
