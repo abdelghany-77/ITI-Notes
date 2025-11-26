@@ -273,6 +273,10 @@
         background: linear-gradient(180deg, #dd0031, #c3002f);
       }
 
+      .course-card.react::before {
+        background: linear-gradient(180deg, #61dafb, #21a1f1);
+      }
+
       .course-card.mongodb::before {
         background: linear-gradient(180deg, #47a248, #3f9142);
       }
@@ -1094,6 +1098,15 @@
           <a href="Notes/mysql-notes.html" class="quick-link"
             >🐬 MySQL Database</a
           >
+          <a href="Notes/php-programming-notes.html" class="quick-link"
+            >🐘 PHP Programming</a
+          >
+          <a href="Notes/wordpress-development-notes.html" class="quick-link"
+            >🎨 WordPress Development</a
+          >
+          <a href="Notes/react-framework-notes.html" class="quick-link"
+            >⚛️ React.js Framework</a
+          >
         </div>
       </div>
 
@@ -1567,6 +1580,36 @@
           </div>
 
           <div
+            class="course-card react"
+            data-category="development"
+            data-keywords="react js framework frontend components hooks state props context router redux nextjs"
+          >
+            <div class="course-tags">
+              <span class="course-tag">Development</span>
+              <span class="course-tag">Framework</span>
+            </div>
+            <div class="course-icon-section">
+              <span class="course-icon">⚛️</span>
+            </div>
+            <div class="course-main-content">
+              <div class="course-header">
+                <h3 class="course-title">React.js Framework</h3>
+                <p class="course-subtitle">Modern UI Library for Web</p>
+              </div>
+              <div class="course-stats">
+                <span class="course-stat">📚 React Core</span>
+                <span class="course-stat">⏱️ Frontend Dev</span>
+                <span class="course-stat">🎯 Components</span>
+              </div>
+            </div>
+            <div class="course-action-section">
+              <a href="Notes/react-framework-notes.html" class="course-link">
+                Access Notes
+              </a>
+            </div>
+          </div>
+
+          <div
             class="course-card mongodb"
             data-category="management"
             data-keywords="mongodb nosql database document json bson crud aggregation indexing replication sharding mongoose atlas"
@@ -1709,7 +1752,9 @@
             <div class="course-main-content">
               <div class="course-header">
                 <h3 class="course-title">MySQL Database</h3>
-                <p class="course-subtitle">Relational Database Management System</p>
+                <p class="course-subtitle">
+                  Relational Database Management System
+                </p>
               </div>
               <div class="course-stats">
                 <span class="course-stat">📚 SQL Mastery</span>
@@ -1778,7 +1823,10 @@
               </div>
             </div>
             <div class="course-action-section">
-              <a href="Notes/wordpress-development-notes.html" class="course-link">
+              <a
+                href="Notes/wordpress-development-notes.html"
+                class="course-link"
+              >
                 Access Notes
               </a>
             </div>
