@@ -1,2432 +1,1646 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Red Hat System Administration I</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red Hat System Administration I</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+<body>
+  <div class="layout-container">
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-book"></i> Study Guide</h3>
+        <p>RHEL System Administration</p>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li>
+            <a href="#day1" onclick="setActive(this)"><i class="fas fa-star"></i> Day 1: Introduction & Basics</a>
+            <ul>
+              <li>
+                <a href="#foss" onclick="setActive(this)">FOSS & Licenses</a>
+              </li>
+              <li>
+                <a href="#linux-history" onclick="setActive(this)">Linux History</a>
+              </li>
+              <li>
+                <a href="#red-hat" onclick="setActive(this)">Red Hat</a>
+              </li>
+              <li>
+                <a href="#installation" onclick="setActive(this)">Installation</a>
+              </li>
+              <li>
+                <a href="#components" onclick="setActive(this)">Linux Components</a>
+              </li>
+              <li>
+                <a href="#basic-commands" onclick="setActive(this)">Basic Commands</a>
+              </li>
+              <li>
+                <a href="#file-basics" onclick="setActive(this)">File & Directory Basics</a>
+              </li>
+              <li>
+                <a href="#documentation" onclick="setActive(this)">Documentation</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#day2" onclick="setActive(this)"><i class="fas fa-edit"></i> Day 2: Vi Editor & Environment</a>
+            <ul>
+              <li>
+                <a href="#vi-editor" onclick="setActive(this)">Vi Text Editor</a>
+              </li>
+              <li>
+                <a href="#user-environment" onclick="setActive(this)">User Environment</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#day3" onclick="setActive(this)"><i class="fas fa-users"></i> Day 3: Users & Permissions</a>
+            <ul>
+              <li>
+                <a href="#user-accounts" onclick="setActive(this)">User Accounts</a>
+              </li>
+              <li>
+                <a href="#user-group-admin" onclick="setActive(this)">User & Group Admin</a>
+              </li>
+              <li>
+                <a href="#switching-accounts" onclick="setActive(this)">Switching Accounts</a>
+              </li>
+              <li>
+                <a href="#permissions" onclick="setActive(this)">Ownership & Permissions</a>
+              </li>
+              <li>
+                <a href="#shutdown" onclick="setActive(this)">System Shutdown</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#day4" onclick="setActive(this)"><i class="fas fa-cog"></i> Day 4: Processes & I/O</a>
+            <ul>
+              <li>
+                <a href="#processes" onclick="setActive(this)">Processes</a>
+              </li>
+              <li>
+                <a href="#io-redirection" onclick="setActive(this)">I/O Redirection</a>
+              </li>
+              <li>
+                <a href="#pipelines" onclick="setActive(this)">Pipelines</a>
+              </li>
+              <li>
+                <a href="#string-processing" onclick="setActive(this)">String Processing</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#day5" onclick="setActive(this)"><i class="fas fa-star"></i> Day 5: Files & Packages</a>
+            <ul>
+              <li>
+                <a href="#inodes" onclick="setActive(this)">Inode Table</a>
+              </li>
+              <li>
+                <a href="#links" onclick="setActive(this)">Hard & Symbolic Links</a>
+              </li>
+              <li>
+                <a href="#archiving" onclick="setActive(this)">Archiving (tar)</a>
+              </li>
+              <li>
+                <a href="#compression" onclick="setActive(this)">Compression</a>
+              </li>
+              <li>
+                <a href="#package-management" onclick="setActive(this)">Package Management</a>
+              </li>
+              <li>
+                <a href="#search" onclick="setActive(this)">Search (find)</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <main class="main-content">
+      <div class="container">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Main Page</a><div class="header">
+          <h1><i class="fas fa-star"></i> Red Hat System Administration I</h1>
+          <p>Complete Study Guide for RHEL Mastery</p>
+        </div>
+        <a href="../index.html" class="back-button"> ? Back to Main Page </a>
+        <a href="./linux-commands-reference.html" class="practice-link">Commands</a>
+        <div class="content">
+          <section id="day1" class="section">
+            <div class="day-title">
+              Day 1: Introduction to Linux, Basic Commands, and File Basics
+            </div>
+            <div id="foss" class="subsection">
+              <h3 class="subsection-title">
+                1. Free/Open Source Software (FOSS) and Licenses
+              </h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-star"></i> What is FOSS?</h4>
+                <p>FOSS provides freedoms to:</p>
+                <ul>
+                  <li>View the source code used to compile programs</li>
+                  <li>Make modifications</li>
+                  <li>Distribute these modifications</li>
+                </ul>
+                <p>
+                  Most FOSS is covered under a public license. The most common
+                  is the GNU General Public License (GPL).
+                </p>
+              </div>
+              <div class="important-box">
+                <h4><i class="fas fa-scroll"></i> Open-source License</h4>
+                <p>
+                  A type of license for computer software and other products
+                  that allows the source code, blueprint, or design to be
+                  used, modified, and/or shared under defined terms and
+                  conditions.
+                </p>
+                <p>
+                  <strong>Examples:</strong> GPL, LGPL, Apache, Mozilla Public
+                  License, and BSD.
+                </p>
+              </div>
+            </div>
+            <div id="linux-history" class="subsection">
+              <h3 class="subsection-title">2. Linux History</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-books"></i> Evolution Timeline</h4>
+                <ul>
+                  <li>
+                    <strong>Multics (1963-1969):</strong> Developed through
+                    collaboration of MIT, General Electric, and Bell Labs
+                  </li>
+                  <li>
+                    <strong>Unix (1969):</strong> First version created in
+                    Bell Labs
+                  </li>
+                  <li>
+                    <strong>Unix Flavors:</strong> IBM (AIX), Sun (Solaris),
+                    HP (HP/UX), Silicon Graphics (IRIX)
+                  </li>
+                  <li>
+                    <strong>GNU Project (1983):</strong> Started by Richard
+                    Stallman with the goal of creating a free UNIX-like OS
+                  </li>
+                  <li>
+                    <strong>Linux Kernel (1991):</strong> Created by Linus
+                    Torvalds
+                  </li>
+                  <li>
+                    <strong>Integration (1992):</strong> Linux and GNU
+                    developers integrated GNU components with Linux
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div id="red-hat" class="subsection">
+              <h3 class="subsection-title">3. Why Linux & Red Hat</h3>
+              <div class="important-box">
+                <h4><i class="fas fa-star"></i> Why Linux?</h4>
+                <ul>
+                  <li>Linux is open source</li>
+                  <li>Released under the GNU General Public License (GPL)</li>
+                  <li>Secure and generally considered virus-free</li>
+                  <li>Ideal for programmers</li>
+                  <li>Strong community support</li>
+                  <li>Dominates professional and server sectors</li>
+                </ul>
+              </div>
+              <div class="concept-box">
+                <h4><i class="fas fa-star"></i> Red Hat</h4>
+                <ul>
+                  <li><strong>Founded:</strong> March 26, 1993</li>
+                  <li>
+                    <strong>First Release:</strong> Red Hat Linux in 1994
+                  </li>
+                  <li>
+                    <strong>Market Presence:</strong> More than 90% of Fortune
+                    Global 500 companies use Red Hat
+                  </li>
+                  <li>
+                    <strong>RHEL Benefits:</strong> Runs demanding
+                    applications better, scales well, reliable, and secure
+                  </li>
+                  <li>
+                    <strong>CentOS:</strong> Community-driven, free
+                    alternative derived from RHEL source code
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div id="installation" class="subsection">
+              <h3 class="subsection-title">4. Installation</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-star"></i> Installation Types</h4>
+                <ul>
+                  <li>Automated installation</li>
+                  <li>Graphical installation</li>
+                  <li>Remote installation</li>
+                </ul>
+              </div>
+              <div class="command-box">
+                <div class="command">NTFS Support Commands:</div>
+                <div class="description">
+                  sudo yum --enablerepo=extras install epel-release
+                </div>
+                <div class="description">sudo yum install ntfs-3g -y</div>
+              </div>
+              <div class="command-box">
+                <div class="command">GRUB Configuration:</div>
+                <div class="description">
+                  sudo grub2-mkconfig > /dev/null # Check for OS detection
+                </div>
+                <div class="description">
+                  sudo cp /boot/grub2/grub.cfg /boot/grub2/grub.cfg.old #
+                  Backup
+                </div>
+                <div class="description">
+                  sudo grub2-mkconfig -o /boot/grub2/grub.cfg # Update config
+                </div>
+              </div>
+            </div>
+            <div id="components" class="subsection">
+              <h3 class="subsection-title">5. Linux Components</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-building"></i> Core Components</h4>
+                <div class="table-container">
+                  <table class="permissions-table">
+                    <thead>
+                      <tr>
+                        <th>Component</th>
+                        <th>Description</th>
+                        <th>Function</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Kernel</strong></td>
+                        <td>Core of the operating system</td>
+                        <td>
+                          Manages hardware, loads into RAM, contains device
+                          drivers
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>Shell</strong></td>
+                        <td>Interface between user and kernel</td>
+                        <td>
+                          Parses commands and translates them for kernel
+                          execution
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>Terminal</strong></td>
+                        <td>Place to accept typed commands</td>
+                        <td>
+                          Displays command results and provides CLI interface
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>Applications</strong></td>
+                        <td>User programs and daemons</td>
+                        <td>Provide services and functionality to users</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Shell Information Commands:</div>
+                <div class="description">
+                  echo $SHELL # Display current shell
+                </div>
+                <div class="description">echo $0 # Display shell name</div>
+                <div class="description">
+                  cat /etc/shells # List all available shells
+                </div>
+              </div>
+              <div class="important-box">
+                <h4><i class="fas fa-desktop"></i> CLI Structure</h4>
+                <p>
+                  <strong>Flow:</strong> Terminal -&gt; Shell -&gt; Kernel -&gt; Hardware
+                </p>
+                <p>
+                  <strong>Available Shells:</strong> Bourne Shell (sh), Korn
+                  Shell (ksh), C Shell (csh), Bourne Again Shell (bash)
+                </p>
+              </div>
+            </div>
+            <div id="basic-commands" class="subsection">
+              <h3 class="subsection-title">
+                6. Basic Commands (CLI Fundamentals)
+              </h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-bolt"></i> Why Use CLI?</h4>
+                <ul>
+                  <li>Consistent technical support across different GUIs</li>
+                  <li>
+                    Speed & Performance (e.g.,
+                    <code>touch file{1..100}</code>)
+                  </li>
+                  <li>Optimized for server-side environments</li>
+                  <li>Security for remote connections (SSH)</li>
+                </ul>
+              </div>
+              <div class="command-box">
+                <div class="command">Command Syntax:</div>
+                <div class="description">command [options] [arguments]</div>
+                <div class="description">Items separated by spaces</div>
+                <div class="description">
+                  Separate multiple commands with semicolon (;)
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Basic Commands:</div>
+                <div class="description">clear # Clear terminal screen</div>
+                <div class="description">echo "text" # Display text</div>
+                <div class="description">
+                  echo $variable # Display variable value
+                </div>
+                <div class="description">
+                  echo -n "text" # Display without newline
+                </div>
+              </div>
+              <div class="important-box">
+                <h4><i class="fas fa-star"></i> Quoting Rules</h4>
+                <ul>
+                  <li>
+                    <strong>Single quotes (' '):</strong> Strong quoting -
+                    ignore all special characters
+                  </li>
+                  <li>
+                    <strong>Double quotes (" "):</strong> Weak quoting -
+                    expand variables but ignore some specials
+                  </li>
+                </ul>
+              </div>
+              <div class="command-box">
+                <div class="command">Variables:</div>
+                <div class="description">x=5 # Local variable</div>
+                <div class="description">echo $HOME # Home directory</div>
+                <div class="description">echo $USER # Current user</div>
+                <div class="description">
+                  echo $PWD # Present working directory
+                </div>
+                <div class="description">
+                  echo $PATH # Command search path
+                </div>
+                <div class="description">
+                  env | grep HOME # Filter environment variables
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Command History:</div>
+                <div class="description">!! # Repeat last command</div>
+                <div class="description">
+                  !string # Repeat last command starting with string
+                </div>
+                <div class="description">!n # Repeat command number n</div>
+                <div class="description">
+                  !-n # Repeat command n commands back
+                </div>
+              </div>
+            </div>
+            <div id="file-basics" class="subsection">
+              <h3 class="subsection-title">7. File and Directory Basics</h3>
+              <div class="file-structure">
+                <h4><i class="fas fa-folder"></i> Linux Filesystem Hierarchy</h4>
+                <ul>
+                  <li>/bin - Common programs</li>
+                  <li>/boot - Kernel and boot files</li>
+                  <li>/dev - Device files</li>
+                  <li>/etc - Configuration files</li>
+                  <li>/home - User home directories</li>
+                  <li>/lib - Shared libraries</li>
+                  <li>/media - Mounted filesystems (USB drives)</li>
+                  <li>/mnt - Temporary mount points</li>
+                  <li>/opt - Optional software packages</li>
+                  <li>/proc - System status (pseudo-filesystem)</li>
+                  <li>/root - Root user's home directory</li>
+                  <li>/sbin - System administration programs</li>
+                  <li>/tmp - Temporary files</li>
+                  <li>/usr - User programs and data</li>
+                  <li>/var - Log files and dynamic files</li>
+                </ul>
+              </div>
+              <div class="command-box">
+                <div class="command">Navigation Commands:</div>
+                <div class="description">pwd # Print working directory</div>
+                <div class="description">
+                  cd /path # Change to specific directory
+                </div>
+                <div class="description">
+                  cd or cd ~ # Go to home directory
+                </div>
+                <div class="description">cd / # Go to root directory</div>
+                <div class="description">cd - # Go to previous directory</div>
+              </div>
+              <div class="concept-box">
+                <h4><i class="fas fa-bullseye"></i> Wildcards (File Globbing)</h4>
+                <ul>
+                  <li>
+                    <strong>* (Asterisk):</strong> Zero or more characters
+                    (except leading .)
+                  </li>
+                  <li>
+                    <strong>? (Question Mark):</strong> Any single character
+                    (except leading .)
+                  </li>
+                  <li>
+                    <strong>[chars]:</strong> Any single character within
+                    brackets
+                  </li>
+                  <li>
+                    <strong>[range]:</strong> Any character within specified
+                    range
+                  </li>
+                </ul>
+              </div>
+              <div class="command-box">
+                <div class="command">Listing Commands:</div>
+                <div class="description">ls # List current directory</div>
+                <div class="description">ls -a # Include hidden files</div>
+                <div class="description">ls -l # Long format</div>
+                <div class="description">ls -lh # Human-readable sizes</div>
+                <div class="description">
+                  ls -lt # Sort by modification time
+                </div>
+                <div class="description">ls -R # Recursive listing</div>
+              </div>
+              <div class="command-box">
+                <div class="command">File Content Commands:</div>
+                <div class="description">
+                  cat filename # Display entire file
+                </div>
+                <div class="description">
+                  cat -n filename # Display with line numbers
+                </div>
+                <div class="description">
+                  more filename # Page by page viewing
+                </div>
+                <div class="description">less filename # Advanced pager</div>
+                <div class="description">
+                  head -n filename # First n lines
+                </div>
+                <div class="description">tail -n filename # Last n lines</div>
+              </div>
+              <div class="command-box">
+                <div class="command">File Manipulation:</div>
+                <div class="description">
+                  touch filename # Create empty file
+                </div>
+                <div class="description">
+                  mkdir dirname # Create directory
+                </div>
+                <div class="description">
+                  mkdir -p path/dir # Create parent directories
+                </div>
+                <div class="description">cp source target # Copy files</div>
+                <div class="description">
+                  cp -r source dest # Copy directories recursively
+                </div>
+                <div class="description">mv source target # Move/rename</div>
+                <div class="description">rm filename # Remove file</div>
+                <div class="description">
+                  rm -r dirname # Remove directory recursively
+                </div>
+                <div class="description">
+                  rmdir dirname # Remove empty directory
+                </div>
+              </div>
+            </div>
+            <div id="documentation" class="subsection">
+              <h3 class="subsection-title">8. Linux Documentation</h3>
+              <div class="command-box">
+                <div class="command">Manual Pages:</div>
+                <div class="description">
+                  man command # Display manual page
+                </div>
+                <div class="description">
+                  man -s 5 passwd # Specific section
+                </div>
+                <div class="description">
+                  man -a command # All manual pages
+                </div>
+                <div class="description">
+                  whatis command # Brief description
+                </div>
+                <div class="description">
+                  man -k "keyword" # Search manual pages
+                </div>
+                <div class="description">
+                  apropos "keyword" # Search descriptions
+                </div>
+              </div>
+              <div class="concept-box">
+                <h4><i class="fas fa-book"></i> Manual Page Sections</h4>
+                <ol>
+                  <li>Executable programs or shell commands</li>
+                  <li>System calls (kernel functions)</li>
+                  <li>Library calls (program libraries)</li>
+                  <li>Special files (usually in /dev)</li>
+                  <li>File formats and conventions</li>
+                  <li>Games</li>
+                  <li>Miscellaneous (macro packages, conventions)</li>
+                  <li>System administration commands</li>
+                  <li>Kernel routines (non-standard)</li>
+                </ol>
+              </div>
+              <div class="command-box">
+                <div class="command">Other Help:</div>
+                <div class="description">
+                  info command # Detailed structured documentation
+                </div>
+                <div class="description">command --help # Built-in help</div>
+                <div class="description">
+                  help command # For shell builtins
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="day2" class="section">
+            <div class="day-title">
+              Day 2: Vi Editor, Environment, and Initialization Files
+            </div>
+            <div id="vi-editor" class="subsection">
+              <h3 class="subsection-title">1. The Vi Text Editor</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-edit"></i> Vi Editor Overview</h4>
+                <p>
+                  The default editor for Unix and Linux, used to manage and
+                  modify text files. It's an interactive editor, often the
+                  only one available in emergency mode.
+                </p>
+                <p>
+                  <strong>vim (vi improved):</strong> Common implementation
+                  offering syntax highlighting, arrow key support, and mouse
+                  support.
+                </p>
+              </div>
+              <div class="important-box">
+                <h4><i class="fas fa-gamepad"></i> Vi Modes</h4>
+                <ul>
+                  <li>
+                    <strong>Command mode:</strong> Default mode; performs
+                    commands (delete, copy, etc.)
+                  </li>
+                  <li>
+                    <strong>Insert mode:</strong> Used to enter text into the
+                    file
+                  </li>
+                  <li>
+                    <strong>Last line mode:</strong> For advanced editing
+                    commands (accessed with :)
+                  </li>
+                </ul>
+              </div>
+              <div class="command-box">
+                <div class="command">Opening Files:</div>
+                <div class="description">vi # Open vi without file</div>
+                <div class="description">
+                  vi filename # Open specific file
+                </div>
+                <div class="description">vi -r filename # Recover file</div>
+                <div class="description">view filename # Read-only mode</div>
+              </div>
+              <div class="command-box">
+                <div class="command">Insert Mode (from Command mode):</div>
+                <div class="description">i # Insert before cursor</div>
+                <div class="description">a # Append after cursor</div>
+                <div class="description">A # Append at end of line</div>
+                <div class="description">I # Insert at beginning of line</div>
+                <div class="description">o # Open new line below</div>
+                <div class="description">O # Open new line above</div>
+              </div>
+              <div class="command-box">
+                <div class="command">Navigation:</div>
+                <div class="description">h, ?, Backspace # Move left</div>
+                <div class="description">j, ? # Move down</div>
+                <div class="description">k, ? # Move up</div>
+                <div class="description">l, -&gt;, Space # Move right</div>
+                <div class="description">w # Forward one word</div>
+                <div class="description">b # Back one word</div>
+                <div class="description">0 # Beginning of line</div>
+                <div class="description">G # Last line of file</div>
+                <div class="description">nG or :n # Go to line n</div>
+              </div>
+              <div class="command-box">
+                <div class="command">Edit & Delete:</div>
+                <div class="description">x # Delete character at cursor</div>
+                <div class="description">dw # Delete word</div>
+                <div class="description">dd # Delete line</div>
+                <div class="description">D # Delete to end of line</div>
+                <div class="description">s # Substitute character</div>
+              </div>
+              <div class="command-box">
+                <div class="command">Search & Replace:</div>
+                <div class="description">/string # Search forward</div>
+                <div class="description">?string # Search backward</div>
+                <div class="description">n # Next occurrence</div>
+                <div class="description">N # Previous occurrence</div>
+                <div class="description">:%s/old/new/g # Global replace</div>
+              </div>
+              <div class="command-box">
+                <div class="command">Copy & Paste:</div>
+                <div class="description">yy # Yank (copy) line</div>
+                <div class="description">p # Put below cursor</div>
+                <div class="description">P # Put above cursor</div>
+              </div>
+              <div class="command-box">
+                <div class="command">Save & Quit:</div>
+                <div class="description">:w # Save file</div>
+                <div class="description">:w newfile # Save as new file</div>
+                <div class="description">:wq, :x, ZZ # Save and quit</div>
+                <div class="description">:q! # Quit without saving</div>
+              </div>
+            </div>
+            <div id="user-environment" class="subsection">
+              <h3 class="subsection-title">
+                2. User Environment and Initialization Files
+              </h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-globe"></i> Environment Creation</h4>
+                <p>
+                  When a user logs in, an environment is created with
+                  variables determining how the user works. Initialization
+                  files are read in a specific order, and if a setting appears
+                  in multiple files, the last one read wins.
+                </p>
+              </div>
+              <div class="important-box">
+                <h4><i class="fas fa-folder-open"></i> Initialization File Order</h4>
+                <ul>
+                  <li>
+                    <strong>Login Terminal:</strong> /etc/profile -&gt; ~/.profile
+                    -&gt; /etc/bash.bashrc
+                  </li>
+                  <li>
+                    <strong>No Login Terminal (Subshell):</strong>
+                    /etc/bash.bashrc -&gt; ~/.bashrc
+                  </li>
+                </ul>
+              </div>
+              <div class="concept-box">
+                <h4><i class="fas fa-folder"></i> Specific File Roles</h4>
+                <div class="table-container">
+                  <table class="permissions-table">
+                    <thead>
+                      <tr>
+                        <th>File</th>
+                        <th>Scope</th>
+                        <th>When Used</th>
+                        <th>Purpose</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>/etc/profile</td>
+                        <td>System-wide</td>
+                        <td>Login shell</td>
+                        <td>Default settings for all users</td>
+                      </tr>
+                      <tr>
+                        <td>/etc/bashrc</td>
+                        <td>System-wide</td>
+                        <td>Subshell</td>
+                        <td>Defaults for all users in subshells</td>
+                      </tr>
+                      <tr>
+                        <td>~/.profile</td>
+                        <td>User-specific</td>
+                        <td>Login shell</td>
+                        <td>Personal settings for login shells</td>
+                      </tr>
+                      <tr>
+                        <td>~/.bashrc</td>
+                        <td>User-specific</td>
+                        <td>Subshell</td>
+                        <td>Personal settings for subshells</td>
+                      </tr>
+                      <tr>
+                        <td>~/.bash_history</td>
+                        <td>User-specific</td>
+                        <td>Always</td>
+                        <td>Command history storage</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="day3" class="section">
+            <div class="day-title">
+              Day 3: User & Group Administration, Permissions, Switching
+              Accounts, Shutdown
+            </div>
+            <div id="user-accounts" class="subsection">
+              <h3 class="subsection-title">1. User Accounts</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-user"></i> User Types</h4>
+                <ul>
+                  <li>
+                    <strong>Root user (Administrator):</strong> UID 0 and GID
+                    0
+                  </li>
+                  <li>
+                    <strong>Normal user:</strong> Typically UID 1000 or above
+                  </li>
+                  <li>
+                    <strong>Service user:</strong> Typically UID between 1 and
+                    999
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div id="user-group-admin" class="subsection">
+              <h3 class="subsection-title">
+                2. Users and Groups Administration
+              </h3>
+              <div class="file-structure">
+                <h4><i class="fas fa-file"></i> Important Files</h4>
+                <ul>
+                  <li>/etc/passwd - User account information</li>
+                  <li>
+                    /etc/shadow - Secured user passwords and aging policies
+                  </li>
+                  <li>/etc/group - Group information</li>
+                  <li>/etc/gshadow - Secured group information</li>
+                </ul>
+              </div>
+              <div class="command-box">
+                <div class="command">User Management:</div>
+                <div class="description">useradd username # Add new user</div>
+                <div class="description">passwd username # Set password</div>
+                <div class="description">
+                  usermod -aG group user # Add to secondary group
+                </div>
+                <div class="description">
+                  userdel -r username # Delete user and home
+                </div>
+                <div class="description">
+                  useradd -D # View default settings
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Group Management:</div>
+                <div class="description">
+                  groupadd groupname # Create group
+                </div>
+                <div class="description">
+                  groupmod -n newname old # Rename group
+                </div>
+                <div class="description">
+                  groupdel groupname # Delete group
+                </div>
+                <div class="description">
+                  groupmems -g group1 -l # List group members
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Password Aging:</div>
+                <div class="description">
+                  chage -l username # Show password info
+                </div>
+                <div class="description">
+                  chage -M 90 username # Max days between changes
+                </div>
+                <div class="description">
+                  chage -m 7 username # Min days between changes
+                </div>
+                <div class="description">
+                  chage -E 2024-12-31 user # Set expiration date
+                </div>
+              </div>
+            </div>
+            <div id="switching-accounts" class="subsection">
+              <h3 class="subsection-title">3. Switching Accounts</h3>
+              <div class="command-box">
+                <div class="command">User Switching:</div>
+                <div class="description">
+                  su - username # Switch with environment
+                </div>
+                <div class="description">
+                  su username # Switch without environment
+                </div>
+                <div class="description">su - # Switch to root with env</div>
+                <div class="description">
+                  sudo -i # Switch to root via sudo
+                </div>
+                <div class="description">
+                  su - user -c "command" # Execute as another user
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">User Information:</div>
+                <div class="description">whoami # Current effective user</div>
+                <div class="description">id username # User/group IDs</div>
+                <div class="description">who # Who is logged in</div>
+                <div class="description">w # Detailed user activity</div>
+              </div>
+            </div>
+            <div id="permissions" class="subsection">
+              <h3 class="subsection-title">4. Ownership and Permissions</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-lock"></i> Permission Types</h4>
+                <div class="table-container">
+                  <table class="permissions-table">
+                    <thead>
+                      <tr>
+                        <th>Permission</th>
+                        <th>Files</th>
+                        <th>Directories</th>
+                        <th>Octal Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Read (r)</td>
+                        <td>Display contents, copy file</td>
+                        <td>List directory contents with ls</td>
+                        <td>4</td>
+                      </tr>
+                      <tr>
+                        <td>Write (w)</td>
+                        <td>Modify file contents</td>
+                        <td>Add/delete files (with execute)</td>
+                        <td>2</td>
+                      </tr>
+                      <tr>
+                        <td>Execute (x)</td>
+                        <td>Execute file/script</td>
+                        <td>Use cd, run ls -l (with read)</td>
+                        <td>1</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Ownership Changes:</div>
+                <div class="description">
+                  chown user file # Change user owner
+                </div>
+                <div class="description">
+                  chown user:group file # Change user and group
+                </div>
+                <div class="description">
+                  chown :group file # Change group only
+                </div>
+                <div class="description">
+                  chown -R user dir # Recursive ownership
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Permission Changes (Symbolic):</div>
+                <div class="description">
+                  chmod u+x file # Add execute for user
+                </div>
+                <div class="description">
+                  chmod g-w file # Remove write for group
+                </div>
+                <div class="description">
+                  chmod o=r file # Set other to read only
+                </div>
+                <div class="description">
+                  chmod a=rw file # Set all to read/write
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Permission Changes (Octal):</div>
+                <div class="description">chmod 755 file # rwxr-xr-x</div>
+                <div class="description">chmod 644 file # rw-r--r--</div>
+                <div class="description">chmod 777 file # rwxrwxrwx</div>
+                <div class="description">chmod 600 file # rw-------</div>
+              </div>
+              <div class="important-box">
+                <h4><i class="fas fa-bullseye"></i> Permission Determination Flow</h4>
+                <ol>
+                  <li>
+                    If UID matches file owner's UID -&gt; Use Owner permissions
+                  </li>
+                  <li>
+                    Else if GID matches file's group GID -&gt; Use Group
+                    permissions
+                  </li>
+                  <li>Else -&gt; Use Other permissions</li>
+                </ol>
+              </div>
+            </div>
+            <div id="shutdown" class="subsection">
+              <h3 class="subsection-title">5. System Shutdown</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-sync"></i> When to Reboot/Shutdown</h4>
+                <ul>
+                  <li>Adding or removing hardware</li>
+                  <li>Upgrading to a new OS version</li>
+                  <li>Upgrading the kernel</li>
+                </ul>
+              </div>
+              <div class="command-box">
+                <div class="command">Shutdown Commands:</div>
+                <div class="description">
+                  shutdown -h now # Halt immediately
+                </div>
+                <div class="description">
+                  shutdown -k now # Warning only (fake)
+                </div>
+                <div class="description">
+                  poweroff # Shut down immediately
+                </div>
+                <div class="description">init 0 # Change to runlevel 0</div>
+              </div>
+            </div>
+          </section>
+          <section id="day4" class="section">
+            <div class="day-title">
+              Day 4: Processes, Redirection, Pipelines, and String Processing
+            </div>
+            <div id="processes" class="subsection">
+              <h3 class="subsection-title">1. Processes</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-cog"></i> Process Basics</h4>
+                <ul>
+                  <li>Every program creates a process with a unique PID</li>
+                  <li>Parent processes create child processes</li>
+                  <li>Daemons run in background providing services</li>
+                  <li>Types: Shell jobs, Daemons, Kernel threads</li>
+                </ul>
+              </div>
+              <div class="command-box">
+                <div class="command">Process Viewing:</div>
+                <div class="description">ps # Current terminal processes</div>
+                <div class="description">ps aux # All processes</div>
+                <div class="description">ps -ef # Full information</div>
+                <div class="description">top # Dynamic real-time view</div>
+                <div class="description">pstree # Tree format</div>
+              </div>
+              <div class="command-box">
+                <div class="command">Job Control:</div>
+                <div class="description">command & # Run in background</div>
+                <div class="description">Ctrl+Z # Suspend current job</div>
+                <div class="description">jobs # List current jobs</div>
+                <div class="description">
+                  fg %1 # Bring job 1 to foreground
+                </div>
+                <div class="description">
+                  bg %1 # Resume job 1 in background
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Signals:</div>
+                <div class="description">kill PID # Send SIGTERM (15)</div>
+                <div class="description">kill -9 PID # Send SIGKILL (9)</div>
+                <div class="description">
+                  pkill processname # Kill by name
+                </div>
+                <div class="description">
+                  killall processname # Kill all instances
+                </div>
+                <div class="description">kill -l # List all signals</div>
+              </div>
+              <div class="command-box">
+                <div class="command">Process Priority:</div>
+                <div class="description">
+                  nice -n 10 command # Start with niceness 10
+                </div>
+                <div class="description">
+                  renice -n 5 -p PID # Change priority
+                </div>
+                <div class="description">
+                  pgrep -l pattern # Search processes
+                </div>
+              </div>
+            </div>
+            <div id="io-redirection" class="subsection">
+              <h3 class="subsection-title">
+                2. Standard Input And Output (I/O Redirection)
+              </h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-chart-bar"></i> Standard Streams</h4>
+                <ul>
+                  <li>
+                    <strong>stdin (0):</strong> Standard input (keyboard)
+                  </li>
+                  <li>
+                    <strong>stdout (1):</strong> Standard output (screen)
+                  </li>
+                  <li>
+                    <strong>stderr (2):</strong> Standard error (screen)
+                  </li>
+                </ul>
+              </div>
+              <div class="command-box">
+                <div class="command">Input Redirection:</div>
+                <div class="description">command < file # Read from file</div>
+                    <div class="description">
+                      command 0< file # Explicit stdin </div>
+                    </div>
+                    <div class="command-box">
+                      <div class="command">Output Redirection:</div>
+                      <div class="description">command > file # Overwrite file</div>
+                      <div class="description">
+                        command >> file # Append to file
+                      </div>
+                      <div class="description">
+                        command 1> file # Explicit stdout
+                      </div>
+                    </div>
+                    <div class="command-box">
+                      <div class="command">Error Redirection:</div>
+                      <div class="description">
+                        command 2> file # Redirect errors
+                      </div>
+                      <div class="description">
+                        command 2>> file # Append errors
+                      </div>
+                      <div class="description">
+                        command 2> /dev/null # Discard errors
+                      </div>
+                      <div class="description">
+                        command > file 2>&1 # Both to same file
+                      </div>
+                      <div class="description">
+                        command &> file # Both to same file
+                      </div>
+                    </div>
+                </div>
+                <div id="pipelines" class="subsection">
+                  <h3 class="subsection-title">3. Pipe Line (|)</h3>
+                  <div class="concept-box">
+                    <h4><i class="fas fa-link"></i> Pipeline Concept</h4>
+                    <p>
+                      Sends the output of one command as the input to another.
+                    </p>
+                    <p><strong>Syntax:</strong> Command1 | Command2</p>
+                  </div>
+                  <div class="command-box">
+                    <div class="command">Pipeline Examples:</div>
+                    <div class="description">
+                      ls -lR / | more # Page through listing
+                    </div>
+                    <div class="description">
+                      ps -ef | grep ssh # Filter processes
+                    </div>
+                    <div class="description">
+                      history | tail -10 # Last 10 commands
+                    </div>
+                    <div class="description">ls | wc -l # Count files</div>
+                  </div>
+                  <div class="command-box">
+                    <div class="command">Tee Command:</div>
+                    <div class="description">
+                      ls -lR / | tee file | more # Save and display
+                    </div>
+                  </div>
+                </div>
+                <div id="string-processing" class="subsection">
+                  <h3 class="subsection-title">4. String Processing</h3>
+                  <div class="command-box">
+                    <div class="command">Word Count (wc):</div>
+                    <div class="description">
+                      wc file # Lines, words, characters
+                    </div>
+                    <div class="description">wc -l file # Lines only</div>
+                    <div class="description">wc -w file # Words only</div>
+                    <div class="description">wc -c file # Characters only</div>
+                  </div>
+                  <div class="command-box">
+                    <div class="command">File Comparison (diff):</div>
+                    <div class="description">
+                      diff file1 file2 # Compare files
+                    </div>
+                  </div>
+                  <div class="command-box">
+                    <div class="command">Pattern Matching (grep):</div>
+                    <div class="description">
+                      grep pattern file # Search for pattern
+                    </div>
+                    <div class="description">
+                      grep -i pattern file # Case insensitive
+                    </div>
+                    <div class="description">
+                      grep -v pattern file # Reverse match
+                    </div>
+                    <div class="description">
+                      grep -r pattern dir # Recursive search
+                    </div>
+                  </div>
+                  <div class="command-box">
+                    <div class="command">Text Translation (tr):</div>
+                    <div class="description">
+                      echo "text" | tr 'a-z' 'A-Z' # Uppercase
+                    </div>
+                    <div class="description">
+                      echo "text" | tr -d ' ' # Delete spaces
+                    </div>
+                  </div>
+                  <div class="command-box">
+                    <div class="command">Field Extraction (cut):</div>
+                    <div class="description">
+                      cut -f3 -d: /etc/passwd # 3rd field, colon delimited
+                    </div>
+                    <div class="description">
+                      cut -c1-10 file # Characters 1-10
+                    </div>
+                  </div>
+                  <div class="command-box">
+                    <div class="command">Sorting (sort):</div>
+                    <div class="description">sort file # Alphabetical sort</div>
+                    <div class="description">sort -n file # Numerical sort</div>
+                    <div class="description">sort -r file # Reverse sort</div>
+                    <div class="description">
+                      sort -t: -k1 /etc/passwd # Sort by field
+                    </div>
+                  </div>
+                </div>
+          </section>
+          <section id="day5" class="section">
+            <div class="day-title">
+              Day 5: Inodes, Archiving, Compression, Package Management,
+              Search
+            </div>
+            <div id="inodes" class="subsection">
+              <h3 class="subsection-title">1. Inode Table</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-folder"></i> Inode Concept</h4>
+                <p>
+                  Linux stores administrative data about files in inodes
+                  (index nodes). Within each filesystem, an inode table maps
+                  used inodes to specific files.
+                </p>
+              </div>
+              <div class="important-box">
+                <h4><i class="fas fa-clipboard"></i> Inode Contents</h4>
+                <ul>
+                  <li>File type</li>
+                  <li>File permissions</li>
+                  <li>Number of links (hard links)</li>
+                  <li>File owner's user ID</li>
+                  <li>Group owner's GID</li>
+                  <li>Last changed time</li>
+                  <li>Last accessed time</li>
+                  <li>Location of file on media</li>
+                </ul>
+                <p>
+                  <strong>NOT included:</strong> File name or file content
+                </p>
+              </div>
+              <div class="command-box">
+                <div class="command">Viewing Inodes:</div>
+                <div class="description">
+                  ls -i /etc/passwd # View inode number of file
+                </div>
+                <div class="description">
+                  ls -id /etc # View inode number of directory
+                </div>
+              </div>
+            </div>
+            <div id="links" class="subsection">
+              <h3 class="subsection-title">
+                2. Hard Links and Symbolic Links
+              </h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-link"></i> Hard Links</h4>
+                <p>
+                  When you create a file, its name is essentially a hard link.
+                  Multiple hard links can be created to a file, allowing
+                  access from different locations.
+                </p>
+                <p><strong>Restrictions:</strong></p>
+                <ul>
+                  <li>
+                    Must exist on the same device (partition, logical volume)
+                  </li>
+                  <li>Cannot create hard links to directories</li>
+                  <li>
+                    When last name is removed, access to file's data is also
+                    removed
+                  </li>
+                </ul>
+              </div>
+              <div class="command-box">
+                <div class="command">Hard Links:</div>
+                <div class="description">
+                  ln source-file target-file # Create hard link
+                </div>
+                <div class="description">
+                  ln /home/user/file hardlink # Example hard link
+                </div>
+              </div>
+              <div class="concept-box">
+                <h4><i class="fas fa-link"></i> Symbolic Links (Soft Links)</h4>
+                <p>
+                  A new entry is made to the inode table for the link. The
+                  content of this entry is the path to the original file.
+                </p>
+                <p><strong>Advantages:</strong></p>
+                <ul>
+                  <li>Can link to files on other devices</li>
+                  <li>Can link to directories</li>
+                </ul>
+                <p>
+                  <strong>Disadvantage:</strong> When original file is
+                  removed, symbolic link becomes invalid
+                </p>
+              </div>
+              <div class="command-box">
+                <div class="command">Symbolic Links:</div>
+                <div class="description">
+                  ln -s source-file target # Create symbolic link
+                </div>
+                <div class="description">
+                  ln -s testfile softlink # Example symbolic link
+                </div>
+              </div>
+              <div class="important-box">
+                <h4><i class="fas fa-folder"></i> File Operations and Inodes</h4>
+                <ul>
+                  <li>
+                    <strong>cp command:</strong> Allocates new inode number,
+                    creates new inode table entry
+                  </li>
+                  <li>
+                    <strong>mv command (same filesystem):</strong> Creates new
+                    directory entry with new name but keeps same inode number
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div id="archiving" class="subsection">
+              <h3 class="subsection-title">3. Archiving (tar)</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-box"></i> Archive Purpose</h4>
+                <p>
+                  To safeguard files and directories by creating a copy
+                  (archive) on a removable medium. Archived copies can be used
+                  to retrieve lost, deleted, or damaged files.
+                </p>
+                <p>
+                  <strong>tar (Tape Archiver):</strong> Designed to stream
+                  files to backup tapes
+                </p>
+              </div>
+              <div class="command-box">
+                <div class="command">Creating Archives:</div>
+                <div class="description">
+                  tar -cvf archive.tar file1 file2 # Create archive
+                </div>
+                <div class="description">c: Create new tar file</div>
+                <div class="description">v: Verbose mode (show files)</div>
+                <div class="description">f: Specify archive filename</div>
+              </div>
+              <div class="command-box">
+                <div class="command">Viewing Archives:</div>
+                <div class="description">
+                  tar -tvf archive.tar # List contents
+                </div>
+                <div class="description">t: List table of contents</div>
+              </div>
+              <div class="command-box">
+                <div class="command">Extracting Archives:</div>
+                <div class="description">
+                  tar -xvf archive.tar # Extract files
+                </div>
+                <div class="description">
+                  tar -xvf archive.tar -C /tmp # Extract to specific directory
+                </div>
+                <div class="description">x: Extract files from archive</div>
+              </div>
+              <div class="command-box">
+                <div class="command">Updating Archives:</div>
+                <div class="description">
+                  tar -rvf archive.tar newfile # Append files
+                </div>
+                <div class="description">
+                  tar -uvf archive.tar /home # Update (newer files only)
+                </div>
+                <div class="description">r: Append files to archive</div>
+                <div class="description">
+                  u: Update archive with newer files
+                </div>
+              </div>
+            </div>
+            <div id="compression" class="subsection">
+              <h3 class="subsection-title">4. Compression</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-star"></i> Compression Purpose</h4>
+                <p>
+                  To make files take less disk space by removing redundancy.
+                  If there's no redundancy, compression won't yield much gain.
+                </p>
+              </div>
+              <div class="command-box">
+                <div class="command">Compression Tools:</div>
+                <div class="description">
+                  gzip file.tar # Compress with gzip -&gt; file.tar.gz
+                </div>
+                <div class="description">
+                  bzip2 file.tar # Compress with bzip2 -&gt; file.tar.bz2
+                </div>
+                <div class="description">
+                  zip archive.zip files # Create zip archive
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Decompression Tools:</div>
+                <div class="description">
+                  gunzip file.tar.gz # Decompress gzip
+                </div>
+                <div class="description">
+                  bunzip2 file.tar.bz2 # Decompress bzip2
+                </div>
+                <div class="description">
+                  zcat file.gz # View compressed content
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Combined Archive & Compression:</div>
+                <div class="description">
+                  tar -czvf backup.tar.gz /etc # Create and gzip compress
+                </div>
+                <div class="description">
+                  tar -cjvf backup.tar.bz2 /etc # Create and bzip2 compress
+                </div>
+                <div class="description">
+                  tar -xzvf backup.tar.gz -C /tmp # Extract gzip archive
+                </div>
+                <div class="description">
+                  tar -xjvf backup.tar.bz2 -C /tmp # Extract bzip2 archive
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Check File Sizes:</div>
+                <div class="description">
+                  ls -lh file # Human-readable file size
+                </div>
+                <div class="description">
+                  du -sh directory # Disk usage of directory
+                </div>
+              </div>
+            </div>
+            <div id="package-management" class="subsection">
+              <h3 class="subsection-title">
+                5. Managing Software (Package Managers)
+              </h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-box"></i> YUM Package Manager</h4>
+                <p>
+                  YUM (Yellowdog Updater, Modified) is the default utility to
+                  manage software packages on RHEL. In RHEL 8, yum has been
+                  replaced with dnf, but Red Hat provides a yum wrapper based
+                  on dnf.
+                </p>
+              </div>
+              <div class="command-box">
+                <div class="command">Package Search & Information:</div>
+                <div class="description">
+                  yum search package # Look for package
+                </div>
+                <div class="description">
+                  yum list package # Get versions info
+                </div>
+                <div class="description">
+                  yum list installed # List installed packages
+                </div>
+                <div class="description">
+                  yum list available # List available packages
+                </div>
+                <div class="description">
+                  yum provides filename # Find package containing file
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Package Installation & Removal:</div>
+                <div class="description">
+                  yum install package # Install package
+                </div>
+                <div class="description">
+                  yum localinstall /path/file # Install from local file
+                </div>
+                <div class="description">
+                  yum remove package # Uninstall package
+                </div>
+                <div class="description">
+                  yum upgrade package # Upgrade package
+                </div>
+                <div class="description">
+                  yum update package # Update package
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Repository Management:</div>
+                <div class="description">
+                  yum repolist all # List repositories
+                </div>
+                <div class="description">
+                  yum clean all # Clean download cache
+                </div>
+                <div class="description">
+                  yum grouplist # List package groups
+                </div>
+              </div>
+            </div>
+            <div id="search" class="subsection">
+              <h3 class="subsection-title">6. Search (find)</h3>
+              <div class="concept-box">
+                <h4><i class="fas fa-search"></i> Find Command</h4>
+                <p>
+                  The find command searches the live filesystem. It's limited
+                  by your own permissions.
+                </p>
+              </div>
+              <div class="command-box">
+                <div class="command">Search by Name:</div>
+                <div class="description">
+                  find /path -name "filename" # Find by exact name
+                </div>
+                <div class="description">
+                  find /path -name "*.txt" # Find by pattern
+                </div>
+                <div class="description">
+                  find /path -iname "FILE" # Case insensitive
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Search by Size:</div>
+                <div class="description">
+                  find /path -size +100M # Files larger than 100MB
+                </div>
+                <div class="description">
+                  find /path -size -1M # Files smaller than 1MB
+                </div>
+                <div class="description">
+                  find /path -size 500M # Files exactly 500MB
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Search by Time:</div>
+                <div class="description">
+                  find /path -atime -7 # Accessed within 7 days
+                </div>
+                <div class="description">
+                  find /path -mtime +30 # Modified more than 30 days ago
+                </div>
+                <div class="description">
+                  find /path -ctime 1 # Changed exactly 1 day ago
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Search by Owner & Type:</div>
+                <div class="description">
+                  find /path -user username # Files owned by user
+                </div>
+                <div class="description">find /path -type f # Files only</div>
+                <div class="description">
+                  find /path -type d # Directories only
+                </div>
+                <div class="description">
+                  find /path -perm 755 # Specific permissions
+                </div>
+              </div>
+              <div class="command-box">
+                <div class="command">Advanced Find Examples:</div>
+                <div class="description">
+                  find /home -name "*.log" -size +10M # Large log files
+                </div>
+                <div class="description">
+                  find /tmp -type f -atime +7 -delete # Delete old temp files
+                </div>
+                <div class="description">
+                  find /etc -name "*.conf" -exec grep -l "ssh" {} \; # Config
+                  files containing "ssh"
+                </div>
+              </div>
+              <div class="warning-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Find Command Notes</h4>
+                <ul>
+                  <li>
+                    Size values: Use k, M, G for kilobytes, megabytes,
+                    gigabytes
+                  </li>
+                  <li>Time values: Measured in 24-hour periods</li>
+                  <li>Use -exec to execute commands on found files</li>
+                  <li>
+                    Use -delete with caution - it permanently removes files
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="footer">
+          <p style="margin-top: 10px">
+            <strong>Created By:</strong> Abdelghany
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+  <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">
+    ?
+  </button>
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.querySelector(".sidebar-overlay");
+      sidebar.classList.toggle("open");
+      overlay.classList.toggle("active");
+      if (window.innerWidth <= 768) {
+        sidebar.classList.toggle("active");
       }
-
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background: linear-gradient(
-          135deg,
-          #e74c3c 0%,
-          #c0392b 50%,
-          #a93226 100%
-        );
-        min-height: 100vh;
-        display: flex;
+    }
+    function closeSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.querySelector(".sidebar-overlay");
+      sidebar.classList.remove("open");
+      overlay.classList.remove("active");
+      sidebar.classList.remove("active");
+    }
+    function setActive(element) {
+      // Remove active class from all links
+      document.querySelectorAll(".sidebar a").forEach((link) => {
+        link.classList.remove("active");
+      });
+      // Add active class to clicked link
+      element.classList.add("active");
+      // Close sidebar after clicking a link
+      closeSidebar();
+    }
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+    // Show/hide scroll to top button
+    window.addEventListener("scroll", function () {
+      const scrollButton = document.getElementById("scrollToTop");
+      if (window.pageYOffset > 300) {
+        scrollButton.classList.add("visible");
+      } else {
+        scrollButton.classList.remove("visible");
       }
-
-      /* Layout Container */
-      .layout-container {
-        display: flex;
-        width: 100%;
-        min-height: 100vh;
-      }
-
-      .container {
-        flex: 1;
-        margin-left: 0;
-        transition: margin-left 0.3s ease;
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.95);
-        margin-top: 20px;
-        margin-bottom: 20px;
-        border-radius: 15px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-      }
-
-      /* Sidebar Navigation */
-      .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 320px;
-        height: 100vh;
-        background: linear-gradient(135deg, #2c3e50, #34495e);
-        backdrop-filter: blur(10px);
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        z-index: 1001;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        overflow-y: auto;
-        color: white;
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .sidebar.active {
-        transform: translateX(0);
-      }
-
-      .sidebar-header {
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-        color: white;
-        padding: 20px;
-        text-align: center;
-        position: sticky;
-        top: 0;
-        z-index: 1002;
-      }
-
-      .sidebar-header h3 {
-        font-size: 1.3rem;
-        margin-bottom: 5px;
-        font-weight: 700;
-      }
-
-      .sidebar-header p {
-        font-size: 0.9rem;
-        opacity: 0.9;
-      }
-
-      .sidebar-content {
-        padding: 20px;
-      }
-
-      .sidebar-toggle {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-        color: white;
-        border: none;
-        padding: 12px 15px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1.1rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-        z-index: 1003;
-      }
-
-      .sidebar-toggle:hover {
-        background: linear-gradient(135deg, #c0392b, #e74c3c);
-        transform: translateY(-2px);
-      }
-
-      .sidebar-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        z-index: 1000;
-      }
-
-      .sidebar-overlay.active {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .sidebar ul {
-        list-style: none;
-        padding: 0;
-      }
-
-      .sidebar ul li {
-        margin-bottom: 8px;
-      }
-
-      .sidebar ul li a {
-        color: #ffffff;
-        text-decoration: none;
-        display: block;
-        padding: 12px 15px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        font-weight: 500;
-        border-left: 4px solid transparent;
-        font-size: 0.9em;
-      }
-
-      .sidebar ul li a:hover,
-      .sidebar ul li a.active {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateX(5px);
-        border-left-color: #e74c3c;
-        color: white;
-      }
-
-      .sidebar ul li ul {
-        margin-left: 15px;
-        margin-top: 5px;
-      }
-
-      .sidebar ul li ul li a {
-        font-size: 0.8em;
-        color: #bdc3c7;
-        padding: 8px 12px;
-      }
-
-      .main-content {
-        width: 100%;
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-      }
-
-      .header {
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-        color: white;
-        padding: 30px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .header::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
-        opacity: 0.3;
-      }
-
-      .header h1 {
-        font-size: 2.5em;
-        margin-bottom: 10px;
-        position: relative;
-        z-index: 1;
-      }
-
-      .header p {
-        font-size: 1.2em;
-        opacity: 0.9;
-        position: relative;
-        z-index: 1;
-      }
-
-      .user-info {
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        padding: 20px;
-        margin: 20px;
-        border-radius: 8px;
-        border-left: 5px solid #e74c3c;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-
-      .back-button {
-        background: linear-gradient(135deg, #3498db, #2980b9);
-        color: white;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin: 20px;
-        cursor: pointer;
-      }
-
-      .back-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
-      }
-
-      .scroll-to-top {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        font-size: 1.5em;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-        opacity: 0;
-        visibility: hidden;
-        z-index: 1000;
-      }
-
-      .scroll-to-top.visible {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .scroll-to-top:hover {
-        transform: translateY(-5px) scale(1.1);
-        box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
-      }
-
-      .content {
-        padding: 0 30px 30px;
-      }
-
-      .section {
-        margin-bottom: 40px;
-        scroll-margin-top: 80px;
-      }
-
-      .section-title {
-        color: #2c3e50;
-        font-size: 1.8em;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 3px solid #e74c3c;
-        position: relative;
-      }
-
-      .section-title::before {
-        content: "🎯";
-        margin-right: 10px;
-      }
-
-      .day-title {
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-size: 1.5em;
-        font-weight: bold;
-      }
-
-      .subsection {
-        margin-bottom: 25px;
-      }
-
-      .subsection-title {
-        color: #34495e;
-        font-size: 1.4em;
-        margin-bottom: 15px;
-        padding-left: 20px;
-        border-left: 4px solid #e74c3c;
-      }
-
-      .command-box {
-        background: #2c3e50;
-        color: #ecf0f1;
-        padding: 15px 20px;
-        border-radius: 8px;
-        font-family: "Courier New", monospace;
-        margin: 15px 0;
-        border-left: 4px solid #e74c3c;
-        overflow-x: auto;
-      }
-
-      .command {
-        color: #f39c12;
-        font-weight: bold;
-      }
-
-      .description {
-        color: #bdc3c7;
-        margin-top: 5px;
-        font-size: 0.9em;
-      }
-
-      .concept-box {
-        background: linear-gradient(135deg, #fff5f5, #fee);
-        padding: 20px;
-        border-radius: 10px;
-        border-left: 5px solid #e74c3c;
-        margin: 15px 0;
-      }
-
-      .concept-box h4 {
-        color: #c0392b;
-        margin-bottom: 10px;
-        font-size: 1.2em;
-      }
-
-      .important-box {
-        background: linear-gradient(135deg, #fff3e0, #ffe0cc);
-        padding: 20px;
-        border-radius: 10px;
-        border-left: 5px solid #ff9800;
-        margin: 15px 0;
-      }
-
-      .important-box h4 {
-        color: #ef6c00;
-        margin-bottom: 10px;
-      }
-
-      .warning-box {
-        background: linear-gradient(135deg, #ffebee, #ffcdd2);
-        padding: 20px;
-        border-radius: 10px;
-        border-left: 5px solid #f44336;
-        margin: 15px 0;
-      }
-
-      .warning-box h4 {
-        color: #d32f2f;
-        margin-bottom: 10px;
-      }
-
-      .file-structure {
-        background: #f8f9fa;
-        padding: 20px;
-        border-radius: 8px;
-        border-left: 4px solid #28a745;
-        margin: 15px 0;
-        font-family: "Courier New", monospace;
-      }
-
-      .file-structure h4 {
-        color: #155724;
-        margin-bottom: 15px;
-        font-family: "Segoe UI", sans-serif;
-      }
-
-      .file-structure ul {
-        list-style: none;
-        margin-left: 0;
-      }
-
-      .file-structure li {
-        margin: 5px 0;
-        color: #495057;
-      }
-
-      .file-structure li::before {
-        content: "📁 ";
-        color: #ffc107;
-      }
-
-      .table-container {
-        overflow-x: auto;
-        margin: 20px 0;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        position: relative;
-      }
-
-      .table-container::after {
-        content: "← Swipe to scroll →";
-        position: absolute;
-        bottom: -25px;
-        right: 0;
-        font-size: 0.75em;
-        color: #666;
-        font-style: italic;
-        display: none;
-      }
-
-      @media (max-width: 768px) {
-        .table-container::after {
-          display: block;
-        }
-      }
-
-      .permissions-table {
-        width: 100%;
-        min-width: 600px;
-        border-collapse: collapse;
-        background: white;
-        font-size: 0.9em;
-      }
-
-      .permissions-table th {
-        background: #e74c3c;
-        color: white;
-        padding: 15px;
-        text-align: left;
-        font-weight: 600;
-        white-space: nowrap;
-      }
-
-      .permissions-table td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #ecf0f1;
-        word-wrap: break-word;
-      }
-
-      .permissions-table tr:nth-child(even) {
-        background: #f8f9fa;
-      }
-
-      @media (max-width: 1024px) {
-        .container {
-          margin: 10px;
-          padding: 15px;
-        }
-
-        .sidebar {
-          width: 90%;
-        }
-
-        .header h1 {
-          font-size: 2em;
-        }
-
-        .user-info {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 10px;
-        }
-
-        .scroll-to-top {
-          bottom: 20px;
-          right: 20px;
-          width: 50px;
-          height: 50px;
-          font-size: 1.2em;
-        }
-      }
-
-      @media (max-width: 600px) {
-        .content {
-          padding: 0 15px 15px;
-        }
-
-        .sidebar {
-          width: 95%;
-        }
-
-        .sidebar-toggle {
-          top: 10px;
-          left: 10px;
-          padding: 10px 12px;
-          font-size: 1rem;
-        }
-
-        .header h1 {
-          font-size: 1.8em;
-        }
-
-        .concept-box,
-        .command-box,
-        .important-box,
-        .warning-box {
-          padding: 15px;
-        }
-
-        .day-title {
-          font-size: 1.8em;
-          padding: 15px;
-        }
-
-        .section-title {
-          font-size: 1.5em;
-        }
-
-        .subsection-title {
-          font-size: 1.2em;
-        }
-
-        /* Mobile table styles */
-        .table-container {
-          margin: 15px -15px;
-          border-radius: 0;
-          box-shadow: none;
-          border-top: 1px solid #ddd;
-          border-bottom: 1px solid #ddd;
-        }
-
-        .permissions-table {
-          min-width: 500px;
-          font-size: 0.8em;
-        }
-
-        .permissions-table th {
-          padding: 10px 8px;
-          font-size: 0.85em;
-        }
-
-        .permissions-table td {
-          padding: 8px;
-          font-size: 0.85em;
-        }
-
-        /* Alternative: Stack table layout for very small screens */
-        @media (max-width: 480px) {
-          .permissions-table {
-            font-size: 0.75em;
+      // Highlight active section on scroll
+      const sections = document.querySelectorAll(".section, .subsection");
+      const scrollPos = window.scrollY + 100;
+      sections.forEach(function (section) {
+        const top = section.offsetTop;
+        const bottom = top + section.offsetHeight;
+        const id = section.getAttribute("id");
+        if (scrollPos >= top && scrollPos <= bottom && id) {
+          document.querySelectorAll(".sidebar a").forEach((link) => {
+            link.classList.remove("active");
+          });
+          const activeLink = document.querySelector(
+            `.sidebar a[href="#${id}"]`
+          );
+          if (activeLink) {
+            activeLink.classList.add("active");
           }
-
-          .permissions-table th,
-          .permissions-table td {
-            padding: 6px 4px;
-          }
         }
-      }
-
-      .practice-link {
-        display: inline-block;
-        background: linear-gradient(135deg, #8e44ad, #9b59b6);
-        color: white;
-        padding: 12px 24px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        margin: 20px;
-      }
-      .practice-link:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(142, 68, 173, 0.3);
-      }
-
-      .footer {
-        text-align: center;
-        padding: 30px;
-        background: linear-gradient(135deg, #2c3e50, #34495e);
-        color: white;
-        border-radius: 12px;
-        margin: 30px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="layout-container">
-      <!-- Sidebar Toggle Button -->
-      <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
-
-      <!-- Sidebar Overlay -->
-      <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-
-      <!-- Sidebar Navigation -->
-      <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-          <h3>📖 Study Guide</h3>
-          <p>RHEL System Administration</p>
-        </div>
-        <div class="sidebar-content">
-          <ul>
-            <li>
-              <a href="#day1" onclick="setActive(this)"
-                >🌟 Day 1: Introduction & Basics</a
-              >
-              <ul>
-                <li>
-                  <a href="#foss" onclick="setActive(this)">FOSS & Licenses</a>
-                </li>
-                <li>
-                  <a href="#linux-history" onclick="setActive(this)"
-                    >Linux History</a
-                  >
-                </li>
-                <li>
-                  <a href="#red-hat" onclick="setActive(this)">Red Hat</a>
-                </li>
-                <li>
-                  <a href="#installation" onclick="setActive(this)"
-                    >Installation</a
-                  >
-                </li>
-                <li>
-                  <a href="#components" onclick="setActive(this)"
-                    >Linux Components</a
-                  >
-                </li>
-                <li>
-                  <a href="#basic-commands" onclick="setActive(this)"
-                    >Basic Commands</a
-                  >
-                </li>
-                <li>
-                  <a href="#file-basics" onclick="setActive(this)"
-                    >File & Directory Basics</a
-                  >
-                </li>
-                <li>
-                  <a href="#documentation" onclick="setActive(this)"
-                    >Documentation</a
-                  >
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="#day2" onclick="setActive(this)"
-                >📝 Day 2: Vi Editor & Environment</a
-              >
-              <ul>
-                <li>
-                  <a href="#vi-editor" onclick="setActive(this)"
-                    >Vi Text Editor</a
-                  >
-                </li>
-                <li>
-                  <a href="#user-environment" onclick="setActive(this)"
-                    >User Environment</a
-                  >
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="#day3" onclick="setActive(this)"
-                >👥 Day 3: Users & Permissions</a
-              >
-              <ul>
-                <li>
-                  <a href="#user-accounts" onclick="setActive(this)"
-                    >User Accounts</a
-                  >
-                </li>
-                <li>
-                  <a href="#user-group-admin" onclick="setActive(this)"
-                    >User & Group Admin</a
-                  >
-                </li>
-                <li>
-                  <a href="#switching-accounts" onclick="setActive(this)"
-                    >Switching Accounts</a
-                  >
-                </li>
-                <li>
-                  <a href="#permissions" onclick="setActive(this)"
-                    >Ownership & Permissions</a
-                  >
-                </li>
-                <li>
-                  <a href="#shutdown" onclick="setActive(this)"
-                    >System Shutdown</a
-                  >
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="#day4" onclick="setActive(this)"
-                >⚙️ Day 4: Processes & I/O</a
-              >
-              <ul>
-                <li>
-                  <a href="#processes" onclick="setActive(this)">Processes</a>
-                </li>
-                <li>
-                  <a href="#io-redirection" onclick="setActive(this)"
-                    >I/O Redirection</a
-                  >
-                </li>
-                <li>
-                  <a href="#pipelines" onclick="setActive(this)">Pipelines</a>
-                </li>
-                <li>
-                  <a href="#string-processing" onclick="setActive(this)"
-                    >String Processing</a
-                  >
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="#day5" onclick="setActive(this)"
-                >🗃️ Day 5: Files & Packages</a
-              >
-              <ul>
-                <li>
-                  <a href="#inodes" onclick="setActive(this)">Inode Table</a>
-                </li>
-                <li>
-                  <a href="#links" onclick="setActive(this)"
-                    >Hard & Symbolic Links</a
-                  >
-                </li>
-                <li>
-                  <a href="#archiving" onclick="setActive(this)"
-                    >Archiving (tar)</a
-                  >
-                </li>
-                <li>
-                  <a href="#compression" onclick="setActive(this)"
-                    >Compression</a
-                  >
-                </li>
-                <li>
-                  <a href="#package-management" onclick="setActive(this)"
-                    >Package Management</a
-                  >
-                </li>
-                <li>
-                  <a href="#search" onclick="setActive(this)">Search (find)</a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-      <main class="main-content">
-        <div class="container">
-          <div class="header">
-            <h1>🎩 Red Hat System Administration I</h1>
-            <p>Complete Study Guide for RHEL Mastery</p>
-          </div>
-
-          <a href="../index.html" class="back-button"> ← Back to Main Page </a>
-          <a href="./linux-commands-reference.html" class="practice-link">Commands</a>
-          <div class="content">
-            <section id="day1" class="section">
-              <div class="day-title">
-                Day 1: Introduction to Linux, Basic Commands, and File Basics
-              </div>
-
-              <div id="foss" class="subsection">
-                <h3 class="subsection-title">
-                  1. Free/Open Source Software (FOSS) and Licenses
-                </h3>
-
-                <div class="concept-box">
-                  <h4>🆓 What is FOSS?</h4>
-                  <p>FOSS provides freedoms to:</p>
-                  <ul>
-                    <li>View the source code used to compile programs</li>
-                    <li>Make modifications</li>
-                    <li>Distribute these modifications</li>
-                  </ul>
-                  <p>
-                    Most FOSS is covered under a public license. The most common
-                    is the GNU General Public License (GPL).
-                  </p>
-                </div>
-
-                <div class="important-box">
-                  <h4>📜 Open-source License</h4>
-                  <p>
-                    A type of license for computer software and other products
-                    that allows the source code, blueprint, or design to be
-                    used, modified, and/or shared under defined terms and
-                    conditions.
-                  </p>
-                  <p>
-                    <strong>Examples:</strong> GPL, LGPL, Apache, Mozilla Public
-                    License, and BSD.
-                  </p>
-                </div>
-              </div>
-
-              <div id="linux-history" class="subsection">
-                <h3 class="subsection-title">2. Linux History</h3>
-
-                <div class="concept-box">
-                  <h4>📚 Evolution Timeline</h4>
-                  <ul>
-                    <li>
-                      <strong>Multics (1963-1969):</strong> Developed through
-                      collaboration of MIT, General Electric, and Bell Labs
-                    </li>
-                    <li>
-                      <strong>Unix (1969):</strong> First version created in
-                      Bell Labs
-                    </li>
-                    <li>
-                      <strong>Unix Flavors:</strong> IBM (AIX), Sun (Solaris),
-                      HP (HP/UX), Silicon Graphics (IRIX)
-                    </li>
-                    <li>
-                      <strong>GNU Project (1983):</strong> Started by Richard
-                      Stallman with the goal of creating a free UNIX-like OS
-                    </li>
-                    <li>
-                      <strong>Linux Kernel (1991):</strong> Created by Linus
-                      Torvalds
-                    </li>
-                    <li>
-                      <strong>Integration (1992):</strong> Linux and GNU
-                      developers integrated GNU components with Linux
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div id="red-hat" class="subsection">
-                <h3 class="subsection-title">3. Why Linux & Red Hat</h3>
-
-                <div class="important-box">
-                  <h4>🐧 Why Linux?</h4>
-                  <ul>
-                    <li>Linux is open source</li>
-                    <li>Released under the GNU General Public License (GPL)</li>
-                    <li>Secure and generally considered virus-free</li>
-                    <li>Ideal for programmers</li>
-                    <li>Strong community support</li>
-                    <li>Dominates professional and server sectors</li>
-                  </ul>
-                </div>
-
-                <div class="concept-box">
-                  <h4>🎩 Red Hat</h4>
-                  <ul>
-                    <li><strong>Founded:</strong> March 26, 1993</li>
-                    <li>
-                      <strong>First Release:</strong> Red Hat Linux in 1994
-                    </li>
-                    <li>
-                      <strong>Market Presence:</strong> More than 90% of Fortune
-                      Global 500 companies use Red Hat
-                    </li>
-                    <li>
-                      <strong>RHEL Benefits:</strong> Runs demanding
-                      applications better, scales well, reliable, and secure
-                    </li>
-                    <li>
-                      <strong>CentOS:</strong> Community-driven, free
-                      alternative derived from RHEL source code
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div id="installation" class="subsection">
-                <h3 class="subsection-title">4. Installation</h3>
-
-                <div class="concept-box">
-                  <h4>💿 Installation Types</h4>
-                  <ul>
-                    <li>Automated installation</li>
-                    <li>Graphical installation</li>
-                    <li>Remote installation</li>
-                  </ul>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">NTFS Support Commands:</div>
-                  <div class="description">
-                    sudo yum --enablerepo=extras install epel-release
-                  </div>
-                  <div class="description">sudo yum install ntfs-3g -y</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">GRUB Configuration:</div>
-                  <div class="description">
-                    sudo grub2-mkconfig > /dev/null # Check for OS detection
-                  </div>
-                  <div class="description">
-                    sudo cp /boot/grub2/grub.cfg /boot/grub2/grub.cfg.old #
-                    Backup
-                  </div>
-                  <div class="description">
-                    sudo grub2-mkconfig -o /boot/grub2/grub.cfg # Update config
-                  </div>
-                </div>
-              </div>
-
-              <div id="components" class="subsection">
-                <h3 class="subsection-title">5. Linux Components</h3>
-
-                <div class="concept-box">
-                  <h4>🏗️ Core Components</h4>
-                  <div class="table-container">
-                    <table class="permissions-table">
-                      <thead>
-                        <tr>
-                          <th>Component</th>
-                          <th>Description</th>
-                          <th>Function</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td><strong>Kernel</strong></td>
-                          <td>Core of the operating system</td>
-                          <td>
-                            Manages hardware, loads into RAM, contains device
-                            drivers
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><strong>Shell</strong></td>
-                          <td>Interface between user and kernel</td>
-                          <td>
-                            Parses commands and translates them for kernel
-                            execution
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><strong>Terminal</strong></td>
-                          <td>Place to accept typed commands</td>
-                          <td>
-                            Displays command results and provides CLI interface
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><strong>Applications</strong></td>
-                          <td>User programs and daemons</td>
-                          <td>Provide services and functionality to users</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Shell Information Commands:</div>
-                  <div class="description">
-                    echo $SHELL # Display current shell
-                  </div>
-                  <div class="description">echo $0 # Display shell name</div>
-                  <div class="description">
-                    cat /etc/shells # List all available shells
-                  </div>
-                </div>
-
-                <div class="important-box">
-                  <h4>🖥️ CLI Structure</h4>
-                  <p>
-                    <strong>Flow:</strong> Terminal → Shell → Kernel → Hardware
-                  </p>
-                  <p>
-                    <strong>Available Shells:</strong> Bourne Shell (sh), Korn
-                    Shell (ksh), C Shell (csh), Bourne Again Shell (bash)
-                  </p>
-                </div>
-              </div>
-
-              <div id="basic-commands" class="subsection">
-                <h3 class="subsection-title">
-                  6. Basic Commands (CLI Fundamentals)
-                </h3>
-
-                <div class="concept-box">
-                  <h4>⚡ Why Use CLI?</h4>
-                  <ul>
-                    <li>Consistent technical support across different GUIs</li>
-                    <li>
-                      Speed & Performance (e.g.,
-                      <code>touch file{1..100}</code>)
-                    </li>
-                    <li>Optimized for server-side environments</li>
-                    <li>Security for remote connections (SSH)</li>
-                  </ul>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Command Syntax:</div>
-                  <div class="description">command [options] [arguments]</div>
-                  <div class="description">Items separated by spaces</div>
-                  <div class="description">
-                    Separate multiple commands with semicolon (;)
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Basic Commands:</div>
-                  <div class="description">clear # Clear terminal screen</div>
-                  <div class="description">echo "text" # Display text</div>
-                  <div class="description">
-                    echo $variable # Display variable value
-                  </div>
-                  <div class="description">
-                    echo -n "text" # Display without newline
-                  </div>
-                </div>
-
-                <div class="important-box">
-                  <h4>🔤 Quoting Rules</h4>
-                  <ul>
-                    <li>
-                      <strong>Single quotes (' '):</strong> Strong quoting -
-                      ignore all special characters
-                    </li>
-                    <li>
-                      <strong>Double quotes (" "):</strong> Weak quoting -
-                      expand variables but ignore some specials
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Variables:</div>
-                  <div class="description">x=5 # Local variable</div>
-                  <div class="description">echo $HOME # Home directory</div>
-                  <div class="description">echo $USER # Current user</div>
-                  <div class="description">
-                    echo $PWD # Present working directory
-                  </div>
-                  <div class="description">
-                    echo $PATH # Command search path
-                  </div>
-                  <div class="description">
-                    env | grep HOME # Filter environment variables
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Command History:</div>
-                  <div class="description">!! # Repeat last command</div>
-                  <div class="description">
-                    !string # Repeat last command starting with string
-                  </div>
-                  <div class="description">!n # Repeat command number n</div>
-                  <div class="description">
-                    !-n # Repeat command n commands back
-                  </div>
-                </div>
-              </div>
-
-              <div id="file-basics" class="subsection">
-                <h3 class="subsection-title">7. File and Directory Basics</h3>
-
-                <div class="file-structure">
-                  <h4>📁 Linux Filesystem Hierarchy</h4>
-                  <ul>
-                    <li>/bin - Common programs</li>
-                    <li>/boot - Kernel and boot files</li>
-                    <li>/dev - Device files</li>
-                    <li>/etc - Configuration files</li>
-                    <li>/home - User home directories</li>
-                    <li>/lib - Shared libraries</li>
-                    <li>/media - Mounted filesystems (USB drives)</li>
-                    <li>/mnt - Temporary mount points</li>
-                    <li>/opt - Optional software packages</li>
-                    <li>/proc - System status (pseudo-filesystem)</li>
-                    <li>/root - Root user's home directory</li>
-                    <li>/sbin - System administration programs</li>
-                    <li>/tmp - Temporary files</li>
-                    <li>/usr - User programs and data</li>
-                    <li>/var - Log files and dynamic files</li>
-                  </ul>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Navigation Commands:</div>
-                  <div class="description">pwd # Print working directory</div>
-                  <div class="description">
-                    cd /path # Change to specific directory
-                  </div>
-                  <div class="description">
-                    cd or cd ~ # Go to home directory
-                  </div>
-                  <div class="description">cd / # Go to root directory</div>
-                  <div class="description">cd - # Go to previous directory</div>
-                </div>
-
-                <div class="concept-box">
-                  <h4>🎯 Wildcards (File Globbing)</h4>
-                  <ul>
-                    <li>
-                      <strong>* (Asterisk):</strong> Zero or more characters
-                      (except leading .)
-                    </li>
-                    <li>
-                      <strong>? (Question Mark):</strong> Any single character
-                      (except leading .)
-                    </li>
-                    <li>
-                      <strong>[chars]:</strong> Any single character within
-                      brackets
-                    </li>
-                    <li>
-                      <strong>[range]:</strong> Any character within specified
-                      range
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Listing Commands:</div>
-                  <div class="description">ls # List current directory</div>
-                  <div class="description">ls -a # Include hidden files</div>
-                  <div class="description">ls -l # Long format</div>
-                  <div class="description">ls -lh # Human-readable sizes</div>
-                  <div class="description">
-                    ls -lt # Sort by modification time
-                  </div>
-                  <div class="description">ls -R # Recursive listing</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">File Content Commands:</div>
-                  <div class="description">
-                    cat filename # Display entire file
-                  </div>
-                  <div class="description">
-                    cat -n filename # Display with line numbers
-                  </div>
-                  <div class="description">
-                    more filename # Page by page viewing
-                  </div>
-                  <div class="description">less filename # Advanced pager</div>
-                  <div class="description">
-                    head -n filename # First n lines
-                  </div>
-                  <div class="description">tail -n filename # Last n lines</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">File Manipulation:</div>
-                  <div class="description">
-                    touch filename # Create empty file
-                  </div>
-                  <div class="description">
-                    mkdir dirname # Create directory
-                  </div>
-                  <div class="description">
-                    mkdir -p path/dir # Create parent directories
-                  </div>
-                  <div class="description">cp source target # Copy files</div>
-                  <div class="description">
-                    cp -r source dest # Copy directories recursively
-                  </div>
-                  <div class="description">mv source target # Move/rename</div>
-                  <div class="description">rm filename # Remove file</div>
-                  <div class="description">
-                    rm -r dirname # Remove directory recursively
-                  </div>
-                  <div class="description">
-                    rmdir dirname # Remove empty directory
-                  </div>
-                </div>
-              </div>
-
-              <div id="documentation" class="subsection">
-                <h3 class="subsection-title">8. Linux Documentation</h3>
-
-                <div class="command-box">
-                  <div class="command">Manual Pages:</div>
-                  <div class="description">
-                    man command # Display manual page
-                  </div>
-                  <div class="description">
-                    man -s 5 passwd # Specific section
-                  </div>
-                  <div class="description">
-                    man -a command # All manual pages
-                  </div>
-                  <div class="description">
-                    whatis command # Brief description
-                  </div>
-                  <div class="description">
-                    man -k "keyword" # Search manual pages
-                  </div>
-                  <div class="description">
-                    apropos "keyword" # Search descriptions
-                  </div>
-                </div>
-
-                <div class="concept-box">
-                  <h4>📖 Manual Page Sections</h4>
-                  <ol>
-                    <li>Executable programs or shell commands</li>
-                    <li>System calls (kernel functions)</li>
-                    <li>Library calls (program libraries)</li>
-                    <li>Special files (usually in /dev)</li>
-                    <li>File formats and conventions</li>
-                    <li>Games</li>
-                    <li>Miscellaneous (macro packages, conventions)</li>
-                    <li>System administration commands</li>
-                    <li>Kernel routines (non-standard)</li>
-                  </ol>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Other Help:</div>
-                  <div class="description">
-                    info command # Detailed structured documentation
-                  </div>
-                  <div class="description">command --help # Built-in help</div>
-                  <div class="description">
-                    help command # For shell builtins
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section id="day2" class="section">
-              <div class="day-title">
-                Day 2: Vi Editor, Environment, and Initialization Files
-              </div>
-
-              <div id="vi-editor" class="subsection">
-                <h3 class="subsection-title">1. The Vi Text Editor</h3>
-
-                <div class="concept-box">
-                  <h4>📝 Vi Editor Overview</h4>
-                  <p>
-                    The default editor for Unix and Linux, used to manage and
-                    modify text files. It's an interactive editor, often the
-                    only one available in emergency mode.
-                  </p>
-                  <p>
-                    <strong>vim (vi improved):</strong> Common implementation
-                    offering syntax highlighting, arrow key support, and mouse
-                    support.
-                  </p>
-                </div>
-
-                <div class="important-box">
-                  <h4>🎮 Vi Modes</h4>
-                  <ul>
-                    <li>
-                      <strong>Command mode:</strong> Default mode; performs
-                      commands (delete, copy, etc.)
-                    </li>
-                    <li>
-                      <strong>Insert mode:</strong> Used to enter text into the
-                      file
-                    </li>
-                    <li>
-                      <strong>Last line mode:</strong> For advanced editing
-                      commands (accessed with :)
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Opening Files:</div>
-                  <div class="description">vi # Open vi without file</div>
-                  <div class="description">
-                    vi filename # Open specific file
-                  </div>
-                  <div class="description">vi -r filename # Recover file</div>
-                  <div class="description">view filename # Read-only mode</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Insert Mode (from Command mode):</div>
-                  <div class="description">i # Insert before cursor</div>
-                  <div class="description">a # Append after cursor</div>
-                  <div class="description">A # Append at end of line</div>
-                  <div class="description">I # Insert at beginning of line</div>
-                  <div class="description">o # Open new line below</div>
-                  <div class="description">O # Open new line above</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Navigation:</div>
-                  <div class="description">h, ←, Backspace # Move left</div>
-                  <div class="description">j, ↓ # Move down</div>
-                  <div class="description">k, ↑ # Move up</div>
-                  <div class="description">l, →, Space # Move right</div>
-                  <div class="description">w # Forward one word</div>
-                  <div class="description">b # Back one word</div>
-                  <div class="description">0 # Beginning of line</div>
-                  <div class="description">G # Last line of file</div>
-                  <div class="description">nG or :n # Go to line n</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Edit & Delete:</div>
-                  <div class="description">x # Delete character at cursor</div>
-                  <div class="description">dw # Delete word</div>
-                  <div class="description">dd # Delete line</div>
-                  <div class="description">D # Delete to end of line</div>
-                  <div class="description">s # Substitute character</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Search & Replace:</div>
-                  <div class="description">/string # Search forward</div>
-                  <div class="description">?string # Search backward</div>
-                  <div class="description">n # Next occurrence</div>
-                  <div class="description">N # Previous occurrence</div>
-                  <div class="description">:%s/old/new/g # Global replace</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Copy & Paste:</div>
-                  <div class="description">yy # Yank (copy) line</div>
-                  <div class="description">p # Put below cursor</div>
-                  <div class="description">P # Put above cursor</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Save & Quit:</div>
-                  <div class="description">:w # Save file</div>
-                  <div class="description">:w newfile # Save as new file</div>
-                  <div class="description">:wq, :x, ZZ # Save and quit</div>
-                  <div class="description">:q! # Quit without saving</div>
-                </div>
-              </div>
-
-              <div id="user-environment" class="subsection">
-                <h3 class="subsection-title">
-                  2. User Environment and Initialization Files
-                </h3>
-
-                <div class="concept-box">
-                  <h4>🌍 Environment Creation</h4>
-                  <p>
-                    When a user logs in, an environment is created with
-                    variables determining how the user works. Initialization
-                    files are read in a specific order, and if a setting appears
-                    in multiple files, the last one read wins.
-                  </p>
-                </div>
-
-                <div class="important-box">
-                  <h4>📂 Initialization File Order</h4>
-                  <ul>
-                    <li>
-                      <strong>Login Terminal:</strong> /etc/profile → ~/.profile
-                      → /etc/bash.bashrc
-                    </li>
-                    <li>
-                      <strong>No Login Terminal (Subshell):</strong>
-                      /etc/bash.bashrc → ~/.bashrc
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="concept-box">
-                  <h4>🗂️ Specific File Roles</h4>
-                  <div class="table-container">
-                    <table class="permissions-table">
-                      <thead>
-                        <tr>
-                          <th>File</th>
-                          <th>Scope</th>
-                          <th>When Used</th>
-                          <th>Purpose</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>/etc/profile</td>
-                          <td>System-wide</td>
-                          <td>Login shell</td>
-                          <td>Default settings for all users</td>
-                        </tr>
-                        <tr>
-                          <td>/etc/bashrc</td>
-                          <td>System-wide</td>
-                          <td>Subshell</td>
-                          <td>Defaults for all users in subshells</td>
-                        </tr>
-                        <tr>
-                          <td>~/.profile</td>
-                          <td>User-specific</td>
-                          <td>Login shell</td>
-                          <td>Personal settings for login shells</td>
-                        </tr>
-                        <tr>
-                          <td>~/.bashrc</td>
-                          <td>User-specific</td>
-                          <td>Subshell</td>
-                          <td>Personal settings for subshells</td>
-                        </tr>
-                        <tr>
-                          <td>~/.bash_history</td>
-                          <td>User-specific</td>
-                          <td>Always</td>
-                          <td>Command history storage</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section id="day3" class="section">
-              <div class="day-title">
-                Day 3: User & Group Administration, Permissions, Switching
-                Accounts, Shutdown
-              </div>
-
-              <div id="user-accounts" class="subsection">
-                <h3 class="subsection-title">1. User Accounts</h3>
-
-                <div class="concept-box">
-                  <h4>👤 User Types</h4>
-                  <ul>
-                    <li>
-                      <strong>Root user (Administrator):</strong> UID 0 and GID
-                      0
-                    </li>
-                    <li>
-                      <strong>Normal user:</strong> Typically UID 1000 or above
-                    </li>
-                    <li>
-                      <strong>Service user:</strong> Typically UID between 1 and
-                      999
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div id="user-group-admin" class="subsection">
-                <h3 class="subsection-title">
-                  2. Users and Groups Administration
-                </h3>
-
-                <div class="file-structure">
-                  <h4>📄 Important Files</h4>
-                  <ul>
-                    <li>/etc/passwd - User account information</li>
-                    <li>
-                      /etc/shadow - Secured user passwords and aging policies
-                    </li>
-                    <li>/etc/group - Group information</li>
-                    <li>/etc/gshadow - Secured group information</li>
-                  </ul>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">User Management:</div>
-                  <div class="description">useradd username # Add new user</div>
-                  <div class="description">passwd username # Set password</div>
-                  <div class="description">
-                    usermod -aG group user # Add to secondary group
-                  </div>
-                  <div class="description">
-                    userdel -r username # Delete user and home
-                  </div>
-                  <div class="description">
-                    useradd -D # View default settings
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Group Management:</div>
-                  <div class="description">
-                    groupadd groupname # Create group
-                  </div>
-                  <div class="description">
-                    groupmod -n newname old # Rename group
-                  </div>
-                  <div class="description">
-                    groupdel groupname # Delete group
-                  </div>
-                  <div class="description">
-                    groupmems -g group1 -l # List group members
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Password Aging:</div>
-                  <div class="description">
-                    chage -l username # Show password info
-                  </div>
-                  <div class="description">
-                    chage -M 90 username # Max days between changes
-                  </div>
-                  <div class="description">
-                    chage -m 7 username # Min days between changes
-                  </div>
-                  <div class="description">
-                    chage -E 2024-12-31 user # Set expiration date
-                  </div>
-                </div>
-              </div>
-
-              <div id="switching-accounts" class="subsection">
-                <h3 class="subsection-title">3. Switching Accounts</h3>
-
-                <div class="command-box">
-                  <div class="command">User Switching:</div>
-                  <div class="description">
-                    su - username # Switch with environment
-                  </div>
-                  <div class="description">
-                    su username # Switch without environment
-                  </div>
-                  <div class="description">su - # Switch to root with env</div>
-                  <div class="description">
-                    sudo -i # Switch to root via sudo
-                  </div>
-                  <div class="description">
-                    su - user -c "command" # Execute as another user
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">User Information:</div>
-                  <div class="description">whoami # Current effective user</div>
-                  <div class="description">id username # User/group IDs</div>
-                  <div class="description">who # Who is logged in</div>
-                  <div class="description">w # Detailed user activity</div>
-                </div>
-              </div>
-
-              <div id="permissions" class="subsection">
-                <h3 class="subsection-title">4. Ownership and Permissions</h3>
-
-                <div class="concept-box">
-                  <h4>🔐 Permission Types</h4>
-                  <div class="table-container">
-                    <table class="permissions-table">
-                      <thead>
-                        <tr>
-                          <th>Permission</th>
-                          <th>Files</th>
-                          <th>Directories</th>
-                          <th>Octal Value</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Read (r)</td>
-                          <td>Display contents, copy file</td>
-                          <td>List directory contents with ls</td>
-                          <td>4</td>
-                        </tr>
-                        <tr>
-                          <td>Write (w)</td>
-                          <td>Modify file contents</td>
-                          <td>Add/delete files (with execute)</td>
-                          <td>2</td>
-                        </tr>
-                        <tr>
-                          <td>Execute (x)</td>
-                          <td>Execute file/script</td>
-                          <td>Use cd, run ls -l (with read)</td>
-                          <td>1</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Ownership Changes:</div>
-                  <div class="description">
-                    chown user file # Change user owner
-                  </div>
-                  <div class="description">
-                    chown user:group file # Change user and group
-                  </div>
-                  <div class="description">
-                    chown :group file # Change group only
-                  </div>
-                  <div class="description">
-                    chown -R user dir # Recursive ownership
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Permission Changes (Symbolic):</div>
-                  <div class="description">
-                    chmod u+x file # Add execute for user
-                  </div>
-                  <div class="description">
-                    chmod g-w file # Remove write for group
-                  </div>
-                  <div class="description">
-                    chmod o=r file # Set other to read only
-                  </div>
-                  <div class="description">
-                    chmod a=rw file # Set all to read/write
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Permission Changes (Octal):</div>
-                  <div class="description">chmod 755 file # rwxr-xr-x</div>
-                  <div class="description">chmod 644 file # rw-r--r--</div>
-                  <div class="description">chmod 777 file # rwxrwxrwx</div>
-                  <div class="description">chmod 600 file # rw-------</div>
-                </div>
-
-                <div class="important-box">
-                  <h4>🎯 Permission Determination Flow</h4>
-                  <ol>
-                    <li>
-                      If UID matches file owner's UID → Use Owner permissions
-                    </li>
-                    <li>
-                      Else if GID matches file's group GID → Use Group
-                      permissions
-                    </li>
-                    <li>Else → Use Other permissions</li>
-                  </ol>
-                </div>
-              </div>
-
-              <div id="shutdown" class="subsection">
-                <h3 class="subsection-title">5. System Shutdown</h3>
-
-                <div class="concept-box">
-                  <h4>🔄 When to Reboot/Shutdown</h4>
-                  <ul>
-                    <li>Adding or removing hardware</li>
-                    <li>Upgrading to a new OS version</li>
-                    <li>Upgrading the kernel</li>
-                  </ul>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Shutdown Commands:</div>
-                  <div class="description">
-                    shutdown -h now # Halt immediately
-                  </div>
-                  <div class="description">
-                    shutdown -k now # Warning only (fake)
-                  </div>
-                  <div class="description">
-                    poweroff # Shut down immediately
-                  </div>
-                  <div class="description">init 0 # Change to runlevel 0</div>
-                </div>
-              </div>
-            </section>
-
-            <section id="day4" class="section">
-              <div class="day-title">
-                Day 4: Processes, Redirection, Pipelines, and String Processing
-              </div>
-
-              <div id="processes" class="subsection">
-                <h3 class="subsection-title">1. Processes</h3>
-
-                <div class="concept-box">
-                  <h4>⚙️ Process Basics</h4>
-                  <ul>
-                    <li>Every program creates a process with a unique PID</li>
-                    <li>Parent processes create child processes</li>
-                    <li>Daemons run in background providing services</li>
-                    <li>Types: Shell jobs, Daemons, Kernel threads</li>
-                  </ul>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Process Viewing:</div>
-                  <div class="description">ps # Current terminal processes</div>
-                  <div class="description">ps aux # All processes</div>
-                  <div class="description">ps -ef # Full information</div>
-                  <div class="description">top # Dynamic real-time view</div>
-                  <div class="description">pstree # Tree format</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Job Control:</div>
-                  <div class="description">command & # Run in background</div>
-                  <div class="description">Ctrl+Z # Suspend current job</div>
-                  <div class="description">jobs # List current jobs</div>
-                  <div class="description">
-                    fg %1 # Bring job 1 to foreground
-                  </div>
-                  <div class="description">
-                    bg %1 # Resume job 1 in background
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Signals:</div>
-                  <div class="description">kill PID # Send SIGTERM (15)</div>
-                  <div class="description">kill -9 PID # Send SIGKILL (9)</div>
-                  <div class="description">
-                    pkill processname # Kill by name
-                  </div>
-                  <div class="description">
-                    killall processname # Kill all instances
-                  </div>
-                  <div class="description">kill -l # List all signals</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Process Priority:</div>
-                  <div class="description">
-                    nice -n 10 command # Start with niceness 10
-                  </div>
-                  <div class="description">
-                    renice -n 5 -p PID # Change priority
-                  </div>
-                  <div class="description">
-                    pgrep -l pattern # Search processes
-                  </div>
-                </div>
-              </div>
-
-              <div id="io-redirection" class="subsection">
-                <h3 class="subsection-title">
-                  2. Standard Input And Output (I/O Redirection)
-                </h3>
-
-                <div class="concept-box">
-                  <h4>📊 Standard Streams</h4>
-                  <ul>
-                    <li>
-                      <strong>stdin (0):</strong> Standard input (keyboard)
-                    </li>
-                    <li>
-                      <strong>stdout (1):</strong> Standard output (screen)
-                    </li>
-                    <li>
-                      <strong>stderr (2):</strong> Standard error (screen)
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Input Redirection:</div>
-                  <div class="description">command < file # Read from file</div>
-                  <div class="description">
-                    command 0< file # Explicit stdin
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Output Redirection:</div>
-                  <div class="description">command > file # Overwrite file</div>
-                  <div class="description">
-                    command >> file # Append to file
-                  </div>
-                  <div class="description">
-                    command 1> file # Explicit stdout
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Error Redirection:</div>
-                  <div class="description">
-                    command 2> file # Redirect errors
-                  </div>
-                  <div class="description">
-                    command 2>> file # Append errors
-                  </div>
-                  <div class="description">
-                    command 2> /dev/null # Discard errors
-                  </div>
-                  <div class="description">
-                    command > file 2>&1 # Both to same file
-                  </div>
-                  <div class="description">
-                    command &> file # Both to same file
-                  </div>
-                </div>
-              </div>
-
-              <div id="pipelines" class="subsection">
-                <h3 class="subsection-title">3. Pipe Line (|)</h3>
-
-                <div class="concept-box">
-                  <h4>🔗 Pipeline Concept</h4>
-                  <p>
-                    Sends the output of one command as the input to another.
-                  </p>
-                  <p><strong>Syntax:</strong> Command1 | Command2</p>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Pipeline Examples:</div>
-                  <div class="description">
-                    ls -lR / | more # Page through listing
-                  </div>
-                  <div class="description">
-                    ps -ef | grep ssh # Filter processes
-                  </div>
-                  <div class="description">
-                    history | tail -10 # Last 10 commands
-                  </div>
-                  <div class="description">ls | wc -l # Count files</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Tee Command:</div>
-                  <div class="description">
-                    ls -lR / | tee file | more # Save and display
-                  </div>
-                </div>
-              </div>
-
-              <div id="string-processing" class="subsection">
-                <h3 class="subsection-title">4. String Processing</h3>
-
-                <div class="command-box">
-                  <div class="command">Word Count (wc):</div>
-                  <div class="description">
-                    wc file # Lines, words, characters
-                  </div>
-                  <div class="description">wc -l file # Lines only</div>
-                  <div class="description">wc -w file # Words only</div>
-                  <div class="description">wc -c file # Characters only</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">File Comparison (diff):</div>
-                  <div class="description">
-                    diff file1 file2 # Compare files
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Pattern Matching (grep):</div>
-                  <div class="description">
-                    grep pattern file # Search for pattern
-                  </div>
-                  <div class="description">
-                    grep -i pattern file # Case insensitive
-                  </div>
-                  <div class="description">
-                    grep -v pattern file # Reverse match
-                  </div>
-                  <div class="description">
-                    grep -r pattern dir # Recursive search
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Text Translation (tr):</div>
-                  <div class="description">
-                    echo "text" | tr 'a-z' 'A-Z' # Uppercase
-                  </div>
-                  <div class="description">
-                    echo "text" | tr -d ' ' # Delete spaces
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Field Extraction (cut):</div>
-                  <div class="description">
-                    cut -f3 -d: /etc/passwd # 3rd field, colon delimited
-                  </div>
-                  <div class="description">
-                    cut -c1-10 file # Characters 1-10
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Sorting (sort):</div>
-                  <div class="description">sort file # Alphabetical sort</div>
-                  <div class="description">sort -n file # Numerical sort</div>
-                  <div class="description">sort -r file # Reverse sort</div>
-                  <div class="description">
-                    sort -t: -k1 /etc/passwd # Sort by field
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section id="day5" class="section">
-              <div class="day-title">
-                Day 5: Inodes, Archiving, Compression, Package Management,
-                Search
-              </div>
-
-              <div id="inodes" class="subsection">
-                <h3 class="subsection-title">1. Inode Table</h3>
-
-                <div class="concept-box">
-                  <h4>🗂️ Inode Concept</h4>
-                  <p>
-                    Linux stores administrative data about files in inodes
-                    (index nodes). Within each filesystem, an inode table maps
-                    used inodes to specific files.
-                  </p>
-                </div>
-
-                <div class="important-box">
-                  <h4>📋 Inode Contents</h4>
-                  <ul>
-                    <li>File type</li>
-                    <li>File permissions</li>
-                    <li>Number of links (hard links)</li>
-                    <li>File owner's user ID</li>
-                    <li>Group owner's GID</li>
-                    <li>Last changed time</li>
-                    <li>Last accessed time</li>
-                    <li>Location of file on media</li>
-                  </ul>
-                  <p>
-                    <strong>NOT included:</strong> File name or file content
-                  </p>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Viewing Inodes:</div>
-                  <div class="description">
-                    ls -i /etc/passwd # View inode number of file
-                  </div>
-                  <div class="description">
-                    ls -id /etc # View inode number of directory
-                  </div>
-                </div>
-              </div>
-
-              <div id="links" class="subsection">
-                <h3 class="subsection-title">
-                  2. Hard Links and Symbolic Links
-                </h3>
-
-                <div class="concept-box">
-                  <h4>🔗 Hard Links</h4>
-                  <p>
-                    When you create a file, its name is essentially a hard link.
-                    Multiple hard links can be created to a file, allowing
-                    access from different locations.
-                  </p>
-                  <p><strong>Restrictions:</strong></p>
-                  <ul>
-                    <li>
-                      Must exist on the same device (partition, logical volume)
-                    </li>
-                    <li>Cannot create hard links to directories</li>
-                    <li>
-                      When last name is removed, access to file's data is also
-                      removed
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Hard Links:</div>
-                  <div class="description">
-                    ln source-file target-file # Create hard link
-                  </div>
-                  <div class="description">
-                    ln /home/user/file hardlink # Example hard link
-                  </div>
-                </div>
-
-                <div class="concept-box">
-                  <h4>🔗 Symbolic Links (Soft Links)</h4>
-                  <p>
-                    A new entry is made to the inode table for the link. The
-                    content of this entry is the path to the original file.
-                  </p>
-                  <p><strong>Advantages:</strong></p>
-                  <ul>
-                    <li>Can link to files on other devices</li>
-                    <li>Can link to directories</li>
-                  </ul>
-                  <p>
-                    <strong>Disadvantage:</strong> When original file is
-                    removed, symbolic link becomes invalid
-                  </p>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Symbolic Links:</div>
-                  <div class="description">
-                    ln -s source-file target # Create symbolic link
-                  </div>
-                  <div class="description">
-                    ln -s testfile softlink # Example symbolic link
-                  </div>
-                </div>
-
-                <div class="important-box">
-                  <h4>📁 File Operations and Inodes</h4>
-                  <ul>
-                    <li>
-                      <strong>cp command:</strong> Allocates new inode number,
-                      creates new inode table entry
-                    </li>
-                    <li>
-                      <strong>mv command (same filesystem):</strong> Creates new
-                      directory entry with new name but keeps same inode number
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div id="archiving" class="subsection">
-                <h3 class="subsection-title">3. Archiving (tar)</h3>
-
-                <div class="concept-box">
-                  <h4>📦 Archive Purpose</h4>
-                  <p>
-                    To safeguard files and directories by creating a copy
-                    (archive) on a removable medium. Archived copies can be used
-                    to retrieve lost, deleted, or damaged files.
-                  </p>
-                  <p>
-                    <strong>tar (Tape Archiver):</strong> Designed to stream
-                    files to backup tapes
-                  </p>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Creating Archives:</div>
-                  <div class="description">
-                    tar -cvf archive.tar file1 file2 # Create archive
-                  </div>
-                  <div class="description">c: Create new tar file</div>
-                  <div class="description">v: Verbose mode (show files)</div>
-                  <div class="description">f: Specify archive filename</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Viewing Archives:</div>
-                  <div class="description">
-                    tar -tvf archive.tar # List contents
-                  </div>
-                  <div class="description">t: List table of contents</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Extracting Archives:</div>
-                  <div class="description">
-                    tar -xvf archive.tar # Extract files
-                  </div>
-                  <div class="description">
-                    tar -xvf archive.tar -C /tmp # Extract to specific directory
-                  </div>
-                  <div class="description">x: Extract files from archive</div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Updating Archives:</div>
-                  <div class="description">
-                    tar -rvf archive.tar newfile # Append files
-                  </div>
-                  <div class="description">
-                    tar -uvf archive.tar /home # Update (newer files only)
-                  </div>
-                  <div class="description">r: Append files to archive</div>
-                  <div class="description">
-                    u: Update archive with newer files
-                  </div>
-                </div>
-              </div>
-
-              <div id="compression" class="subsection">
-                <h3 class="subsection-title">4. Compression</h3>
-
-                <div class="concept-box">
-                  <h4>🗜️ Compression Purpose</h4>
-                  <p>
-                    To make files take less disk space by removing redundancy.
-                    If there's no redundancy, compression won't yield much gain.
-                  </p>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Compression Tools:</div>
-                  <div class="description">
-                    gzip file.tar # Compress with gzip → file.tar.gz
-                  </div>
-                  <div class="description">
-                    bzip2 file.tar # Compress with bzip2 → file.tar.bz2
-                  </div>
-                  <div class="description">
-                    zip archive.zip files # Create zip archive
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Decompression Tools:</div>
-                  <div class="description">
-                    gunzip file.tar.gz # Decompress gzip
-                  </div>
-                  <div class="description">
-                    bunzip2 file.tar.bz2 # Decompress bzip2
-                  </div>
-                  <div class="description">
-                    zcat file.gz # View compressed content
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Combined Archive & Compression:</div>
-                  <div class="description">
-                    tar -czvf backup.tar.gz /etc # Create and gzip compress
-                  </div>
-                  <div class="description">
-                    tar -cjvf backup.tar.bz2 /etc # Create and bzip2 compress
-                  </div>
-                  <div class="description">
-                    tar -xzvf backup.tar.gz -C /tmp # Extract gzip archive
-                  </div>
-                  <div class="description">
-                    tar -xjvf backup.tar.bz2 -C /tmp # Extract bzip2 archive
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Check File Sizes:</div>
-                  <div class="description">
-                    ls -lh file # Human-readable file size
-                  </div>
-                  <div class="description">
-                    du -sh directory # Disk usage of directory
-                  </div>
-                </div>
-              </div>
-
-              <div id="package-management" class="subsection">
-                <h3 class="subsection-title">
-                  5. Managing Software (Package Managers)
-                </h3>
-
-                <div class="concept-box">
-                  <h4>📦 YUM Package Manager</h4>
-                  <p>
-                    YUM (Yellowdog Updater, Modified) is the default utility to
-                    manage software packages on RHEL. In RHEL 8, yum has been
-                    replaced with dnf, but Red Hat provides a yum wrapper based
-                    on dnf.
-                  </p>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Package Search & Information:</div>
-                  <div class="description">
-                    yum search package # Look for package
-                  </div>
-                  <div class="description">
-                    yum list package # Get versions info
-                  </div>
-                  <div class="description">
-                    yum list installed # List installed packages
-                  </div>
-                  <div class="description">
-                    yum list available # List available packages
-                  </div>
-                  <div class="description">
-                    yum provides filename # Find package containing file
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Package Installation & Removal:</div>
-                  <div class="description">
-                    yum install package # Install package
-                  </div>
-                  <div class="description">
-                    yum localinstall /path/file # Install from local file
-                  </div>
-                  <div class="description">
-                    yum remove package # Uninstall package
-                  </div>
-                  <div class="description">
-                    yum upgrade package # Upgrade package
-                  </div>
-                  <div class="description">
-                    yum update package # Update package
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Repository Management:</div>
-                  <div class="description">
-                    yum repolist all # List repositories
-                  </div>
-                  <div class="description">
-                    yum clean all # Clean download cache
-                  </div>
-                  <div class="description">
-                    yum grouplist # List package groups
-                  </div>
-                </div>
-              </div>
-
-              <div id="search" class="subsection">
-                <h3 class="subsection-title">6. Search (find)</h3>
-
-                <div class="concept-box">
-                  <h4>🔍 Find Command</h4>
-                  <p>
-                    The find command searches the live filesystem. It's limited
-                    by your own permissions.
-                  </p>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Search by Name:</div>
-                  <div class="description">
-                    find /path -name "filename" # Find by exact name
-                  </div>
-                  <div class="description">
-                    find /path -name "*.txt" # Find by pattern
-                  </div>
-                  <div class="description">
-                    find /path -iname "FILE" # Case insensitive
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Search by Size:</div>
-                  <div class="description">
-                    find /path -size +100M # Files larger than 100MB
-                  </div>
-                  <div class="description">
-                    find /path -size -1M # Files smaller than 1MB
-                  </div>
-                  <div class="description">
-                    find /path -size 500M # Files exactly 500MB
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Search by Time:</div>
-                  <div class="description">
-                    find /path -atime -7 # Accessed within 7 days
-                  </div>
-                  <div class="description">
-                    find /path -mtime +30 # Modified more than 30 days ago
-                  </div>
-                  <div class="description">
-                    find /path -ctime 1 # Changed exactly 1 day ago
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Search by Owner & Type:</div>
-                  <div class="description">
-                    find /path -user username # Files owned by user
-                  </div>
-                  <div class="description">find /path -type f # Files only</div>
-                  <div class="description">
-                    find /path -type d # Directories only
-                  </div>
-                  <div class="description">
-                    find /path -perm 755 # Specific permissions
-                  </div>
-                </div>
-
-                <div class="command-box">
-                  <div class="command">Advanced Find Examples:</div>
-                  <div class="description">
-                    find /home -name "*.log" -size +10M # Large log files
-                  </div>
-                  <div class="description">
-                    find /tmp -type f -atime +7 -delete # Delete old temp files
-                  </div>
-                  <div class="description">
-                    find /etc -name "*.conf" -exec grep -l "ssh" {} \; # Config
-                    files containing "ssh"
-                  </div>
-                </div>
-
-                <div class="warning-box">
-                  <h4>⚠️ Find Command Notes</h4>
-                  <ul>
-                    <li>
-                      Size values: Use k, M, G for kilobytes, megabytes,
-                      gigabytes
-                    </li>
-                    <li>Time values: Measured in 24-hour periods</li>
-                    <li>Use -exec to execute commands on found files</li>
-                    <li>
-                      Use -delete with caution - it permanently removes files
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          <div class="footer">
-            <p style="margin-top: 10px">
-              <strong>Created By:</strong> Abdelghany
-            </p>
-          </div>
-        </div>
-      </main>
-    </div>
-
-    <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">
-      ↑
-    </button>
-
-    <script>
-      function toggleSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.querySelector(".sidebar-overlay");
-
-        sidebar.classList.toggle("open");
-        overlay.classList.toggle("active");
-
-        if (window.innerWidth <= 768) {
-          sidebar.classList.toggle("active");
+      });
+    });
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute("href"));
+        if (target) {
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
         }
-      }
-
-      function closeSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.querySelector(".sidebar-overlay");
-
-        sidebar.classList.remove("open");
-        overlay.classList.remove("active");
-        sidebar.classList.remove("active");
-      }
-
-      function setActive(element) {
-        // Remove active class from all links
-        document.querySelectorAll(".sidebar a").forEach((link) => {
-          link.classList.remove("active");
-        });
-
-        // Add active class to clicked link
-        element.classList.add("active");
-
-        // Close sidebar after clicking a link
+      });
+    });
+    // Close sidebar when clicking outside
+    document.addEventListener("click", function (e) {
+      const sidebar = document.getElementById("sidebar");
+      const toggle = document.querySelector(".sidebar-toggle");
+      if (
+        window.innerWidth <= 768 &&
+        !sidebar.contains(e.target) &&
+        !toggle.contains(e.target) &&
+        sidebar.classList.contains("active")
+      ) {
         closeSidebar();
       }
-
-      function scrollToTop() {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-      }
-
-      // Show/hide scroll to top button
-      window.addEventListener("scroll", function () {
-        const scrollButton = document.getElementById("scrollToTop");
-        if (window.pageYOffset > 300) {
-          scrollButton.classList.add("visible");
-        } else {
-          scrollButton.classList.remove("visible");
-        }
-
-        // Highlight active section on scroll
-        const sections = document.querySelectorAll(".section, .subsection");
-        const scrollPos = window.scrollY + 100;
-
-        sections.forEach(function (section) {
-          const top = section.offsetTop;
-          const bottom = top + section.offsetHeight;
-          const id = section.getAttribute("id");
-
-          if (scrollPos >= top && scrollPos <= bottom && id) {
-            document.querySelectorAll(".sidebar a").forEach((link) => {
-              link.classList.remove("active");
-            });
-            const activeLink = document.querySelector(
-              `.sidebar a[href="#${id}"]`
-            );
-            if (activeLink) {
-              activeLink.classList.add("active");
-            }
-          }
-        });
-      });
-
-      // Smooth scrolling for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          if (target) {
-            target.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }
-        });
-      });
-
-      // Close sidebar when clicking outside
-      document.addEventListener("click", function (e) {
-        const sidebar = document.getElementById("sidebar");
-        const toggle = document.querySelector(".sidebar-toggle");
-
-        if (
-          window.innerWidth <= 768 &&
-          !sidebar.contains(e.target) &&
-          !toggle.contains(e.target) &&
-          sidebar.classList.contains("active")
-        ) {
-          closeSidebar();
-        }
-      });
-      setInterval(updateTimestamp, 60000);
-    </script>
-  </body>
+    });
+    setInterval(updateTimestamp, 60000);
+  </script>
+  <!-- Shared JavaScript for dark mode and features -->
+  <script src="../assets/js/main.js"></script>
+</body>
 </html>
+
+
+

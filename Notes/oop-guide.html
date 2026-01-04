@@ -1,1161 +1,499 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Object-Oriented Programming Study Notes</title>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
-    <link rel="shortcut icon" href="../favicon.svg" />
-
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-      }
-
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-
-      /* Header Styles */
-      .header {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 30px;
-        border-radius: 15px;
-        text-align: center;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      }
-
-      .header h1 {
-        color: #2c3e50;
-        font-size: 2.5em;
-        margin-bottom: 10px;
-      }
-
-      .header p {
-        color: #7f8c8d;
-        font-size: 1.1em;
-      }
-
-      /* Navigation Links */
-      .nav-links {
-        text-align: center;
-        margin-bottom: 30px;
-      }
-
-      .nav-links a {
-        display: inline-block;
-        padding: 12px 25px;
-        background: rgba(255, 255, 255, 0.9);
-        color: #2c3e50;
-        text-decoration: none;
-        border-radius: 25px;
-        margin: 0 10px;
-        transition: all 0.3s ease;
-        font-weight: 600;
-      }
-
-      .nav-links a:hover {
-        background: #3498db;
-        color: white;
-        transform: translateY(-2px);
-      }
-
-      /* Table of Contents Styles (Data Structure Style) */
-      .toc-container {
-        position: fixed;
-        top: 20px;
-        left: -320px;
-        width: 300px;
-        height: calc(100vh - 40px);
-        background: rgba(255, 255, 255, 0.98);
-        border-radius: 20px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3),
-          0 10px 20px rgba(0, 0, 0, 0.2);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 1000;
-        overflow: hidden;
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
-
-      .toc-container.active {
-        left: 20px;
-        transform: translateY(0);
-      }
-
-      /* Add backdrop overlay */
-      .toc-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(2px);
-        z-index: 999;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-      }
-
-      .toc-backdrop.active {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .toc-header {
-        padding: 25px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 20px 20px 0 0;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .toc-header h3 {
-        margin: 0;
-        font-size: 1.3em;
-        font-weight: 600;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-      }
-
-      .toc-list {
-        padding: 20px;
-        height: calc(100% - 80px);
-        overflow-y: auto;
-      }
-
-      .toc-list ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      .toc-list li {
-        margin: 8px 0;
-      }
-
-      .toc-list a {
-        display: block;
-        padding: 8px 12px;
-        color: #2c3e50;
-        text-decoration: none;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        font-size: 0.9em;
-      }
-
-      .toc-list a:hover {
-        background: #3498db;
-        color: white;
-        transform: translateX(5px);
-      }
-
-      .toc-toggle {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 15px 18px;
-        border-radius: 50%;
-        cursor: pointer;
-        z-index: 1001;
-        font-size: 20px;
-        font-weight: bold;
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4),
-          0 4px 10px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        backdrop-filter: blur(10px);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-      }
-
-      .toc-toggle:hover {
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        transform: scale(1.15) rotate(90deg);
-        box-shadow: 0 12px 35px rgba(118, 75, 162, 0.5),
-          0 6px 15px rgba(0, 0, 0, 0.3);
-      }
-
-      .toc-toggle:active {
-        transform: scale(1.05) rotate(90deg);
-      }
-
-      /* Content Sections */
-      .content-section {
-        background: rgba(255, 255, 255, 0.95);
-        margin: 20px 0;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      }
-
-      .content-section h1 {
-        color: #2c3e50;
-        border-bottom: 3px solid #3498db;
-        padding-bottom: 10px;
-        margin-bottom: 25px;
-        font-size: 2.2em;
-      }
-
-      .content-section h2 {
-        color: #34495e;
-        margin: 30px 0 20px 0;
-        font-size: 1.8em;
-        border-left: 4px solid #e74c3c;
-        padding-left: 15px;
-      }
-
-      .content-section h3 {
-        color: #2c3e50;
-        margin: 25px 0 15px 0;
-        font-size: 1.4em;
-      }
-
-      .content-section h4 {
-        color: #34495e;
-        margin: 20px 0 10px 0;
-        font-size: 1.2em;
-      }
-
-      .content-section p {
-        margin-bottom: 15px;
-        text-align: justify;
-      }
-
-      .content-section ul,
-      .content-section ol {
-        margin: 15px 0 15px 30px;
-      }
-
-      .content-section li {
-        margin-bottom: 8px;
-      }
-
-      /* Enhanced Code Examples with VS Code Dark Theme */
-      .code-example,
-      pre {
-        background: linear-gradient(145deg, #1e1e1e 0%, #252526 100%);
-        color: #d4d4d4;
-        padding: 25px;
-        border-radius: 12px;
-        overflow-x: auto;
-        margin: 20px 0;
-        font-family: "Fira Code", "Consolas", "Monaco", "Courier New", monospace;
-        font-size: 14px;
-        line-height: 1.6;
-        border: 1px solid #3c3c3c;
-        position: relative;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
-          inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(5px);
-      }
-
-      .code-example::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #007acc, #00d4ff);
-        border-radius: 12px 12px 0 0;
-      }
-
-      .code-language {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        background: rgba(0, 122, 204, 0.8);
-        color: white;
-        padding: 4px 12px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        backdrop-filter: blur(10px);
-        z-index: 10;
-      }
-
-      .code-example pre {
-        background: none;
-        margin: 0;
-        padding: 20px 0 0 0;
-        border: none;
-        box-shadow: none;
-      }
-
-      .code-example code {
-        background: none;
-        color: inherit;
-        padding: 0;
-        font-size: inherit;
-        font-family: inherit;
-      }
-
-      /* Syntax Highlighting - Enhanced Colors */
-      .code-example .keyword {
-        color: #569cd6;
-        font-weight: 600;
-      }
-
-      .code-example .string {
-        color: #ce9178;
-      }
-
-      .code-example .comment {
-        color: #6a9955;
-        font-style: italic;
-        opacity: 0.8;
-      }
-
-      .code-example .number {
-        color: #b5cea8;
-      }
-
-      .code-example .function {
-        color: #dcdcaa;
-        font-weight: 500;
-      }
-
-      .code-example .classname {
-        color: #4ec9b0;
-        font-weight: 500;
-      }
-
-      .code-example .type {
-        color: #4ec9b0;
-      }
-
-      .code-example .operator {
-        color: #d4d4d4;
-      }
-
-      .code-example .variable {
-        color: #9cdcfe;
-      }
-
-      .code-example .property {
-        color: #9cdcfe;
-      }
-
-      .code-example .constant {
-        color: #4fc1ff;
-        font-weight: 500;
-      }
-
-      .code-example .punctuation {
-        color: #d4d4d4;
-      }
-
-      .code-example .bracket {
-        color: #ffd700;
-        font-weight: bold;
-      }
-
-      /* Code scrollbar styling */
-      .code-example::-webkit-scrollbar {
-        height: 8px;
-      }
-
-      .code-example::-webkit-scrollbar-track {
-        background: #2d2d30;
-        border-radius: 4px;
-      }
-
-      .code-example::-webkit-scrollbar-thumb {
-        background: #424242;
-        border-radius: 4px;
-      }
-
-      .code-example::-webkit-scrollbar-thumb:hover {
-        background: #4f4f4f;
-      }
-
-      /* Inline code styling */
-      code {
-        background: linear-gradient(135deg, #2d2d30 0%, #1e1e1e 100%);
-        color: #ce9178;
-        padding: 3px 8px;
-        border-radius: 6px;
-        font-family: "Fira Code", "Consolas", "Monaco", "Courier New", monospace;
-        font-size: 0.85em;
-        font-weight: 500;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      }
-
-      /* Highlight Boxes */
-      .highlight-box {
-        background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-        color: white;
-        padding: 20px;
-        border-radius: 12px;
-        margin: 20px 0;
-        box-shadow: 0 8px 25px rgba(116, 185, 255, 0.3);
-      }
-
-      .highlight-box h4 {
-        color: white;
-        margin-bottom: 15px;
-      }
-
-      /* Tables */
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      }
-
-      th,
-      td {
-        padding: 15px;
-        text-align: left;
-        border-bottom: 1px solid #ecf0f1;
-      }
-
-      th {
-        background: #3498db;
-        color: white;
-        font-weight: 600;
-      }
-
-      tr:hover {
-        background: #f8f9fa;
-      }
-
-      /* SOLID Principles Cards */
-      .principles-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-        margin: 20px 0;
-      }
-
-      .principle-card {
-        background: #f8f9fa;
-        padding: 20px;
-        border-radius: 12px;
-        border-left: 5px solid #3498db;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-
-      .principle-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      }
-
-      .principle-card h4 {
-        color: #2c3e50;
-        margin-bottom: 10px;
-      }
-
-      .principle-card p {
-        color: #7f8c8d;
-        font-size: 0.95em;
-      }
-
-      /* Back to Top Button */
-      .back-to-top {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 55px;
-        height: 55px;
-        font-size: 20px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        opacity: 0;
-        visibility: hidden;
-        z-index: 1000;
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4),
-          0 4px 10px rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(10px);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-      }
-
-      .back-to-top.visible {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .back-to-top:hover {
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        transform: scale(1.15);
-        box-shadow: 0 12px 35px rgba(118, 75, 162, 0.5),
-          0 6px 15px rgba(0, 0, 0, 0.3);
-      }
-
-      .back-to-top:active {
-        transform: scale(1.05);
-      }
-
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        .container {
-          padding: 15px;
-        }
-
-        .header h1 {
-          font-size: 2em;
-        }
-
-        .toc-list ul {
-          columns: 1;
-        }
-
-        .principles-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .back-to-top {
-          bottom: 20px;
-          right: 20px;
-          width: 50px;
-          height: 50px;
-          font-size: 18px;
-        }
-
-        .toc-container {
-          width: 280px;
-        }
-
-        .toc-container.active {
-          left: 10px;
-        }
-
-        .toc-toggle {
-          top: 15px;
-          left: 15px;
-          padding: 12px 15px;
-          font-size: 18px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .container {
-          padding: 10px;
-        }
-
-        .back-to-top {
-          bottom: 15px;
-          right: 15px;
-          width: 45px;
-          height: 45px;
-          font-size: 16px;
-        }
-
-        .toc-container {
-          width: 260px;
-        }
-
-        .toc-container.active {
-          left: 5px;
-        }
-
-        .toc-toggle {
-          top: 10px;
-          left: 10px;
-          padding: 10px 12px;
-          font-size: 16px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Table of Contents Toggle Button -->
-    <button class="toc-toggle" onclick="toggleTOC()">☰</button>
-
-    <!-- Table of Contents -->
-    <div class="toc-container" id="tocContainer">
-      <div class="toc-header">
-        <h3>� Table of Contents</h3>
-      </div>
-      <div class="toc-list">
-        <ul>
-          <li><a href="#overview">🔍 Overview</a></li>
-          <li><a href="#key-concepts">🎯 Key Concepts</a></li>
-          <li><a href="#basic-syntax">💻 Basic Syntax</a></li>
-          <li><a href="#properties-methods">🏗️ Properties and Methods</a></li>
-          <li>
-            <a href="#constructor-destructor">⚙️ Constructor and Destructor</a>
-          </li>
-          <li><a href="#inheritance">🌳 Inheritance</a></li>
-          <li><a href="#method-overriding">🔄 Method Overriding</a></li>
-          <li><a href="#abstract-classes">🔒 Abstract Classes</a></li>
-          <li><a href="#interfaces">🤝 Interfaces</a></li>
-          <li><a href="#traits">🔗 Traits</a></li>
-          <li><a href="#magic-methods">✨ Magic Methods</a></li>
-          <li><a href="#namespaces">📁 Namespaces</a></li>
-          <li><a href="#autoloading">🔄 Autoloading</a></li>
-          <li><a href="#solid-principles">🧱 SOLID Principles</a></li>
-          <li><a href="#design-patterns">🏗️ Design Patterns</a></li>
-          <li><a href="#best-practices">⭐ Best Practices</a></li>
-        </ul>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Object-Oriented Programming Study Notes</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="shortcut icon" href="../favicon.svg" />
+</head>
+<body>
+  <!-- Table of Contents Toggle Button -->
+  <button class="toc-toggle" onclick="toggleTOC()"><i class="fas fa-bars"></i></button>
+  <!-- Table of Contents -->
+  <div class="toc-container" id="tocContainer">
+    <div class="toc-header">
+      <h3><i class="fas fa-list"></i> Table of Contents</h3>
     </div>
-
-    <!-- TOC Backdrop -->
-    <div class="toc-backdrop" id="tocBackdrop"></div>
-
-    <!-- Back to Top Button -->
-    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
-      ↑
-    </button>
-
-    <div class="container">
-      <div class="header">
-        <h1>� Object-Oriented Programming Study Notes</h1>
-        <p>
-          Comprehensive study guide covering OOP concepts, PHP implementation,
-          and SOLID principles
-        </p>
-      </div>
-
-      <div class="nav-links">
-        <a href="../index.html">� Home</a>
-      </div>
-
-      <!-- Overview -->
-      <div class="content-section" id="overview">
-        <h1>🔍 Overview</h1>
-        <p>
-          Object-Oriented Programming (OOP) is a programming paradigm that uses
-          <strong>objects</strong> and <strong>classes</strong> to structure
-          code. PHP supports OOP, allowing developers to write modular,
-          reusable, and maintainable code.
-        </p>
-      </div>
-
-      <!-- Key Concepts -->
-      <div class="content-section" id="key-concepts">
-        <h1>🎯 Key Concepts</h1>
-
-        <ol>
-          <li><strong>Class</strong>: A blueprint for creating objects.</li>
-          <li><strong>Object</strong>: An instance of a class.</li>
-          <li>
-            <strong>Properties</strong>: Variables that belong to a class.
-          </li>
-          <li><strong>Methods</strong>: Functions that belong to a class.</li>
-          <li>
-            <strong>Encapsulation</strong>: Restricting access to certain
-            properties or methods.
-          </li>
-          <li>
-            <strong>Inheritance</strong>: Creating a new class from an existing
-            class.
-          </li>
-          <li>
-            <strong>Polymorphism</strong>: Using a single interface to represent
-            different types.
-          </li>
-          <li>
-            <strong>Abstraction</strong>: Hiding complex implementation details.
-          </li>
-        </ol>
-      </div>
-
-      <!-- Basic Syntax -->
-      <div class="content-section" id="basic-syntax">
-        <h1>💻 Basic Syntax</h1>
-
-        <h3>Defining a Class</h3>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">ClassName</span> {
+    <div class="toc-list">
+      <ul>
+        <li><a href="#overview"><i class="fas fa-search"></i> Overview</a></li>
+        <li><a href="#key-concepts"><i class="fas fa-bullseye"></i> Key Concepts</a></li>
+        <li><a href="#basic-syntax"><i class="fas fa-laptop-code"></i> Basic Syntax</a></li>
+        <li><a href="#properties-methods"><i class="fas fa-building"></i> Properties and Methods</a></li>
+        <li>
+          <a href="#constructor-destructor"><i class="fas fa-cog"></i> Constructor and Destructor</a>
+        </li>
+        <li><a href="#inheritance"><i class="fas fa-star"></i> Inheritance</a></li>
+        <li><a href="#method-overriding"><i class="fas fa-sync"></i> Method Overriding</a></li>
+        <li><a href="#abstract-classes"><i class="fas fa-lock"></i> Abstract Classes</a></li>
+        <li><a href="#interfaces"><i class="fas fa-handshake"></i> Interfaces</a></li>
+        <li><a href="#traits"><i class="fas fa-link"></i> Traits</a></li>
+        <li><a href="#magic-methods"><i class="fas fa-sparkles"></i> Magic Methods</a></li>
+        <li><a href="#namespaces"><i class="fas fa-folder"></i> Namespaces</a></li>
+        <li><a href="#autoloading"><i class="fas fa-sync"></i> Autoloading</a></li>
+        <li><a href="#solid-principles"><i class="fas fa-star"></i> SOLID Principles</a></li>
+        <li><a href="#design-patterns"><i class="fas fa-building"></i> Design Patterns</a></li>
+        <li><a href="#best-practices"><i class="fas fa-star"></i> Best Practices</a></li>
+      </ul>
+    </div>
+  </div>
+  <!-- TOC Backdrop -->
+  <div class="toc-backdrop" id="tocBackdrop"></div>
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+    ?
+  </button>
+  <div class="container">
+    <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Main Page</a><div class="header">
+      <h1><i class="fas fa-book"></i> Object-Oriented Programming Study Notes</h1>
+      <p>
+        Comprehensive study guide covering OOP concepts, PHP implementation,
+        and SOLID principles
+      </p>
+    </div>
+    <div class="nav-links">
+      <a href="../index.html"><i class="fas fa-home"></i> Home</a>
+    </div>
+    <!-- Overview -->
+    <div class="content-section" id="overview">
+      <h1><i class="fas fa-search"></i> Overview</h1>
+      <p>
+        Object-Oriented Programming (OOP) is a programming paradigm that uses
+        <strong>objects</strong> and <strong>classes</strong> to structure
+        code. PHP supports OOP, allowing developers to write modular,
+        reusable, and maintainable code.
+      </p>
+    </div>
+    <!-- Key Concepts -->
+    <div class="content-section" id="key-concepts">
+      <h1><i class="fas fa-bullseye"></i> Key Concepts</h1>
+      <ol>
+        <li><strong>Class</strong>: A blueprint for creating objects.</li>
+        <li><strong>Object</strong>: An instance of a class.</li>
+        <li>
+          <strong>Properties</strong>: Variables that belong to a class.
+        </li>
+        <li><strong>Methods</strong>: Functions that belong to a class.</li>
+        <li>
+          <strong>Encapsulation</strong>: Restricting access to certain
+          properties or methods.
+        </li>
+        <li>
+          <strong>Inheritance</strong>: Creating a new class from an existing
+          class.
+        </li>
+        <li>
+          <strong>Polymorphism</strong>: Using a single interface to represent
+          different types.
+        </li>
+        <li>
+          <strong>Abstraction</strong>: Hiding complex implementation details.
+        </li>
+      </ol>
+    </div>
+    <!-- Basic Syntax -->
+    <div class="content-section" id="basic-syntax">
+      <h1><i class="fas fa-laptop-code"></i> Basic Syntax</h1>
+      <h3>Defining a Class</h3>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">ClassName</span> {
     <span class="comment">// Properties</span>
     <span class="keyword">public</span> <span class="variable">$property1</span>;
     <span class="keyword">private</span> <span class="variable">$property2</span>;
-    
     <span class="comment">// Methods</span>
     <span class="keyword">public function</span> <span class="function">method1</span>() {
         <span class="comment">// Code</span>
     }
-    
     <span class="keyword">private function</span> <span class="function">method2</span>() {
         <span class="comment">// Code</span>
     }
 }</code></pre>
-        </div>
-
-        <h3>Creating an Object</h3>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="variable">$object</span> = <span class="keyword">new</span> <span class="classname">ClassName</span>();</code></pre>
-        </div>
-
-        <h3>Accessing Properties and Methods</h3>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="variable">$object</span>-><span class="property">property1</span> = <span class="string">"value"</span>;
-<span class="variable">$object</span>-><span class="function">method1</span>();</code></pre>
-        </div>
       </div>
-
-      <!-- Properties and Methods -->
-      <div class="content-section" id="properties-methods">
-        <h1>🏗️ Properties and Methods</h1>
-
-        <h3>Visibility Modifiers</h3>
-        <ul>
-          <li><strong>Public</strong>: Accessible from anywhere.</li>
-          <li><strong>Private</strong>: Accessible only within the class.</li>
-          <li>
-            <strong>Protected</strong>: Accessible within the class and its
-            subclasses.
-          </li>
-        </ul>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
+      <h3>Creating an Object</h3>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="variable">$object</span> = <span class="keyword">new</span> <span class="classname">ClassName</span>();</code></pre>
+      </div>
+      <h3>Accessing Properties and Methods</h3>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="variable">$object</span>-><span class="property">property1</span> = <span class="string">"value"</span>;
+<span class="variable">$object</span>-><span class="function">method1</span>();</code></pre>
+      </div>
+    </div>
+    <!-- Properties and Methods -->
+    <div class="content-section" id="properties-methods">
+      <h1><i class="fas fa-building"></i> Properties and Methods</h1>
+      <h3>Visibility Modifiers</h3>
+      <ul>
+        <li><strong>Public</strong>: Accessible from anywhere.</li>
+        <li><strong>Private</strong>: Accessible only within the class.</li>
+        <li>
+          <strong>Protected</strong>: Accessible within the class and its
+          subclasses.
+        </li>
+      </ul>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
     <span class="keyword">public</span> <span class="variable">$model</span>;
     <span class="keyword">private</span> <span class="variable">$mileage</span>;
     <span class="keyword">protected</span> <span class="variable">$color</span>;
-
     <span class="keyword">public function</span> <span class="function">setMileage</span>(<span class="variable">$mileage</span>) {
         <span class="variable">$this</span>-><span class="property">mileage</span> = <span class="variable">$mileage</span>;
     }
-
     <span class="keyword">public function</span> <span class="function">getMileage</span>() {
         <span class="keyword">return</span> <span class="variable">$this</span>-><span class="property">mileage</span>;
     }
 }</code></pre>
-        </div>
-
-        <h3>Static Properties and Methods</h3>
-        <ul>
-          <li>Belong to the class, not an instance.</li>
-          <li>Accessed using <code>::</code>.</li>
-        </ul>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">Math</span> {
+      </div>
+      <h3>Static Properties and Methods</h3>
+      <ul>
+        <li>Belong to the class, not an instance.</li>
+        <li>Accessed using <code>::</code>.</li>
+      </ul>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">Math</span> {
     <span class="keyword">public static</span> <span class="variable">$pi</span> = <span class="number">3.14</span>;
-
     <span class="keyword">public static function</span> <span class="function">square</span>(<span class="variable">$num</span>) {
         <span class="keyword">return</span> <span class="variable">$num</span> * <span class="variable">$num</span>;
     }
 }
-
 <span class="keyword">echo</span> <span class="classname">Math</span>::<span class="variable">$pi</span>; <span class="comment">// 3.14</span>
 <span class="keyword">echo</span> <span class="classname">Math</span>::<span class="function">square</span>(<span class="number">5</span>); <span class="comment">// 25</span></code></pre>
-        </div>
       </div>
-
-      <!-- Constructor and Destructor -->
-      <div class="content-section" id="constructor-destructor">
-        <h1>⚙️ Constructor and Destructor</h1>
-
-        <h3>Constructor</h3>
-        <ul>
-          <li>Called when an object is created.</li>
-          <li>Use <code>__construct()</code>.</li>
-        </ul>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
+    </div>
+    <!-- Constructor and Destructor -->
+    <div class="content-section" id="constructor-destructor">
+      <h1><i class="fas fa-cog"></i> Constructor and Destructor</h1>
+      <h3>Constructor</h3>
+      <ul>
+        <li>Called when an object is created.</li>
+        <li>Use <code>__construct()</code>.</li>
+      </ul>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
     <span class="keyword">public</span> <span class="variable">$model</span>;
-
     <span class="keyword">public function</span> <span class="function">__construct</span>(<span class="variable">$model</span>) {
         <span class="variable">$this</span>-><span class="property">model</span> = <span class="variable">$model</span>;
     }
 }
-
 <span class="variable">$car</span> = <span class="keyword">new</span> <span class="classname">Car</span>(<span class="string">"Toyota"</span>);
 <span class="keyword">echo</span> <span class="variable">$car</span>-><span class="property">model</span>; <span class="comment">// Toyota</span></code></pre>
-        </div>
-
-        <h3>Destructor</h3>
-        <ul>
-          <li>Called when an object is destroyed.</li>
-          <li>Use <code>__destruct()</code>.</li>
-        </ul>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
+      </div>
+      <h3>Destructor</h3>
+      <ul>
+        <li>Called when an object is destroyed.</li>
+        <li>Use <code>__destruct()</code>.</li>
+      </ul>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
     <span class="keyword">public function</span> <span class="function">__destruct</span>() {
         <span class="keyword">echo</span> <span class="string">"Car object destroyed."</span>;
     }
 }
-
 <span class="variable">$car</span> = <span class="keyword">new</span> <span class="classname">Car</span>();
 <span class="function">unset</span>(<span class="variable">$car</span>); <span class="comment">// Car object destroyed.</span></code></pre>
-        </div>
       </div>
-
-      <!-- Inheritance -->
-      <div class="content-section" id="inheritance">
-        <h1>🌳 Inheritance</h1>
-        <ul>
-          <li>
-            A class can inherit properties and methods from another class.
-          </li>
-          <li>Use <code>extends</code>.</li>
-        </ul>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">Vehicle</span> {
+    </div>
+    <!-- Inheritance -->
+    <div class="content-section" id="inheritance">
+      <h1><i class="fas fa-star"></i> Inheritance</h1>
+      <ul>
+        <li>
+          A class can inherit properties and methods from another class.
+        </li>
+        <li>Use <code>extends</code>.</li>
+      </ul>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">Vehicle</span> {
     <span class="keyword">public</span> <span class="variable">$brand</span>;
-
     <span class="keyword">public function</span> <span class="function">honk</span>() {
         <span class="keyword">return</span> <span class="string">"Honk!"</span>;
     }
 }
-
 <span class="keyword">class</span> <span class="classname">Car</span> <span class="keyword">extends</span> <span class="classname">Vehicle</span> {
     <span class="keyword">public function</span> <span class="function">drive</span>() {
         <span class="keyword">return</span> <span class="string">"Driving a </span><span class="variable">$this</span>-><span class="property">brand</span><span class="string"> car."</span>;
     }
 }
-
 <span class="variable">$car</span> = <span class="keyword">new</span> <span class="classname">Car</span>();
 <span class="variable">$car</span>-><span class="property">brand</span> = <span class="string">"Toyota"</span>;
 <span class="keyword">echo</span> <span class="variable">$car</span>-><span class="function">honk</span>(); <span class="comment">// Honk!</span>
 <span class="keyword">echo</span> <span class="variable">$car</span>-><span class="function">drive</span>(); <span class="comment">// Driving a Toyota car.</span></code></pre>
-        </div>
       </div>
-
-      <!-- Method Overriding -->
-      <div class="content-section" id="method-overriding">
-        <h1>🔄 Method Overriding</h1>
-        <p>A subclass can override a method from its parent class.</p>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">Vehicle</span> {
+    </div>
+    <!-- Method Overriding -->
+    <div class="content-section" id="method-overriding">
+      <h1><i class="fas fa-sync"></i> Method Overriding</h1>
+      <p>A subclass can override a method from its parent class.</p>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">Vehicle</span> {
     <span class="keyword">public function</span> <span class="function">honk</span>() {
         <span class="keyword">return</span> <span class="string">"Honk!"</span>;
     }
 }
-
 <span class="keyword">class</span> <span class="classname">Car</span> <span class="keyword">extends</span> <span class="classname">Vehicle</span> {
     <span class="keyword">public function</span> <span class="function">honk</span>() {
         <span class="keyword">return</span> <span class="string">"Beep!"</span>;
     }
 }
-
 <span class="variable">$car</span> = <span class="keyword">new</span> <span class="classname">Car</span>();
 <span class="keyword">echo</span> <span class="variable">$car</span>-><span class="function">honk</span>(); <span class="comment">// Beep!</span></code></pre>
-        </div>
       </div>
-
-      <!-- Abstract Classes -->
-      <div class="content-section" id="abstract-classes">
-        <h1>🔒 Abstract Classes</h1>
-        <ul>
-          <li>Cannot be instantiated.</li>
-          <li>Used as a base class for other classes.</li>
-          <li>Use <code>abstract</code>.</li>
-        </ul>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">abstract class</span> <span class="classname">Animal</span> {
+    </div>
+    <!-- Abstract Classes -->
+    <div class="content-section" id="abstract-classes">
+      <h1><i class="fas fa-lock"></i> Abstract Classes</h1>
+      <ul>
+        <li>Cannot be instantiated.</li>
+        <li>Used as a base class for other classes.</li>
+        <li>Use <code>abstract</code>.</li>
+      </ul>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">abstract class</span> <span class="classname">Animal</span> {
     <span class="keyword">abstract public function</span> <span class="function">makeSound</span>();
 }
-
 <span class="keyword">class</span> <span class="classname">Dog</span> <span class="keyword">extends</span> <span class="classname">Animal</span> {
     <span class="keyword">public function</span> <span class="function">makeSound</span>() {
         <span class="keyword">return</span> <span class="string">"Woof!"</span>;
     }
 }
-
 <span class="variable">$dog</span> = <span class="keyword">new</span> <span class="classname">Dog</span>();
 <span class="keyword">echo</span> <span class="variable">$dog</span>-><span class="function">makeSound</span>(); <span class="comment">// Woof!</span></code></pre>
-        </div>
       </div>
-
-      <!-- Interfaces -->
-      <div class="content-section" id="interfaces">
-        <h1>🤝 Interfaces</h1>
-        <ul>
-          <li>Defines a contract for classes.</li>
-          <li>Use <code>interface</code> and <code>implements</code>.</li>
-        </ul>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">interface</span> <span class="classname">Sound</span> {
+    </div>
+    <!-- Interfaces -->
+    <div class="content-section" id="interfaces">
+      <h1><i class="fas fa-handshake"></i> Interfaces</h1>
+      <ul>
+        <li>Defines a contract for classes.</li>
+        <li>Use <code>interface</code> and <code>implements</code>.</li>
+      </ul>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">interface</span> <span class="classname">Sound</span> {
     <span class="keyword">public function</span> <span class="function">makeSound</span>();
 }
-
 <span class="keyword">class</span> <span class="classname">Dog</span> <span class="keyword">implements</span> <span class="classname">Sound</span> {
     <span class="keyword">public function</span> <span class="function">makeSound</span>() {
         <span class="keyword">return</span> <span class="string">"Woof!"</span>;
     }
 }
-
 <span class="variable">$dog</span> = <span class="keyword">new</span> <span class="classname">Dog</span>();
 <span class="keyword">echo</span> <span class="variable">$dog</span>-><span class="function">makeSound</span>(); <span class="comment">// Woof!</span></code></pre>
-        </div>
       </div>
-
-      <!-- Traits -->
-      <div class="content-section" id="traits">
-        <h1>🔗 Traits</h1>
-        <ul>
-          <li>Allow code reuse in single inheritance.</li>
-          <li>Use <code>trait</code>.</li>
-        </ul>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">trait</span> <span class="classname">Loggable</span> {
+    </div>
+    <!-- Traits -->
+    <div class="content-section" id="traits">
+      <h1><i class="fas fa-link"></i> Traits</h1>
+      <ul>
+        <li>Allow code reuse in single inheritance.</li>
+        <li>Use <code>trait</code>.</li>
+      </ul>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">trait</span> <span class="classname">Loggable</span> {
     <span class="keyword">public function</span> <span class="function">log</span>(<span class="variable">$message</span>) {
         <span class="keyword">echo</span> <span class="string">"Log: </span><span class="variable">$message</span><span class="string">"</span>;
     }
 }
-
 <span class="keyword">class</span> <span class="classname">User</span> {
     <span class="keyword">use</span> <span class="classname">Loggable</span>;
-
     <span class="keyword">public function</span> <span class="function">save</span>() {
         <span class="variable">$this</span>-><span class="function">log</span>(<span class="string">"User saved."</span>);
     }
 }
-
 <span class="variable">$user</span> = <span class="keyword">new</span> <span class="classname">User</span>();
 <span class="variable">$user</span>-><span class="function">save</span>(); <span class="comment">// Log: User saved.</span></code></pre>
-        </div>
       </div>
-
-      <!-- Magic Methods -->
-      <div class="content-section" id="magic-methods">
-        <h1>✨ Magic Methods</h1>
-        <ul>
-          <li>Special methods that start with <code>__</code>.</li>
-          <li>
-            Examples: <code>__construct()</code>, <code>__destruct()</code>,
-            <code>__get()</code>, <code>__set()</code>,
-            <code>__toString()</code>.
-          </li>
-        </ul>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
+    </div>
+    <!-- Magic Methods -->
+    <div class="content-section" id="magic-methods">
+      <h1><i class="fas fa-sparkles"></i> Magic Methods</h1>
+      <ul>
+        <li>Special methods that start with <code>__</code>.</li>
+        <li>
+          Examples: <code>__construct()</code>, <code>__destruct()</code>,
+          <code>__get()</code>, <code>__set()</code>,
+          <code>__toString()</code>.
+        </li>
+      </ul>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">Car</span> {
     <span class="keyword">private</span> <span class="variable">$data</span> = [];
-
     <span class="keyword">public function</span> <span class="function">__set</span>(<span class="variable">$name</span>, <span class="variable">$value</span>) {
         <span class="variable">$this</span>-><span class="property">data</span>[<span class="variable">$name</span>] = <span class="variable">$value</span>;
     }
-
     <span class="keyword">public function</span> <span class="function">__get</span>(<span class="variable">$name</span>) {
         <span class="keyword">return</span> <span class="variable">$this</span>-><span class="property">data</span>[<span class="variable">$name</span>];
     }
-
     <span class="keyword">public function</span> <span class="function">__toString</span>() {
         <span class="keyword">return</span> <span class="string">"This is a car object."</span>;
     }
 }
-
 <span class="variable">$car</span> = <span class="keyword">new</span> <span class="classname">Car</span>();
 <span class="variable">$car</span>-><span class="property">model</span> = <span class="string">"Toyota"</span>;
 <span class="keyword">echo</span> <span class="variable">$car</span>-><span class="property">model</span>; <span class="comment">// Toyota</span>
 <span class="keyword">echo</span> <span class="variable">$car</span>; <span class="comment">// This is a car object.</span></code></pre>
-        </div>
       </div>
-
-      <!-- Namespaces -->
-      <div class="content-section" id="namespaces">
-        <h1>📁 Namespaces</h1>
-        <ul>
-          <li>Prevent name conflicts between classes.</li>
-          <li>Use <code>namespace</code>.</li>
-        </ul>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">namespace</span> <span class="classname">App</span>;
-
+    </div>
+    <!-- Namespaces -->
+    <div class="content-section" id="namespaces">
+      <h1><i class="fas fa-folder"></i> Namespaces</h1>
+      <ul>
+        <li>Prevent name conflicts between classes.</li>
+        <li>Use <code>namespace</code>.</li>
+      </ul>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">namespace</span> <span class="classname">App</span>;
 <span class="keyword">class</span> <span class="classname">User</span> {
     <span class="keyword">public function</span> <span class="function">greet</span>() {
         <span class="keyword">return</span> <span class="string">"Hello!"</span>;
     }
 }
-
 <span class="variable">$user</span> = <span class="keyword">new</span> \<span class="classname">App</span>\<span class="classname">User</span>();
 <span class="keyword">echo</span> <span class="variable">$user</span>-><span class="function">greet</span>(); <span class="comment">// Hello!</span></code></pre>
-        </div>
       </div>
-
-      <!-- Autoloading -->
-      <div class="content-section" id="autoloading">
-        <h1>🔄 Autoloading</h1>
-        <ul>
-          <li>
-            Automatically load classes without <code>require</code> or
-            <code>include</code>.
-          </li>
-          <li>Use <code>spl_autoload_register()</code>.</li>
-        </ul>
-
-        <h4>Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="function">spl_autoload_register</span>(<span class="keyword">function</span> (<span class="variable">$class</span>) {
+    </div>
+    <!-- Autoloading -->
+    <div class="content-section" id="autoloading">
+      <h1><i class="fas fa-sync"></i> Autoloading</h1>
+      <ul>
+        <li>
+          Automatically load classes without <code>require</code> or
+          <code>include</code>.
+        </li>
+        <li>Use <code>spl_autoload_register()</code>.</li>
+      </ul>
+      <h4>Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="function">spl_autoload_register</span>(<span class="keyword">function</span> (<span class="variable">$class</span>) {
     <span class="function">include</span> <span class="string">'classes/'</span> . <span class="variable">$class</span> . <span class="string">'.php'</span>;
 });
-
 <span class="variable">$user</span> = <span class="keyword">new</span> <span class="classname">User</span>();</code></pre>
-        </div>
-
-        <div class="highlight-box">
-          <h4>📝 Complete OOP Workflow Example</h4>
-          <p><strong>1. Define a Class:</strong></p>
-          <div class="code-example">
-            <div class="code-language">PHP</div>
-            <pre><code><span class="keyword">class</span> <span class="classname">User</span> {
+      </div>
+      <div class="highlight-box">
+        <h4><i class="fas fa-edit"></i> Complete OOP Workflow Example</h4>
+        <p><strong>1. Define a Class:</strong></p>
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">User</span> {
     <span class="keyword">private</span> <span class="variable">$name</span>;
-
     <span class="keyword">public function</span> <span class="function">__construct</span>(<span class="variable">$name</span>) {
         <span class="variable">$this</span>-><span class="property">name</span> = <span class="variable">$name</span>;
     }
-
     <span class="keyword">public function</span> <span class="function">greet</span>() {
         <span class="keyword">return</span> <span class="string">"Hello, </span><span class="variable">$this</span>-><span class="property">name</span><span class="string">!"</span>;
     }
 }</code></pre>
-          </div>
-
-          <p><strong>2. Create an Object:</strong></p>
-          <div class="code-example">
-            <div class="code-language">PHP</div>
-            <pre><code><span class="variable">$user</span> = <span class="keyword">new</span> <span class="classname">User</span>(<span class="string">"John"</span>);
+        </div>
+        <p><strong>2. Create an Object:</strong></p>
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="variable">$user</span> = <span class="keyword">new</span> <span class="classname">User</span>(<span class="string">"John"</span>);
 <span class="keyword">echo</span> <span class="variable">$user</span>-><span class="function">greet</span>(); <span class="comment">// Hello, John!</span></code></pre>
-          </div>
-
-          <p><strong>3. Extend a Class:</strong></p>
-          <div class="code-example">
-            <div class="code-language">PHP</div>
-            <pre><code><span class="keyword">class</span> <span class="classname">Admin</span> <span class="keyword">extends</span> <span class="classname">User</span> {
+        </div>
+        <p><strong>3. Extend a Class:</strong></p>
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="keyword">class</span> <span class="classname">Admin</span> <span class="keyword">extends</span> <span class="classname">User</span> {
     <span class="keyword">public function</span> <span class="function">promote</span>() {
         <span class="keyword">return</span> <span class="string">"</span><span class="variable">$this</span>-><span class="property">name</span><span class="string"> has been promoted to admin."</span>;
     }
 }
-
 <span class="variable">$admin</span> = <span class="keyword">new</span> <span class="classname">Admin</span>(<span class="string">"Jane"</span>);
 <span class="keyword">echo</span> <span class="variable">$admin</span>-><span class="function">greet</span>(); <span class="comment">// Hello, Jane!</span>
 <span class="keyword">echo</span> <span class="variable">$admin</span>-><span class="function">promote</span>(); <span class="comment">// Jane has been promoted to admin.</span></code></pre>
-          </div>
         </div>
       </div>
-
-      <!-- SOLID Principles -->
-      <div class="content-section" id="solid-principles">
-        <h1>🧱 SOLID Principles</h1>
-
-        <p>
-          SOLID is an acronym for five design principles introduced by Robert C.
-          Martin (Uncle Bob). These principles help developers design software
-          that is easy to understand, maintain, and extend.
-        </p>
-
-        <h2>1. Single Responsibility Principle (SRP)</h2>
-        <h4>Definition:</h4>
-        <p>
-          A class should have only one reason to change, meaning it should have
-          only one job or responsibility.
-        </p>
-
-        <h4>Why:</h4>
-        <ul>
-          <li>Improves readability and maintainability.</li>
-          <li>Reduces the risk of introducing bugs when making changes.</li>
-        </ul>
-
-        <h4>Violation Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">User</span> {
+    </div>
+    <!-- SOLID Principles -->
+    <div class="content-section" id="solid-principles">
+      <h1><i class="fas fa-star"></i> SOLID Principles</h1>
+      <p>
+        SOLID is an acronym for five design principles introduced by Robert C.
+        Martin (Uncle Bob). These principles help developers design software
+        that is easy to understand, maintain, and extend.
+      </p>
+      <h2>1. Single Responsibility Principle (SRP)</h2>
+      <h4>Definition:</h4>
+      <p>
+        A class should have only one reason to change, meaning it should have
+        only one job or responsibility.
+      </p>
+      <h4>Why:</h4>
+      <ul>
+        <li>Improves readability and maintainability.</li>
+        <li>Reduces the risk of introducing bugs when making changes.</li>
+      </ul>
+      <h4>Violation Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">User</span> {
     <span class="keyword">public function</span> <span class="function">authenticate</span>(<span class="variable">$username</span>, <span class="variable">$password</span>) {
         <span class="comment">// Authentication logic</span>
     }
-
     <span class="keyword">public function</span> <span class="function">logError</span>(<span class="variable">$error</span>) {
         <span class="comment">// Logging logic</span>
     }
 }</code></pre>
-        </div>
-
-        <h4>Solution:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">User</span> {
+      </div>
+      <h4>Solution:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">User</span> {
     <span class="keyword">public function</span> <span class="function">authenticate</span>(<span class="variable">$username</span>, <span class="variable">$password</span>) {
         <span class="comment">// Authentication logic</span>
     }
 }
-
 <span class="keyword">class</span> <span class="classname">Logger</span> {
     <span class="keyword">public function</span> <span class="function">logError</span>(<span class="variable">$error</span>) {
         <span class="comment">// Logging logic</span>
     }
 }</code></pre>
-        </div>
-
-        <h2>2. Open/Closed Principle (OCP)</h2>
-        <h4>Definition:</h4>
-        <p>
-          Software entities (classes, modules, functions) should be open for
-          extension but closed for modification.
-        </p>
-
-        <h4>Why:</h4>
-        <ul>
-          <li>Allows adding new features without changing existing code.</li>
-          <li>Reduces the risk of breaking existing functionality.</li>
-        </ul>
-
-        <h4>Violation Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">AreaCalculator</span> {
+      </div>
+      <h2>2. Open/Closed Principle (OCP)</h2>
+      <h4>Definition:</h4>
+      <p>
+        Software entities (classes, modules, functions) should be open for
+        extension but closed for modification.
+      </p>
+      <h4>Why:</h4>
+      <ul>
+        <li>Allows adding new features without changing existing code.</li>
+        <li>Reduces the risk of breaking existing functionality.</li>
+      </ul>
+      <h4>Violation Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">AreaCalculator</span> {
     <span class="keyword">public function</span> <span class="function">calculate</span>(<span class="variable">$shape</span>) {
         <span class="keyword">if</span> (<span class="variable">$shape</span> <span class="keyword">instanceof</span> <span class="classname">Circle</span>) {
             <span class="keyword">return</span> <span class="function">pi</span>() * <span class="variable">$shape</span>-><span class="property">radius</span> ** <span class="number">2</span>;
@@ -1164,353 +502,307 @@
         }
     }
 }</code></pre>
-        </div>
-
-        <h4>Solution:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">interface</span> <span class="classname">Shape</span> {
+      </div>
+      <h4>Solution:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">interface</span> <span class="classname">Shape</span> {
     <span class="keyword">public function</span> <span class="function">area</span>();
 }
-
 <span class="keyword">class</span> <span class="classname">Circle</span> <span class="keyword">implements</span> <span class="classname">Shape</span> {
     <span class="keyword">public</span> <span class="variable">$radius</span>;
-
     <span class="keyword">public function</span> <span class="function">area</span>() {
         <span class="keyword">return</span> <span class="function">pi</span>() * <span class="variable">$this</span>-><span class="property">radius</span> ** <span class="number">2</span>;
     }
 }
-
 <span class="keyword">class</span> <span class="classname">Square</span> <span class="keyword">implements</span> <span class="classname">Shape</span> {
     <span class="keyword">public</span> <span class="variable">$side</span>;
-
     <span class="keyword">public function</span> <span class="function">area</span>() {
         <span class="keyword">return</span> <span class="variable">$this</span>-><span class="property">side</span> ** <span class="number">2</span>;
     }
 }
-
 <span class="keyword">class</span> <span class="classname">AreaCalculator</span> {
     <span class="keyword">public function</span> <span class="function">calculate</span>(<span class="classname">Shape</span> <span class="variable">$shape</span>) {
         <span class="keyword">return</span> <span class="variable">$shape</span>-><span class="function">area</span>();
     }
 }</code></pre>
-        </div>
-
-        <h2>3. Liskov Substitution Principle (LSP)</h2>
-        <h4>Definition:</h4>
-        <p>
-          Objects of a superclass should be replaceable with objects of a
-          subclass without affecting the correctness of the program.
-        </p>
-
-        <h4>Why:</h4>
-        <ul>
-          <li>
-            Ensures a subclass can stand in for its superclass without causing
-            unexpected behavior.
-          </li>
-          <li>Promotes proper inheritance.</li>
-        </ul>
-
-        <h4>Violation Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">Bird</span> {
+      </div>
+      <h2>3. Liskov Substitution Principle (LSP)</h2>
+      <h4>Definition:</h4>
+      <p>
+        Objects of a superclass should be replaceable with objects of a
+        subclass without affecting the correctness of the program.
+      </p>
+      <h4>Why:</h4>
+      <ul>
+        <li>
+          Ensures a subclass can stand in for its superclass without causing
+          unexpected behavior.
+        </li>
+        <li>Promotes proper inheritance.</li>
+      </ul>
+      <h4>Violation Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">Bird</span> {
     <span class="keyword">public function</span> <span class="function">fly</span>() {
         <span class="comment">// Fly logic</span>
     }
 }
-
 <span class="keyword">class</span> <span class="classname">Ostrich</span> <span class="keyword">extends</span> <span class="classname">Bird</span> {
     <span class="keyword">public function</span> <span class="function">fly</span>() {
         <span class="keyword">throw new</span> <span class="classname">Exception</span>(<span class="string">"Can't fly"</span>);
     }
 }</code></pre>
-        </div>
-
-        <h4>Solution:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">Bird</span> {
+      </div>
+      <h4>Solution:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">Bird</span> {
     <span class="comment">// Common bird methods</span>
 }
-
 <span class="keyword">class</span> <span class="classname">FlyingBird</span> <span class="keyword">extends</span> <span class="classname">Bird</span> {
     <span class="keyword">public function</span> <span class="function">fly</span>() {
         <span class="comment">// Fly logic</span>
     }
 }
-
 <span class="keyword">class</span> <span class="classname">Ostrich</span> <span class="keyword">extends</span> <span class="classname">Bird</span> {
     <span class="comment">// Ostrich-specific methods</span>
 }</code></pre>
-        </div>
-
-        <h2>4. Interface Segregation Principle (ISP)</h2>
-        <h4>Definition:</h4>
-        <p>
-          Clients should not be forced to depend on interfaces they do not use.
-          Instead of one large interface, create smaller, specific interfaces.
-        </p>
-
-        <h4>Why:</h4>
-        <ul>
-          <li>Reduces the burden of implementing unnecessary methods.</li>
-          <li>Makes the system more modular and easier to refactor.</li>
-        </ul>
-
-        <h4>Violation Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">interface</span> <span class="classname">Worker</span> {
+      </div>
+      <h2>4. Interface Segregation Principle (ISP)</h2>
+      <h4>Definition:</h4>
+      <p>
+        Clients should not be forced to depend on interfaces they do not use.
+        Instead of one large interface, create smaller, specific interfaces.
+      </p>
+      <h4>Why:</h4>
+      <ul>
+        <li>Reduces the burden of implementing unnecessary methods.</li>
+        <li>Makes the system more modular and easier to refactor.</li>
+      </ul>
+      <h4>Violation Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">interface</span> <span class="classname">Worker</span> {
     <span class="keyword">public function</span> <span class="function">work</span>();
     <span class="keyword">public function</span> <span class="function">eat</span>();
 }
-
 <span class="keyword">class</span> <span class="classname">Human</span> <span class="keyword">implements</span> <span class="classname">Worker</span> {
     <span class="keyword">public function</span> <span class="function">work</span>() {
         <span class="comment">// Work logic</span>
     }
-
     <span class="keyword">public function</span> <span class="function">eat</span>() {
         <span class="comment">// Eat logic</span>
     }
 }
-
 <span class="keyword">class</span> <span class="classname">Robot</span> <span class="keyword">implements</span> <span class="classname">Worker</span> {
     <span class="keyword">public function</span> <span class="function">work</span>() {
         <span class="comment">// Work logic</span>
     }
-
     <span class="keyword">public function</span> <span class="function">eat</span>() {
         <span class="comment">// Robots don't eat!</span>
     }
 }</code></pre>
-        </div>
-
-        <h4>Solution:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">interface</span> <span class="classname">Workable</span> {
+      </div>
+      <h4>Solution:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">interface</span> <span class="classname">Workable</span> {
     <span class="keyword">public function</span> <span class="function">work</span>();
 }
-
 <span class="keyword">interface</span> <span class="classname">Eatable</span> {
     <span class="keyword">public function</span> <span class="function">eat</span>();
 }
-
 <span class="keyword">class</span> <span class="classname">Human</span> <span class="keyword">implements</span> <span class="classname">Workable</span>, <span class="classname">Eatable</span> {
     <span class="keyword">public function</span> <span class="function">work</span>() {
         <span class="comment">// Work logic</span>
     }
-
     <span class="keyword">public function</span> <span class="function">eat</span>() {
         <span class="comment">// Eat logic</span>
     }
 }
-
 <span class="keyword">class</span> <span class="classname">Robot</span> <span class="keyword">implements</span> <span class="classname">Workable</span> {
     <span class="keyword">public function</span> <span class="function">work</span>() {
         <span class="comment">// Work logic</span>
     }
 }</code></pre>
-        </div>
-
-        <h2>5. Dependency Inversion Principle (DIP)</h2>
-        <h4>Definition:</h4>
-        <p>
-          High-level modules should not depend on low-level modules. Both should
-          depend on abstractions. Abstractions should not depend on details.
-          Details should depend on abstractions.
-        </p>
-
-        <h4>Why:</h4>
-        <ul>
-          <li>Promotes loose coupling between modules.</li>
-          <li>Makes the system more flexible and easier to test.</li>
-        </ul>
-
-        <h4>Violation Example:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">MySQLConnection</span> {
+      </div>
+      <h2>5. Dependency Inversion Principle (DIP)</h2>
+      <h4>Definition:</h4>
+      <p>
+        High-level modules should not depend on low-level modules. Both should
+        depend on abstractions. Abstractions should not depend on details.
+        Details should depend on abstractions.
+      </p>
+      <h4>Why:</h4>
+      <ul>
+        <li>Promotes loose coupling between modules.</li>
+        <li>Makes the system more flexible and easier to test.</li>
+      </ul>
+      <h4>Violation Example:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">MySQLConnection</span> {
     <span class="keyword">public function</span> <span class="function">connect</span>() {
         <span class="comment">// MySQL connection logic</span>
     }
 }
-
 <span class="keyword">class</span> <span class="classname">User</span> {
     <span class="keyword">private</span> <span class="variable">$dbConnection</span>;
-
     <span class="keyword">public function</span> <span class="function">__construct</span>() {
         <span class="variable">$this</span>-><span class="property">dbConnection</span> = <span class="keyword">new</span> <span class="classname">MySQLConnection</span>();
     }
 }</code></pre>
-        </div>
-
-        <h4>Solution:</h4>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">interface</span> <span class="classname">DBConnection</span> {
+      </div>
+      <h4>Solution:</h4>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">interface</span> <span class="classname">DBConnection</span> {
     <span class="keyword">public function</span> <span class="function">connect</span>();
 }
-
 <span class="keyword">class</span> <span class="classname">MySQLConnection</span> <span class="keyword">implements</span> <span class="classname">DBConnection</span> {
     <span class="keyword">public function</span> <span class="function">connect</span>() {
         <span class="comment">// MySQL connection logic</span>
     }
 }
-
 <span class="keyword">class</span> <span class="classname">User</span> {
     <span class="keyword">private</span> <span class="variable">$dbConnection</span>;
-
     <span class="keyword">public function</span> <span class="function">__construct</span>(<span class="classname">DBConnection</span> <span class="variable">$dbConnection</span>) {
         <span class="variable">$this</span>-><span class="property">dbConnection</span> = <span class="variable">$dbConnection</span>;
     }
 }</code></pre>
-        </div>
-
-        <h3>Summary of SOLID Principles</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Principle</th>
-              <th>Key Idea</th>
-              <th>Example</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Single Responsibility (SRP)</strong></td>
-              <td>A class should have only one reason to change.</td>
-              <td>
-                Separate authentication and logging into different classes.
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Open/Closed (OCP)</strong></td>
-              <td>
-                Classes should be open for extension but closed for
-                modification.
-              </td>
-              <td>
-                Use interfaces to allow adding new shapes without modifying
-                existing code.
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Liskov Substitution (LSP)</strong></td>
-              <td>
-                Subclasses should be substitutable for their base classes.
-              </td>
-              <td>
-                Ensure subclasses can replace superclasses without breaking the
-                program.
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Interface Segregation (ISP)</strong></td>
-              <td>
-                Create small, specific interfaces instead of large,
-                general-purpose ones.
-              </td>
-              <td>Split a large Worker interface into Workable and Eatable.</td>
-            </tr>
-            <tr>
-              <td><strong>Dependency Inversion (DIP)</strong></td>
-              <td>Depends on abstractions, not concretions.</td>
-              <td>
-                Inject database connections via an interface instead of
-                hardcoding them.
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="highlight-box">
-          <h4>🎯 Benefits of SOLID Principles</h4>
-          <div class="principles-grid">
-            <div class="principle-card">
-              <h4>🔧 Maintainability</h4>
-              <p>Easier to understand and modify code.</p>
-            </div>
-            <div class="principle-card">
-              <h4>📈 Scalability</h4>
-              <p>Simplifies adding new features.</p>
-            </div>
-            <div class="principle-card">
-              <h4>🧪 Testability</h4>
-              <p>Promotes writing testable code.</p>
-            </div>
-            <div class="principle-card">
-              <h4>♻️ Reusability</h4>
-              <p>Encourages modular and reusable components.</p>
-            </div>
-            <div class="principle-card">
-              <h4>🔄 Flexibility</h4>
-              <p>Reduces tight coupling between components.</p>
-            </div>
+      </div>
+      <h3>Summary of SOLID Principles</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Principle</th>
+            <th>Key Idea</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Single Responsibility (SRP)</strong></td>
+            <td>A class should have only one reason to change.</td>
+            <td>
+              Separate authentication and logging into different classes.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Open/Closed (OCP)</strong></td>
+            <td>
+              Classes should be open for extension but closed for
+              modification.
+            </td>
+            <td>
+              Use interfaces to allow adding new shapes without modifying
+              existing code.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Liskov Substitution (LSP)</strong></td>
+            <td>
+              Subclasses should be substitutable for their base classes.
+            </td>
+            <td>
+              Ensure subclasses can replace superclasses without breaking the
+              program.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Interface Segregation (ISP)</strong></td>
+            <td>
+              Create small, specific interfaces instead of large,
+              general-purpose ones.
+            </td>
+            <td>Split a large Worker interface into Workable and Eatable.</td>
+          </tr>
+          <tr>
+            <td><strong>Dependency Inversion (DIP)</strong></td>
+            <td>Depends on abstractions, not concretions.</td>
+            <td>
+              Inject database connections via an interface instead of
+              hardcoding them.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="highlight-box">
+        <h4><i class="fas fa-bullseye"></i> Benefits of SOLID Principles</h4>
+        <div class="principles-grid">
+          <div class="principle-card">
+            <h4><i class="fas fa-wrench"></i> Maintainability</h4>
+            <p>Easier to understand and modify code.</p>
+          </div>
+          <div class="principle-card">
+            <h4><i class="fas fa-star"></i> Scalability</h4>
+            <p>Simplifies adding new features.</p>
+          </div>
+          <div class="principle-card">
+            <h4><i class="fas fa-flask"></i> Testability</h4>
+            <p>Promotes writing testable code.</p>
+          </div>
+          <div class="principle-card">
+            <h4><i class="fas fa-star"></i> Reusability</h4>
+            <p>Encourages modular and reusable components.</p>
+          </div>
+          <div class="principle-card">
+            <h4><i class="fas fa-sync"></i> Flexibility</h4>
+            <p>Reduces tight coupling between components.</p>
           </div>
         </div>
       </div>
-
-      <!-- Design Patterns -->
-      <div class="content-section" id="design-patterns">
-        <h1>🏗️ Design Patterns</h1>
-        <p>
-          Design patterns are reusable solutions to common problems in software
-          design. They represent best practices and provide a template for how
-          to solve problems that occur repeatedly in software development.
-        </p>
-
-        <div class="highlight-box">
-          <h3>🔧 Creational Patterns</h3>
-          <p>Deal with object creation mechanisms</p>
-        </div>
-
-        <h3>1. Singleton Pattern</h3>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">class</span> <span class="classname">Database</span> {
+    </div>
+    <!-- Design Patterns -->
+    <div class="content-section" id="design-patterns">
+      <h1><i class="fas fa-building"></i> Design Patterns</h1>
+      <p>
+        Design patterns are reusable solutions to common problems in software
+        design. They represent best practices and provide a template for how
+        to solve problems that occur repeatedly in software development.
+      </p>
+      <div class="highlight-box">
+        <h3><i class="fas fa-wrench"></i> Creational Patterns</h3>
+        <p>Deal with object creation mechanisms</p>
+      </div>
+      <h3>1. Singleton Pattern</h3>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">class</span> <span class="classname">Database</span> {
     <span class="keyword">private static</span> <span class="variable">$instance</span> = <span class="keyword">null</span>;
     <span class="keyword">private</span> <span class="variable">$connection</span>;
-    
     <span class="keyword">private function</span> <span class="function">__construct</span>() {
         <span class="comment">// Private constructor prevents instantiation</span>
         <span class="variable">$this</span>-><span class="property">connection</span> = <span class="keyword">new</span> <span class="classname">PDO</span>(<span class="string">'mysql:host=localhost'</span>);
     }
-    
     <span class="keyword">public static function</span> <span class="function">getInstance</span>() {
         <span class="keyword">if</span> (<span class="keyword">self</span>::<span class="variable">$instance</span> === <span class="keyword">null</span>) {
             <span class="keyword">self</span>::<span class="variable">$instance</span> = <span class="keyword">new</span> <span class="keyword">self</span>();
         }
         <span class="keyword">return</span> <span class="keyword">self</span>::<span class="variable">$instance</span>;
     }
-    
     <span class="keyword">private function</span> <span class="function">__clone</span>() {} <span class="comment">// Prevent cloning</span>
     <span class="keyword">private function</span> <span class="function">__wakeup</span>() {} <span class="comment">// Prevent unserialization</span>
 }</code></pre>
-        </div>
-
-        <h3>2. Factory Pattern</h3>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">interface</span> <span class="classname">Logger</span> {
+      </div>
+      <h3>2. Factory Pattern</h3>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">interface</span> <span class="classname">Logger</span> {
     <span class="keyword">public function</span> <span class="function">log</span>(<span class="variable">$message</span>);
 }
-
 <span class="keyword">class</span> <span class="classname">FileLogger</span> <span class="keyword">implements</span> <span class="classname">Logger</span> {
     <span class="keyword">public function</span> <span class="function">log</span>(<span class="variable">$message</span>) {
         <span class="function">file_put_contents</span>(<span class="string">'app.log'</span>, <span class="variable">$message</span>, <span class="constant">FILE_APPEND</span>);
     }
 }
-
 <span class="keyword">class</span> <span class="classname">DatabaseLogger</span> <span class="keyword">implements</span> <span class="classname">Logger</span> {
     <span class="keyword">public function</span> <span class="function">log</span>(<span class="variable">$message</span>) {
         <span class="comment">// Log to database</span>
     }
 }
-
 <span class="keyword">class</span> <span class="classname">LoggerFactory</span> {
     <span class="keyword">public static function</span> <span class="function">create</span>(<span class="variable">$type</span>) {
         <span class="keyword">switch</span> (<span class="variable">$type</span>) {
@@ -1523,149 +815,130 @@
         }
     }
 }</code></pre>
-        </div>
-
-        <div class="highlight-box">
-          <h3>🏗️ Structural Patterns</h3>
-          <p>Deal with object composition and relationships</p>
-        </div>
-
-        <h3>3. Adapter Pattern</h3>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="comment">// Old payment system</span>
+      </div>
+      <div class="highlight-box">
+        <h3><i class="fas fa-building"></i> Structural Patterns</h3>
+        <p>Deal with object composition and relationships</p>
+      </div>
+      <h3>3. Adapter Pattern</h3>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="comment">// Old payment system</span>
 <span class="keyword">class</span> <span class="classname">OldPaymentSystem</span> {
     <span class="keyword">public function</span> <span class="function">makePayment</span>(<span class="variable">$amount</span>) {
         <span class="keyword">return</span> <span class="string">"Payment of $"</span> . <span class="variable">$amount</span> . <span class="string">" processed"</span>;
     }
 }
-
 <span class="comment">// New payment interface</span>
 <span class="keyword">interface</span> <span class="classname">PaymentInterface</span> {
     <span class="keyword">public function</span> <span class="function">pay</span>(<span class="variable">$amount</span>);
 }
-
 <span class="comment">// Adapter to make old system work with new interface</span>
 <span class="keyword">class</span> <span class="classname">PaymentAdapter</span> <span class="keyword">implements</span> <span class="classname">PaymentInterface</span> {
     <span class="keyword">private</span> <span class="variable">$oldPaymentSystem</span>;
-    
     <span class="keyword">public function</span> <span class="function">__construct</span>(<span class="classname">OldPaymentSystem</span> <span class="variable">$oldPaymentSystem</span>) {
         <span class="variable">$this</span>-><span class="property">oldPaymentSystem</span> = <span class="variable">$oldPaymentSystem</span>;
     }
-    
     <span class="keyword">public function</span> <span class="function">pay</span>(<span class="variable">$amount</span>) {
         <span class="keyword">return</span> <span class="variable">$this</span>-><span class="property">oldPaymentSystem</span>-><span class="function">makePayment</span>(<span class="variable">$amount</span>);
     }
 }</code></pre>
-        </div>
-
-        <div class="highlight-box">
-          <h3>⚙️ Behavioral Patterns</h3>
-          <p>Deal with communication between objects and responsibilities</p>
-        </div>
-
-        <h3>4. Observer Pattern</h3>
-        <div class="code-example">
-          <div class="code-language">PHP</div>
-          <pre><code><span class="keyword">interface</span> <span class="classname">Observer</span> {
+      </div>
+      <div class="highlight-box">
+        <h3><i class="fas fa-cog"></i> Behavioral Patterns</h3>
+        <p>Deal with communication between objects and responsibilities</p>
+      </div>
+      <h3>4. Observer Pattern</h3>
+      <div class="code-example">
+        <div class="code-language">PHP</div>
+        <pre><code><span class="keyword">interface</span> <span class="classname">Observer</span> {
     <span class="keyword">public function</span> <span class="function">update</span>(<span class="variable">$data</span>);
 }
-
 <span class="keyword">class</span> <span class="classname">EmailNotifier</span> <span class="keyword">implements</span> <span class="classname">Observer</span> {
     <span class="keyword">public function</span> <span class="function">update</span>(<span class="variable">$data</span>) {
         <span class="keyword">echo</span> <span class="string">"Email sent: "</span> . <span class="variable">$data</span>;
     }
 }
-
 <span class="keyword">class</span> <span class="classname">UserRegistration</span> {
     <span class="keyword">private</span> <span class="variable">$observers</span> = [];
-    
     <span class="keyword">public function</span> <span class="function">addObserver</span>(<span class="classname">Observer</span> <span class="variable">$observer</span>) {
         <span class="variable">$this</span>-><span class="property">observers</span>[] = <span class="variable">$observer</span>;
     }
-    
     <span class="keyword">public function</span> <span class="function">register</span>(<span class="variable">$user</span>) {
         <span class="comment">// Register user logic...</span>
         <span class="variable">$this</span>-><span class="function">notifyObservers</span>(<span class="string">"User "</span> . <span class="variable">$user</span> . <span class="string">" registered"</span>);
     }
-    
     <span class="keyword">private function</span> <span class="function">notifyObservers</span>(<span class="variable">$data</span>) {
         <span class="keyword">foreach</span> (<span class="variable">$this</span>-><span class="property">observers</span> <span class="keyword">as</span> <span class="variable">$observer</span>) {
             <span class="variable">$observer</span>-><span class="function">update</span>(<span class="variable">$data</span>);
         }
     }
 }</code></pre>
+      </div>
+    </div>
+    <!-- Best Practices -->
+    <div class="content-section" id="best-practices">
+      <h1><i class="fas fa-star"></i> Best Practices</h1>
+      <p>
+        Following OOP best practices helps create maintainable, readable, and
+        robust code. Here are essential guidelines for effective OOP
+        development.
+      </p>
+      <div class="principles-grid">
+        <div class="principle-card">
+          <h3><i class="fas fa-edit"></i> Naming Conventions</h3>
+          <ul>
+            <li>
+              <strong>Classes:</strong> PascalCase (e.g.,
+              <code>UserAccount</code>)
+            </li>
+            <li>
+              <strong>Methods:</strong> camelCase (e.g.,
+              <code>getUserName()</code>)
+            </li>
+            <li>
+              <strong>Properties:</strong> camelCase (e.g.,
+              <code>$firstName</code>)
+            </li>
+            <li>
+              <strong>Constants:</strong> UPPER_CASE (e.g.,
+              <code>MAX_ATTEMPTS</code>)
+            </li>
+          </ul>
+        </div>
+        <div class="principle-card">
+          <h3><i class="fas fa-lock"></i> Encapsulation Rules</h3>
+          <ul>
+            <li>Keep properties private/protected</li>
+            <li>Provide public getters/setters when needed</li>
+            <li>Validate data in setters</li>
+            <li>Hide internal implementation details</li>
+          </ul>
+        </div>
+        <div class="principle-card">
+          <h3><i class="fas fa-building"></i> Class Design</h3>
+          <ul>
+            <li>Keep classes focused (Single Responsibility)</li>
+            <li>Favor composition over inheritance</li>
+            <li>Use interfaces for contracts</li>
+            <li>Make classes immutable when possible</li>
+          </ul>
+        </div>
+        <div class="principle-card">
+          <h3><i class="fas fa-books"></i> Code Organization</h3>
+          <ul>
+            <li>Use namespaces to organize code</li>
+            <li>Follow PSR-4 autoloading standards</li>
+            <li>Group related classes in directories</li>
+            <li>Use meaningful file and directory names</li>
+          </ul>
         </div>
       </div>
-
-      <!-- Best Practices -->
-      <div class="content-section" id="best-practices">
-        <h1>⭐ Best Practices</h1>
-        <p>
-          Following OOP best practices helps create maintainable, readable, and
-          robust code. Here are essential guidelines for effective OOP
-          development.
-        </p>
-
-        <div class="principles-grid">
-          <div class="principle-card">
-            <h3>📝 Naming Conventions</h3>
-            <ul>
-              <li>
-                <strong>Classes:</strong> PascalCase (e.g.,
-                <code>UserAccount</code>)
-              </li>
-              <li>
-                <strong>Methods:</strong> camelCase (e.g.,
-                <code>getUserName()</code>)
-              </li>
-              <li>
-                <strong>Properties:</strong> camelCase (e.g.,
-                <code>$firstName</code>)
-              </li>
-              <li>
-                <strong>Constants:</strong> UPPER_CASE (e.g.,
-                <code>MAX_ATTEMPTS</code>)
-              </li>
-            </ul>
-          </div>
-
-          <div class="principle-card">
-            <h3>🔒 Encapsulation Rules</h3>
-            <ul>
-              <li>Keep properties private/protected</li>
-              <li>Provide public getters/setters when needed</li>
-              <li>Validate data in setters</li>
-              <li>Hide internal implementation details</li>
-            </ul>
-          </div>
-
-          <div class="principle-card">
-            <h3>🏗️ Class Design</h3>
-            <ul>
-              <li>Keep classes focused (Single Responsibility)</li>
-              <li>Favor composition over inheritance</li>
-              <li>Use interfaces for contracts</li>
-              <li>Make classes immutable when possible</li>
-            </ul>
-          </div>
-
-          <div class="principle-card">
-            <h3>📚 Code Organization</h3>
-            <ul>
-              <li>Use namespaces to organize code</li>
-              <li>Follow PSR-4 autoloading standards</li>
-              <li>Group related classes in directories</li>
-              <li>Use meaningful file and directory names</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="highlight-box">
-          <h3>💡 Common Anti-Patterns to Avoid</h3>
-          <div class="code-example">
-            <div class="code-language">❌ Bad Example</div>
-            <pre><code><span class="comment">// God Object - does too much</span>
+      <div class="highlight-box">
+        <h3><i class="fas fa-lightbulb"></i> Common Anti-Patterns to Avoid</h3>
+        <div class="code-example">
+          <div class="code-language"><i class="fas fa-times"></i> Bad Example</div>
+          <pre><code><span class="comment">// God Object - does too much</span>
 <span class="keyword">class</span> <span class="classname">User</span> {
     <span class="keyword">public function</span> <span class="function">validateEmail</span>() { /* ... */ }
     <span class="keyword">public function</span> <span class="function">hashPassword</span>() { /* ... */ }
@@ -1674,69 +947,61 @@
     <span class="keyword">public function</span> <span class="function">generateReport</span>() { /* ... */ }
     <span class="comment">// Too many responsibilities!</span>
 }</code></pre>
-          </div>
-
-          <div class="code-example">
-            <div class="code-language">✅ Good Example</div>
-            <pre><code><span class="comment">// Single Responsibility - focused classes</span>
+        </div>
+        <div class="code-example">
+          <div class="code-language"><i class="fas fa-check"></i> Good Example</div>
+          <pre><code><span class="comment">// Single Responsibility - focused classes</span>
 <span class="keyword">class</span> <span class="classname">User</span> {
     <span class="keyword">private</span> <span class="variable">$email</span>;
     <span class="keyword">private</span> <span class="variable">$password</span>;
-    
     <span class="comment">// Only user-related data and basic operations</span>
 }
-
 <span class="keyword">class</span> <span class="classname">EmailValidator</span> {
     <span class="keyword">public function</span> <span class="function">validate</span>(<span class="variable">$email</span>) { /* ... */ }
 }
-
 <span class="keyword">class</span> <span class="classname">PasswordHasher</span> {
     <span class="keyword">public function</span> <span class="function">hash</span>(<span class="variable">$password</span>) { /* ... */ }
 }
-
 <span class="keyword">class</span> <span class="classname">EmailService</span> {
     <span class="keyword">public function</span> <span class="function">send</span>(<span class="variable">$to</span>, <span class="variable">$message</span>) { /* ... */ }
 }</code></pre>
-          </div>
         </div>
-
-        <div class="highlight-box">
-          <h3>🧪 Testing Best Practices</h3>
-          <ul>
-            <li>
-              <strong>Unit Testing:</strong> Test individual methods in
-              isolation
-            </li>
-            <li>
-              <strong>Mock Dependencies:</strong> Use dependency injection for
-              testability
-            </li>
-            <li><strong>Test Coverage:</strong> Aim for high test coverage</li>
-            <li>
-              <strong>TDD:</strong> Consider Test-Driven Development approach
-            </li>
-          </ul>
-        </div>
-
-        <div class="highlight-box">
-          <h3>🚀 Performance Considerations</h3>
-          <ul>
-            <li>
-              <strong>Lazy Loading:</strong> Load objects only when needed
-            </li>
-            <li><strong>Object Pooling:</strong> Reuse expensive objects</li>
-            <li><strong>Caching:</strong> Cache frequently accessed data</li>
-            <li>
-              <strong>Memory Management:</strong> Unset unused object references
-            </li>
-          </ul>
-        </div>
-
-        <div class="highlight-box">
-          <h3>📖 Documentation & Comments</h3>
-          <div class="code-example">
-            <div class="code-language">PHP</div>
-            <pre><code><span class="comment">/**
+      </div>
+      <div class="highlight-box">
+        <h3><i class="fas fa-flask"></i> Testing Best Practices</h3>
+        <ul>
+          <li>
+            <strong>Unit Testing:</strong> Test individual methods in
+            isolation
+          </li>
+          <li>
+            <strong>Mock Dependencies:</strong> Use dependency injection for
+            testability
+          </li>
+          <li><strong>Test Coverage:</strong> Aim for high test coverage</li>
+          <li>
+            <strong>TDD:</strong> Consider Test-Driven Development approach
+          </li>
+        </ul>
+      </div>
+      <div class="highlight-box">
+        <h3><i class="fas fa-rocket"></i> Performance Considerations</h3>
+        <ul>
+          <li>
+            <strong>Lazy Loading:</strong> Load objects only when needed
+          </li>
+          <li><strong>Object Pooling:</strong> Reuse expensive objects</li>
+          <li><strong>Caching:</strong> Cache frequently accessed data</li>
+          <li>
+            <strong>Memory Management:</strong> Unset unused object references
+          </li>
+        </ul>
+      </div>
+      <div class="highlight-box">
+        <h3><i class="fas fa-book"></i> Documentation & Comments</h3>
+        <div class="code-example">
+          <div class="code-language">PHP</div>
+          <pre><code><span class="comment">/**
  * Represents a bank account with basic operations
  * 
  * @package Banking
@@ -1750,7 +1015,6 @@
      * @var int
      */</span>
     <span class="keyword">private</span> <span class="variable">$balanceInCents</span>;
-    
     <span class="comment">/**
      * Deposit money into the account
      * 
@@ -1762,100 +1026,94 @@
         <span class="keyword">if</span> (<span class="variable">$amount</span> <= 0) {
             <span class="keyword">throw new</span> <span class="classname">InvalidArgumentException</span>(<span class="string">'Amount must be positive'</span>);
         }
-        
         <span class="variable">$this</span>-><span class="property">balanceInCents</span> += <span class="function">intval</span>(<span class="variable">$amount</span> * 100);
         <span class="keyword">return</span> <span class="keyword">true</span>;
     }
 }</code></pre>
-          </div>
         </div>
       </div>
     </div>
-
-    <script>
-      // Toggle Table of Contents
-      function toggleTOC() {
-        const tocContainer = document.getElementById("tocContainer");
-        const tocBackdrop = document.getElementById("tocBackdrop");
-        const isActive = tocContainer.classList.contains("active");
-
-        if (isActive) {
-          tocContainer.classList.remove("active");
-          tocBackdrop.classList.remove("active");
-        } else {
-          tocContainer.classList.add("active");
-          tocBackdrop.classList.add("active");
-        }
+  </div>
+  <script>
+    // Toggle Table of Contents
+    function toggleTOC() {
+      const tocContainer = document.getElementById("tocContainer");
+      const tocBackdrop = document.getElementById("tocBackdrop");
+      const isActive = tocContainer.classList.contains("active");
+      if (isActive) {
+        tocContainer.classList.remove("active");
+        tocBackdrop.classList.remove("active");
+      } else {
+        tocContainer.classList.add("active");
+        tocBackdrop.classList.add("active");
       }
-
-      // Close TOC when clicking on backdrop
-      document.addEventListener("DOMContentLoaded", function () {
-        const tocBackdrop = document.getElementById("tocBackdrop");
-        const tocContainer = document.getElementById("tocContainer");
-
-        tocBackdrop.addEventListener("click", function () {
-          tocContainer.classList.remove("active");
-          tocBackdrop.classList.remove("active");
-        });
+    }
+    // Close TOC when clicking on backdrop
+    document.addEventListener("DOMContentLoaded", function () {
+      const tocBackdrop = document.getElementById("tocBackdrop");
+      const tocContainer = document.getElementById("tocContainer");
+      tocBackdrop.addEventListener("click", function () {
+        tocContainer.classList.remove("active");
+        tocBackdrop.classList.remove("active");
       });
-
-      // Close TOC when clicking outside
-      document.addEventListener("click", function (event) {
-        const tocContainer = document.getElementById("tocContainer");
-        const tocBackdrop = document.getElementById("tocBackdrop");
-        const tocButton = document.querySelector(".toc-toggle");
-
-        if (
-          !tocContainer.contains(event.target) &&
-          !tocButton.contains(event.target) &&
-          !tocBackdrop.contains(event.target)
-        ) {
-          tocContainer.classList.remove("active");
-          tocBackdrop.classList.remove("active");
-        }
-      });
-
-      // Close TOC when clicking on a link (mobile friendly)
-      document.querySelectorAll(".toc-list a").forEach((link) => {
-        link.addEventListener("click", function () {
-          const tocContainer = document.getElementById("tocContainer");
-          const tocBackdrop = document.getElementById("tocBackdrop");
-          tocContainer.classList.remove("active");
-          tocBackdrop.classList.remove("active");
-        });
-      });
-
-      // Back to Top Button Functionality
-      function scrollToTop() {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
+    });
+    // Close TOC when clicking outside
+    document.addEventListener("click", function (event) {
+      const tocContainer = document.getElementById("tocContainer");
+      const tocBackdrop = document.getElementById("tocBackdrop");
+      const tocButton = document.querySelector(".toc-toggle");
+      if (
+        !tocContainer.contains(event.target) &&
+        !tocButton.contains(event.target) &&
+        !tocBackdrop.contains(event.target)
+      ) {
+        tocContainer.classList.remove("active");
+        tocBackdrop.classList.remove("active");
       }
-
-      // Show/Hide Back to Top Button
-      window.addEventListener("scroll", function () {
-        const backToTopButton = document.getElementById("backToTop");
-        if (window.pageYOffset > 300) {
-          backToTopButton.classList.add("visible");
-        } else {
-          backToTopButton.classList.remove("visible");
+    });
+    // Close TOC when clicking on a link (mobile friendly)
+    document.querySelectorAll(".toc-list a").forEach((link) => {
+      link.addEventListener("click", function () {
+        const tocContainer = document.getElementById("tocContainer");
+        const tocBackdrop = document.getElementById("tocBackdrop");
+        tocContainer.classList.remove("active");
+        tocBackdrop.classList.remove("active");
+      });
+    });
+    // Back to Top Button Functionality
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+    // Show/Hide Back to Top Button
+    window.addEventListener("scroll", function () {
+      const backToTopButton = document.getElementById("backToTop");
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.add("visible");
+      } else {
+        backToTopButton.classList.remove("visible");
+      }
+    });
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute("href"));
+        if (target) {
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
         }
       });
-
-      // Smooth scrolling for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          if (target) {
-            target.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }
-        });
-      });
-    </script>
-  </body>
+    });
+  </script>
+  <!-- Shared JavaScript for dark mode and features -->
+  <script src="../assets/js/main.js"></script>
+</body>
 </html>
+
+
+

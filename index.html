@@ -1,2039 +1,854 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="ITI Courses Notes Hub - Comprehensive study materials for Operating Systems, SQA, Networking, Database, and more."
-    />
-    <meta name="theme-color" content="#667eea" />
-    <title>ITI-Courses Notes Hub</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIEJhY2tncm91bmQgZ3JhZGllbnQgY2lyY2xlIC0tPgogIDxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjE2IiBmaWxsPSJ1cmwoI2dyYWQxKSIvPgogIAogIDwhLS0gQm9vay9Lbm93bGVkZ2Ugc3ltYm9sIC0tPgogIDxyZWN0IHg9IjgiIHk9IjEwIiB3aWR0aD0iMTYiIGhlaWdodD0iMTIiIHJ4PSIxIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSI5IiB5PSIxMSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjEiIGZpbGw9IiM2NjdlZWEiLz4KICA8cmVjdCB4PSI5IiB5PSIxMyIgd2lkdGg9IjE0IiBoZWlnaHQ9IjEiIGZpbGw9IiM2NjdlZWEiLz4KICA8cmVjdCB4PSI5IiB5PSIxNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjEiIGZpbGw9IiM2NjdlZWEiLz4KICA8cmVjdCB4PSI5IiB5PSIxNyIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEiIGZpbGw9IiM3NjRiYTIiLz4KICA8cmVjdCB4PSI5IiB5PSIxOSIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEiIGZpbGw9IiM3NjRiYTIiLz4KICAKICA8IS0tIElUSSBMZXR0ZXJzIC0tPgogIDx0ZXh0IHg9IjE2IiB5PSI4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmZmZmIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNiIgZm9udC13ZWlnaHQ9ImJvbGQiPklUSTwvdGV4dD4KICAKICA8IS0tIFRlY2ggc3ltYm9sIChjaXJjdWl0IHBhdHRlcm4pIC0tPgogIDxjaXJjbGUgY3g9IjIwIiBjeT0iMjUiIHI9IjEuNSIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iMTIiIGN5PSIyNSIgcj0iMS41IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjgiLz4KICA8bGluZSB4MT0iMTIiIHkxPSIyNSIgeDI9IjIwIiB5Mj0iMjUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuOCIvPgogIDxsaW5lIHgxPSIxNiIgeTE9IjI1IiB4Mj0iMTYiIHkyPSIyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjAuNSIgb3BhY2l0eT0iMC44Ii8+CiAgCiAgPCEtLSBHcmFkaWVudCBkZWZpbml0aW9uIC0tPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkMSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2NjdlZWEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI1MCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM3NjRiYTIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojZjA5M2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KPC9zdmc+"
-    />
-    <link rel="shortcut icon" href="favicon.svg" />
-
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background: linear-gradient(
-          135deg,
-          #667eea 0%,
-          #764ba2 50%,
-          #f093fb 100%
-        );
-        min-height: 100vh;
-        animation: gradientShift 10s ease infinite;
-        /* Performance optimizations */
-        will-change: auto;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-
-      @keyframes gradientShift {
-        0%,
-        100% {
-          background: linear-gradient(
-            135deg,
-            #667eea 0%,
-            #764ba2 50%,
-            #f093fb 100%
-          );
-        }
-        25% {
-          background: linear-gradient(
-            135deg,
-            #f093fb 0%,
-            #f5576c 50%,
-            #4facfe 100%
-          );
-        }
-        50% {
-          background: linear-gradient(
-            135deg,
-            #4facfe 0%,
-            #00f2fe 50%,
-            #43e97b 100%
-          );
-        }
-        75% {
-          background: linear-gradient(
-            135deg,
-            #43e97b 0%,
-            #38f9d7 50%,
-            #667eea 100%
-          );
-        }
-      }
-
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.95);
-        margin-top: 20px;
-        margin-bottom: 20px;
-        border-radius: 20px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(10px);
-      }
-
-      .header {
-        text-align: center;
-        margin-bottom: 50px;
-        padding: 40px 0;
-        background: linear-gradient(135deg, #2c3e50, #34495e);
-        color: white;
-        border-radius: 15px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .header::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="20" r="1.2" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="1.8" fill="rgba(255,255,255,0.1)"/></svg>');
-        opacity: 0.3;
-        animation: floatStars 20s ease-in-out infinite;
-      }
-
-      @keyframes floatStars {
-        0%,
-        100% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
-      }
-
-      .header h1 {
-        font-size: 3em;
-        margin-bottom: 15px;
-        position: relative;
-        z-index: 1;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-      }
-
-      .header p {
-        font-size: 1.3em;
-        opacity: 0.9;
-        position: relative;
-        z-index: 1;
-      }
-
-      .user-info {
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 30px;
-        border-left: 5px solid #3498db;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      }
-
-      .user-info .user-details {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        flex-wrap: wrap;
-      }
-
-      .user-avatar {
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(135deg, #3498db, #2980b9);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5em;
-        color: white;
-        font-weight: bold;
-      }
-
-      .course-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        margin: 40px 0;
-        max-width: 1000px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .course-card {
-        background: linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.9),
-          rgba(255, 255, 255, 0.95)
-        );
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease,
-          border-color 0.3s ease;
-        position: relative;
-        cursor: pointer;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        display: flex;
-        align-items: center;
-        padding: 0;
-        min-height: 140px;
-        /* Performance optimizations */
-        will-change: transform;
-        contain: layout style paint;
-      }
-
-      .course-card:hover {
-        transform: translateX(10px) scale(1.02);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-        border-color: rgba(255, 255, 255, 0.4);
-      }
-
-      .course-card::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 6px;
-        transition: all 0.3s ease;
-        border-radius: 20px 0 0 20px;
-      }
-
-      .course-card.os::before {
-        background: linear-gradient(180deg, #3498db, #2980b9);
-      }
-
-      .course-card.sqa::before {
-        background: linear-gradient(180deg, #e74c3c, #c0392b);
-      }
-
-      .course-card.network::before {
-        background: linear-gradient(180deg, #1e3c72, #2a5298);
-      }
-
-      .course-card.linux::before {
-        background: linear-gradient(180deg, #2c3e50, #34495e);
-      }
-
-      .course-card.database::before {
-        background: linear-gradient(180deg, #8e44ad, #9b59b6);
-      }
-
-      .course-card.agile::before {
-        background: linear-gradient(180deg, #e67e22, #f39c12);
-      }
-
-      .course-card.git::before {
-        background: linear-gradient(180deg, #27ae60, #2ecc71);
-      }
-
-      .course-card.javascript::before {
-        background: linear-gradient(180deg, #f39c12, #e67e22);
-      }
-
-      .course-card.oop::before {
-        background: linear-gradient(180deg, #9b59b6, #8e44ad);
-      }
-
-      .course-card.datastructures::before {
-        background: linear-gradient(180deg, #3498db, #2980b9);
-      }
-
-      .course-card.algorithms::before {
-        background: linear-gradient(180deg, #e74c3c, #c0392b);
-      }
-
-      .course-card.angular::before {
-        background: linear-gradient(180deg, #dd0031, #c3002f);
-      }
-
-      .course-card.react::before {
-        background: linear-gradient(180deg, #61dafb, #21a1f1);
-      }
-
-      .course-card.mongodb::before {
-        background: linear-gradient(180deg, #47a248, #3f9142);
-      }
-
-      .course-card.docker::before {
-        background: linear-gradient(180deg, #2496ed, #1e87d8);
-      }
-
-      .course-card.aws::before {
-        background: linear-gradient(180deg, #ff9900, #ec7211);
-      }
-
-      .course-card.nodejs::before {
-        background: linear-gradient(180deg, #68a063, #5a8f56);
-      }
-
-      .course-card.mysql::before {
-        background: linear-gradient(180deg, #00758f, #00546b);
-      }
-
-      .course-card.php::before {
-        background: linear-gradient(180deg, #777bb4, #563196);
-      }
-
-      .course-card.wordpress::before {
-        background: linear-gradient(180deg, #21759b, #d54e21);
-      }
-
-      .course-icon-section {
-        flex: 0 0 120px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 140px;
-        position: relative;
-      }
-
-      .course-main-content {
-        flex: 1;
-        padding: 25px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-
-      .course-action-section {
-        flex: 0 0 180px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-      }
-
-      .course-header {
-        margin-bottom: 15px;
-      }
-
-      .course-icon {
-        font-size: 4em;
-        margin-bottom: 0;
-        display: block;
-        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-        will-change: transform;
-      }
-
-      .course-card:hover .course-icon {
-        transform: scale(1.1) rotate(5deg);
-      }
-
-      .course-card.os .course-icon {
-        color: #3498db;
-      }
-      .course-card.sqa .course-icon {
-        color: #e74c3c;
-      }
-      .course-card.network .course-icon {
-        color: #1e3c72;
-      }
-      .course-card.linux .course-icon {
-        color: #2c3e50;
-      }
-      .course-card.database .course-icon {
-        color: #8e44ad;
-      }
-      .course-card.agile .course-icon {
-        color: #e67e22;
-      }
-      .course-card.git .course-icon {
-        color: #27ae60;
-      }
-      .course-card.javascript .course-icon {
-        color: #f39c12;
-      }
-      .course-card.oop .course-icon {
-        color: #9b59b6;
-      }
-      .course-card.datastructures .course-icon {
-        color: #3498db;
-      }
-      .course-card.algorithms .course-icon {
-        color: #e74c3c;
-      }
-
-      .course-card.angular .course-icon {
-        color: #dd0031;
-      }
-
-      .course-card.mongodb .course-icon {
-        color: #47a248;
-      }
-
-      .course-card.docker .course-icon {
-        color: #2496ed;
-      }
-
-      .course-card.aws .course-icon {
-        color: #ff9900;
-      }
-
-      .course-card.nodejs .course-icon {
-        color: #68a063;
-      }
-
-      .course-card.mysql .course-icon {
-        color: #00758f;
-      }
-
-      .course-card.php .course-icon {
-        color: #777bb4;
-      }
-
-      .course-card.wordpress .course-icon {
-        color: #21759b;
-      }
-
-      .course-title {
-        font-size: 1.4em;
-        margin-bottom: 8px;
-        color: #2c3e50;
-        font-weight: 700;
-      }
-
-      .course-subtitle {
-        color: #7f8c8d;
-        font-size: 0.95em;
-        margin-bottom: 15px;
-        font-weight: 500;
-      }
-
-      .course-content {
-        padding: 0;
-      }
-
-      .course-stats {
-        display: flex;
-        gap: 20px;
-        margin-top: 10px;
-      }
-
-      .course-stat {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 0.85em;
-        color: #6c757d;
-      }
-
-      .course-description {
-        color: #555;
-        margin-bottom: 20px;
-        line-height: 1.6;
-      }
-
-      .topics-list {
-        display: none;
-      }
-
-      .topics-list h4 {
-        color: #2c3e50;
-        margin-bottom: 10px;
-        font-size: 1.1em;
-      }
-
-      .topics-list ul {
-        list-style: none;
-        padding-left: 0;
-      }
-
-      .topics-list li {
-        background: #f8f9fa;
-        margin: 5px 0;
-        padding: 8px 12px;
-        border-radius: 6px;
-        border-left: 3px solid #ecf0f1;
-        font-size: 0.9em;
-        transition: all 0.3s ease;
-      }
-
-      .topics-list li:hover {
-        background: #e9ecef;
-        border-left-color: #3498db;
-      }
-
-      .course-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        text-decoration: none;
-        padding: 12px 20px;
-        border-radius: 25px;
-        font-weight: 600;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        font-size: 0.9em;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        will-change: transform;
-      }
-
-      .course-card.os .course-link {
-        background: linear-gradient(135deg, #3498db, #2980b9);
-      }
-
-      .course-card.sqa .course-link {
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-      }
-
-      .course-card.network .course-link {
-        background: linear-gradient(135deg, #1e3c72, #2a5298);
-      }
-
-      .course-card.linux .course-link {
-        background: linear-gradient(135deg, #2c3e50, #34495e);
-      }
-
-      .course-card.database .course-link {
-        background: linear-gradient(135deg, #8e44ad, #9b59b6);
-      }
-
-      .course-card.agile .course-link {
-        background: linear-gradient(135deg, #e67e22, #f39c12);
-      }
-
-      .course-card.git .course-link {
-        background: linear-gradient(135deg, #27ae60, #2ecc71);
-      }
-
-      .course-card.javascript .course-link {
-        background: linear-gradient(135deg, #f39c12, #e67e22);
-      }
-
-      .course-card.oop .course-link {
-        background: linear-gradient(135deg, #9b59b6, #8e44ad);
-      }
-
-      .course-card.datastructures .course-link {
-        background: linear-gradient(135deg, #3498db, #2980b9);
-      }
-
-      .course-card.algorithms .course-link {
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-      }
-
-      .course-card.angular .course-link {
-        background: linear-gradient(135deg, #dd0031, #c3002f);
-      }
-
-      .course-card.mongodb .course-link {
-        background: linear-gradient(135deg, #47a248, #3f9142);
-      }
-
-      .course-card.docker .course-link {
-        background: linear-gradient(135deg, #2496ed, #1e87d8);
-      }
-
-      .course-card.aws .course-link {
-        background: linear-gradient(135deg, #ff9900, #ec7211);
-      }
-
-      .course-card.nodejs .course-link {
-        background: linear-gradient(135deg, #68a063, #5a8f56);
-      }
-
-      .course-card.mysql .course-link {
-        background: linear-gradient(135deg, #00758f, #00546b);
-      }
-
-      .course-card.php .course-link {
-        background: linear-gradient(135deg, #777bb4, #563196);
-      }
-
-      .course-card.wordpress .course-link {
-        background: linear-gradient(135deg, #21759b, #d54e21);
-      }
-
-      .course-link:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      }
-
-      .course-link::after {
-        content: "→";
-        font-size: 1.2em;
-        margin-left: 5px;
-        transition: transform 0.3s ease;
-      }
-
-      .course-link:hover::after {
-        transform: translateX(5px);
-      }
-
-      .course-link::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.2),
-          transparent
-        );
-        transition: left 0.5s ease;
-      }
-
-      .course-link:hover::before {
-        left: 100%;
-      }
-
-      .stats-section {
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        padding: 30px;
-        border-radius: 12px;
-        margin: 40px 0;
-        text-align: center;
-      }
-
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-top: 20px;
-      }
-
-      .stat-card {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      }
-
-      .stat-number {
-        font-size: 2.5em;
-        font-weight: bold;
-        color: #3498db;
-        display: block;
-      }
-
-      .stat-label {
-        color: #7f8c8d;
-        font-size: 0.9em;
-        margin-top: 5px;
-      }
-
-      .footer {
-        text-align: center;
-        padding: 30px;
-        background: linear-gradient(135deg, #2c3e50, #34495e);
-        color: white;
-        border-radius: 12px;
-        margin-top: 40px;
-      }
-
-      .footer-links {
-        display: flex;
-        justify-content: center;
-        gap: 30px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-      }
-
-      .footer-link {
-        color: #ecf0f1;
-        text-decoration: none;
-        transition: color 0.3s ease;
-      }
-
-      .footer-link:hover {
-        color: #3498db;
-      }
-
-      .features-section {
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        margin: 30px 0;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      }
-
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin-top: 20px;
-      }
-
-      .feature-item {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        padding: 15px;
-        background: #f8f9fa;
-        border-radius: 8px;
-        transition: background 0.3s ease;
-      }
-
-      .feature-item:hover {
-        background: #e9ecef;
-      }
-
-      .feature-icon {
-        font-size: 2em;
-        color: #3498db;
-      }
-
-      .quick-access {
-        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-        padding: 25px;
-        border-radius: 12px;
-        margin: 30px 0;
-        border-left: 5px solid #f39c12;
-      }
-
-      .quick-access h3 {
-        color: #d68910;
-        margin-bottom: 15px;
-      }
-
-      .quick-links {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-      }
-
-      .quick-link {
-        background: white;
-        color: #d68910;
-        text-decoration: none;
-        padding: 10px 15px;
-        border-radius: 20px;
-        font-size: 0.9em;
-        transition: all 0.3s ease;
-        border: 2px solid #f39c12;
-      }
-
-      .quick-link:hover {
-        background: #f39c12;
-        color: white;
-      }
-
-      /* Search and Filter Styles */
-      .search-section {
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        margin: 30px 0;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        text-align: center;
-      }
-
-      .search-container {
-        max-width: 600px;
-        margin: 0 auto;
-        position: relative;
-      }
-
-      .search-input {
-        width: 100%;
-        padding: 15px 50px 15px 20px;
-        border: 2px solid #e9ecef;
-        border-radius: 25px;
-        font-size: 1.1em;
-        outline: none;
-        transition: all 0.3s ease;
-      }
-
-      .search-input:focus {
-        border-color: #3498db;
-        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-      }
-
-      .search-icon {
-        position: absolute;
-        right: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #7f8c8d;
-        font-size: 1.2em;
-        pointer-events: none;
-      }
-
-      .filter-tags {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 20px;
-        flex-wrap: wrap;
-      }
-
-      .filter-tag {
-        background: #f8f9fa;
-        color: #495057;
-        padding: 8px 16px;
-        border-radius: 20px;
-        border: 2px solid transparent;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.9em;
-      }
-
-      .filter-tag:hover,
-      .filter-tag.active {
-        background: #3498db;
-        color: white;
-        border-color: #2980b9;
-      }
-
-      /* Sticky Navigation */
-      .sticky-nav {
-        position: sticky;
-        top: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        padding: 15px 0;
-        margin-bottom: 20px;
-        border-radius: 0 0 15px 15px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        z-index: 100;
-      }
-
-      .nav-links {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
-      }
-
-      .nav-link {
-        color: #2c3e50;
-        text-decoration: none;
-        padding: 8px 16px;
-        border-radius: 20px;
-        transition: all 0.3s ease;
-        font-weight: 500;
-      }
-
-      .nav-link:hover {
-        background: #3498db;
-        color: white;
-      }
-
-      /* Course Card Improvements */
-      .course-card {
-        background: white;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        position: relative;
-        cursor: pointer;
-      }
-
-      .course-card:hover {
-        transform: translateY(-10px) scale(1.02);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-      }
-
-      .course-card.hidden {
-        display: none;
-      }
-
-      /* Performance optimization: Use GPU acceleration */
-      .course-card,
-      .course-icon,
-      .course-link,
-      .filter-tag,
-      .nav-link,
-      .quick-link {
-        transform: translateZ(0);
-        backface-visibility: hidden;
-        perspective: 1000px;
-      }
-
-      .course-tags {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        display: flex;
-        gap: 5px;
-        flex-wrap: wrap;
-        z-index: 10;
-      }
-
-      .course-tag {
-        background: rgba(255, 255, 255, 0.9);
-        color: #333;
-        padding: 4px 10px;
-        border-radius: 12px;
-        font-size: 0.75em;
-        font-weight: 600;
-        backdrop-filter: blur(5px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      /* No Results Message */
-      .no-results {
-        text-align: center;
-        padding: 40px;
-        color: #7f8c8d;
-        font-size: 1.2em;
-        display: none;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-
-      .no-results.show {
-        display: block;
-        opacity: 1;
-      }
-
-      /* Reduce animations on low-end devices */
-      @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-        }
-      }
-
-      @media (max-width: 968px) {
-        .container {
-          margin: 10px;
-          padding: 15px;
-        }
-
-        .header h1 {
-          font-size: 2.2em;
-        }
-
-        .course-grid {
-          gap: 15px;
-        }
-
-        .course-card {
-          flex-direction: column;
-          min-height: initial;
-          text-align: center;
-        }
-
-        .course-icon-section {
-          flex: none;
-          height: auto;
-          padding: 20px;
-        }
-
-        .course-main-content {
-          padding: 20px;
-        }
-
-        .course-action-section {
-          flex: none;
-          padding: 20px;
-        }
-
-        .course-stats {
-          justify-content: center;
-        }
-
-        .stats-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        .user-info {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 15px;
-        }
-
-        .footer-links {
-          flex-direction: column;
-          gap: 15px;
-        }
-
-        .quick-links {
-          justify-content: center;
-        }
-
-        .nav-links {
-          gap: 10px;
-        }
-
-        .nav-link {
-          font-size: 0.9em;
-          padding: 6px 12px;
-        }
-
-        .filter-tags {
-          gap: 5px;
-        }
-
-        .filter-tag {
-          font-size: 0.8em;
-          padding: 6px 12px;
-        }
-
-        .search-input {
-          font-size: 1em;
-          padding: 12px 40px 12px 15px;
-        }
-      }
-
-      @media (max-width: 600px) {
-        .stats-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .features-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1>ITI Courses Notes Hub</h1>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="ITI Courses Notes Hub - Comprehensive study materials for Operating Systems, SQA, Networking, Database, and more." />
+  <meta name="theme-color" content="#667eea" />
+  <title>ITI-Courses Notes Hub</title>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="assets/css/main.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32"
+    href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIEJhY2tncm91bmQgZ3JhZGllbnQgY2lyY2xlIC0tPgogIDxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjE2IiBmaWxsPSJ1cmwoI2dyYWQxKSIvPgogIAogIDwhLS0gQm9vay9Lbm93bGVkZ2Ugc3ltYm9sIC0tPgogIDxyZWN0IHg9IjgiIHk9IjEwIiB3aWR0aD0iMTYiIGhlaWdodD0iMTIiIHJ4PSIxIiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSI5IiB5PSIxMSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjEiIGZpbGw9IiM2NjdlZWEiLz4KICA8cmVjdCB4PSI5IiB5PSIxMyIgd2lkdGg9IjE0IiBoZWlnaHQ9IjEiIGZpbGw9IiM2NjdlZWEiLz4KICA8cmVjdCB4PSI5IiB5PSIxNSIgd2lkdGg9IjE0IiBoZWlnaHQ9IjEiIGZpbGw9IiM2NjdlZWEiLz4KICA8cmVjdCB4PSI5IiB5PSIxNyIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEiIGZpbGw9IiM3NjRiYTIiLz4KICA8cmVjdCB4PSI5IiB5PSIxOSIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEiIGZpbGw9IiM3NjRiYTIiLz4KICAKICA8IS0tIElUSSBMZXR0ZXJzIC0tPgogIDx0ZXh0IHg9IjE2IiB5PSI4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmZmZmIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNiIgZm9udC13ZWlnaHQ9ImJvbGQiPklUSTwvdGV4dD4KICAKICA8IS0tIFRlY2ggc3ltYm9sIChjaXJjdWl0IHBhdHRlcm4pIC0tPgogIDxjaXJjbGUgY3g9IjIwIiBjeT0iMjUiIHI9IjEuNSIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iMTIiIGN5PSIyNSIgcj0iMS41IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjgiLz4KICA8bGluZSB4MT0iMTIiIHkxPSIyNSIgeDI9IjIwIiB5Mj0iMjUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuOCIvPgogIDxsaW5lIHgxPSIxNiIgeTE9IjI1IiB4Mj0iMTYiIHkyPSIyMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjAuNSIgb3BhY2l0eT0iMC44Ii8+CiAgCiAgPCEtLSBHcmFkaWVudCBkZWZpbml0aW9uIC0tPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkMSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2NjdlZWEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI1MCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM3NjRiYTIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojZjA5M2ZiIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KPC9zdmc+" />
+  <link rel="shortcut icon" href="favicon.svg" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>ITI Courses Notes Hub</h1>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section" id="search">
+      <h2><i class="fas fa-search"></i> Find Your Course</h2>
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search courses, topics, or technologies..."
+          id="courseSearch" />
+        <span class="search-icon"><i class="fas fa-search"></i></span>
       </div>
-
-      <!-- Search Section -->
-      <div class="search-section" id="search">
-        <h2 style="margin-bottom: 20px; color: #2c3e50">🔍 Find Your Course</h2>
-        <div class="search-container">
-          <input
-            type="text"
-            class="search-input"
-            placeholder="Search courses, topics, or technologies..."
-            id="courseSearch"
-          />
-          <span class="search-icon">🔍</span>
-        </div>
-        <div class="filter-tags">
-          <span class="filter-tag active" data-filter="all">All Courses</span>
-          <span class="filter-tag" data-filter="systems">Systems</span>
-          <span class="filter-tag" data-filter="development">Development</span>
-          <span class="filter-tag" data-filter="security">Security</span>
-          <span class="filter-tag" data-filter="management">Management</span>
-          <span class="filter-tag" data-filter="tools">Tools</span>
-        </div>
+      <div class="filter-tags">
+        <span class="filter-tag active" data-filter="all">All Courses</span>
+        <span class="filter-tag" data-filter="systems">Systems</span>
+        <span class="filter-tag" data-filter="development">Development</span>
+        <span class="filter-tag" data-filter="security">Security</span>
+        <span class="filter-tag" data-filter="management">Management</span>
+        <span class="filter-tag" data-filter="tools">Tools</span>
       </div>
-      <div class="quick-access" id="quick-access">
-        <h3>🚀 Quick Access - Jump to Any Course</h3>
-        <div class="quick-links">
-          <a href="Notes/os-course-notes.html" class="quick-link"
-            >💻 Operating Systems</a
-          >
-          <a href="Notes/sqa-course-notes.html" class="quick-link"
-            >🔍 Software Quality</a
-          >
-          <a href="Notes/network-cybersecurity-notes.html" class="quick-link"
-            >🌐 Networking</a
-          >
-          <a href="Notes/complete-linux-commands-guide.html" class="quick-link"
-            >🐧 Linux Commands</a
-          >
-          <a href="Notes/database-course-notes.html" class="quick-link"
-            >📊 Database Management</a
-          >
-          <a href="Notes/agile-course-notes.html" class="quick-link"
-            >🚀 Agile Practices</a
-          >
-          <a href="Notes/git-version-control-study.html" class="quick-link"
-            >📝 Git & Version Control</a
-          >
-          <a href="Notes/javascript-comprehensive-guide.html" class="quick-link"
-            >⚡ JavaScript Guide</a
-          >
-          <a href="Notes/oop-guide.html" class="quick-link"
-            >🏗️ Object-Oriented Programming</a
-          >
-          <a href="Notes/data-structures-guide.html" class="quick-link"
-            >📊 Data Structures</a
-          >
-          <a href="Notes/algorithms-guide.html" class="quick-link"
-            >🧮 Algorithms</a
-          >
-          <a href="Notes/angular-framework-notes.html" class="quick-link"
-            >🅰️ Angular Framework</a
-          >
-          <a href="Notes/mongodb-nosql-notes.html" class="quick-link"
-            >🍃 MongoDB Database</a
-          >
-          <a href="Notes/docker-containerization-notes.html" class="quick-link"
-            >🐳 Docker Containers</a
-          >
-          <a href="Notes/aws-cloud-notes.html" class="quick-link"
-            >☁️ AWS Cloud</a
-          >
-          <a href="Notes/nodejs-web-development-notes.html" class="quick-link"
-            >🟢 Node.js Backend</a
-          >
-          <a href="Notes/mysql-notes.html" class="quick-link"
-            >🐬 MySQL Database</a
-          >
-          <a href="Notes/php-programming-notes.html" class="quick-link"
-            >🐘 PHP Programming</a
-          >
-          <a href="Notes/wordpress-development-notes.html" class="quick-link"
-            >🎨 WordPress Development</a
-          >
-          <a href="Notes/react-framework-notes.html" class="quick-link"
-            >⚛️ React.js Framework</a
-          >
-        </div>
-      </div>
-
-      <!-- Special Tools Section -->
-      <section
-        class="special-tools"
-        id="special-tools"
-        style="margin-bottom: 40px"
-      >
-        <h2
-          style="
-            text-align: center;
-            margin-bottom: 30px;
-            color: #2c3e50;
-            font-size: 2em;
-          "
-        >
-          🛠️ Special Tools & Trackers
-        </h2>
-        <div
-          style="
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-          "
-        >
-          <div
-            style="
-              background: linear-gradient(135deg, #667eea, #764ba2);
-              color: white;
-              padding: 30px;
-              border-radius: 20px;
-              text-align: center;
-              min-width: 300px;
-              box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-              transition: all 0.3s ease;
-              cursor: pointer;
-              position: relative;
-              overflow: hidden;
-            "
-            onclick="window.location.href='Notes/problem-solving-tracker.html'"
-            onmouseover="this.style.transform='translateY(-10px)'"
-            onmouseout="this.style.transform='translateY(0)'"
-          >
-            <div
-              style="
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(255, 255, 255, 0.1);
-                opacity: 0.3;
-              "
-            ></div>
-            <div style="position: relative; z-index: 1">
-              <div style="font-size: 4em; margin-bottom: 15px">🧠</div>
-              <h3 style="font-size: 1.5em; margin-bottom: 10px">
-                Problem Solving Tracker
-              </h3>
-              <p style="opacity: 0.9; margin-bottom: 20px">
-                Track your coding challenges, LeetCode problems, and algorithm
-                practice
-              </p>
-              <div
-                style="
-                  background: rgba(255, 255, 255, 0.2);
-                  padding: 10px 20px;
-                  border-radius: 15px;
-                  font-weight: 600;
-                  backdrop-filter: blur(10px);
-                "
-              >
-                🚀 Launch Tracker
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="courses">
-        <h2
-          style="
-            text-align: center;
-            margin-bottom: 30px;
-            color: #2c3e50;
-            font-size: 2em;
-          "
-        >
-          📚 Available Course Notes
-        </h2>
-
-        <div class="course-grid">
-          <div
-            class="course-card os"
-            data-category="systems"
-            data-keywords="operating systems os computer processes memory scheduling virtualization"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Systems</span>
-              <span class="course-tag">Core</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">💻</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Operating Systems</h3>
-                <p class="course-subtitle">Comprehensive OS Fundamentals</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat"></span>
-                <span class="course-stat">⏱️ Core Course</span>
-                <span class="course-stat">🎯 Systems</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/os-course-notes.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card sqa"
-            data-category="development"
-            data-keywords="software quality assurance testing bug unit testing qa quality control"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Development</span>
-              <span class="course-tag">Testing</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🔍</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Software Quality Assurance</h3>
-                <p class="course-subtitle">Quality Code & Bug Management</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat"></span>
-                <span class="course-stat">⏱️ Development</span>
-                <span class="course-stat">🎯 Testing</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/sqa-course-notes.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card network"
-            data-category="security"
-            data-keywords="network cybersecurity networking tcp ip protocols security encryption vpn cloud computing"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Security</span>
-              <span class="course-tag">Networks</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🌐</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Network & Cyber Security</h3>
-                <p class="course-subtitle">Networking & Security Essentials</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat"></span>
-                <span class="course-stat">⏱️ Security</span>
-                <span class="course-stat">🎯 Networks</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a
-                href="Notes/network-cybersecurity-notes.html"
-                class="course-link"
-              >
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card linux"
-            data-category="tools"
-            data-keywords="linux commands shell scripting system administration command line bash terminal"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Tools</span>
-              <span class="course-tag">Systems</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🐧</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">
-                  Linux Commands & System Administration
-                </h3>
-                <p class="course-subtitle">Command Line Mastery</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat"></span>
-                <span class="course-stat">⏱️ Tools</span>
-                <span class="course-stat">🎯 CLI</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a
-                href="Notes/complete-linux-commands-guide.html"
-                class="course-link"
-              >
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card database"
-            data-category="management"
-            data-keywords="database sql tsql erd normalization query mysql postgresql data management"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Management</span>
-              <span class="course-tag">SQL</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🗃️</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Database Management & Design</h3>
-                <p class="course-subtitle">Data Modeling & SQL Mastery</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat"></span>
-                <span class="course-stat">⏱️ Data</span>
-                <span class="course-stat">🎯 SQL</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/database-course-notes.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card agile"
-            data-category="management"
-            data-keywords="agile scrum kanban project management methodology development practices team"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Management</span>
-              <span class="course-tag">Agile</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🚀</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Agile Fundamentals & Practices</h3>
-                <p class="course-subtitle">Modern Project Management</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat"></span>
-                <span class="course-stat">⏱️ Methodology</span>
-                <span class="course-stat">🎯 Teams</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/agile-course-notes.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card git"
-            data-category="tools"
-            data-keywords="git version control github gitlab repository commit branch merge pull push vcs collaboration"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Tools</span>
-              <span class="course-tag">VCS</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">📝</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Git & Version Control Study</h3>
-                <p class="course-subtitle">Source Code Management Mastery</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 Git Topics</span>
-                <span class="course-stat">⏱️ Version Control</span>
-                <span class="course-stat">🎯 Collaboration</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a
-                href="Notes/git-version-control-study.html"
-                class="course-link"
-              >
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card javascript"
-            data-category="development"
-            data-keywords="javascript js programming web development frontend backend node.js es6 dom api"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Development</span>
-              <span class="course-tag">Programming</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">⚡</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">JavaScript Comprehensive Guide</h3>
-                <p class="course-subtitle">Modern Web Development Essentials</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 JS Concepts</span>
-                <span class="course-stat">⏱️ Programming</span>
-                <span class="course-stat">🎯 Web Dev</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a
-                href="Notes/javascript-comprehensive-guide.html"
-                class="course-link"
-              >
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card oop"
-            data-category="development"
-            data-keywords="object oriented programming oop classes objects inheritance polymorphism encapsulation abstraction cpp c++ constructor destructor"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Development</span>
-              <span class="course-tag">Programming</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🏗️</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Object-Oriented Programming</h3>
-                <p class="course-subtitle">Master OOP Concepts with C++</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 OOP Principles</span>
-                <span class="course-stat">⏱️ C++ Programming</span>
-                <span class="course-stat">🎯 Design Patterns</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/oop-guide.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card datastructures"
-            data-category="development"
-            data-keywords="data structures stack queue array linked list tree graph hash table binary search sorting algorithms"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Development</span>
-              <span class="course-tag">Computer Science</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">📊</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Data Structures</h3>
-                <p class="course-subtitle">
-                  Essential Data Organization Concepts
-                </p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 DS Concepts</span>
-                <span class="course-stat">⏱️ Implementation</span>
-                <span class="course-stat">🎯 Problem Solving</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/data-structures-guide.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card algorithms"
-            data-category="development"
-            data-keywords="algorithms sorting searching dynamic programming recursion complexity analysis big o time space complexity graph algorithms"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Development</span>
-              <span class="course-tag">Computer Science</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🧮</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Algorithms</h3>
-                <p class="course-subtitle">Problem-Solving & Optimization</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 Algorithm Types</span>
-                <span class="course-stat">⏱️ Complexity</span>
-                <span class="course-stat">🎯 Optimization</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/algorithms-guide.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card angular"
-            data-category="development"
-            data-keywords="angular framework typescript spa single page application components directives services dependency injection routing rxjs reactive forms"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Development</span>
-              <span class="course-tag">Framework</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🅰️</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Angular Framework</h3>
-                <p class="course-subtitle">
-                  Modern Web Application Development
-                </p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 Angular Concepts</span>
-                <span class="course-stat">⏱️ TypeScript</span>
-                <span class="course-stat">🎯 SPA Development</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/angular-framework-notes.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card react"
-            data-category="development"
-            data-keywords="react js framework frontend components hooks state props context router redux nextjs"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Development</span>
-              <span class="course-tag">Framework</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">⚛️</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">React.js Framework</h3>
-                <p class="course-subtitle">Modern UI Library for Web</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 React Core</span>
-                <span class="course-stat">⏱️ Frontend Dev</span>
-                <span class="course-stat">🎯 Components</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/react-framework-notes.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card mongodb"
-            data-category="management"
-            data-keywords="mongodb nosql database document json bson crud aggregation indexing replication sharding mongoose atlas"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Management</span>
-              <span class="course-tag">NoSQL</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🍃</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">MongoDB Database</h3>
-                <p class="course-subtitle">NoSQL Document Database Mastery</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 NoSQL Concepts</span>
-                <span class="course-stat">⏱️ Document DB</span>
-                <span class="course-stat">🎯 Scalability</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/mongodb-nosql-notes.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card docker"
-            data-category="tools"
-            data-keywords="docker containers containerization devops deployment kubernetes orchestration images dockerfile compose microservices"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Tools</span>
-              <span class="course-tag">DevOps</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🐳</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Docker & Containerization</h3>
-                <p class="course-subtitle">
-                  Container Orchestration & Deployment
-                </p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 Container Tech</span>
-                <span class="course-stat">⏱️ DevOps</span>
-                <span class="course-stat">🎯 Microservices</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a
-                href="Notes/docker-containerization-notes.html"
-                class="course-link"
-              >
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card aws"
-            data-category="systems"
-            data-keywords="aws amazon web services cloud computing ec2 s3 lambda rds cloudfront vpc serverless deployment scaling"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Systems</span>
-              <span class="course-tag">Cloud</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">☁️</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">AWS Cloud Services</h3>
-                <p class="course-subtitle">Amazon Web Services Fundamentals</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 Cloud Services</span>
-                <span class="course-stat">⏱️ Infrastructure</span>
-                <span class="course-stat">🎯 Scalability</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/aws-cloud-notes.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card nodejs"
-            data-category="development"
-            data-keywords="nodejs node.js javascript backend server express api rest asynchronous npm modules event-driven non-blocking"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Development</span>
-              <span class="course-tag">Backend</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🟢</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">Node.js Backend Development</h3>
-                <p class="course-subtitle">Server-Side JavaScript Runtime</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 Node.js Core</span>
-                <span class="course-stat">⏱️ Backend Dev</span>
-                <span class="course-stat">🎯 RESTful APIs</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a
-                href="Notes/nodejs-web-development-notes.html"
-                class="course-link"
-              >
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card mysql"
-            data-category="management"
-            data-keywords="mysql database sql relational rdbms queries joins indexing stored procedures triggers views transactions normalization mariadb"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Management</span>
-              <span class="course-tag">Database</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🐬</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">MySQL Database</h3>
-                <p class="course-subtitle">
-                  Relational Database Management System
-                </p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 SQL Mastery</span>
-                <span class="course-stat">⏱️ RDBMS</span>
-                <span class="course-stat">🎯 Data Management</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/mysql-notes.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card php"
-            data-category="development"
-            data-keywords="php programming web development backend server-side scripting mysql database oop classes objects inheritance sessions cookies security forms validation"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Development</span>
-              <span class="course-tag">Backend</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🐘</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">PHP Programming</h3>
-                <p class="course-subtitle">Server-Side Web Development</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 PHP 8.x</span>
-                <span class="course-stat">⏱️ Web Development</span>
-                <span class="course-stat">🎯 Backend</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a href="Notes/php-programming-notes.html" class="course-link">
-                Access Notes
-              </a>
-            </div>
-          </div>
-
-          <div
-            class="course-card wordpress"
-            data-category="development"
-            data-keywords="wordpress cms themes plugins custom post types taxonomies hooks api security performance deployment mysql database content management"
-          >
-            <div class="course-tags">
-              <span class="course-tag">Development</span>
-              <span class="course-tag">CMS</span>
-            </div>
-            <div class="course-icon-section">
-              <span class="course-icon">🎨</span>
-            </div>
-            <div class="course-main-content">
-              <div class="course-header">
-                <h3 class="course-title">WordPress Development</h3>
-                <p class="course-subtitle">Complete CMS Development Guide</p>
-              </div>
-              <div class="course-stats">
-                <span class="course-stat">📚 WP Core</span>
-                <span class="course-stat">⏱️ Theme/Plugin Dev</span>
-                <span class="course-stat">🎯 CMS Mastery</span>
-              </div>
-            </div>
-            <div class="course-action-section">
-              <a
-                href="Notes/wordpress-development-notes.html"
-                class="course-link"
-              >
-                Access Notes
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- No Results Message -->
-        <div class="no-results" id="noResults">
-          <h3>🔍 No courses found</h3>
-          <p>Try adjusting your search terms or filters</p>
-        </div>
-      </section>
-
-      <div class="footer">
-        <p style="opacity: 0.8; margin-top: 10px">Created By: Abdelghany</p>
+    </div>
+    <div class="quick-access" id="quick-access">
+      <h3><i class="fas fa-star"></i> Quick Access - Jump to Any Course</h3>
+      <div class="quick-links">
+        <a href="Notes/os-course-notes.html" class="quick-link"><i class="fas fa-desktop"></i> Operating Systems</a>
+        <a href="Notes/sqa-course-notes.html" class="quick-link"><i class="fas fa-check-circle"></i> Software
+          Quality</a>
+        <a href="Notes/network-cybersecurity-notes.html" class="quick-link"><i class="fas fa-network-wired"></i>
+          Networking</a>
+        <a href="Notes/complete-linux-commands-guide.html" class="quick-link"><i class="fab fa-linux"></i> Linux
+          Commands</a>
+        <a href="Notes/database-course-notes.html" class="quick-link"><i class="fas fa-database"></i> Database
+          Management</a>
+        <a href="Notes/agile-course-notes.html" class="quick-link"><i class="fas fa-rocket"></i> Agile Practices</a>
+        <a href="Notes/git-version-control-study.html" class="quick-link"><i class="fas fa-file-alt"></i> Git & Version
+          Control</a>
+        <a href="Notes/javascript-comprehensive-guide.html" class="quick-link"><i class="fas fa-bolt"></i> JavaScript
+          Guide</a>
+        <a href="Notes/oop-guide.html" class="quick-link"><i class="fas fa-cube"></i> Object-Oriented Programming</a>
+        <a href="Notes/data-structures-guide.html" class="quick-link"><i class="fas fa-chart-bar"></i> Data
+          Structures</a>
+        <a href="Notes/algorithms-guide.html" class="quick-link"><i class="fas fa-brain"></i> Algorithms</a>
+        <a href="Notes/angular-framework-notes.html" class="quick-link"><i class="fab fa-angular"></i> Angular
+          Framework</a>
+        <a href="Notes/mongodb-nosql-notes.html" class="quick-link"><i class="fas fa-leaf"></i> MongoDB Database</a>
+        <a href="Notes/docker-containerization-notes.html" class="quick-link"><i class="fab fa-docker"></i> Docker
+          Containers</a>
+        <a href="Notes/aws-cloud-notes.html" class="quick-link"><i class="fab fa-aws"></i> AWS Cloud</a>
+        <a href="Notes/nodejs-web-development-notes.html" class="quick-link"><i class="fab fa-node-js"></i> Node.js
+          Backend</a>
+        <a href="Notes/mysql-notes.html" class="quick-link"><i class="fas fa-database"></i> MySQL Database</a>
+        <a href="Notes/php-programming-notes.html" class="quick-link"><i class="fab fa-php"></i> PHP Programming</a>
+        <a href="Notes/wordpress-development-notes.html" class="quick-link"><i class="fab fa-wordpress"></i> WordPress
+          Development</a>
+        <a href="Notes/react-framework-notes.html" class="quick-link"><i class="fab fa-react"></i> React.js
+          Framework</a>
       </div>
     </div>
 
-    <script>
-      // Search and Filter Functionality with Performance Optimizations
-      document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.getElementById("courseSearch");
-        const filterTags = document.querySelectorAll(".filter-tag");
-        const courseCards = document.querySelectorAll(".course-card");
-        const noResults = document.getElementById("noResults");
+    <!-- Special Tools Section -->
+    <section class="special-tools" id="special-tools">
+      <h2>
+        <i class="fas fa-tools"></i> Special Tools & Trackers
+      </h2>
+      <div class="tools-container">
+        <div class="tool-card" onclick="window.location.href='Notes/problem-solving-tracker.html'">
+          <div class="tool-glow"></div>
+          <div class="tool-content">
+            <div class="tool-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+            <h3>Problem Solving Tracker</h3>
+            <p>
+              Track your coding challenges, LeetCode problems, and algorithm
+              practice with progress tracking
+            </p>
+            <div class="tool-stats">
+              <span><i class="fas fa-list-check"></i> 150+ Problems</span>
+              <span><i class="fas fa-chart-line"></i> Progress Tracking</span>
+            </div>
+            <div class="tool-action">
+              <i class="fas fa-rocket"></i> Launch Tracker
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        // Debounce function for better performance
-        function debounce(func, wait) {
-          let timeout;
-          return function executedFunction(...args) {
-            const later = () => {
-              clearTimeout(timeout);
-              func(...args);
-            };
+    <section id="courses">
+      <h2>
+        <i class="fas fa-code"></i>Available Course Notes
+      </h2>
+
+      <div class="course-grid">
+        <div class="course-card os" data-category="systems"
+          data-keywords="operating systems os computer processes memory scheduling virtualization">
+          <div class="course-tags">
+            <span class="course-tag">Systems</span>
+            <span class="course-tag">Core</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fas fa-desktop"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">Operating Systems</h3>
+              <p class="course-subtitle">Comprehensive OS Fundamentals</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"></span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Core Course</span>
+              <span class="course-stat"><i class="fas fa-code"></i>Systems</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/os-course-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card sqa" data-category="development"
+          data-keywords="software quality assurance testing bug unit testing qa quality control">
+          <div class="course-tags">
+            <span class="course-tag">Development</span>
+            <span class="course-tag">Testing</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fas fa-bug"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">Software Quality Assurance</h3>
+              <p class="course-subtitle">Quality Code & Bug Management</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"></span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Development</span>
+              <span class="course-stat"><i class="fas fa-code"></i>Testing</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/sqa-course-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card network" data-category="security"
+          data-keywords="network cybersecurity networking tcp ip protocols security encryption vpn cloud computing">
+          <div class="course-tags">
+            <span class="course-tag">Security</span>
+            <span class="course-tag">Networks</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fas fa-globe"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">Network & Cyber Security</h3>
+              <p class="course-subtitle">Networking & Security Essentials</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"></span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Security</span>
+              <span class="course-stat"><i class="fas fa-code"></i>Networks</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/network-cybersecurity-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card linux" data-category="tools"
+          data-keywords="linux commands shell scripting system administration command line bash terminal">
+          <div class="course-tags">
+            <span class="course-tag">Tools</span>
+            <span class="course-tag">Systems</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fab fa-linux"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">
+                Linux Commands & System Administration
+              </h3>
+              <p class="course-subtitle">Command Line Mastery</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"></span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Tools</span>
+              <span class="course-stat"><i class="fas fa-code"></i>CLI</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/complete-linux-commands-guide.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card database" data-category="management"
+          data-keywords="database sql tsql erd normalization query mysql postgresql data management">
+          <div class="course-tags">
+            <span class="course-tag">Management</span>
+            <span class="course-tag">SQL</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fas fa-database"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">Database Management & Design</h3>
+              <p class="course-subtitle">Data Modeling & SQL Mastery</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"></span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Data</span>
+              <span class="course-stat"><i class="fas fa-code"></i>SQL</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/database-course-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card agile" data-category="management"
+          data-keywords="agile scrum kanban project management methodology development practices team">
+          <div class="course-tags">
+            <span class="course-tag">Management</span>
+            <span class="course-tag">Agile</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fas fa-globe"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">Git & Version Control Study</h3>
+              <p class="course-subtitle">Source Code Management Mastery</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-code"></i>Git Topics</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Version Control</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> Collaboration</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/git-version-control-study.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card javascript" data-category="development"
+          data-keywords="javascript js programming web development frontend backend node.js es6 dom api">
+          <div class="course-tags">
+            <span class="course-tag">Development</span>
+            <span class="course-tag">Programming</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fas fa-bolt"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">JavaScript Comprehensive Guide</h3>
+              <p class="course-subtitle">Modern Web Development Essentials</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> JS Concepts</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Programming</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> Web Dev</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/javascript-comprehensive-guide.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card oop" data-category="development"
+          data-keywords="object oriented programming oop classes objects inheritance polymorphism encapsulation abstraction cpp c++ constructor destructor">
+          <div class="course-tags">
+            <span class="course-tag">Development</span>
+            <span class="course-tag">Programming</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fas fa-cube"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">Object-Oriented Programming</h3>
+              <p class="course-subtitle">Master OOP Concepts with C++</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> OOP Principles</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> C++ Programming</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> Design Patterns</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/oop-guide.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card datastructures" data-category="development"
+          data-keywords="data structures stack queue array linked list tree graph hash table binary search sorting algorithms">
+          <div class="course-tags">
+            <span class="course-tag">Development</span>
+            <span class="course-tag">Computer Science</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fas fa-chart-bar"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">Data Structures</h3>
+              <p class="course-subtitle">
+                Essential Data Organization Concepts
+              </p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> DS Concepts</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Implementation</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> Problem Solving</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/data-structures-guide.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card algorithms" data-category="development"
+          data-keywords="algorithms sorting searching dynamic programming recursion complexity analysis big o time space complexity graph algorithms">
+          <div class="course-tags">
+            <span class="course-tag">Development</span>
+            <span class="course-tag">Computer Science</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fas fa-project-diagram"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">Algorithms</h3>
+              <p class="course-subtitle">Problem-Solving & Optimization</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> Algorithm Types</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Complexity</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> Optimization</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/algorithms-guide.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card angular" data-category="development"
+          data-keywords="angular framework typescript spa single page application components directives services dependency injection routing rxjs reactive forms">
+          <div class="course-tags">
+            <span class="course-tag">Development</span>
+            <span class="course-tag">Framework</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fab fa-angular"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">Angular Framework</h3>
+              <p class="course-subtitle">
+                Modern Web Application Development
+              </p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> Angular Concepts</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> TypeScript</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> SPA Development</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/angular-framework-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card react" data-category="development"
+          data-keywords="react js framework frontend components hooks state props context router redux nextjs">
+          <div class="course-tags">
+            <span class="course-tag">Development</span>
+            <span class="course-tag">Framework</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fab fa-react"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">React.js Framework</h3>
+              <p class="course-subtitle">Modern UI Library for Web</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> React Core</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Frontend Dev</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> Components</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/react-framework-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card mongodb" data-category="management"
+          data-keywords="mongodb nosql database document json bson crud aggregation indexing replication sharding mongoose atlas">
+          <div class="course-tags">
+            <span class="course-tag">Management</span>
+            <span class="course-tag">NoSQL</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fas fa-leaf"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">MongoDB Database</h3>
+              <p class="course-subtitle">NoSQL Document Database Mastery</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> NoSQL Concepts</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Document DB</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> Scalability</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/mongodb-nosql-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card docker" data-category="tools"
+          data-keywords="docker containers containerization devops deployment kubernetes orchestration images dockerfile compose microservices">
+          <div class="course-tags">
+            <span class="course-tag">Tools</span>
+            <span class="course-tag">DevOps</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fab fa-docker"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">Docker & Containerization</h3>
+              <p class="course-subtitle">
+                Container Orchestration & Deployment
+              </p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> Container Tech</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> DevOps</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> Microservices</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/docker-containerization-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card aws" data-category="systems"
+          data-keywords="aws amazon web services cloud computing ec2 s3 lambda rds cloudfront vpc serverless deployment scaling">
+          <div class="course-tags">
+            <span class="course-tag">Systems</span>
+            <span class="course-tag">Cloud</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fab fa-aws"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">AWS Cloud Services</h3>
+              <p class="course-subtitle">Amazon Web Services Fundamentals</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> Cloud Services</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Infrastructure</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> Scalability</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/aws-cloud-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card nodejs" data-category="development"
+          data-keywords="nodejs node.js javascript backend server express api rest asynchronous npm modules event-driven non-blocking">
+          <div class="course-tags">
+            <span class="course-tag">Development</span>
+            <span class="course-tag">Backend</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fab fa-node-js"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">Node.js Backend Development</h3>
+              <p class="course-subtitle">Server-Side JavaScript Runtime</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> Node.js Core</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Backend Dev</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> RESTful APIs</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/nodejs-web-development-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card mysql" data-category="management"
+          data-keywords="mysql database sql relational rdbms queries joins indexing stored procedures triggers views transactions normalization mariadb">
+          <div class="course-tags">
+            <span class="course-tag">Management</span>
+            <span class="course-tag">Database</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fas fa-database"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">MySQL Database</h3>
+              <p class="course-subtitle">
+                Relational Database Management System
+              </p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> SQL Mastery</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> RDBMS</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> Data Management</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/mysql-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card php" data-category="development"
+          data-keywords="php programming web development backend server-side scripting mysql database oop classes objects inheritance sessions cookies security forms validation">
+          <div class="course-tags">
+            <span class="course-tag">Development</span>
+            <span class="course-tag">Backend</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fab fa-php"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">PHP Programming</h3>
+              <p class="course-subtitle">Server-Side Web Development</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> PHP 8.x</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Web Development</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> Backend</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/php-programming-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+
+        <div class="course-card wordpress" data-category="development"
+          data-keywords="wordpress cms themes plugins custom post types taxonomies hooks api security performance deployment mysql database content management">
+          <div class="course-tags">
+            <span class="course-tag">Development</span>
+            <span class="course-tag">CMS</span>
+          </div>
+          <div class="course-icon-section">
+            <span class="course-icon"><i class="fab fa-wordpress"></i></span>
+          </div>
+          <div class="course-main-content">
+            <div class="course-header">
+              <h3 class="course-title">WordPress Development</h3>
+              <p class="course-subtitle">Complete CMS Development Guide</p>
+            </div>
+            <div class="course-stats">
+              <span class="course-stat"><i class="fas fa-books"></i> WP Core</span>
+              <span class="course-stat"><i class="fas fa-stopwatch"></i> Theme/Plugin Dev</span>
+              <span class="course-stat"><i class="fas fa-bullseye"></i> CMS Mastery</span>
+            </div>
+          </div>
+          <div class="course-action-section">
+            <a href="Notes/wordpress-development-notes.html" class="course-link">
+              Access Notes
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Results Message -->
+      <div class="no-results" id="noResults">
+        <h3><i class="fas fa-search"></i> No courses found</h3>
+        <p>Try adjusting your search terms or filters</p>
+      </div>
+    </section>
+
+    <div class="footer">
+      <p>Created By: Abdelghany</p>
+    </div>
+  </div>
+
+  <script>
+    // Search and Filter Functionality with Performance Optimizations
+    document.addEventListener("DOMContentLoaded", function () {
+      const searchInput = document.getElementById("courseSearch");
+      const filterTags = document.querySelectorAll(".filter-tag");
+      const courseCards = document.querySelectorAll(".course-card");
+      const noResults = document.getElementById("noResults");
+
+      // Debounce function for better performance
+      function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
             clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
+            func(...args);
           };
-        }
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      }
 
-        // Optimized search functionality with debouncing
-        const debouncedFilter = debounce(filterCourses, 200);
+      // Optimized search functionality with debouncing
+      const debouncedFilter = debounce(filterCourses, 200);
 
-        searchInput.addEventListener("input", function () {
-          debouncedFilter();
+      searchInput.addEventListener("input", function () {
+        debouncedFilter();
+      });
+
+      // Filter tag functionality with event delegation
+      filterTags.forEach((tag) => {
+        tag.addEventListener("click", function () {
+          // Remove active class from all tags
+          filterTags.forEach((t) => t.classList.remove("active"));
+          // Add active class to clicked tag
+          this.classList.add("active");
+          filterCourses();
         });
+      });
 
-        // Filter tag functionality with event delegation
-        filterTags.forEach((tag) => {
-          tag.addEventListener("click", function () {
-            // Remove active class from all tags
-            filterTags.forEach((t) => t.classList.remove("active"));
-            // Add active class to clicked tag
-            this.classList.add("active");
-            filterCourses();
-          });
-        });
-
-        // Optimized clickable course cards with passive event listeners
-        courseCards.forEach((card) => {
-          card.addEventListener(
-            "click",
-            function (e) {
-              // Prevent navigation if clicking on the link directly
-              if (!e.target.classList.contains("course-link")) {
-                const link = this.querySelector(".course-link");
-                if (link) {
-                  window.location.href = link.href;
-                }
-              }
-            },
-            { passive: true }
-          );
-        });
-
-        function filterCourses() {
-          const searchTerm = searchInput.value.toLowerCase();
-          const activeFilter =
-            document.querySelector(".filter-tag.active").dataset.filter;
-          let visibleCount = 0;
-
-          // Use requestAnimationFrame for smoother UI updates
-          requestAnimationFrame(() => {
-            // Batch DOM reads and writes
-            const updates = [];
-
-            courseCards.forEach((card) => {
-              const title = card
-                .querySelector(".course-title")
-                .textContent.toLowerCase();
-              const keywords = card.dataset.keywords
-                ? card.dataset.keywords.toLowerCase()
-                : "";
-              const category = card.dataset.category;
-              const topics = Array.from(
-                card.querySelectorAll(".topics-list li")
-              )
-                .map((li) => li.textContent.toLowerCase())
-                .join(" ");
-
-              // Check search term
-              const matchesSearch =
-                searchTerm === "" ||
-                title.includes(searchTerm) ||
-                keywords.includes(searchTerm) ||
-                topics.includes(searchTerm);
-
-              // Check filter
-              const matchesFilter =
-                activeFilter === "all" || category === activeFilter;
-
-              const shouldShow = matchesSearch && matchesFilter;
-              updates.push({ card, shouldShow });
-
-              if (shouldShow) {
-                visibleCount++;
-              }
-            });
-
-            // Batch apply all DOM changes
-            updates.forEach(({ card, shouldShow }) => {
-              if (shouldShow) {
-                card.classList.remove("hidden");
-              } else {
-                card.classList.add("hidden");
-              }
-            });
-
-            // Show/hide no results message
-            if (visibleCount === 0) {
-              noResults.classList.add("show");
-            } else {
-              noResults.classList.remove("show");
-            }
-          });
-        }
-
-        // Smooth scrolling for navigation links with passive listeners
-        document.querySelectorAll(".nav-link").forEach((link) => {
-          link.addEventListener(
-            "click",
-            function (e) {
-              const href = this.getAttribute("href");
-              if (href.startsWith("#")) {
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                  target.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                }
-              }
-            },
-            { passive: false }
-          );
-        });
-
-        // Keyboard navigation
-        searchInput.addEventListener("keydown", function (e) {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            const firstVisibleCard = document.querySelector(
-              ".course-card:not(.hidden)"
-            );
-            if (firstVisibleCard) {
-              const link = firstVisibleCard.querySelector(".course-link");
+      // Optimized clickable course cards with passive event listeners
+      courseCards.forEach((card) => {
+        card.addEventListener(
+          "click",
+          function (e) {
+            // Prevent navigation if clicking on the link directly
+            if (!e.target.classList.contains("course-link")) {
+              const link = this.querySelector(".course-link");
               if (link) {
                 window.location.href = link.href;
               }
             }
-          }
-        });
+          },
+          { passive: true }
+        );
+      });
 
-        // Add search focus shortcut (Ctrl/Cmd + K)
-        document.addEventListener("keydown", function (e) {
-          if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-            e.preventDefault();
-            searchInput.focus();
-            searchInput.select();
-          }
-        });
+      function filterCourses() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const activeFilter =
+          document.querySelector(".filter-tag.active").dataset.filter;
+        let visibleCount = 0;
 
-        // Intersection Observer for lazy animations (optional enhancement)
-        if ("IntersectionObserver" in window) {
-          const observerOptions = {
-            threshold: 0.1,
-            rootMargin: "50px",
-          };
+        // Use requestAnimationFrame for smoother UI updates
+        requestAnimationFrame(() => {
+          // Batch DOM reads and writes
+          const updates = [];
 
-          const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.style.opacity = "1";
-                entry.target.style.transform = "translateY(0)";
-              }
-            });
-          }, observerOptions);
-
-          // Observe course cards for lazy animation (optional)
           courseCards.forEach((card) => {
-            card.style.opacity = "0";
-            card.style.transform = "translateY(20px)";
-            card.style.transition = "opacity 0.5s ease, transform 0.5s ease";
-            observer.observe(card);
+            const title = card
+              .querySelector(".course-title")
+              .textContent.toLowerCase();
+            const keywords = card.dataset.keywords
+              ? card.dataset.keywords.toLowerCase()
+              : "";
+            const category = card.dataset.category;
+            const topics = Array.from(
+              card.querySelectorAll(".topics-list li")
+            )
+              .map((li) => li.textContent.toLowerCase())
+              .join(" ");
+
+            // Check search term
+            const matchesSearch =
+              searchTerm === "" ||
+              title.includes(searchTerm) ||
+              keywords.includes(searchTerm) ||
+              topics.includes(searchTerm);
+
+            // Check filter
+            const matchesFilter =
+              activeFilter === "all" || category === activeFilter;
+
+            const shouldShow = matchesSearch && matchesFilter;
+            updates.push({ card, shouldShow });
+
+            if (shouldShow) {
+              visibleCount++;
+            }
           });
+
+          // Batch apply all DOM changes
+          updates.forEach(({ card, shouldShow }) => {
+            if (shouldShow) {
+              card.classList.remove("hidden");
+            } else {
+              card.classList.add("hidden");
+            }
+          });
+
+          // Show/hide no results message
+          if (visibleCount === 0) {
+            noResults.classList.add("show");
+          } else {
+            noResults.classList.remove("show");
+          }
+        });
+      }
+
+      // Smooth scrolling for navigation links with passive listeners
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener(
+          "click",
+          function (e) {
+            const href = this.getAttribute("href");
+            if (href.startsWith("#")) {
+              e.preventDefault();
+              const target = document.querySelector(href);
+              if (target) {
+                target.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }
+            }
+          },
+          { passive: false }
+        );
+      });
+
+      // Keyboard navigation
+      searchInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          const firstVisibleCard = document.querySelector(
+            ".course-card:not(.hidden)"
+          );
+          if (firstVisibleCard) {
+            const link = firstVisibleCard.querySelector(".course-link");
+            if (link) {
+              window.location.href = link.href;
+            }
+          }
         }
       });
-    </script>
-  </body>
+
+      // Add search focus shortcut (Ctrl/Cmd + K)
+      document.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+          e.preventDefault();
+          searchInput.focus();
+          searchInput.select();
+        }
+      });
+
+      // Intersection Observer for lazy animations (optional enhancement)
+      if ("IntersectionObserver" in window) {
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: "50px",
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = "1";
+              entry.target.style.transform = "translateY(0)";
+            }
+          });
+        }, observerOptions);
+
+        // Observe course cards for lazy animation (optional)
+        courseCards.forEach((card) => {
+          card.style.opacity = "0";
+          card.style.transform = "translateY(20px)";
+          card.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+          observer.observe(card);
+        });
+      }
+    });
+  </script>
+
+  <!-- Shared JavaScript -->
+  <script src="assets/js/main.js"></script>
+</body>
+
 </html>

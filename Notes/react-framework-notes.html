@@ -1,723 +1,182 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>React.js Framework Study Notes</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background: linear-gradient(135deg, #61dafb 0%, #0088cc 100%);
-        min-height: 100vh;
-        display: flex;
-      }
-
-      /* Layout Container */
-      .layout-container {
-        display: flex;
-        width: 100%;
-        min-height: 100vh;
-      }
-
-      /* Sidebar Navigation */
-      .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 300px;
-        height: 100vh;
-        background: linear-gradient(
-          180deg,
-          rgba(97, 218, 251, 0.95) 0%,
-          rgba(0, 136, 204, 0.95) 100%
-        );
-        backdrop-filter: blur(10px);
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        z-index: 1001;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        overflow-y: auto;
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .sidebar.active {
-        transform: translateX(0);
-      }
-
-      .sidebar-header {
-        background: linear-gradient(135deg, #61dafb, #0088cc);
-        color: white;
-        padding: 20px;
-        text-align: center;
-        position: sticky;
-        top: 0;
-        z-index: 1002;
-      }
-
-      .sidebar-header h3 {
-        font-size: 1.3rem;
-        margin-bottom: 5px;
-        font-weight: 700;
-      }
-
-      .sidebar-header p {
-        font-size: 0.9rem;
-        opacity: 0.9;
-      }
-
-      .sidebar-content {
-        padding: 20px;
-      }
-
-      .sidebar ul {
-        list-style: none;
-        padding: 0;
-      }
-
-      .sidebar li {
-        margin-bottom: 8px;
-      }
-
-      .sidebar a {
-        color: #ffffff;
-        text-decoration: none;
-        padding: 12px 15px;
-        display: block;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        font-weight: 500;
-        border-left: 4px solid transparent;
-      }
-
-      .sidebar a:hover {
-        background: rgba(255, 255, 255, 0.2);
-        border-left-color: #20232a;
-        transform: translateX(5px);
-      }
-
-      /* Toggle Button */
-      .toggle-btn {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        padding: 12px 16px;
-        background: linear-gradient(135deg, #61dafb, #0088cc);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1.2rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        z-index: 1002;
-        transition: all 0.3s ease;
-      }
-
-      .toggle-btn:hover {
-        background: linear-gradient(135deg, #0088cc, #006699);
-        transform: scale(1.05);
-      }
-
-      /* Overlay */
-      .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-      }
-
-      .overlay.active {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      /* Main Content */
-      .main-content {
-        flex: 1;
-        margin-left: 0;
-        transition: margin-left 0.3s ease;
-      }
-
-      .container {
-        max-width: 1400px;
-        margin: 30px auto;
-        padding: 30px;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      }
-
-      /* Header */
-      .header {
-        text-align: center;
-        margin-bottom: 40px;
-        padding: 40px 20px;
-        background: linear-gradient(135deg, #61dafb, #0088cc);
-        border-radius: 15px;
-        color: white;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .header::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.1) 0%,
-          transparent 70%
-        );
-        animation: pulse 15s ease-in-out infinite;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          transform: scale(1) translate(0, 0);
-        }
-        50% {
-          transform: scale(1.1) translate(-10%, -10%);
-        }
-      }
-
-      .header h1 {
-        font-size: 2.8rem;
-        margin-bottom: 10px;
-        position: relative;
-        z-index: 1;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-      }
-
-      .header p {
-        font-size: 1.2rem;
-        position: relative;
-        z-index: 1;
-        opacity: 0.95;
-      }
-
-      /* Course Outline */
-      .course-outline {
-        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-        padding: 30px;
-        border-radius: 15px;
-        margin-bottom: 40px;
-        border-left: 6px solid #0088cc;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      }
-
-      .course-outline h2 {
-        color: #0088cc;
-        margin-bottom: 25px;
-        font-size: 2rem;
-        text-align: center;
-      }
-
-      .outline-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 15px;
-      }
-
-      .outline-card {
-        background: white;
-        padding: 18px 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        border-left: 4px solid #61dafb;
-        transition: all 0.3s ease;
-        cursor: pointer;
-      }
-
-      .outline-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        border-left-color: #0088cc;
-      }
-
-      .outline-card strong {
-        color: #0088cc;
-        font-size: 1.1rem;
-      }
-
-      /* Lesson Section */
-      .lesson {
-        background: white;
-        margin-bottom: 35px;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-      }
-
-      .lesson:hover {
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-      }
-
-      .lesson-header {
-        background: linear-gradient(135deg, #61dafb, #0088cc);
-        color: white;
-        padding: 25px 30px;
-        position: relative;
-      }
-
-      .lesson-header h2 {
-        font-size: 1.8rem;
-        margin-bottom: 8px;
-      }
-
-      .lesson-header p {
-        font-size: 1.05rem;
-        opacity: 0.95;
-      }
-
-      .lesson-content {
-        padding: 30px;
-      }
-
-      /* Section */
-      .section {
-        margin-bottom: 30px;
-      }
-
-      .section-title {
-        color: #0088cc;
-        font-size: 1.4rem;
-        margin-bottom: 15px;
-        padding-bottom: 8px;
-        border-bottom: 3px solid #e1f5fe;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      /* Content Boxes */
-      .content-box {
-        background: #f5f5f5;
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        border-left: 5px solid #61dafb;
-        line-height: 1.8;
-      }
-
-      .definition-box {
-        background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        border-left: 5px solid #4caf50;
-        line-height: 1.8;
-      }
-
-      .highlight-box {
-        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        border-left: 5px solid #ff9800;
-        line-height: 1.8;
-      }
-
-      .warning-box {
-        background: linear-gradient(135deg, #ffebee, #ffcdd2);
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        border-left: 5px solid #f44336;
-        line-height: 1.8;
-      }
-
-      .info-box {
-        background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        border-left: 5px solid #03a9f4;
-        line-height: 1.8;
-      }
-
-      /* Code Block */
-      .code-box {
-        background: #263238;
-        color: #aed581;
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        overflow-x: auto;
-        font-family: "Consolas", "Monaco", "Courier New", monospace;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      }
-
-      .code-box pre {
-        margin: 0;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-      }
-
-      /* Lists */
-      .content-box ul,
-      .definition-box ul,
-      .highlight-box ul,
-      .warning-box ul,
-      .info-box ul {
-        margin-left: 25px;
-        margin-top: 10px;
-      }
-
-      .content-box li,
-      .definition-box li,
-      .highlight-box li,
-      .warning-box li,
-      .info-box li {
-        margin-bottom: 8px;
-      }
-
-      /* Tables */
-      .comparison-table {
-        overflow-x: auto;
-        margin: 20px 0;
-      }
-
-      .comparison-table table {
-        width: 100%;
-        border-collapse: collapse;
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .comparison-table th {
-        background: linear-gradient(135deg, #61dafb, #0088cc);
-        color: white;
-        padding: 15px;
-        text-align: left;
-        font-weight: 600;
-        font-size: 1.05rem;
-      }
-
-      .comparison-table td {
-        padding: 15px;
-        border-bottom: 1px solid #e0e0e0;
-      }
-
-      .comparison-table tr:last-child td {
-        border-bottom: none;
-      }
-
-      .comparison-table tr:hover {
-        background: #f5f5f5;
-      }
-
-      /* Back Button */
-      .back-to-main {
-        position: fixed;
-        top: 80px;
-        left: 20px;
-        padding: 12px 20px;
-        background: #20232a;
-        color: white;
-        text-decoration: none;
-        border-radius: 25px;
-        font-size: 0.9rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        z-index: 1002;
-        transition: all 0.3s ease;
-      }
-
-      .back-to-main:hover {
-        background: #0088cc;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-      }
-
-      /* Scroll to Top Button */
-      .scroll-top {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(135deg, #61dafb, #0088cc);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        font-size: 1.5rem;
-        cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        z-index: 1000;
-      }
-
-      .scroll-top.show {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .scroll-top:hover {
-        background: linear-gradient(135deg, #0088cc, #006699);
-        transform: translateY(-5px);
-      }
-
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        .container {
-          margin: 15px;
-          padding: 20px;
-        }
-
-        .header h1 {
-          font-size: 2rem;
-        }
-
-        .header p {
-          font-size: 1rem;
-        }
-
-        .sidebar {
-          width: 280px;
-        }
-
-        .toggle-btn {
-          top: 10px;
-          left: 10px;
-          padding: 10px 14px;
-        }
-
-        .back-to-main {
-          top: 65px;
-          left: 10px;
-          padding: 10px 16px;
-          font-size: 0.85rem;
-        }
-
-        .outline-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .lesson-header h2 {
-          font-size: 1.5rem;
-        }
-
-        .section-title {
-          font-size: 1.2rem;
-        }
-      }
-
-      code {
-        background: #f4f4f4;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-family: "Consolas", "Monaco", monospace;
-        font-size: 0.9rem;
-        color: #d63384;
-      }
-
-      strong {
-        color: #0088cc;
-        font-weight: 600;
-      }
-    </style>
-  </head>
-  <body>
-    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-    <div class="overlay" onclick="closeSidebar()"></div>
-    <a href="../index.html" class="back-to-main">🏠</a>
-
-    <div class="layout-container">
-      <!-- Sidebar -->
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-          <h3>⚛️ React Navigation</h3>
-          <p>Jump to any module</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React.js Framework Study Notes</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+<body>
+  <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+  <div class="overlay" onclick="closeSidebar()"></div>
+  
+  <div class="layout-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-star"></i> React Navigation</h3>
+        <p>Jump to any module</p>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li><a onclick="closeSidebar()" href="#outline"><i class="fas fa-clipboard"></i> Course Outline</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson1"><i class="fas fa-star"></i> React Fundamentals</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson2"><i class="fas fa-puzzle-piece"></i> Components & JSX</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson3"><i class="fas fa-palette"></i> Props & State</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson4"><i class="fas fa-star"></i> Hooks Deep Dive</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson5"><i class="fas fa-stopwatch"></i> useEffect & Lifecycle</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson6"><i class="fas fa-sync"></i> Component Communication</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson7"><i class="fas fa-globe"></i> Context API</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson8"><i class="fas fa-compass"></i> React Router</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson9"><i class="fas fa-broadcast-tower"></i> Data Fetching</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson10"><i class="fas fa-edit"></i> Forms & Validation</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson11"><i class="fas fa-star"></i> State Management</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson12"><i class="fas fa-bolt"></i> Performance Optimization</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson13"><i class="fas fa-flask"></i> Testing</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson14"><i class="fas fa-lock"></i> Security Best Practices</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson15">? Accessibility</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson16"><i class="fas fa-palette"></i> Styling Solutions</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson17"><i class="fas fa-star"></i> Animations</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson18"><i class="fas fa-dna"></i> Advanced Patterns</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson19"><i class="fas fa-rocket"></i> React 18 Features</a></li>
+          <li><a onclick="closeSidebar()" href="#lesson20"><i class="fas fa-star"></i> Next.js Framework</a></li>
+        </ul>
+      </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="container">
+        <!-- Header -->
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Main Page</a><div class="header">
+          <h1><i class="fas fa-star"></i> React.js Framework</h1>
+          <p>Comprehensive Study Guide - From Zero to Hero</p>
         </div>
-        <div class="sidebar-content">
-          <ul>
-            <li><a onclick="closeSidebar()" href="#outline">📋 Course Outline</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson1">⚛️ React Fundamentals</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson2">🧩 Components & JSX</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson3">🎨 Props & State</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson4">🪝 Hooks Deep Dive</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson5">⏱️ useEffect & Lifecycle</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson6">🔄 Component Communication</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson7">🌐 Context API</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson8">🧭 React Router</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson9">📡 Data Fetching</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson10">📝 Forms & Validation</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson11">🗃️ State Management</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson12">⚡ Performance Optimization</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson13">🧪 Testing</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson14">🔐 Security Best Practices</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson15">♿ Accessibility</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson16">🎨 Styling Solutions</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson17">🌀 Animations</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson18">🧬 Advanced Patterns</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson19">🚀 React 18 Features</a></li>
-            <li><a onclick="closeSidebar()" href="#lesson20">🧱 Next.js Framework</a></li>
-          </ul>
-        </div>
-      </aside>
-
-      <!-- Main Content -->
-      <main class="main-content">
-        <div class="container">
-          <!-- Header -->
-          <div class="header">
-            <h1>⚛️ React.js Framework</h1>
-            <p>Comprehensive Study Guide - From Zero to Hero</p>
+        <!-- Module 1: React Fundamentals -->
+        <div id="lesson1" class="lesson">
+          <div class="lesson-header">
+            <h2><i class="fas fa-star"></i> Module 1: React Fundamentals</h2>
+            <p>Understanding React's core philosophy and architecture</p>
           </div>
-
-
-
-          <!-- Module 1: React Fundamentals -->
-          <div id="lesson1" class="lesson">
-            <div class="lesson-header">
-              <h2>⚛️ Module 1: React Fundamentals</h2>
-              <p>Understanding React's core philosophy and architecture</p>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title"><i class="fas fa-books"></i> What is React?</h3>
+              <div class="definition-box">
+                <p>
+                  <strong>React</strong> is a JavaScript library for building user
+                  interfaces, developed and maintained by Meta (Facebook). It uses a
+                  component-based architecture and declarative programming paradigm to
+                  create interactive UIs efficiently. React components are pieces of the UI that have their own logic
+                  and appearance, ranging from as small as a button to as large as an entire page.
+                </p>
+              </div>
+              <div class="content-box">
+                <p><strong>Key Features:</strong></p>
+                <ul>
+                  <li>
+                    <strong>Declarative:</strong> Describe what the UI should look like for any given state,
+                    and React efficiently updates and renders the right components when data changes
+                  </li>
+                  <li>
+                    <strong>Component-Based:</strong> Build encapsulated components that
+                    manage their own state, then compose them to make complex UIs
+                  </li>
+                  <li>
+                    <strong>Learn Once, Write Anywhere:</strong> React Native for mobile,
+                    React for web, and other platforms
+                  </li>
+                  <li>
+                    <strong>Virtual DOM:</strong> Efficient rendering through reconciliation
+                    algorithm that diffs trees and applies minimal changes
+                  </li>
+                  <li>
+                    <strong>Unidirectional Data Flow:</strong> Data flows down from parent to child components through
+                    props, making state changes predictable
+                  </li>
+                </ul>
+              </div>
+              <div class="info-box">
+                <p><strong>React in 80/20 Rule:</strong> The React documentation on react.dev focuses on the 80% of
+                  concepts you'll use daily - components, JSX, props, state, hooks, events, conditional rendering, and
+                  lists. Mastering these core concepts will make you productive in React development.</p>
+              </div>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">📚 What is React?</h3>
-                <div class="definition-box">
-                  <p>
-                    <strong>React</strong> is a JavaScript library for building user
-                    interfaces, developed and maintained by Meta (Facebook). It uses a
-                    component-based architecture and declarative programming paradigm to
-                    create interactive UIs efficiently. React components are pieces of the UI that have their own logic and appearance, ranging from as small as a button to as large as an entire page.
-                  </p>
-                </div>
-                <div class="content-box">
-                  <p><strong>Key Features:</strong></p>
-                  <ul>
-                    <li>
-                      <strong>Declarative:</strong> Describe what the UI should look like for any given state,
-                      and React efficiently updates and renders the right components when data changes
-                    </li>
-                    <li>
-                      <strong>Component-Based:</strong> Build encapsulated components that
-                      manage their own state, then compose them to make complex UIs
-                    </li>
-                    <li>
-                      <strong>Learn Once, Write Anywhere:</strong> React Native for mobile,
-                      React for web, and other platforms
-                    </li>
-                    <li>
-                      <strong>Virtual DOM:</strong> Efficient rendering through reconciliation
-                      algorithm that diffs trees and applies minimal changes
-                    </li>
-                    <li>
-                      <strong>Unidirectional Data Flow:</strong> Data flows down from parent to child components through props, making state changes predictable
-                    </li>
-                  </ul>
-                </div>
-                <div class="info-box">
-                  <p><strong>React in 80/20 Rule:</strong> The React documentation on react.dev focuses on the 80% of concepts you'll use daily - components, JSX, props, state, hooks, events, conditional rendering, and lists. Mastering these core concepts will make you productive in React development.</p>
-                </div>
+            <div class="section">
+              <h3 class="section-title"><i class="fas fa-bullseye"></i> Virtual DOM Explained</h3>
+              <div class="info-box">
+                <p>
+                  The <strong>Virtual DOM</strong> is a lightweight JavaScript
+                  representation of the actual DOM. React uses it to optimize rendering:
+                </p>
+                <ul>
+                  <li>
+                    <strong>Step 1:</strong> When state changes, React creates a new
+                    Virtual DOM tree
+                  </li>
+                  <li>
+                    <strong>Step 2:</strong> React compares (diffs) the new Virtual DOM
+                    with the previous one
+                  </li>
+                  <li>
+                    <strong>Step 3:</strong> React calculates the minimum set of changes
+                    needed
+                  </li>
+                  <li>
+                    <strong>Step 4:</strong> React updates only the changed parts in the
+                    real DOM
+                  </li>
+                </ul>
               </div>
-
-              <div class="section">
-                <h3 class="section-title">🎯 Virtual DOM Explained</h3>
-                <div class="info-box">
-                  <p>
-                    The <strong>Virtual DOM</strong> is a lightweight JavaScript
-                    representation of the actual DOM. React uses it to optimize rendering:
-                  </p>
-                  <ul>
-                    <li>
-                      <strong>Step 1:</strong> When state changes, React creates a new
-                      Virtual DOM tree
-                    </li>
-                    <li>
-                      <strong>Step 2:</strong> React compares (diffs) the new Virtual DOM
-                      with the previous one
-                    </li>
-                    <li>
-                      <strong>Step 3:</strong> React calculates the minimum set of changes
-                      needed
-                    </li>
-                    <li>
-                      <strong>Step 4:</strong> React updates only the changed parts in the
-                      real DOM
-                    </li>
-                  </ul>
-                </div>
-                <div class="highlight-box">
-                  <p>
-                    <strong>💡 Performance Benefit:</strong> Direct DOM manipulation is
-                    slow. By batching updates and minimizing DOM operations, React achieves
-                    better performance than traditional approaches.
-                  </p>
-                </div>
+              <div class="highlight-box">
+                <p>
+                  <strong><i class="fas fa-lightbulb"></i> Performance Benefit:</strong> Direct DOM manipulation is
+                  slow. By batching updates and minimizing DOM operations, React achieves
+                  better performance than traditional approaches.
+                </p>
               </div>
-
-              <div class="section">
-                <h3 class="section-title">🛠️ Setting Up React</h3>
-                <div class="content-box">
-                  <p><strong>Method 1: Create React App (CRA)</strong></p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+            <div class="section">
+              <h3 class="section-title"><i class="fas fa-tools"></i> Setting Up React</h3>
+              <div class="content-box">
+                <p><strong>Method 1: Create React App (CRA)</strong></p>
+              </div>
+              <div class="code-box">
+                <pre>
 # Create new React project
 npx create-react-app my-app
 cd my-app
 npm start
-
 # Project structure:
 # my-app/
-# ├── node_modules/
-# ├── public/
-# │   ├── index.html
-# │   └── favicon.ico
-# ├── src/
-# │   ├── App.js
-# │   ├── App.css
-# │   ├── index.js
-# │   └── index.css
-# ├── package.json
-# └── README.md</pre>
-                </div>
-
-                <div class="content-box">
-                  <p><strong>Method 2: Vite (Modern & Faster)</strong></p>
-                </div>
-                <div class="code-box">
-                  <pre>
+# +-- node_modules/
+# +-- public/
+# �   +-- index.html
+# �   +-- favicon.ico
+# +-- src/
+# �   +-- App.js
+# �   +-- App.css
+# �   +-- index.js
+# �   +-- index.css
+# +-- package.json
+# +-- README.md</pre>
+              </div>
+              <div class="content-box">
+                <p><strong>Method 2: Vite (Modern & Faster)</strong></p>
+              </div>
+              <div class="code-box">
+                <pre>
 # Create Vite project
 npm create vite@latest my-react-app -- --template react
 cd my-react-app
 npm install
 npm run dev</pre>
-                </div>
-
-                <div class="content-box">
-                  <p><strong>Method 3: CDN (Quick Testing)</strong></p>
-                </div>
-                <div class="code-box">
-                  <pre>
+              </div>
+              <div class="content-box">
+                <p><strong>Method 3: CDN (Quick Testing)</strong></p>
+              </div>
+              <div class="code-box">
+                <pre>
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
@@ -735,112 +194,115 @@ npm run dev</pre>
   &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</pre>
-                </div>
               </div>
-
-              <div class="section">
-                <h3 class="section-title">📖 React vs Other Frameworks</h3>
-                <div class="comparison-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Feature</th>
-                        <th>React</th>
-                        <th>Vue</th>
-                        <th>Angular</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Type</td>
-                        <td>Library</td>
-                        <td>Framework</td>
-                        <td>Full Framework</td>
-                      </tr>
-                      <tr>
-                        <td>Learning Curve</td>
-                        <td>Moderate</td>
-                        <td>Easy</td>
-                        <td>Steep</td>
-                      </tr>
-                      <tr>
-                        <td>Language</td>
-                        <td>JSX + JavaScript</td>
-                        <td>Template + JavaScript</td>
-                        <td>TypeScript</td>
-                      </tr>
-                      <tr>
-                        <td>DOM</td>
-                        <td>Virtual DOM</td>
-                        <td>Virtual DOM</td>
-                        <td>Real DOM</td>
-                      </tr>
-                      <tr>
-                        <td>State Management</td>
-                        <td>Redux, Context</td>
-                        <td>Vuex, Pinia</td>
-                        <td>RxJS, Services</td>
-                      </tr>
-                      <tr>
-                        <td>Community</td>
-                        <td>Very Large</td>
-                        <td>Large</td>
-                        <td>Large</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+            </div>
+            <div class="section">
+              <h3 class="section-title"><i class="fas fa-book"></i> React vs Other Frameworks</h3>
+              <div class="comparison-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Feature</th>
+                      <th>React</th>
+                      <th>Vue</th>
+                      <th>Angular</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Type</td>
+                      <td>Library</td>
+                      <td>Framework</td>
+                      <td>Full Framework</td>
+                    </tr>
+                    <tr>
+                      <td>Learning Curve</td>
+                      <td>Moderate</td>
+                      <td>Easy</td>
+                      <td>Steep</td>
+                    </tr>
+                    <tr>
+                      <td>Language</td>
+                      <td>JSX + JavaScript</td>
+                      <td>Template + JavaScript</td>
+                      <td>TypeScript</td>
+                    </tr>
+                    <tr>
+                      <td>DOM</td>
+                      <td>Virtual DOM</td>
+                      <td>Virtual DOM</td>
+                      <td>Real DOM</td>
+                    </tr>
+                    <tr>
+                      <td>State Management</td>
+                      <td>Redux, Context</td>
+                      <td>Vuex, Pinia</td>
+                      <td>RxJS, Services</td>
+                    </tr>
+                    <tr>
+                      <td>Community</td>
+                      <td>Very Large</td>
+                      <td>Large</td>
+                      <td>Large</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
-
-          <!-- Module 2: Components & JSX -->
-          <div id="lesson2" class="lesson">
-            <div class="lesson-header">
-              <h2>🧩 Module 2: Components & JSX</h2>
-              <p>Building blocks of React applications</p>
-            </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">🎯 Creating and Nesting Components</h3>
-                <div class="definition-box">
-                  <p>
-                    <strong>Components</strong> are independent, reusable pieces of UI that have their own logic and appearance.
-                    A component can be as small as a button, or as large as an entire page. React components are JavaScript functions that return markup.
-                  </p>
-                </div>
-                <div class="info-box">
-                  <p><strong>Key Rules:</strong></p>
-                  <ul>
-                    <li><strong>Component Names Must Start with Capital Letter:</strong> React component names must always start with a capital letter (e.g., <code>MyButton</code>), while HTML tags must be lowercase.</li>
-                    <li><strong>Components Return JSX:</strong> React components are JavaScript functions that return JSX markup</li>
-                    <li><strong>Nesting Components:</strong> Once you've declared a component, you can nest it into another component</li>
-                    <li><strong>Export Default:</strong> The <code>export default</code> keywords specify the main component in the file</li>
-                  </ul>
-                </div>
-                <div class="content-box">
-                  <p><strong>Types of Components:</strong></p>
-                  <ul>
-                    <li><strong>Function Components:</strong> Modern approach, simpler syntax, use hooks for state and side effects</li>
-                    <li>
-                      <strong>Class Components:</strong> Legacy approach, more boilerplate, have
-                      lifecycle methods (still supported but not recommended for new code)
-                    </li>
-                  </ul>
-                </div>
+        </div>
+        <!-- Module 2: Components & JSX -->
+        <div id="lesson2" class="lesson">
+          <div class="lesson-header">
+            <h2><i class="fas fa-puzzle-piece"></i> Module 2: Components & JSX</h2>
+            <p>Building blocks of React applications</p>
+          </div>
+          <div class="lesson-content">
+            <div class="section">
+              <h3 class="section-title"><i class="fas fa-bullseye"></i> Creating and Nesting Components</h3>
+              <div class="definition-box">
+                <p>
+                  <strong>Components</strong> are independent, reusable pieces of UI that have their own logic and
+                  appearance.
+                  A component can be as small as a button, or as large as an entire page. React components are
+                  JavaScript functions that return markup.
+                </p>
               </div>
-
-              <div class="section">
-                <h3 class="section-title">📝 Function Components</h3>
-                <div class="code-box">
-                  <pre>
+              <div class="info-box">
+                <p><strong>Key Rules:</strong></p>
+                <ul>
+                  <li><strong>Component Names Must Start with Capital Letter:</strong> React component names must always
+                    start with a capital letter (e.g., <code>MyButton</code>), while HTML tags must be lowercase.</li>
+                  <li><strong>Components Return JSX:</strong> React components are JavaScript functions that return JSX
+                    markup</li>
+                  <li><strong>Nesting Components:</strong> Once you've declared a component, you can nest it into
+                    another component</li>
+                  <li><strong>Export Default:</strong> The <code>export default</code> keywords specify the main
+                    component in the file</li>
+                </ul>
+              </div>
+              <div class="content-box">
+                <p><strong>Types of Components:</strong></p>
+                <ul>
+                  <li><strong>Function Components:</strong> Modern approach, simpler syntax, use hooks for state and
+                    side effects</li>
+                  <li>
+                    <strong>Class Components:</strong> Legacy approach, more boilerplate, have
+                    lifecycle methods (still supported but not recommended for new code)
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="section">
+              <h3 class="section-title"><i class="fas fa-edit"></i> Function Components</h3>
+              <div class="code-box">
+                <pre>
 // Basic Function Component
 function MyButton() {
   return (
     &lt;button&gt;I'm a button&lt;/button&gt;
   );
 }
-
 // Nesting Components
 export default function MyApp() {
   return (
@@ -850,28 +312,26 @@ export default function MyApp() {
     &lt;/div&gt;
   );
 }
-
 // Component with Props
 function Welcome({ name }) {
   return &lt;h1&gt;Hello, {name}!&lt;/h1&gt;;
 }
-
 // Usage
 &lt;Welcome name="Sara" /&gt;</pre>
-                </div>
-                <div class="highlight-box">
-                  <p>
-                    <strong>💡 Best Practice:</strong> Use function components for all new code. They're simpler, more readable, and recommended by the React team. The <code>&lt;MyButton /&gt;</code> syntax with capital letter tells React it's a component, not an HTML tag.
-                  </p>
-                </div>
               </div>
-
-              <div class="section">
-                <h3 class="section-title">🏛️ Class Components (Legacy)</h3>
-                <div class="code-box">
-                  <pre>
+              <div class="highlight-box">
+                <p>
+                  <strong><i class="fas fa-lightbulb"></i> Best Practice:</strong> Use function components for all new code. They're simpler, more
+                  readable, and recommended by the React team. The <code>&lt;MyButton /&gt;</code> syntax with capital
+                  letter tells React it's a component, not an HTML tag.
+                </p>
+              </div>
+            </div>
+            <div class="section">
+              <h3 class="section-title"><i class="fas fa-star"></i> Class Components (Legacy)</h3>
+              <div class="code-box">
+                <pre>
 import React, { Component } from 'react';
-
 class Welcome extends Component {
   constructor(props) {
     super(props);
@@ -879,19 +339,15 @@ class Welcome extends Component {
       count: 0
     };
   }
-
   componentDidMount() {
     console.log('Component mounted');
   }
-
   componentDidUpdate(prevProps, prevState) {
     console.log('Component updated');
   }
-
   componentWillUnmount() {
     console.log('Component will unmount');
   }
-
   render() {
     return (
       &lt;div&gt;
@@ -904,35 +360,39 @@ class Welcome extends Component {
     );
   }
 }
-
 export default Welcome;</pre>
-                </div>
-                <div class="warning-box">
-                  <p>
-                    <strong>⚠️ Note:</strong> While class components still work, function
-                    components with hooks are the modern standard. Learn classes only for
-                    maintaining legacy code.
-                  </p>
-                </div>
               </div>
-
-              <div class="section">
-                <h3 class="section-title">✨ Writing Markup with JSX</h3>
-                <div class="definition-box">
-                  <p>
-                    <strong>JSX (JavaScript XML)</strong> is a syntax extension for JavaScript that lets you write HTML-like markup inside JavaScript files. While JSX is optional, most React projects use it for convenience. All tools recommended for local development support JSX out of the box.
-                  </p>
-                </div>
-                <div class="info-box">
-                  <p><strong>JSX is Stricter than HTML:</strong></p>
-                  <ul>
-                    <li><strong>Close All Tags:</strong> You must close tags like <code>&lt;br /&gt;</code> - self-closing tags need the slash</li>
-                    <li><strong>Single Root:</strong> Components can't return multiple JSX tags. Wrap them in a shared parent like <code>&lt;div&gt;...&lt;/div&gt;</code> or empty wrapper <code>&lt;&gt;...&lt;/&gt;</code></li>
-                    <li><strong>camelCase Attributes:</strong> JSX turns into JavaScript - use <code>className</code> instead of <code>class</code>, <code>htmlFor</code> instead of <code>for</code></li>
-                  </ul>
-                </div>
-                <div class="code-box">
-                  <pre>
+              <div class="warning-box">
+                <p>
+                  <strong><i class="fas fa-exclamation-triangle"></i> Note:</strong> While class components still work, function
+                  components with hooks are the modern standard. Learn classes only for
+                  maintaining legacy code.
+                </p>
+              </div>
+            </div>
+            <div class="section">
+              <h3 class="section-title"><i class="fas fa-sparkles"></i> Writing Markup with JSX</h3>
+              <div class="definition-box">
+                <p>
+                  <strong>JSX (JavaScript XML)</strong> is a syntax extension for JavaScript that lets you write
+                  HTML-like markup inside JavaScript files. While JSX is optional, most React projects use it for
+                  convenience. All tools recommended for local development support JSX out of the box.
+                </p>
+              </div>
+              <div class="info-box">
+                <p><strong>JSX is Stricter than HTML:</strong></p>
+                <ul>
+                  <li><strong>Close All Tags:</strong> You must close tags like <code>&lt;br /&gt;</code> - self-closing
+                    tags need the slash</li>
+                  <li><strong>Single Root:</strong> Components can't return multiple JSX tags. Wrap them in a shared
+                    parent like <code>&lt;div&gt;...&lt;/div&gt;</code> or empty wrapper
+                    <code>&lt;&gt;...&lt;/&gt;</code></li>
+                  <li><strong>camelCase Attributes:</strong> JSX turns into JavaScript - use <code>className</code>
+                    instead of <code>class</code>, <code>htmlFor</code> instead of <code>for</code></li>
+                </ul>
+              </div>
+              <div class="code-box">
+                <pre>
 // JSX Example - Single Root Element Required
 function AboutPage() {
   return (
@@ -942,7 +402,6 @@ function AboutPage() {
     &lt;/&gt;
   );
 }
-
 // Using className for CSS classes
 function Avatar() {
   return (
@@ -953,7 +412,6 @@ function Avatar() {
     /&gt;
   );
 }
-
 // Fragment alternative
 const component = (
   &lt;React.Fragment&gt;
@@ -961,39 +419,38 @@ const component = (
     &lt;p&gt;Paragraph&lt;/p&gt;
   &lt;/React.Fragment&gt;
 );
-
 // Curly braces escape into JavaScript
 const name = "Hedy Lamarr";
 const element = &lt;h1&gt;Hello, {name}!&lt;/h1&gt;;
-
 // Use className instead of class
 const div = &lt;div className="container"&gt;Content&lt;/div&gt;;
-
 // Self-closing tags require /
 const input = &lt;input type="text" /&gt;;
 const image = &lt;img src="photo.jpg" alt="Photo" /&gt;;</pre>
-                </div>
-                <div class="highlight-box">
-                  <p><strong>💡 Tip:</strong> If you have a lot of HTML to port to JSX, you can use an <a href="https://transform.tools/html-to-jsx" target="_blank">online converter</a> to help translate it.</p>
-                </div>
               </div>
-
-              <div class="section">
-                <h3 class="section-title">📊 Displaying Data</h3>
-                <div class="definition-box">
-                  <p>
-                    JSX lets you put markup into JavaScript. <strong>Curly braces</strong> let you "escape back" into JavaScript so you can embed variables from your code and display them to the user. You can also use curly braces for JSX attributes.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+              <div class="highlight-box">
+                <p><strong><i class="fas fa-lightbulb"></i> Tip:</strong> If you have a lot of HTML to port to JSX, you can use an <a
+                    href="https://transform.tools/html-to-jsx" target="_blank">online converter</a> to help translate
+                  it.</p>
+              </div>
+            </div>
+            <div class="section">
+              <h3 class="section-title"><i class="fas fa-chart-bar"></i> Displaying Data</h3>
+              <div class="definition-box">
+                <p>
+                  JSX lets you put markup into JavaScript. <strong>Curly braces</strong> let you "escape back" into
+                  JavaScript so you can embed variables from your code and display them to the user. You can also use
+                  curly braces for JSX attributes.
+                </p>
+              </div>
+              <div class="code-box">
+                <pre>
 // Embedding Variables
 const user = {
   name: 'Hedy Lamarr',
   imageUrl: 'https://i.imgur.com/yXOvdOSs.jpg',
   imageSize: 90,
 };
-
 export default function Profile() {
   return (
     &lt;&gt;
@@ -1010,21 +467,24 @@ export default function Profile() {
     &lt;/&gt;
   );
 }</pre>
-                </div>
-                <div class="info-box">
-                  <p><strong>Style Attribute Note:</strong> In the example above, <code>style={{}}</code> is not special syntax - it's a regular <code>{}</code> object inside the <code>style={ }</code> JSX curly braces. Use the <code>style</code> attribute when your styles depend on JavaScript variables.</p>
-                </div>
               </div>
-
-              <div class="section">
-                <h3 class="section-title">❓ Conditional Rendering</h3>
-                <div class="definition-box">
-                  <p>
-                    In React, there is no special syntax for writing conditions. Instead, you'll use the same techniques as regular JavaScript code - <code>if</code> statements, the conditional (<code>?</code>) operator, or logical AND (<code>&&</code>).
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+              <div class="info-box">
+                <p><strong>Style Attribute Note:</strong> In the example above, <code>style={{}}</code> is not special
+                  syntax - it's a regular <code>{}</code> object inside the <code>style={ }</code> JSX curly braces. Use
+                  the <code>style</code> attribute when your styles depend on JavaScript variables.</p>
+              </div>
+            </div>
+            <div class="section">
+              <h3 class="section-title">? Conditional Rendering</h3>
+              <div class="definition-box">
+                <p>
+                  In React, there is no special syntax for writing conditions. Instead, you'll use the same techniques
+                  as regular JavaScript code - <code>if</code> statements, the conditional (<code>?</code>) operator, or
+                  logical AND (<code>&&</code>).
+                </p>
+              </div>
+              <div class="code-box">
+                <pre>
 // Using if/else Statement
 let content;
 if (isLoggedIn) {
@@ -1033,7 +493,6 @@ if (isLoggedIn) {
   content = &lt;LoginForm /&gt;;
 }
 return &lt;div&gt;{content}&lt;/div&gt;;
-
 // Using Ternary Operator (more compact)
 &lt;div&gt;
   {isLoggedIn ? (
@@ -1042,37 +501,37 @@ return &lt;div&gt;{content}&lt;/div&gt;;
     &lt;LoginForm /&gt;
   )}
 &lt;/div&gt;
-
 // Using Logical AND (when you don't need else branch)
 &lt;div&gt;
   {isLoggedIn && &lt;AdminPanel /&gt;}
 &lt;/div&gt;
-
 // Conditional Attributes
 &lt;div className={isActive ? 'active' : 'inactive'}&gt;
   Content
 &lt;/div&gt;</pre>
-                </div>
-                <div class="highlight-box">
-                  <p><strong>💡 Best Practice:</strong> All of these approaches also work for conditionally specifying attributes. If you're unfamiliar with JavaScript syntax, start by always using <code>if...else</code> and gradually adopt more compact forms.</p>
-                </div>
               </div>
-
-              <div class="section">
-                <h3 class="section-title">📝 Rendering Lists</h3>
-                <div class="definition-box">
-                  <p>
-                    You will rely on JavaScript features like <code>for</code> loops and the array <code>map()</code> function to render lists of components. For each item in a list, you should pass a <strong>key</strong> - a string or number that uniquely identifies that item among its siblings.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+              <div class="highlight-box">
+                <p><strong><i class="fas fa-lightbulb"></i> Best Practice:</strong> All of these approaches also work for conditionally specifying
+                  attributes. If you're unfamiliar with JavaScript syntax, start by always using <code>if...else</code>
+                  and gradually adopt more compact forms.</p>
+              </div>
+            </div>
+            <div class="section">
+              <h3 class="section-title"><i class="fas fa-edit"></i> Rendering Lists</h3>
+              <div class="definition-box">
+                <p>
+                  You will rely on JavaScript features like <code>for</code> loops and the array <code>map()</code>
+                  function to render lists of components. For each item in a list, you should pass a
+                  <strong>key</strong> - a string or number that uniquely identifies that item among its siblings.
+                </p>
+              </div>
+              <div class="code-box">
+                <pre>
 const products = [
   { title: 'Cabbage', isFruit: false, id: 1 },
   { title: 'Garlic', isFruit: false, id: 2 },
   { title: 'Apple', isFruit: true, id: 3 },
 ];
-
 export default function ShoppingList() {
   const listItems = products.map(product =&gt;
     &lt;li
@@ -1084,60 +543,62 @@ export default function ShoppingList() {
       {product.title}
     &lt;/li&gt;
   );
-
   return &lt;ul&gt;{listItems}&lt;/ul&gt;;
 }</pre>
-                </div>
-                <div class="warning-box">
-                  <p>
-                    <strong>⚠️ Key Importance:</strong> Notice how <code>&lt;li&gt;</code> has a <code>key</code> attribute. Usually, a key should come from your data, such as a database ID. React uses your keys to know what happened if you later insert, delete, or reorder items. Keys tell React which array item each component corresponds to.
-                  </p>
-                </div>
               </div>
-
-              <div class="section">
-                <h3 class="section-title">👆 Responding to Events</h3>
-                <div class="definition-box">
-                  <p>
-                    You can respond to events by declaring <strong>event handler</strong> functions inside your components. Event handlers are your own functions triggered in response to interactions like clicking, hovering, focusing form inputs, and more.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+              <div class="warning-box">
+                <p>
+                  <strong><i class="fas fa-exclamation-triangle"></i> Key Importance:</strong> Notice how <code>&lt;li&gt;</code> has a <code>key</code>
+                  attribute. Usually, a key should come from your data, such as a database ID. React uses your keys to
+                  know what happened if you later insert, delete, or reorder items. Keys tell React which array item
+                  each component corresponds to.
+                </p>
+              </div>
+            </div>
+            <div class="section">
+              <h3 class="section-title"><i class="fas fa-hand-point-up"></i> Responding to Events</h3>
+              <div class="definition-box">
+                <p>
+                  You can respond to events by declaring <strong>event handler</strong> functions inside your
+                  components. Event handlers are your own functions triggered in response to interactions like clicking,
+                  hovering, focusing form inputs, and more.
+                </p>
+              </div>
+              <div class="code-box">
+                <pre>
 function MyButton() {
   function handleClick() {
     alert('You clicked me!');
   }
-
   return (
     &lt;button onClick={handleClick}&gt;
       Click me
     &lt;/button&gt;
   );
 }</pre>
-                </div>
-                <div class="warning-box">
-                  <p>
-                    <strong>⚠️ Important:</strong> Notice <code>onClick={handleClick}</code> has no parentheses at the end! Do <strong>not call</strong> the event handler function - you only need to <em>pass it down</em>. React will call your event handler when the user clicks the button.
-                  </p>
-                </div>
               </div>
-                <div class="code-box">
-                  <pre>
+              <div class="warning-box">
+                <p>
+                  <strong><i class="fas fa-exclamation-triangle"></i> Important:</strong> Notice <code>onClick={handleClick}</code> has no parentheses at the
+                  end! Do <strong>not call</strong> the event handler function - you only need to <em>pass it down</em>.
+                  React will call your event handler when the user clicks the button.
+                </p>
+              </div>
+            </div>
+            <div class="code-box">
+              <pre>
 // Conditional Rendering
 const Greeting = ({ isLoggedIn }) =&gt; (
   &lt;div&gt;
     {isLoggedIn ? &lt;h1&gt;Welcome back!&lt;/h1&gt; : &lt;h1&gt;Please sign in&lt;/h1&gt;}
   &lt;/div&gt;
 );
-
 // Conditional Rendering with &&
 const Notification = ({ hasMessages }) =&gt; (
   &lt;div&gt;
     {hasMessages && &lt;p&gt;You have new messages!&lt;/p&gt;}
   &lt;/div&gt;
 );
-
 // Rendering Lists
 const TodoList = ({ todos }) =&gt; (
   &lt;ul&gt;
@@ -1146,7 +607,6 @@ const TodoList = ({ todos }) =&gt; (
     ))}
   &lt;/ul&gt;
 );
-
 // Inline Styles
 const StyledDiv = () =&gt; (
   &lt;div style={{ 
@@ -1158,71 +618,68 @@ const StyledDiv = () =&gt; (
     Styled Content
   &lt;/div&gt;
 );
-
 // Spread Attributes
 const props = { id: 'user', className: 'active' };
 const element = &lt;div {...props}&gt;Content&lt;/div&gt;;
-
 // Children Prop
 const Card = ({ children }) =&gt; (
   &lt;div className="card"&gt;
     {children}
   &lt;/div&gt;
 );
-
 // Usage
 &lt;Card&gt;
   &lt;h2&gt;Title&lt;/h2&gt;
   &lt;p&gt;Description&lt;/p&gt;
 &lt;/Card&gt;</pre>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">⚠️ Common JSX Mistakes</h3>
-                <div class="warning-box">
-                  <ul>
-                    <li>
-                      <strong>Using class instead of className:</strong> Will cause warnings
-                    </li>
-                    <li>
-                      <strong>Forgetting to close tags:</strong> All tags must be closed or
-                      self-closing
-                    </li>
-                    <li>
-                      <strong>Missing keys in lists:</strong> Required for React's
-                      reconciliation
-                    </li>
-                    <li>
-                      <strong>Direct if statements:</strong> Use ternary or && operators
-                      instead
-                    </li>
-                    <li>
-                      <strong>Modifying props:</strong> Props are read-only, never mutate
-                      them
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 3: Props & State -->
-          <div id="lesson3" class="lesson">
-            <div class="lesson-header">
-              <h2>🎨 Module 3: Props & State</h2>
-              <p>Managing data in React components</p>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-exclamation-triangle"></i> Common JSX Mistakes</h3>
+            <div class="warning-box">
+              <ul>
+                <li>
+                  <strong>Using class instead of className:</strong> Will cause warnings
+                </li>
+                <li>
+                  <strong>Forgetting to close tags:</strong> All tags must be closed or
+                  self-closing
+                </li>
+                <li>
+                  <strong>Missing keys in lists:</strong> Required for React's
+                  reconciliation
+                </li>
+                <li>
+                  <strong>Direct if statements:</strong> Use ternary or && operators
+                  instead
+                </li>
+                <li>
+                  <strong>Modifying props:</strong> Props are read-only, never mutate
+                  them
+                </li>
+              </ul>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">📦 Props (Properties)</h3>
-                <div class="definition-box">
-                  <p>
-                    <strong>Props</strong> are information you pass to JSX tags. They work like arguments to functions - they let parent components pass data to child components. Props are read-only and flow unidirectionally from parent to child.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+          </div>
+        </div>
+      </div>
+      <!-- Module 3: Props & State -->
+      <div id="lesson3" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-palette"></i> Module 3: Props & State</h2>
+          <p>Managing data in React components</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-box"></i> Props (Properties)</h3>
+            <div class="definition-box">
+              <p>
+                <strong>Props</strong> are information you pass to JSX tags. They work like arguments to functions -
+                they let parent components pass data to child components. Props are read-only and flow unidirectionally
+                from parent to child.
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 // Passing Props to Components
 function Avatar({ person, size }) {
   return (
@@ -1235,7 +692,6 @@ function Avatar({ person, size }) {
     /&gt;
   );
 }
-
 export default function Profile() {
   return (
     &lt;Avatar
@@ -1244,13 +700,11 @@ export default function Profile() {
     /&gt;
   );
 }
-
 // Default Props with Destructuring
 function Avatar({ person, size = 100 }) {
   // size will be 100 if not provided
   return &lt;img src={person.imageUrl} width={size} height={size} /&gt;;
 }
-
 // Forwarding Props with Spread
 function Profile(props) {
   return (
@@ -1259,64 +713,65 @@ function Profile(props) {
     &lt;/div&gt;
   );
 }</pre>
-                </div>
-                <div class="info-box">
-                  <p><strong>Props as Component Configuration:</strong> You can think of props like "knobs" you can adjust. They serve the same role as arguments for functions - props are the only argument to your component!</p>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">🔄 Updating the Screen with State</h3>
-                <div class="definition-box">
-                  <p>
-                    Components often need to change what's on screen as a result of interaction. Typing into a form should update the input field, clicking a button should change content. Components need to "remember" things - this component-specific memory is called <strong>state</strong>.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+            <div class="info-box">
+              <p><strong>Props as Component Configuration:</strong> You can think of props like "knobs" you can adjust.
+                They serve the same role as arguments for functions - props are the only argument to your component!</p>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-sync"></i> Updating the Screen with State</h3>
+            <div class="definition-box">
+              <p>
+                Components often need to change what's on screen as a result of interaction. Typing into a form should
+                update the input field, clicking a button should change content. Components need to "remember" things -
+                this component-specific memory is called <strong>state</strong>.
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 import { useState } from 'react';
-
 // Basic Counter with State
 function MyButton() {
   const [count, setCount] = useState(0);
-
   function handleClick() {
     setCount(count + 1);
   }
-
   return (
     &lt;button onClick={handleClick}&gt;
       Clicked {count} times
     &lt;/button&gt;
   );
 }</pre>
-                </div>
-                <div class="info-box">
-                  <p>
-                    <strong>How useState Works:</strong> You'll get two things from <code>useState</code>: the current state (<code>count</code>), and the function that lets you update it (<code>setCount</code>). The convention is to name them like <code>[something, setSomething]</code>.
-                  </p>
-                  <p>The first time the button is displayed, <code>count</code> will be <code>0</code> because you passed <code>0</code> to <code>useState()</code>. When you want to change state, call <code>setCount()</code> and pass the new value.</p>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">🔗 Sharing Data Between Components</h3>
-                <div class="definition-box">
-                  <p>
-                    Often, you'll want components to share data and always update together. To make components display the same data and update together, move the state from individual components "upwards" to the closest common parent. This is called <strong>"lifting state up"</strong>.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+            <div class="info-box">
+              <p>
+                <strong>How useState Works:</strong> You'll get two things from <code>useState</code>: the current state
+                (<code>count</code>), and the function that lets you update it (<code>setCount</code>). The convention
+                is to name them like <code>[something, setSomething]</code>.
+              </p>
+              <p>The first time the button is displayed, <code>count</code> will be <code>0</code> because you passed
+                <code>0</code> to <code>useState()</code>. When you want to change state, call <code>setCount()</code>
+                and pass the new value.</p>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-link"></i> Sharing Data Between Components</h3>
+            <div class="definition-box">
+              <p>
+                Often, you'll want components to share data and always update together. To make components display the
+                same data and update together, move the state from individual components "upwards" to the closest common
+                parent. This is called <strong>"lifting state up"</strong>.
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 import { useState } from 'react';
-
 export default function MyApp() {
   const [count, setCount] = useState(0);
-
   function handleClick() {
     setCount(count + 1);
   }
-
   return (
     &lt;div&gt;
       &lt;h1&gt;Counters that update together&lt;/h1&gt;
@@ -1325,7 +780,6 @@ export default function MyApp() {
     &lt;/div&gt;
   );
 }
-
 function MyButton({ count, onClick }) {
   return (
     &lt;button onClick={onClick}&gt;
@@ -1333,125 +787,123 @@ function MyButton({ count, onClick }) {
     &lt;/button&gt;
   );
 }</pre>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">⚖️ Props vs State</h3>
-                <div class="comparison-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Aspect</th>
-                        <th>Props</th>
-                        <th>State</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Definition</td>
-                        <td>Data passed from parent</td>
-                        <td>Data managed within component</td>
-                      </tr>
-                      <tr>
-                        <td>Mutability</td>
-                        <td>Read-only (immutable)</td>
-                        <td>Can be changed with setState</td>
-                      </tr>
-                      <tr>
-                        <td>Ownership</td>
-                        <td>Owned by parent</td>
-                        <td>Owned by component</td>
-                      </tr>
-                      <tr>
-                        <td>Update Trigger</td>
-                        <td>Parent re-renders</td>
-                        <td>setState call</td>
-                      </tr>
-                      <tr>
-                        <td>Use Case</td>
-                        <td>Component configuration</td>
-                        <td>Interactive/dynamic data</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">🎯 Best Practices</h3>
-                <div class="highlight-box">
-                  <ul>
-                    <li>
-                      <strong>Immutability:</strong> Never mutate state directly, always use
-                      setState
-                    </li>
-                    <li>
-                      <strong>Functional Updates:</strong> Use function form when new state
-                      depends on previous
-                    </li>
-                    <li>
-                      <strong>Lift State Up:</strong> Move shared state to closest common
-                      ancestor
-                    </li>
-                    <li>
-                      <strong>Single Source of Truth:</strong> Don't duplicate state across
-                      components
-                    </li>
-                    <li>
-                      <strong>Derived State:</strong> Calculate values from existing state
-                      instead of storing them
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 4: Hooks Deep Dive -->
-          <div id="lesson4" class="lesson">
-            <div class="lesson-header">
-              <h2>🪝 Module 4: Hooks Deep Dive</h2>
-              <p>Mastering React's built-in hooks and creating custom ones</p>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-star"></i> Props vs State</h3>
+            <div class="comparison-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Aspect</th>
+                    <th>Props</th>
+                    <th>State</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Definition</td>
+                    <td>Data passed from parent</td>
+                    <td>Data managed within component</td>
+                  </tr>
+                  <tr>
+                    <td>Mutability</td>
+                    <td>Read-only (immutable)</td>
+                    <td>Can be changed with setState</td>
+                  </tr>
+                  <tr>
+                    <td>Ownership</td>
+                    <td>Owned by parent</td>
+                    <td>Owned by component</td>
+                  </tr>
+                  <tr>
+                    <td>Update Trigger</td>
+                    <td>Parent re-renders</td>
+                    <td>setState call</td>
+                  </tr>
+                  <tr>
+                    <td>Use Case</td>
+                    <td>Component configuration</td>
+                    <td>Interactive/dynamic data</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">🎯 What are Hooks?</h3>
-                <div class="definition-box">
-                  <p>
-                    <strong>Hooks</strong> are functions that start with <code>use</code> and let you "hook into" React features. <code>useState</code> is a built-in Hook provided by React. You can find other built-in Hooks in the React API reference, or write your own by combining existing ones.
-                  </p>
-                </div>
-                <div class="warning-box">
-                  <p>
-                    <strong>⚠️ Hook Rules:</strong> Hooks are more restrictive than other functions:
-                  </p>
-                  <ul>
-                    <li>You can only call Hooks <strong>at the top level</strong> of your components (or other Hooks)</li>
-                    <li>Don't call Hooks inside conditions, loops, or nested functions</li>
-                    <li>If you want to use <code>useState</code> in a condition or loop, extract a new component and put it there</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">💾 useState - Component's Memory</h3>
-                <div class="definition-box">
-                  <p>
-                    <code>useState</code> is a Hook that lets you add state to function components. The first time the component displays, useState returns the initial value. When you want to change state, call the setter function.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-bullseye"></i> Best Practices</h3>
+            <div class="highlight-box">
+              <ul>
+                <li>
+                  <strong>Immutability:</strong> Never mutate state directly, always use
+                  setState
+                </li>
+                <li>
+                  <strong>Functional Updates:</strong> Use function form when new state
+                  depends on previous
+                </li>
+                <li>
+                  <strong>Lift State Up:</strong> Move shared state to closest common
+                  ancestor
+                </li>
+                <li>
+                  <strong>Single Source of Truth:</strong> Don't duplicate state across
+                  components
+                </li>
+                <li>
+                  <strong>Derived State:</strong> Calculate values from existing state
+                  instead of storing them
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Module 4: Hooks Deep Dive -->
+      <div id="lesson4" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-star"></i> Module 4: Hooks Deep Dive</h2>
+          <p>Mastering React's built-in hooks and creating custom ones</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-bullseye"></i> What are Hooks?</h3>
+            <div class="definition-box">
+              <p>
+                <strong>Hooks</strong> are functions that start with <code>use</code> and let you "hook into" React
+                features. <code>useState</code> is a built-in Hook provided by React. You can find other built-in Hooks
+                in the React API reference, or write your own by combining existing ones.
+              </p>
+            </div>
+            <div class="warning-box">
+              <p>
+                <strong><i class="fas fa-exclamation-triangle"></i> Hook Rules:</strong> Hooks are more restrictive than other functions:
+              </p>
+              <ul>
+                <li>You can only call Hooks <strong>at the top level</strong> of your components (or other Hooks)</li>
+                <li>Don't call Hooks inside conditions, loops, or nested functions</li>
+                <li>If you want to use <code>useState</code> in a condition or loop, extract a new component and put it
+                  there</li>
+              </ul>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-star"></i> useState - Component's Memory</h3>
+            <div class="definition-box">
+              <p>
+                <code>useState</code> is a Hook that lets you add state to function components. The first time the
+                component displays, useState returns the initial value. When you want to change state, call the setter
+                function.
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 import { useState } from 'react';
-
 // Gallery with Multiple State Variables
 function Gallery() {
   const [index, setIndex] = useState(0);
   const [showMore, setShowMore] = useState(false);
-
   const hasNext = index &lt; sculptureList.length - 1;
-
   function handleNextClick() {
     if (hasNext) {
       setIndex(index + 1);
@@ -1459,11 +911,9 @@ function Gallery() {
       setIndex(0);
     }
   }
-
   function handleMoreClick() {
     setShowMore(!showMore);
   }
-
   let sculpture = sculptureList[index];
   return (
     &lt;&gt;
@@ -1477,40 +927,35 @@ function Gallery() {
     &lt;/&gt;
   );
 }</pre>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">🔗 useRef - Referencing Values Without Re-rendering</h3>
-                <div class="definition-box">
-                  <p>
-                    When you want a component to "remember" some information, but you don't want that information to trigger new renders, you can use a <code>useRef</code>. Unlike state, refs don't trigger re-renders when you change them.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-link"></i> useRef - Referencing Values Without Re-rendering</h3>
+            <div class="definition-box">
+              <p>
+                When you want a component to "remember" some information, but you don't want that information to trigger
+                new renders, you can use a <code>useRef</code>. Unlike state, refs don't trigger re-renders when you
+                change them.
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 import { useRef } from 'react';
-
 // Ref for Mutable Value (doesn't cause re-render)
 function Counter() {
   let ref = useRef(0);
-
   function handleClick() {
     ref.current = ref.current + 1;
     alert('You clicked ' + ref.current + ' times!');
   }
-
   return &lt;button onClick={handleClick}&gt;Click me!&lt;/button&gt;;
 }
-
 // Ref for DOM Manipulation
 function Form() {
   const inputRef = useRef(null);
-
   function handleClick() {
     inputRef.current.focus();
   }
-
   return (
     &lt;&gt;
       &lt;input ref={inputRef} /&gt;
@@ -1518,27 +963,28 @@ function Form() {
     &lt;/&gt;
   );
 }</pre>
-                </div>
-                <div class="info-box">
-                  <p><strong>When to Use Refs:</strong> A ref is like a secret pocket that React doesn't track. Use refs to store timeout IDs, DOM elements, and other objects that don't impact the component's rendering output. Access the current value through <code>ref.current</code>.</p>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">⏱️ useEffect - Synchronizing with External Systems</h3>
-                <div class="definition-box">
-                  <p>
-                    Some components need to synchronize with external systems - control non-React components, set up server connections, or send analytics logs. <code>useEffect</code> lets you run code after rendering to synchronize your component with systems outside React.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+            <div class="info-box">
+              <p><strong>When to Use Refs:</strong> A ref is like a secret pocket that React doesn't track. Use refs to
+                store timeout IDs, DOM elements, and other objects that don't impact the component's rendering output.
+                Access the current value through <code>ref.current</code>.</p>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-stopwatch"></i> useEffect - Synchronizing with External Systems</h3>
+            <div class="definition-box">
+              <p>
+                Some components need to synchronize with external systems - control non-React components, set up server
+                connections, or send analytics logs. <code>useEffect</code> lets you run code after rendering to
+                synchronize your component with systems outside React.
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 import { useState, useRef, useEffect } from 'react';
-
 // Syncing with External API
 function VideoPlayer({ src, isPlaying }) {
   const ref = useRef(null);
-
   useEffect(() => {
     if (isPlaying) {
       ref.current.play();
@@ -1546,44 +992,41 @@ function VideoPlayer({ src, isPlaying }) {
       ref.current.pause();
     }
   }, [isPlaying]); // Re-run when isPlaying changes
-
   return &lt;video ref={ref} src={src} loop playsInline /&gt;;
 }
-
 // Effect with Cleanup
 function ChatRoom({ roomId }) {
   useEffect(() => {
     const connection = createConnection(roomId);
     connection.connect();
-    
     // Cleanup function
     return () => connection.disconnect();
   }, [roomId]); // Re-run when roomId changes
-
   return &lt;h1&gt;Welcome to {roomId}!&lt;/h1&gt;;
 }</pre>
-                </div>
-                <div class="warning-box">
-                  <p>
-                    <strong>⚠️ You Might Not Need an Effect:</strong> Effects are an escape hatch from React's paradigm. Don't use Effects to transform data for rendering or handle user events. If there's no external system involved, you probably don't need an Effect.
-                  </p>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">🌐 useContext - Passing Data Deeply</h3>
-                <div class="definition-box">
-                  <p>
-                    Usually, you pass information from parent to child via props. But passing props can become verbose if you need to pass through many components. <code>useContext</code> lets a component receive information from distant parents without passing it as props.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+            <div class="warning-box">
+              <p>
+                <strong><i class="fas fa-exclamation-triangle"></i> You Might Not Need an Effect:</strong> Effects are an escape hatch from React's paradigm.
+                Don't use Effects to transform data for rendering or handle user events. If there's no external system
+                involved, you probably don't need an Effect.
+              </p>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-globe"></i> useContext - Passing Data Deeply</h3>
+            <div class="definition-box">
+              <p>
+                Usually, you pass information from parent to child via props. But passing props can become verbose if
+                you need to pass through many components. <code>useContext</code> lets a component receive information
+                from distant parents without passing it as props.
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 import { createContext, useContext } from 'react';
-
 // Create Context
 const ThemeContext = createContext('light');
-
 // Provider Component
 function App() {
   return (
@@ -1592,26 +1035,25 @@ function App() {
     &lt;/ThemeContext.Provider&gt;
   );
 }
-
 // Consumer Component (deeply nested)
 function Button() {
   const theme = useContext(ThemeContext);
   return &lt;button className={theme}&gt;Click me&lt;/button&gt;;
 }</pre>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">♻️ useReducer - Consolidating State Logic</h3>
-                <div class="definition-box">
-                  <p>
-                    Components with many state updates across event handlers can get overwhelming. <code>useReducer</code> lets you consolidate all state update logic outside your component in a single function called a "reducer".
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-star"></i> useReducer - Consolidating State Logic</h3>
+            <div class="definition-box">
+              <p>
+                Components with many state updates across event handlers can get overwhelming. <code>useReducer</code>
+                lets you consolidate all state update logic outside your component in a single function called a
+                "reducer".
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 import { useReducer } from 'react';
-
 function tasksReducer(tasks, action) {
   switch (action.type) {
     case 'added':
@@ -1633,10 +1075,8 @@ function tasksReducer(tasks, action) {
       throw Error('Unknown action: ' + action.type);
   }
 }
-
 function TaskApp() {
   const [tasks, dispatch] = useReducer(tasksReducer, []);
-
   function handleAddTask(text) {
     dispatch({
       type: 'added',
@@ -1644,7 +1084,6 @@ function TaskApp() {
       text: text,
     });
   }
-
   return (
     &lt;&gt;
       &lt;AddTask onAddTask={handleAddTask} /&gt;
@@ -1652,24 +1091,23 @@ function TaskApp() {
     &lt;/&gt;
   );
 }</pre>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">🔧 Custom Hooks - Reusing Logic</h3>
-                <div class="definition-box">
-                  <p>
-                    Sometimes you'll wish there was a Hook for a more specific purpose. You can create your own <strong>custom Hooks</strong> to extract component logic into reusable functions. Custom Hooks let you share stateful logic but not state itself.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-wrench"></i> Custom Hooks - Reusing Logic</h3>
+            <div class="definition-box">
+              <p>
+                Sometimes you'll wish there was a Hook for a more specific purpose. You can create your own
+                <strong>custom Hooks</strong> to extract component logic into reusable functions. Custom Hooks let you
+                share stateful logic but not state itself.
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 import { useState, useEffect } from 'react';
-
 // Custom Hook for Online Status
 function useOnlineStatus() {
   const [isOnline, setIsOnline] = useState(true);
-
   useEffect(() => {
     function handleOnline() {
       setIsOnline(true);
@@ -1684,185 +1122,177 @@ function useOnlineStatus() {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
-
   return isOnline;
 }
-
 // Using Custom Hook
 function StatusBar() {
   const isOnline = useOnlineStatus();
-  return &lt;h1&gt;{isOnline ? '✅ Online' : '❌ Disconnected'}&lt;/h1&gt;;
+  return &lt;h1&gt;{isOnline ? '<i class="fas fa-check"></i> Online' : '<i class="fas fa-times"></i> Disconnected'}&lt;/h1&gt;;
 }
-
 function SaveButton() {
   const isOnline = useOnlineStatus();
-
   function handleSave() {
-    console.log('✅ Progress saved');
+    console.log('<i class="fas fa-check"></i> Progress saved');
   }
-
   return (
     &lt;button disabled={!isOnline} onClick={handleSave}&gt;
       {isOnline ? 'Save progress' : 'Reconnecting...'}
     &lt;/button&gt;
   );
 }</pre>
-                </div>
-                <div class="highlight-box">
-                  <p><strong>💡 Hook Naming:</strong> Custom Hooks must start with <code>use</code> followed by a capital letter (e.g., <code>useOnlineStatus</code>). This lets React know it's a Hook and should follow Hook rules.</p>
-                </div>
-              </div>
+            </div>
+            <div class="highlight-box">
+              <p><strong><i class="fas fa-lightbulb"></i> Hook Naming:</strong> Custom Hooks must start with <code>use</code> followed by a capital
+                letter (e.g., <code>useOnlineStatus</code>). This lets React know it's a Hook and should follow Hook
+                rules.</p>
             </div>
           </div>
-
-
-          <!-- Module 5: useEffect & Lifecycle -->
-          <div id="lesson5" class="lesson">
-            <div class="lesson-header">
-              <h2>⏱️ Module 5: useEffect & Lifecycle</h2>
-              <p>Synchronizing with external systems and component lifecycle</p>
+        </div>
+      </div>
+      <!-- Module 5: useEffect & Lifecycle -->
+      <div id="lesson5" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-stopwatch"></i> Module 5: useEffect & Lifecycle</h2>
+          <p>Synchronizing with external systems and component lifecycle</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-sync"></i> The Component Lifecycle</h3>
+            <div class="definition-box">
+              <p>
+                Every React component goes through the same lifecycle:
+              </p>
+              <ul>
+                <li><strong>Mounting:</strong> The component is added to the screen (birth)</li>
+                <li><strong>Updating:</strong> The component receives new props or state (growth)</li>
+                <li><strong>Unmounting:</strong> The component is removed from the screen (death)</li>
+              </ul>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">🔄 The Component Lifecycle</h3>
-                <div class="definition-box">
-                  <p>
-                    Every React component goes through the same lifecycle:
-                  </p>
-                  <ul>
-                    <li><strong>Mounting:</strong> The component is added to the screen (birth)</li>
-                    <li><strong>Updating:</strong> The component receives new props or state (growth)</li>
-                    <li><strong>Unmounting:</strong> The component is removed from the screen (death)</li>
-                  </ul>
-                </div>
-                <div class="info-box">
-                  <p><strong>Mental Model:</strong> Think of components like living organisms. They are born, they react to changes in their environment, and eventually they die.</p>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">⚡ The useEffect Hook</h3>
-                <div class="definition-box">
-                  <p>
-                    <code>useEffect</code> lets you synchronize a component with an external system (like a server connection, browser DOM, or analytics). It runs <strong>after</strong> the component renders.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            <div class="info-box">
+              <p><strong>Mental Model:</strong> Think of components like living organisms. They are born, they react to
+                changes in their environment, and eventually they die.</p>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-bolt"></i> The useEffect Hook</h3>
+            <div class="definition-box">
+              <p>
+                <code>useEffect</code> lets you synchronize a component with an external system (like a server
+                connection, browser DOM, or analytics). It runs <strong>after</strong> the component renders.
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 import { useEffect } from 'react';
-
 function MyComponent() {
   useEffect(() => {
     // This code runs after every render
     console.log('Component rendered');
-    
     return () => {
       // This cleanup code runs before the component unmounts
       // OR before the effect re-runs
       console.log('Cleanup');
     };
   });
-  
   return &lt;div&gt;Hello&lt;/div&gt;;
 }</pre>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">🎯 Dependency Array Rules</h3>
-                <div class="warning-box">
-                  <p>The second argument to <code>useEffect</code> is the <strong>dependency array</strong>. It controls when the effect runs:</p>
-                  <ul>
-                    <li><code>useEffect(fn)</code> - Runs after <strong>every</strong> render</li>
-                    <li><code>useEffect(fn, [])</code> - Runs <strong>only once</strong> (on mount)</li>
-                    <li><code>useEffect(fn, [prop, state])</code> - Runs on mount AND when <strong>prop or state changes</strong></li>
-                  </ul>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-bullseye"></i> Dependency Array Rules</h3>
+            <div class="warning-box">
+              <p>The second argument to <code>useEffect</code> is the <strong>dependency array</strong>. It controls
+                when the effect runs:</p>
+              <ul>
+                <li><code>useEffect(fn)</code> - Runs after <strong>every</strong> render</li>
+                <li><code>useEffect(fn, [])</code> - Runs <strong>only once</strong> (on mount)</li>
+                <li><code>useEffect(fn, [prop, state])</code> - Runs on mount AND when <strong>prop or state
+                    changes</strong></li>
+              </ul>
+            </div>
+            <div class="code-box">
+              <pre>
 useEffect(() => {
   const connection = createConnection(serverUrl, roomId);
   connection.connect();
-  
   return () => {
     connection.disconnect();
   };
 }, [serverUrl, roomId]); // Re-run if serverUrl or roomId changes</pre>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">🚫 Common Mistakes</h3>
-                <div class="highlight-box">
-                  <ul>
-                    <li><strong>Infinite Loops:</strong> Setting state inside an effect without dependencies causes infinite re-renders.</li>
-                    <li><strong>Missing Dependencies:</strong> Always include every reactive value (props, state) used inside the effect in the dependency array.</li>
-                    <li><strong>Not Cleaning Up:</strong> Always return a cleanup function for effects that subscribe to something (like event listeners or timers).</li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 6: Component Communication -->
-          <div id="lesson6" class="lesson">
-            <div class="lesson-header">
-              <h2>🔄 Module 6: Component Communication</h2>
-              <p>Patterns for sharing data between components</p>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-star"></i> Common Mistakes</h3>
+            <div class="highlight-box">
+              <ul>
+                <li><strong>Infinite Loops:</strong> Setting state inside an effect without dependencies causes infinite
+                  re-renders.</li>
+                <li><strong>Missing Dependencies:</strong> Always include every reactive value (props, state) used
+                  inside the effect in the dependency array.</li>
+                <li><strong>Not Cleaning Up:</strong> Always return a cleanup function for effects that subscribe to
+                  something (like event listeners or timers).</li>
+              </ul>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">👨‍ Parent to Child (Props)</h3>
-                <div class="definition-box">
-                  <p>
-                    The most common way to communicate is passing data from parent to child using <strong>props</strong>. This is a one-way data flow (downwards).
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+          </div>
+        </div>
+      </div>
+      <!-- Module 6: Component Communication -->
+      <div id="lesson6" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-sync"></i> Module 6: Component Communication</h2>
+          <p>Patterns for sharing data between components</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-star"></i> Parent to Child (Props)</h3>
+            <div class="definition-box">
+              <p>
+                The most common way to communicate is passing data from parent to child using <strong>props</strong>.
+                This is a one-way data flow (downwards).
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 function Parent() {
   const data = "Hello from Parent";
   return &lt;Child message={data} /&gt;;
 }
-
 function Child({ message }) {
   return &lt;p&gt;{message}&lt;/p&gt;;
 }</pre>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">👶 Child to Parent (Callbacks)</h3>
-                <div class="definition-box">
-                  <p>
-                    To communicate upwards, the parent passes a function (callback) to the child. The child calls this function to send data back or trigger an event in the parent.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-star"></i> Child to Parent (Callbacks)</h3>
+            <div class="definition-box">
+              <p>
+                To communicate upwards, the parent passes a function (callback) to the child. The child calls this
+                function to send data back or trigger an event in the parent.
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 function Parent() {
   const handleData = (childData) => {
     console.log("Received:", childData);
   };
-
   return &lt;Child onAction={handleData} /&gt;;
 }
-
 function Child({ onAction }) {
   return &lt;button onClick={() => onAction("Data from Child")}&gt;Send&lt;/button&gt;;
 }</pre>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">🧩 Component Composition (Children Prop)</h3>
-                <div class="definition-box">
-                  <p>
-                    Instead of passing data through many layers (prop drilling), you can pass components as children. This lets you compose components together like HTML tags.
-                  </p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-puzzle-piece"></i> Component Composition (Children Prop)</h3>
+            <div class="definition-box">
+              <p>
+                Instead of passing data through many layers (prop drilling), you can pass components as children. This
+                lets you compose components together like HTML tags.
+              </p>
+            </div>
+            <div class="code-box">
+              <pre>
 function Layout({ children }) {
   return (
     &lt;div className="layout"&gt;
@@ -1871,7 +1301,6 @@ function Layout({ children }) {
     &lt;/div&gt;
   );
 }
-
 function App() {
   return (
     &lt;Layout&gt;
@@ -1879,53 +1308,51 @@ function App() {
     &lt;/Layout&gt;
   );
 }</pre>
-                </div>
-                <div class="highlight-box">
-                  <p><strong>💡 Why Composition?</strong> It reduces the need to pass props through intermediate components that don't use them, making your code cleaner and more flexible.</p>
-                </div>
-              </div>
+            </div>
+            <div class="highlight-box">
+              <p><strong><i class="fas fa-lightbulb"></i> Why Composition?</strong> It reduces the need to pass props through intermediate components
+                that don't use them, making your code cleaner and more flexible.</p>
             </div>
           </div>
-
-          <!-- Module 7: Context API -->
-          <div id="lesson7" class="lesson">
-            <div class="lesson-header">
-              <h2>🌐 Module 7: Context API & Global State</h2>
-              <p>Managing global state without prop drilling</p>
+        </div>
+      </div>
+      <!-- Module 7: Context API -->
+      <div id="lesson7" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-globe"></i> Module 7: Context API & Global State</h2>
+          <p>Managing global state without prop drilling</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-box"></i> The Prop Drilling Problem</h3>
+            <div class="definition-box">
+              <p>
+                Passing data through many layers of components just to reach a deeply nested child is called
+                <strong>prop drilling</strong>. It makes code hard to maintain and refactor.
+              </p>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">📦 The Prop Drilling Problem</h3>
-                <div class="definition-box">
-                  <p>
-                    Passing data through many layers of components just to reach a deeply nested child is called <strong>prop drilling</strong>. It makes code hard to maintain and refactor.
-                  </p>
-                </div>
-                <div class="info-box">
-                  <p><strong>Context API</strong> provides a way to share values like these between components without having to explicitly pass a prop through every level of the tree.</p>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">🛠️ Using Context</h3>
-                <div class="content-box">
-                  <p>There are 3 steps to using Context:</p>
-                  <ol>
-                    <li><strong>Create</strong> the context</li>
-                    <li><strong>Provide</strong> the context value</li>
-                    <li><strong>Consume</strong> the context value</li>
-                  </ol>
-                </div>
-                <div class="code-box">
-                  <pre>
+            <div class="info-box">
+              <p><strong>Context API</strong> provides a way to share values like these between components without
+                having to explicitly pass a prop through every level of the tree.</p>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-tools"></i> Using Context</h3>
+            <div class="content-box">
+              <p>There are 3 steps to using Context:</p>
+              <ol>
+                <li><strong>Create</strong> the context</li>
+                <li><strong>Provide</strong> the context value</li>
+                <li><strong>Consume</strong> the context value</li>
+              </ol>
+            </div>
+            <div class="code-box">
+              <pre>
 import { createContext, useContext, useState } from 'react';
-
 // 1. Create Context
 const ThemeContext = createContext('light');
-
 export default function App() {
   const [theme, setTheme] = useState('light');
-
   return (
     // 2. Provide Context
     &lt;ThemeContext.Provider value={theme}&gt;
@@ -1936,7 +1363,6 @@ export default function App() {
     &lt;/ThemeContext.Provider&gt;
   );
 }
-
 function Form() {
   return (
     &lt;Panel title="Welcome"&gt;
@@ -1945,12 +1371,10 @@ function Form() {
     &lt;/Panel&gt;
   );
 }
-
 function Panel({ title, children }) {
   // 3. Consume Context
   const theme = useContext(ThemeContext);
   const className = 'panel-' + theme;
-  
   return (
     &lt;section className={className}&gt;
       &lt;h1&gt;{title}&lt;/h1&gt;
@@ -1958,53 +1382,53 @@ function Panel({ title, children }) {
     &lt;/section&gt;
   );
 }
-
 function Button({ children }) {
   // 3. Consume Context
   const theme = useContext(ThemeContext);
   const className = 'button-' + theme;
-  
   return (
     &lt;button className={className}&gt;
       {children}
     &lt;/button&gt;
   );
 }</pre>
-                </div>
-              </div>
-
-              <div class="section">
-                <h3 class="section-title">⚠️ Before You Use Context</h3>
-                <div class="warning-box">
-                  <p>Context is very powerful, but don't overuse it. Before you reach for Context, consider:</p>
-                  <ul>
-                    <li><strong>Start with Props:</strong> Passing props is explicit and easy to track. It's fine for 2-3 levels deep.</li>
-                    <li><strong>Extract Components:</strong> Sometimes passing children (composition) is better than passing data.</li>
-                  </ul>
-                </div>
-                <div class="highlight-box">
-                  <p><strong>Use Cases for Context:</strong> Theming, Current User (Auth), Routing, Language/Locale, Global State.</p>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 8: React Router -->
-          <div id="lesson8" class="lesson">
-            <div class="lesson-header">
-              <h2>🧭 Module 8: React Router</h2>
-              <p>Navigation and routing in Single Page Applications</p>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-exclamation-triangle"></i> Before You Use Context</h3>
+            <div class="warning-box">
+              <p>Context is very powerful, but don't overuse it. Before you reach for Context, consider:</p>
+              <ul>
+                <li><strong>Start with Props:</strong> Passing props is explicit and easy to track. It's fine for 2-3
+                  levels deep.</li>
+                <li><strong>Extract Components:</strong> Sometimes passing children (composition) is better than passing
+                  data.</li>
+              </ul>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">🗺️ Client-Side Routing</h3>
-                <div class="definition-box">
-                  <p><strong>React Router</strong> enables "client-side routing". Instead of getting a new document from the server when the user clicks a link, the router intercepts the URL change and renders a different component locally. This makes the app feel faster.</p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            <div class="highlight-box">
+              <p><strong>Use Cases for Context:</strong> Theming, Current User (Auth), Routing, Language/Locale, Global
+                State.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Module 8: React Router -->
+      <div id="lesson8" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-compass"></i> Module 8: React Router</h2>
+          <p>Navigation and routing in Single Page Applications</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-map"></i> Client-Side Routing</h3>
+            <div class="definition-box">
+              <p><strong>React Router</strong> enables "client-side routing". Instead of getting a new document from the
+                server when the user clicks a link, the router intercepts the URL change and renders a different
+                component locally. This makes the app feel faster.</p>
+            </div>
+            <div class="code-box">
+              <pre>
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-
 function App() {
   return (
     &lt;BrowserRouter&gt;
@@ -2019,28 +1443,25 @@ function App() {
     &lt;/BrowserRouter&gt;
   );
 }</pre>
-                </div>
-              </div>
-              <div class="section">
-                <h3 class="section-title">🔗 Navigation Hooks</h3>
-                <div class="content-box">
-                  <ul>
-                    <li><strong>useNavigate:</strong> Programmatically navigate (e.g., after form submission).</li>
-                    <li><strong>useParams:</strong> Access URL parameters (e.g., user ID).</li>
-                  </ul>
-                </div>
-                <div class="code-box">
-                  <pre>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-link"></i> Navigation Hooks</h3>
+            <div class="content-box">
+              <ul>
+                <li><strong>useNavigate:</strong> Programmatically navigate (e.g., after form submission).</li>
+                <li><strong>useParams:</strong> Access URL parameters (e.g., user ID).</li>
+              </ul>
+            </div>
+            <div class="code-box">
+              <pre>
 import { useNavigate, useParams } from "react-router-dom";
-
 function UserProfile() {
   let { id } = useParams();
   let navigate = useNavigate();
-
   function goHome() {
     navigate("/");
   }
-
   return (
     &lt;div&gt;
       &lt;h1&gt;User ID: {id}&lt;/h1&gt;
@@ -2048,32 +1469,30 @@ function UserProfile() {
     &lt;/div&gt;
   );
 }</pre>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 9: Data Fetching -->
-          <div id="lesson9" class="lesson">
-            <div class="lesson-header">
-              <h2>📡 Module 9: Data Fetching</h2>
-              <p>Working with APIs and asynchronous data</p>
+        </div>
+      </div>
+      <!-- Module 9: Data Fetching -->
+      <div id="lesson9" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-broadcast-tower"></i> Module 9: Data Fetching</h2>
+          <p>Working with APIs and asynchronous data</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-star"></i> Fetching with useEffect</h3>
+            <div class="definition-box">
+              <p>The most basic way to fetch data is using <code>useEffect</code> and the browser's <code>fetch</code>
+                API. You need to handle loading and error states manually.</p>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">📥 Fetching with useEffect</h3>
-                <div class="definition-box">
-                  <p>The most basic way to fetch data is using <code>useEffect</code> and the browser's <code>fetch</code> API. You need to handle loading and error states manually.</p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            <div class="code-box">
+              <pre>
 import { useState, useEffect } from 'react';
-
 function UserList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     fetch('https://api.example.com/users')
       .then(res => {
@@ -2089,49 +1508,47 @@ function UserList() {
         setLoading(false);
       });
   }, []); // Empty dependency array = run once on mount
-
   if (loading) return &lt;div&gt;Loading...&lt;/div&gt;;
   if (error) return &lt;div&gt;Error: {error}&lt;/div&gt;;
-
   return (
     &lt;ul&gt;
       {users.map(user => &lt;li key={user.id}&gt;{user.name}&lt;/li&gt;)}
     &lt;/ul&gt;
   );
 }</pre>
-                </div>
-              </div>
-              <div class="section">
-                <h3 class="section-title">🚀 Modern Data Fetching</h3>
-                <div class="highlight-box">
-                  <p><strong>Recommendation:</strong> For production apps, use libraries like <strong>TanStack Query (React Query)</strong> or <strong>SWR</strong>. They handle caching, deduping, background updates, and stale data automatically.</p>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 10: Forms -->
-          <div id="lesson10" class="lesson">
-            <div class="lesson-header">
-              <h2>📝 Module 10: Forms & Validation</h2>
-              <p>Handling user input effectively</p>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-rocket"></i> Modern Data Fetching</h3>
+            <div class="highlight-box">
+              <p><strong>Recommendation:</strong> For production apps, use libraries like <strong>TanStack Query (React
+                  Query)</strong> or <strong>SWR</strong>. They handle caching, deduping, background updates, and stale
+                data automatically.</p>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">🎮 Controlled Components</h3>
-                <div class="definition-box">
-                  <p>In a controlled component, form data is handled by React state. The source of truth is the React state, not the DOM.</p>
-                </div>
-                <div class="code-box">
-                  <pre>
+          </div>
+        </div>
+      </div>
+      <!-- Module 10: Forms -->
+      <div id="lesson10" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-edit"></i> Module 10: Forms & Validation</h2>
+          <p>Handling user input effectively</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-gamepad"></i> Controlled Components</h3>
+            <div class="definition-box">
+              <p>In a controlled component, form data is handled by React state. The source of truth is the React state,
+                not the DOM.</p>
+            </div>
+            <div class="code-box">
+              <pre>
 function LoginForm() {
   const [email, setEmail] = useState('');
-
   function handleSubmit(e) {
     e.preventDefault();
     console.log('Submitted:', email);
   }
-
   return (
     &lt;form onSubmit={handleSubmit}&gt;
       &lt;label&gt;
@@ -2146,186 +1563,179 @@ function LoginForm() {
     &lt;/form&gt;
   );
 }</pre>
-                </div>
-              </div>
-              <div class="section">
-                <h3 class="section-title">📋 React Hook Form</h3>
-                <div class="info-box">
-                  <p>For complex forms with validation, <strong>React Hook Form</strong> is the industry standard library. It minimizes re-renders and simplifies validation logic.</p>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 11: State Management -->
-          <div id="lesson11" class="lesson">
-            <div class="lesson-header">
-              <h2>🗃️ Module 11: State Management</h2>
-              <p>Scaling state beyond Context</p>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-clipboard"></i> React Hook Form</h3>
+            <div class="info-box">
+              <p>For complex forms with validation, <strong>React Hook Form</strong> is the industry standard library.
+                It minimizes re-renders and simplifies validation logic.</p>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">⚖️ When to use a Library?</h3>
-                <div class="content-box">
-                  <p>React's built-in State and Context are sufficient for many apps. Consider a library like <strong>Redux Toolkit</strong> or <strong>Zustand</strong> when:</p>
-                  <ul>
-                    <li>You have large amounts of state that changes frequently.</li>
-                    <li>The state logic is complex.</li>
-                    <li>You need to track state changes over time (debugging).</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="section">
-                <h3 class="section-title">🐻 Zustand Example</h3>
-                <div class="code-box">
-                  <pre>
+          </div>
+        </div>
+      </div>
+      <!-- Module 11: State Management -->
+      <div id="lesson11" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-star"></i> Module 11: State Management</h2>
+          <p>Scaling state beyond Context</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-star"></i> When to use a Library?</h3>
+            <div class="content-box">
+              <p>React's built-in State and Context are sufficient for many apps. Consider a library like <strong>Redux
+                  Toolkit</strong> or <strong>Zustand</strong> when:</p>
+              <ul>
+                <li>You have large amounts of state that changes frequently.</li>
+                <li>The state logic is complex.</li>
+                <li>You need to track state changes over time (debugging).</li>
+              </ul>
+            </div>
+          </div>
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-star"></i> Zustand Example</h3>
+            <div class="code-box">
+              <pre>
 import { create } from 'zustand';
-
 const useStore = create((set) => ({
   bears: 0,
   increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
   removeAllBears: () => set({ bears: 0 }),
 }));
-
 function BearCounter() {
   const bears = useStore((state) => state.bears);
   return &lt;h1&gt;{bears} around here ...&lt;/h1&gt;;
 }</pre>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 12: Performance -->
-          <div id="lesson12" class="lesson">
-            <div class="lesson-header">
-              <h2>⚡ Module 12: Performance Optimization</h2>
-              <p>Making React apps fast</p>
+        </div>
+      </div>
+      <!-- Module 12: Performance -->
+      <div id="lesson12" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-bolt"></i> Module 12: Performance Optimization</h2>
+          <p>Making React apps fast</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-brain"></i> Memoization</h3>
+            <div class="definition-box">
+              <p><strong>React.memo</strong> skips re-rendering a component if its props haven't changed.
+                <strong>useMemo</strong> caches the result of a calculation. <strong>useCallback</strong> caches a
+                function definition.</p>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">🧠 Memoization</h3>
-                <div class="definition-box">
-                  <p><strong>React.memo</strong> skips re-rendering a component if its props haven't changed. <strong>useMemo</strong> caches the result of a calculation. <strong>useCallback</strong> caches a function definition.</p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            <div class="code-box">
+              <pre>
 import { memo, useMemo, useCallback } from 'react';
-
 const ExpensiveComponent = memo(function({ data, onClick }) {
   // Only re-renders if data or onClick changes
   return &lt;div onClick={onClick}&gt;{data}&lt;/div&gt;;
 });
-
 function Parent({ items }) {
   // Cache expensive calculation
   const total = useMemo(() => items.reduce((a, b) => a + b, 0), [items]);
-
   // Cache function reference
   const handleClick = useCallback(() => {
     console.log('Clicked');
   }, []);
-
   return &lt;ExpensiveComponent data={total} onClick={handleClick} /&gt;;
 }</pre>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 13: Testing -->
-          <div id="lesson13" class="lesson">
-            <div class="lesson-header">
-              <h2>🧪 Module 13: Testing</h2>
-              <p>Ensuring code quality</p>
+        </div>
+      </div>
+      <!-- Module 13: Testing -->
+      <div id="lesson13" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-flask"></i> Module 13: Testing</h2>
+          <p>Ensuring code quality</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-check"></i> React Testing Library</h3>
+            <div class="definition-box">
+              <p><strong>React Testing Library (RTL)</strong> is the standard for testing React components. It
+                encourages testing how the user interacts with your app, rather than implementation details.</p>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">✅ React Testing Library</h3>
-                <div class="definition-box">
-                  <p><strong>React Testing Library (RTL)</strong> is the standard for testing React components. It encourages testing how the user interacts with your app, rather than implementation details.</p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            <div class="code-box">
+              <pre>
 import { render, screen, fireEvent } from '@testing-library/react';
 import Button from './Button';
-
 test('renders button and handles click', () => {
   const handleClick = jest.fn();
   render(&lt;Button onClick={handleClick}&gt;Click Me&lt;/Button&gt;);
-
   const button = screen.getByText('Click Me');
   fireEvent.click(button);
-
   expect(handleClick).toHaveBeenCalledTimes(1);
 });</pre>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 14: Security -->
-          <div id="lesson14" class="lesson">
-            <div class="lesson-header">
-              <h2>🔐 Module 14: Security Best Practices</h2>
-              <p>Protecting your React application</p>
-            </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">🛡️ Common Vulnerabilities</h3>
-                <div class="warning-box">
-                  <ul>
-                    <li><strong>XSS (Cross-Site Scripting):</strong> React escapes data by default, but be careful with <code>dangerouslySetInnerHTML</code>.</li>
-                    <li><strong>Broken Authentication:</strong> Store tokens securely (HttpOnly cookies preferred over localStorage).</li>
-                    <li><strong>Insecure Dependencies:</strong> Regularly audit your npm packages.</li>
-                  </ul>
-                </div>
-              </div>
+        </div>
+      </div>
+      <!-- Module 14: Security -->
+      <div id="lesson14" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-lock"></i> Module 14: Security Best Practices</h2>
+          <p>Protecting your React application</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-shield-alt"></i> Common Vulnerabilities</h3>
+            <div class="warning-box">
+              <ul>
+                <li><strong>XSS (Cross-Site Scripting):</strong> React escapes data by default, but be careful with
+                  <code>dangerouslySetInnerHTML</code>.</li>
+                <li><strong>Broken Authentication:</strong> Store tokens securely (HttpOnly cookies preferred over
+                  localStorage).</li>
+                <li><strong>Insecure Dependencies:</strong> Regularly audit your npm packages.</li>
+              </ul>
             </div>
           </div>
-
-          <!-- Module 15: Accessibility -->
-          <div id="lesson15" class="lesson">
-            <div class="lesson-header">
-              <h2>♿ Module 15: Accessibility (a11y)</h2>
-              <p>Building inclusive applications</p>
+        </div>
+      </div>
+      <!-- Module 15: Accessibility -->
+      <div id="lesson15" class="lesson">
+        <div class="lesson-header">
+          <h2>? Module 15: Accessibility (a11y)</h2>
+          <p>Building inclusive applications</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-eye"></i> ARIA and Semantic HTML</h3>
+            <div class="definition-box">
+              <p>Use semantic HTML tags (<code>button</code>, <code>nav</code>, <code>main</code>) whenever possible.
+                Use <strong>ARIA attributes</strong> only when necessary to describe dynamic content to screen readers.
+              </p>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">👁️ ARIA and Semantic HTML</h3>
-                <div class="definition-box">
-                  <p>Use semantic HTML tags (<code>button</code>, <code>nav</code>, <code>main</code>) whenever possible. Use <strong>ARIA attributes</strong> only when necessary to describe dynamic content to screen readers.</p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            <div class="code-box">
+              <pre>
 // Bad
 &lt;div onClick={submit}&gt;Submit&lt;/div&gt;
-
 // Good
 &lt;button onClick={submit} aria-label="Submit form"&gt;Submit&lt;/button&gt;</pre>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 16: Styling -->
-          <div id="lesson16" class="lesson">
-            <div class="lesson-header">
-              <h2>🎨 Module 16: Styling Solutions</h2>
-              <p>CSS-in-JS, Modules, and Utility Classes</p>
+        </div>
+      </div>
+      <!-- Module 16: Styling -->
+      <div id="lesson16" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-palette"></i> Module 16: Styling Solutions</h2>
+          <p>CSS-in-JS, Modules, and Utility Classes</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-star"></i> Popular Approaches</h3>
+            <div class="content-box">
+              <ul>
+                <li><strong>CSS Modules:</strong> Scoped CSS files (<code>Button.module.css</code>).</li>
+                <li><strong>Styled Components:</strong> CSS-in-JS library.</li>
+                <li><strong>Tailwind CSS:</strong> Utility-first CSS framework (highly popular).</li>
+              </ul>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">💅 Popular Approaches</h3>
-                <div class="content-box">
-                  <ul>
-                    <li><strong>CSS Modules:</strong> Scoped CSS files (<code>Button.module.css</code>).</li>
-                    <li><strong>Styled Components:</strong> CSS-in-JS library.</li>
-                    <li><strong>Tailwind CSS:</strong> Utility-first CSS framework (highly popular).</li>
-                  </ul>
-                </div>
-                <div class="code-box">
-                  <pre>
+            <div class="code-box">
+              <pre>
 // Tailwind CSS Example
 function Card() {
   return (
@@ -2337,27 +1747,26 @@ function Card() {
     &lt;/div&gt;
   );
 }</pre>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 17: Animations -->
-          <div id="lesson17" class="lesson">
-            <div class="lesson-header">
-              <h2>🌀 Module 17: Animations</h2>
-              <p>Adding motion to your UI</p>
+        </div>
+      </div>
+      <!-- Module 17: Animations -->
+      <div id="lesson17" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-star"></i> Module 17: Animations</h2>
+          <p>Adding motion to your UI</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-film"></i> Framer Motion</h3>
+            <div class="info-box">
+              <p><strong>Framer Motion</strong> is the most popular animation library for React. It provides a simple
+                declarative syntax.</p>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">🎬 Framer Motion</h3>
-                <div class="info-box">
-                  <p><strong>Framer Motion</strong> is the most popular animation library for React. It provides a simple declarative syntax.</p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            <div class="code-box">
+              <pre>
 import { motion } from "framer-motion";
-
 function MyComponent() {
   return (
     &lt;motion.div
@@ -2369,95 +1778,98 @@ function MyComponent() {
     &lt;/motion.div&gt;
   );
 }</pre>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 18: Advanced Patterns -->
-          <div id="lesson18" class="lesson">
-            <div class="lesson-header">
-              <h2>🧬 Module 18: Advanced Patterns</h2>
-              <p>Higher-Order Components and Render Props</p>
+        </div>
+      </div>
+      <!-- Module 18: Advanced Patterns -->
+      <div id="lesson18" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-dna"></i> Module 18: Advanced Patterns</h2>
+          <p>Higher-Order Components and Render Props</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-puzzle-piece"></i> Render Props</h3>
+            <div class="definition-box">
+              <p>A technique for sharing code between components using a prop whose value is a function.</p>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">🧩 Render Props</h3>
-                <div class="definition-box">
-                  <p>A technique for sharing code between components using a prop whose value is a function.</p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            <div class="code-box">
+              <pre>
 &lt;DataProvider render={data => (
   &lt;h1&gt;Hello {data.target}&lt;/h1&gt;
 )}/&gt;</pre>
-                </div>
-              </div>
             </div>
           </div>
-
-          <!-- Module 19: React 18 Features -->
-          <div id="lesson19" class="lesson">
-            <div class="lesson-header">
-              <h2>🚀 Module 19: React 18 Features</h2>
-              <p>Concurrency and Suspense</p>
-            </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">⚡ Concurrent React</h3>
-                <div class="content-box">
-                  <ul>
-                    <li><strong>Automatic Batching:</strong> React batches state updates for better performance.</li>
-                    <li><strong>Transitions:</strong> <code>useTransition</code> lets you mark updates as non-urgent.</li>
-                    <li><strong>Suspense:</strong> Declaratively wait for data loading.</li>
-                  </ul>
-                </div>
-              </div>
+        </div>
+      </div>
+      <!-- Module 19: React 18 Features -->
+      <div id="lesson19" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-rocket"></i> Module 19: React 18 Features</h2>
+          <p>Concurrency and Suspense</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-bolt"></i> Concurrent React</h3>
+            <div class="content-box">
+              <ul>
+                <li><strong>Automatic Batching:</strong> React batches state updates for better performance.</li>
+                <li><strong>Transitions:</strong> <code>useTransition</code> lets you mark updates as non-urgent.</li>
+                <li><strong>Suspense:</strong> Declaratively wait for data loading.</li>
+              </ul>
             </div>
           </div>
-
-          <!-- Module 20: Next.js -->
-          <div id="lesson20" class="lesson">
-            <div class="lesson-header">
-              <h2>🧱 Module 20: Next.js Framework</h2>
-              <p>The React Framework for the Web</p>
+        </div>
+      </div>
+      <!-- Module 20: Next.js -->
+      <div id="lesson20" class="lesson">
+        <div class="lesson-header">
+          <h2><i class="fas fa-star"></i> Module 20: Next.js Framework</h2>
+          <p>The React Framework for the Web</p>
+        </div>
+        <div class="lesson-content">
+          <div class="section">
+            <h3 class="section-title"><i class="fas fa-globe"></i> Server Components</h3>
+            <div class="definition-box">
+              <p><strong>Next.js</strong> (App Router) uses React Server Components by default. They render on the
+                server, reducing the bundle size sent to the client.</p>
             </div>
-            <div class="lesson-content">
-              <div class="section">
-                <h3 class="section-title">🌍 Server Components</h3>
-                <div class="definition-box">
-                  <p><strong>Next.js</strong> (App Router) uses React Server Components by default. They render on the server, reducing the bundle size sent to the client.</p>
-                </div>
-                <div class="code-box">
-                  <pre>
+            <div class="code-box">
+              <pre>
 // app/page.js (Server Component)
 async function getData() {
   const res = await fetch('https://api.example.com/data');
   return res.json();
 }
-
 export default async function Page() {
   const data = await getData();
   return &lt;main&gt;{data.title}&lt;/main&gt;;
 }</pre>
-                </div>
-                <div class="highlight-box">
-                  <p><strong>Why Next.js?</strong> It provides routing, SSR (Server-Side Rendering), SSG (Static Site Generation), and API routes out of the box.</p>
-                </div>
-              </div>
+            </div>
+            <div class="highlight-box">
+              <p><strong>Why Next.js?</strong> It provides routing, SSR (Server-Side Rendering), SSG (Static Site
+                Generation), and API routes out of the box.</p>
             </div>
           </div>
-
         </div>
       </div>
-    </main>
   </div>
-  <button class="scroll-top" onclick="scrollTopSmooth()">↑</button>
+  </div>
+  </main>
+  </div>
+  <button class="scroll-top" onclick="scrollTopSmooth()">?</button>
   <script>
-    function toggleSidebar(){const s=document.getElementById('sidebar');const o=document.querySelector('.overlay');s.classList.toggle('active');o.classList.toggle('active');}
-    function closeSidebar(){document.getElementById('sidebar').classList.remove('active');document.querySelector('.overlay').classList.remove('active');}
-    function scrollTopSmooth(){window.scrollTo({top:0,behavior:'smooth'});} 
-    window.addEventListener('scroll',()=>{const b=document.querySelector('.scroll-top'); if(window.pageYOffset>300){b.classList.add('show')} else {b.classList.remove('show')}});
+    function toggleSidebar() { const s = document.getElementById('sidebar'); const o = document.querySelector('.overlay'); s.classList.toggle('active'); o.classList.toggle('active'); }
+    function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.querySelector('.overlay').classList.remove('active'); }
+    function scrollTopSmooth() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    window.addEventListener('scroll', () => { const b = document.querySelector('.scroll-top'); if (window.pageYOffset > 300) { b.classList.add('show') } else { b.classList.remove('show') } });
   </script>
+  <!-- Shared JavaScript for dark mode and features -->
+  <script src="../assets/js/main.js"></script>
 </body>
 </html>
+</html>
+
+
+
