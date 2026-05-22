@@ -1,17 +1,22 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Linux Commands Reference Guide - Complete Examples</title>
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="../assets/css/main.css" />
 </head>
+
 <body>
   <div class="layout-container">
     <!-- Sidebar Toggle Button -->
-    <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <button class="sidebar-toggle" aria-expanded="false" aria-label="Toggle navigation"><i
+        class="fas fa-bars"></i></button>
     <!-- Sidebar Overlay -->
     <div class="sidebar-overlay" onclick="closeSidebar()"></div>
     <!-- Sidebar Navigation -->
@@ -23,7 +28,8 @@
       <div class="sidebar-content">
         <ul>
           <li>
-            <a href="#file-directory" onclick="setActive(this)"><i class="fas fa-folder"></i> File & Directory Operations</a>
+            <a href="#file-directory" onclick="setActive(this)"><i class="fas fa-folder"></i> File & Directory
+              Operations</a>
             <ul>
               <li>
                 <a href="#file-directory" onclick="setActive(this)">Basic Navigation</a>
@@ -51,7 +57,8 @@
             </ul>
           </li>
           <li>
-            <a href="#system-process" onclick="setActive(this)"><i class="fas fa-cog"></i> System & Process Management</a>
+            <a href="#system-process" onclick="setActive(this)"><i class="fas fa-cog"></i> System & Process
+              Management</a>
             <ul>
               <li>
                 <a href="#system-process" onclick="setActive(this)">Process Control</a>
@@ -65,7 +72,8 @@
             </ul>
           </li>
           <li>
-            <a href="#text-processing" onclick="setActive(this)"><i class="fas fa-edit"></i> Text Processing & Redirection</a>
+            <a href="#text-processing" onclick="setActive(this)"><i class="fas fa-edit"></i> Text Processing &
+              Redirection</a>
             <ul>
               <li>
                 <a href="#text-processing" onclick="setActive(this)">Redirection</a>
@@ -92,7 +100,8 @@
     </nav>
     <main class="main-content">
       <div class="container">
-        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Main Page</a><div class="header">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+        <div class="header">
           <h1><i class="fas fa-books"></i> Linux Commands Reference</h1>
         </div>
         <a href="../Notes/complete-linux-commands-guide.html" class="back-button">
@@ -916,7 +925,5 @@
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>
+
 </html>
-
-
-

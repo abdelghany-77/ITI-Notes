@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IBM DB2 Database Study Notes - Group B (Topics 19-23)</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
+<body>
+  <!-- Sidebar Navigation -->
+  <button class="sidebar-toggle" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="sidebar-overlay"></div>
+
+  <div class="layout-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-book"></i> Course Navigation</h3>
+        <p>IBM DB2 Administration</p>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li>
+            <a href="#topic19"><i class="fas fa-list-ol"></i> Topic 19: Clustered Indexes &amp; Sequences</a>
+            <ul>
+              <li><a href="#t19-arch">Concept &amp; Architecture</a></li>
+              <li><a href="#t19-syntax">Full Syntax &amp; CLP</a></li>
+              <li><a href="#t19-lab">Enterprise Lab</a></li>
+              <li><a href="#t19-trouble">Best Practices &amp; Troubleshooting</a></li>
+              <li><a href="#t19-summary">Cheat-Sheet Table</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic20"><i class="fas fa-key"></i> Topic 20: Connection Security &amp; Auth</a>
+            <ul>
+              <li><a href="#t20-arch">Concept &amp; Architecture</a></li>
+              <li><a href="#t20-syntax">Full Syntax &amp; CLP</a></li>
+              <li><a href="#t20-lab">Enterprise Lab</a></li>
+              <li><a href="#t20-trouble">Best Practices &amp; Troubleshooting</a></li>
+              <li><a href="#t20-summary">Cheat-Sheet Table</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic21"><i class="fas fa-user-shield"></i> Topic 21: SECADM vs DBADM</a>
+            <ul>
+              <li><a href="#t21-arch">Concept &amp; Architecture</a></li>
+              <li><a href="#t21-syntax">Full Syntax &amp; CLP</a></li>
+              <li><a href="#t21-lab">Enterprise Lab</a></li>
+              <li><a href="#t21-trouble">Best Practices &amp; Troubleshooting</a></li>
+              <li><a href="#t21-summary">Cheat-Sheet Table</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic22"><i class="fas fa-lock"></i> Topic 22: Privileges &amp; RBAC</a>
+            <ul>
+              <li><a href="#t22-arch">Concept &amp; Architecture</a></li>
+              <li><a href="#t22-syntax">Full Syntax &amp; CLP</a></li>
+              <li><a href="#t22-lab">Enterprise Lab</a></li>
+              <li><a href="#t22-trouble">Best Practices &amp; Troubleshooting</a></li>
+              <li><a href="#t22-summary">Cheat-Sheet Table</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic23"><i class="fas fa-fingerprint"></i> Topic 23: Auditing &amp; RCAC</a>
+            <ul>
+              <li><a href="#t23-arch">Concept &amp; Architecture</a></li>
+              <li><a href="#t23-syntax">Full Syntax &amp; CLP</a></li>
+              <li><a href="#t23-lab">Enterprise Lab</a></li>
+              <li><a href="#t23-trouble">Best Practices &amp; Troubleshooting</a></li>
+              <li><a href="#t23-summary">Cheat-Sheet Table</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="container">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+
+        <div class="header">
+          <h1><i class="fas fa-shield-alt"></i> IBM DB2 Administration</h1>
+          <p>Group B Topics (19-23) - Advanced Database Objects &amp; Security Administration</p>
+        </div>
+
+        <div class="content">
+          <!-- Topic 19: Database Objects: Clustered Indexes & Sequences -->
+          <section id="topic19" class="section">
+            <h2 class="section-title">Topic 19: Database Objects - Clustered Indexes &amp; Sequences</h2>
+
+            <div class="subsection" id="t19-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture</h3>
+              <p>
+                In IBM DB2 LUW, <strong>Clustered Indexes</strong> and <strong>Sequences</strong> are specialized
+                database objects designed to optimize storage physical access structures and concurrent numerical key
+                generation.
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-sitemap"></i> The Clustering Index Model</h5>
+                  <p>
+                    Unlike index-organized tables (found in Oracle IOT or MySQL InnoDB where the primary key physically
+                    represents the table rows), a DB2 <strong>Clustering Index</strong> is a secondary structure. It
+                    instructs the DB2 engine to attempt to physically insert and maintain table records in the exact
+                    sorting sequence of the index keys.
+                  </p>
+                  <p>
+                    When a clustering index is defined, DB2 uses space-allocation algorithms to place new inserts on the
+                    same page as existing rows with similar key values. Range scans become sequential, allowing DB2's
+                    <strong>Prefetchers (`db2pfch`)</strong> to fetch groups of data pages in a single disk sweep,
+                    reducing random disk I/O bottlenecks.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-redo"></i> High-Performance Sequences</h5>
+                  <p>
+                    A <strong>Sequence</strong> is an independent schema object that generates sequential numbers
+                    according to the defined specifications. It is highly optimized for multi-client execution.
+                  </p>
+                  <p>
+                    Unlike identities which are tightly coupled to a single table schema, a sequence is an independent
+                    first-class database entity. By caching generated ranges in memory (managed by Engine Dispatchable
+                    Units - EDUs), multiple applications can fetch values simultaneously using <code>NEXT VALUE</code>
+                    without table-level serialization locks.
+                  </p>
+                </div>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> Key Structural Differences: Sequences vs. Identity Columns</h4>
+                <ul>
+                  <li><strong>Scope:</strong> Sequences are decoupled from tables and can be shared across multiple
+                    tables, schemas, or within conditional logic. Identity columns are locked to a single table.</li>
+                  <li><strong>Data Manipulation:</strong> A sequence's current state can be altered dynamically (e.g.
+                    <code>RESTART WITH</code>) without dropping the sequence, whereas identity columns require heavy
+                    table alterations.
+                  </li>
+                  <li><strong>Uniqueness:</strong> Identity columns strictly guarantee that the database generates the
+                    number on insert. Sequences can be retrieved via standalone query (e.g., in application code) and
+                    inserted into non-primary key columns or custom XML paths.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t19-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                Professional DBAs utilize specialized CLP statements to build tablespaces, define table clustering
+                indexes, and fine-tune sequence caching parameters.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP: Tablespace, Clustering Index, and Sequence Definition</div>
+                <pre><code>-- 1. Create a dedicated automatic storage tablespace with a 16KB page size
+CREATE TABLESPACE bank_data_ts 
+  PAGESIZE 16384 
+  MANAGED BY AUTOMATIC STORAGE;
+
+-- 2. Create the core Accounts table
+CREATE TABLE bank.Accounts (
+  AccountID BIGINT NOT NULL,
+  BranchID INT NOT NULL,
+  AccountType VARCHAR(15) NOT NULL,
+  Balance DECIMAL(15,2) NOT NULL,
+  CONSTRAINT pk_accounts PRIMARY KEY (AccountID)
+) IN bank_data_ts;
+
+-- 3. Create a Clustering Index on BranchID to group branches physically
+CREATE INDEX bank.idx_accounts_branch 
+  ON bank.Accounts (BranchID ASC) 
+  CLUSTER;
+
+-- 4. Create an Auditable Sequence with optimized caching
+CREATE SEQUENCE bank.AccountNumberSeq
+  AS BIGINT
+  START WITH 100000
+  INCREMENT BY 1
+  MINVALUE 100000
+  MAXVALUE 999999999999
+  NO CYCLE
+  CACHE 100
+  ORDER;
+
+-- 5. Modify existing indexing and sequence attributes
+ALTER INDEX bank.idx_accounts_branch NOT CLUSTER;
+ALTER INDEX bank.idx_accounts_branch CLUSTER;
+
+ALTER SEQUENCE bank.AccountNumberSeq 
+  RESTART WITH 200000 
+  CACHE 250;</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-list"></i> SQL/CLP Command Parameter Breakdown</h4>
+                <ul>
+                  <li><strong><code>CLUSTER</code>:</strong> Tells the database engine to physically cluster all rows
+                    according to the sorting rules of this index. Only one clustering index is allowed per table.</li>
+                  <li><strong><code>AS BIGINT</code>:</strong> Defines the underlying storage data type for the sequence
+                    values.</li>
+                  <li><strong><code>NO CYCLE</code>:</strong> Prevents the sequence from resetting to the minimum value
+                    once it reaches the maximum value, preventing duplicate keys under a primary key constraint.</li>
+                  <li><strong><code>CACHE 100</code>:</strong> Instructs DB2 to generate and hold 100 sequential numbers
+                    in memory. This eliminates database catalog access I/O on every sequence query, accelerating
+                    concurrent inserts.</li>
+                  <li><strong><code>ORDER</code>:</strong> Guarantees that numbers are generated in the exact order of
+                    transaction requests (crucial for time-sensitive audit trails).</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t19-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab</h3>
+              <p>
+                <strong>Scenario:</strong> A corporate banking institution wants to optimize performance for
+                branch-level financial report generations. The DBA must group accounts physically by branch using a
+                clustering index and generate account numbers using a high-performance database sequence.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DBA Lab Execution Script</div>
+                <pre><code>-- Logged in as the DB2 Instance Owner (db2inst1)
+db2 "CONNECT TO ITIDB"
+
+-- Step 1: Create the sequence and table
+db2 "CREATE TABLE bank.Accounts ( \
+       AccountNo BIGINT NOT NULL PRIMARY KEY, \
+       BranchID INT NOT NULL, \
+       Balance DECIMAL(15,2) NOT NULL \
+     )"
+
+db2 "CREATE INDEX bank.idx_accounts_branch ON bank.Accounts (BranchID ASC) CLUSTER"
+
+db2 "CREATE SEQUENCE bank.AccountNumberSeq AS BIGINT START WITH 500000 INCREMENT BY 1 CACHE 5"
+
+-- Step 2: Insert banking accounts using the sequence next value
+db2 "INSERT INTO bank.Accounts VALUES (NEXT VALUE FOR bank.AccountNumberSeq, 101, 75000.00)"
+db2 "INSERT INTO bank.Accounts VALUES (NEXT VALUE FOR bank.AccountNumberSeq, 102, 120000.50)"
+db2 "INSERT INTO bank.Accounts VALUES (NEXT VALUE FOR bank.AccountNumberSeq, 101, 3400.00)"
+db2 "INSERT INTO bank.Accounts VALUES (NEXT VALUE FOR bank.AccountNumberSeq, 103, 980000.00)"
+db2 "INSERT INTO bank.Accounts VALUES (NEXT VALUE FOR bank.AccountNumberSeq, 102, 15000.25)"
+
+-- Step 3: Retrieve values and verify their physical clustering
+db2 "SELECT AccountNo, BranchID, Balance FROM bank.Accounts ORDER BY BranchID"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-check-circle"></i> Expected CLI Terminal Output</h4>
+                <pre>
+ACCOUNTNO            BRANCHID    BALANCE
+-------------------- ----------- -----------------
+              500000         101          75000.00
+              500002         101           3400.00
+              500001         102         120000.50
+              500004         102          15000.25
+              500003         103         980000.00
+
+  5 record(s) selected.</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cogs"></i> Lab Walkthrough & Reclustering Execution</h4>
+                <p>
+                  <strong>Physical Organization:</strong> During table creation and initial inserts, DB2 placed rows
+                  with <code>BranchID = 101</code> physically close together. Notice that <code>AccountNo</code> values
+                  (which indicate the chronological order of insertion: 500000, 500001, etc.) are physically stored
+                  out-of-order in our sorted query because DB2 prioritized grouping by <code>BranchID</code>.
+                </p>
+                <p>
+                  <strong>Clustering Degradation:</strong> Over time, millions of arbitrary branch insertions fill
+                  database pages, forcing DB2 to place new rows in arbitrary remote pages. This degrades the table's
+                  clustering ratio.
+                </p>
+                <p>
+                  To restore perfect clustering and eliminate page fragmentation, the DBA runs the online table
+                  reorganization utility:
+                </p>
+                <div class="code-example">
+                  <div class="code-language">DB2 Reorg CLP Command</div>
+                  <pre><code>db2 "REORG TABLE bank.Accounts INDEX bank.idx_accounts_branch"</code></pre>
+                </div>
+                <pre
+                  style="background: #111; color: #27ae60; padding: 15px; border-radius: var(--radius-md); font-family: var(--font-code);">
+DB20000I  The REORG command completed successfully.
+                </pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t19-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-star"></i> Indexing &amp; Reorg Tuning Strategies</h5>
+                  <ul>
+                    <li><strong>Singular Choice:</strong> You can only have one clustering index per table. Choose a key
+                      that represents major range-scan queries (e.g., date columns or region IDs).</li>
+                    <li><strong>Write Density vs volatility:</strong> Avoid defining a clustering index on highly
+                      volatile columns (frequent <code>UPDATE</code>s). An update to a clustered column forces DB2 to
+                      perform expensive physical row movements across pages.</li>
+                    <li><strong>Automate Reorgs:</strong> Implement cron jobs checking the
+                      <code>CLUSTERING_INDEX_REORG</code> flag via database administrative views, triggering standard
+                      <code>REORG TABLE</code> when the clustering ratio drops below 80%.
+                    </li>
+                  </ul>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-bolt"></i> High-Concurrence Sequence Caching</h5>
+                  <ul>
+                    <li><strong>Sizing the Cache:</strong> For highly concurrent transactional OLTP systems, size the
+                      sequence cache large (e.g., <code>CACHE 500</code>). This keeps sequence allocations completely
+                      inside CPU register cycles.</li>
+                    <li><strong>Handling Gaps:</strong> If the DB2 instance encounters a hard crash (e.g., power loss),
+                      all sequence numbers cached in memory but not yet committed to rows are permanently lost, creating
+                      gaps in the number sequence.</li>
+                    <li><strong>Auditable Contiguity:</strong> If compliance requires contiguous, gapless numbers,
+                      define the sequence as <code>NO CACHE</code> and <code>ORDER</code>. Expect an insert performance
+                      cost as each sequence request accesses system tables directly under serialization locks.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Diagnostic Codes &amp; Remedies</h4>
+                <ul>
+                  <li>
+                    <strong>SQL0668N Reason Code 7 ("Operation not allowed: Table in REORG Pending State")</strong>
+                    <br><em>Root Cause:</em> Schema changes, data alterations, or altering a clustering index has placed
+                    the table in an unsafe, fragmented state.
+                    <br><em>Remedy:</em> Execute a physical reorg using: <code>db2 "REORG TABLE bank.Accounts"</code>.
+                  </li>
+                  <li>
+                    <strong>SQL0359N ("The range of values for the identity column or sequence is exhausted")</strong>
+                    <br><em>Root Cause:</em> A sequence marked as <code>NO CYCLE</code> has hit its defined maximum
+                    boundary (<code>MAXVALUE</code>).
+                    <br><em>Remedy:</em> Increase the sequence boundaries using
+                    <code>ALTER SEQUENCE bank.AccountNumberSeq MAXVALUE 999999999999</code> or activate wrapping using
+                    <code>ALTER SEQUENCE bank.AccountNumberSeq CYCLE</code>.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t19-summary">
+              <h3 class="subsection-title">5. Topic 19 Summary Cheat-Sheet Table</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Object Type</th>
+                      <th>Primary Administrative Purpose</th>
+                      <th>Core Performance Parameter</th>
+                      <th>Key DBA Operations Tool</th>
+                      <th>Typical DBA Troubleshooting Vector</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Clustered Index</strong></td>
+                      <td>Maintains physical record sorting to maximize sequential prefetching speeds.</td>
+                      <td><code>CLUSTER</code> parameter on <code>CREATE INDEX</code>.</td>
+                      <td><code>REORG TABLE [table] INDEX [index]</code></td>
+                      <td>Clustering degradation under volatile sparse insertions. (SQL0668N)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Sequence Object</strong></td>
+                      <td>Provides rapid, locked-free, independent unique numeric sequence generation.</td>
+                      <td><code>CACHE [N]</code> and <code>ORDER / NO ORDER</code></td>
+                      <td><code>ALTER SEQUENCE [seq] RESTART WITH [N]</code></td>
+                      <td>Sequence boundary exhaustion (SQL0359N) and gap creation after instance crashes.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Topic 20: Connection Security & Authentication Locations -->
+          <section id="topic20" class="section">
+            <h2 class="section-title">Topic 20: Connection Security &amp; Authentication Locations</h2>
+
+            <div class="subsection" id="t20-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture</h3>
+              <p>
+                In database environments, security is defined in two stages: <strong>Authentication</strong> (verifying
+                <em>who</em> is attempting to connect) and <strong>Authorization</strong> (verifying <em>what</em>
+                resources they can access).
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-shield-alt"></i> Authentication vs. Authorization</h4>
+                <p>
+                  <strong>Authentication:</strong> DB2 LUW does not maintain an internal database of users and
+                  passwords. Instead, authentication is managed externally by the underlying Operating System (PAM,
+                  Local Accounts) or central directories (LDAP, Active Directory, Kerberos). The database relies on
+                  configuration settings to determine <em>where</em> and <em>how</em> credentials are validated.
+                </p>
+                <p>
+                  <strong>Authorization:</strong> Once a user's identity is authenticated, the internal DB2 engine
+                  checks authorization tables (system catalogs like <code>SYSCAT.DBAUTH</code>) to enforce database
+                  privileges.
+                </p>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-server"></i> SERVER (Default Location)</h5>
+                  <p>
+                    All authentication validation occurs entirely on the <strong>database server machine</strong>. When
+                    a client application connects, the username and password are sent in cleartext across the network to
+                    the server host, which validates the credentials using its local operating system accounts or LDAP
+                    configuration.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-key"></i> SERVER_ENCRYPT</h5>
+                  <p>
+                    Similar to <code>SERVER</code>, validation occurs at the database host. However, DB2 forces the
+                    client to negotiate a <strong>Diffie-Hellman cryptographic exchange</strong>. The client encrypts
+                    the database password (and optionally the username) before transmission over the network, protecting
+                    credentials from interception.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-laptop-code"></i> CLIENT</h5>
+                  <p>
+                    The database engine trusts the <strong>client workstation's operating system</strong> to validate
+                    the identity. The server assumes the client user was verified locally and accepts connection
+                    requests without validating passwords. This represents a significant security risk and is deprecated
+                    in modern production architectures.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-user-lock"></i> DATA_ENCRYPT</h5>
+                  <p>
+                    Extends <code>SERVER_ENCRYPT</code> by encrypting not only the login credentials during the
+                    handshake but also all subsequent user data, query texts, and transaction payloads transmitted
+                    between the client and database server.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="subsection" id="t20-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                Authentication configurations are managed at the global instance level inside the Database Manager
+                Configuration (<strong>DBM CFG</strong>).
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP: DBM Configuration for Connection Security</div>
+                <pre><code>-- 1. Inspect the current database manager authentication configuration
+db2 GET DBM CFG | grep -i authentication
+
+-- 2. Modify authentication to enforce password encryption during transmission
+db2 UPDATE DBM CFG USING AUTHENTICATION SERVER_ENCRYPT
+
+-- 3. Modify authentication to encrypt both credentials and query data
+db2 UPDATE DBM CFG USING AUTHENTICATION DATA_ENCRYPT
+
+-- 4. Enable full secure SSL/TLS client-server communication
+db2 UPDATE DBM CFG USING AUTHENTICATION SSL
+
+-- 5. Force the DB2 engine to recycle and apply the changes
+db2stop force
+db2start</code></pre>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-exclamation-triangle"></i> Administrative Recyclability Requirement</h4>
+                <p>
+                  <strong>Crucial DBA Action:</strong> Any alteration to the <code>AUTHENTICATION</code> parameter
+                  inside the <code>DBM CFG</code> will <strong>not</strong> take effect dynamically. Active client
+                  applications must be disconnected, the instance stopped (<code>db2stop force</code>), and restarted
+                  (<code>db2start</code>) for the security engine to load the new authentication requirements.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="t20-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab</h3>
+              <p>
+                <strong>Scenario:</strong> A security auditor requires a corporate bank database manager to secure the
+                database connection mechanism. The DBA must update the instance configuration to reject cleartext
+                credentials and enforce <code>SERVER_ENCRYPT</code> as the mandatory authentication standard.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DBA Lab Console Transcript</div>
+                <pre><code># Log in to the server hosting the database as db2inst1
+su - db2inst1
+
+# Step 1: Check baseline authentication setting
+db2 "GET DBM CFG" | grep "AUTHENTICATION"
+
+# Step 2: Update database manager configuration
+db2 "UPDATE DBM CFG USING AUTHENTICATION SERVER_ENCRYPT"
+
+# Step 3: Force client disconnection and restart the instance
+db2 "FORCE APPLICATION ALL"
+db2 "db2stop force"
+db2 "db2start"
+
+# Step 4: Verify the new active configuration setting
+db2 "GET DBM CFG" | grep "AUTHENTICATION"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-check-circle"></i> Expected CLI Output (Security Lockdown)</h4>
+                <pre>
+$ db2 "GET DBM CFG" | grep "AUTHENTICATION"
+ Database manager authentication        (AUTHENTICATION) = SERVER
+
+$ db2 "UPDATE DBM CFG USING AUTHENTICATION SERVER_ENCRYPT"
+DB20000I  The UPDATE DATABASE MANAGER CONFIGURATION command completed successfully.
+
+$ db2 "db2stop force"
+05/22/2026 12:36:12     0   0   SQL1064N  DB2STOP processing was successful.
+
+$ db2 "db2start"
+05/22/2026 12:36:15     0   0   SQL1063N  DB2START processing was successful.
+
+$ db2 "GET DBM CFG" | grep "AUTHENTICATION"
+ Database manager authentication        (AUTHENTICATION) = SERVER_ENCRYPT</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-network-wired"></i> Remote Client Connection Verification</h4>
+                <p>
+                  Once configured to <code>SERVER_ENCRYPT</code>, any remote client terminal or application trying to
+                  connect using cleartext will be rejected by the server handshake, requiring the client to use
+                  encrypted connection protocols:
+                </p>
+                <div class="code-example">
+                  <div class="code-language">DB2 Client connection CLP</div>
+                  <pre><code>-- Explicit client connection directing encryption
+db2 "CONNECT TO LocalBankAlias USER bank_user USING securePass"</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="subsection" id="t20-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-star"></i> Production Security Best Practices</h5>
+                  <ul>
+                    <li><strong>Prohibit CLIENT Authentication:</strong> Never use <code>CLIENT</code> authentication in
+                      a production database. A malicious user with access to a client CLI can easily forge usernames and
+                      bypass database password checks.</li>
+                    <li><strong>Deploy SERVER_ENCRYPT or SSL:</strong> Standardize on <code>SERVER_ENCRYPT</code> or
+                      <code>SSL</code> as the baseline database manager configuration to prevent cleartext password
+                      sniffing across corporate intranets.
+                    </li>
+                    <li><strong>Coordinate Security Plug-Ins:</strong> When integrating DB2 with enterprise LDAP
+                      systems, ensure the database manager configuration references the correct security plugins
+                      (<code>SRVCON_PW_PLUGIN</code>).</li>
+                  </ul>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-lock"></i> Encryption Performance Impacts</h5>
+                  <ul>
+                    <li><strong>Handshake Cost:</strong> The Diffie-Hellman exchange required by
+                      <code>SERVER_ENCRYPT</code> introduces a minor CPU overhead during initial client connections.
+                    </li>
+                    <li><strong>Mitigation Strategy:</strong> Implement application <strong>Connection Pooling</strong>.
+                      This maintains persistent open connections, avoiding frequent connection renegotiation overhead.
+                    </li>
+                    <li><strong>Data Encryption:</strong> While <code>DATA_ENCRYPT</code> secures all data in transit,
+                      encrypting all query payloads introduces notable CPU and network processing overhead. Assess
+                      network throughput before deploying system-wide.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Diagnostic Codes &amp; Remedies</h4>
+                <ul>
+                  <li>
+                    <strong>SQL30082N Reason Code 24 ("Security processing failed with reason: USERNAME AND/OR PASSWORD
+                      INVALID")</strong>
+                    <br><em>Root Cause:</em> The user provided incorrect credentials, or the server's OS user database
+                    does not exist.
+                    <br><em>Remedy:</em> Check the system logs on the database host (e.g., <code>/var/log/secure</code>
+                    or OS Event Viewer). Verify the user account is active and the password matches.
+                  </li>
+                  <li>
+                    <strong>SQL30082N Reason Code 19 ("Security processing failed with reason: USERID DISABLED or
+                      LOCKED")</strong>
+                    <br><em>Root Cause:</em> The user account has been disabled or locked out by OS-level password
+                    policies (e.g., due to too many failed attempts).
+                    <br><em>Remedy:</em> Contact the OS administrator to unlock the system user account using command
+                    tools like <code>passwd -u [user]</code>.
+                  </li>
+                  <li>
+                    <strong>SQL30082N Reason Code 15 ("Security processing failed with reason: SECURITY SERVICE
+                      ERROR")</strong>
+                    <br><em>Root Cause:</em> DB2 failed to communicate with the external OS security services (such as
+                    PAM or LDAP).
+                    <br><em>Remedy:</em> Ensure the DB2 database manager process has permission to read the system user
+                    credentials (e.g., check setuid permissions on the <code>db2ckpw</code> binary under the DB2 install
+                    directory).
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t20-summary">
+              <h3 class="subsection-title">5. Topic 20 Summary Cheat-Sheet Table</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Authentication Location</th>
+                      <th>Validation Authority Location</th>
+                      <th>Over-The-Wire Security Rating</th>
+                      <th>Dynamic Recyclability?</th>
+                      <th>Typical Use Case / Suitability</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>SERVER</strong></td>
+                      <td>Database Host Operating System / Directory</td>
+                      <td><span style="color:#d35400;">Low</span> (Passwords sent in cleartext)</td>
+                      <td>No (Requires Instance Restart)</td>
+                      <td>Small development sandbox environments with isolated, non-sensitive data.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>SERVER_ENCRYPT</strong></td>
+                      <td>Database Host Operating System / Directory</td>
+                      <td><span style="color:#27ae60;">High</span> (Passwords encrypted via DH)</td>
+                      <td>No (Requires Instance Restart)</td>
+                      <td>Standard enterprise baseline for secure internal corporate database systems.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>CLIENT</strong></td>
+                      <td>Client Workstation Operating System</td>
+                      <td><span style="color:#c0392b; font-weight:bold;">Zero Security</span> (Vulnerable to spoofing)
+                      </td>
+                      <td>No (Requires Instance Restart)</td>
+                      <td>Highly deprecated. Only used inside secure mainframe environments.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>DATA_ENCRYPT</strong></td>
+                      <td>Database Host Operating System / Directory</td>
+                      <td><span style="color:#27ae60; font-weight:bold;">Maximum</span> (Credentials &amp; data
+                        encrypted)</td>
+                      <td>No (Requires Instance Restart)</td>
+                      <td>High-security applications handling highly sensitive financial data or PII.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Topic 21: Administrative Authorities: SECADM vs. DBADM -->
+          <section id="topic21" class="section">
+            <h2 class="section-title">Topic 21: Administrative Authorities: SECADM vs. DBADM</h2>
+
+            <div class="subsection" id="t21-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture</h3>
+              <p>
+                Modern database security relies on the principle of <strong>Separation of Duties (SoD)</strong>.
+                Historically, a Database Administrator (DBADM) possessed absolute control over database operations,
+                security policies, and user data. Modern DB2 installations strictly bifurcate these administrative roles
+                into <strong>SECADM</strong> and <strong>DBADM</strong>.
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-user-shield"></i> The SECADM (Security Administrator)</h5>
+                  <p>
+                    The <strong>SECADM</strong> is the database security authority. SECADM has exclusive control over:
+                  </p>
+                  <ul>
+                    <li>Creating and managing Database Roles, Groups, and Security Policies.</li>
+                    <li>Granting and revoking all database authorities (including DBADM itself) and object-level
+                      privileges.</li>
+                    <li>Activating and managing <strong>Row and Column Access Control (RCAC)</strong> rules.</li>
+                    <li>Configuring database audit systems via <code>db2audit</code>.</li>
+                  </ul>
+                  <p>
+                    <strong>Data Privacy Rule:</strong> By design, a SECADM <strong>cannot</strong> query user table
+                    data or execute standard operational database commands (such as table index reorganizations or
+                    tablespace allocations) unless explicitly granted.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-tools"></i> The DBADM (Database Administrator)</h5>
+                  <p>
+                    The <strong>DBADM</strong> manages database operations. DBADM controls:
+                  </p>
+                  <ul>
+                    <li>Physical storage management, creating tablespaces, buffer pools, and schema schemas.</li>
+                    <li>Executing utility tools like <code>BACKUP</code>, <code>RESTORE</code>, <code>RUNSTATS</code>,
+                      and <code>REORG</code>.</li>
+                    <li>Tuning local database configurations (<code>DB CFG</code>) to optimize query performance.</li>
+                  </ul>
+                  <p>
+                    <strong>Security Rule:</strong> By design, a DBADM <strong>cannot</strong> grant authorities or
+                    privileges to other users, manage database security roles, or alter the audit trails. Under
+                    compliance configurations, a DBADM is granted <code>WITHOUT DATA ACCESS</code>, preventing them from
+                    reading user tables directly.
+                  </p>
+                </div>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-balance-scale"></i> Why Separate Administrative Duties?</h4>
+                <p>
+                  This architectural split prevents a single superuser account from compromising both the data and the
+                  audit trails. SECADM controls security rules, while DBADM manages operations. This separation is key
+                  to meeting compliance standards such as Sarbanes-Oxley (SOX), HIPAA, and PCI-DSS.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="t21-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                SECADM is the only authority capable of granting or revoking administrative authorities.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP: Granting and Revoking SECADM &amp; DBADM</div>
+                <pre><code>-- 1. Grant Security Administration authority (Can only be run by a SECADM user or Instance Owner initially)
+db2 "GRANT SECADM ON DATABASE TO USER sec_admin"
+
+-- 2. Grant operational Database Administration to a user
+db2 "GRANT DBADM ON DATABASE TO USER db_manager"
+
+-- 3. Industry-Standard: Grant DBADM with strict data access restriction (Compliance Model)
+db2 "GRANT DBADM WITHOUT DATA ACCESS ON DATABASE TO USER secure_dba"
+
+-- 4. Grant DBADM with legacy access rights (Strongly discouraged in production)
+db2 "GRANT DBADM WITH DATA ACCESS ON DATABASE TO USER legacy_dba"
+
+-- 5. Revoke administrative authorities
+db2 "REVOKE SECADM ON DATABASE FROM USER sec_admin"
+db2 "REVOKE DBADM ON DATABASE FROM USER db_manager"</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-list"></i> SQL Keyword Definitions</h4>
+                <ul>
+                  <li><strong><code>WITHOUT DATA ACCESS</code>:</strong> Explicitly blocks the DBADM user from querying
+                    tables, reading view data, or running routines containing user data within the database.</li>
+                  <li><strong><code>WITH DATA ACCESS</code>:</strong> Grants DBADM implicit authority to execute
+                    <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code> queries on
+                    all user tables in the database.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t21-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab</h3>
+              <p>
+                <strong>Scenario:</strong> The security compliance team requires a bank to separate DBA operations from
+                security settings. The DBA must establish a security admin account (<code>sec_admin</code>) and an
+                operational manager account (<code>db_manager</code>), restricting the operational manager from reading
+                user table data.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DBA Lab Command Actions</div>
+                <pre><code># [System Administrator Shell - Root Account]
+# Create OS users representing the respective administrators
+sudo useradd -m -g db2iadm1 sec_admin
+sudo useradd -m -g db2iadm1 db_manager
+echo "sec_admin:Pass123" | sudo chpasswd
+echo "db_manager:Pass123" | sudo chpasswd
+
+# [Log in as DB2 Instance Owner to assign initial SECADM role]
+su - db2inst1
+db2 "CONNECT TO ITIDB"
+db2 "GRANT SECADM ON DATABASE TO USER sec_admin"
+db2 "TERMINATE"
+
+# [Log in as SECADM: sec_admin]
+# Authenticate and connect to the database to grant operational DBADM
+su - sec_admin
+db2 "CONNECT TO ITIDB"
+db2 "GRANT DBADM WITHOUT DATA ACCESS ON DATABASE TO USER db_manager"
+db2 "TERMINATE"
+
+# [Log in as DBADM: db_manager]
+# Connect to test database privileges
+su - db_manager
+db2 "CONNECT TO ITIDB"
+
+# Attempt to create a standard tablespace (Should succeed)
+db2 "CREATE TABLESPACE userspace2 PAGESIZE 4K MANAGED BY AUTOMATIC STORAGE"
+
+# Attempt to query sensitive bank records (Should be blocked)
+db2 "SELECT * FROM bank.Accounts"</code></pre>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Expected CLI Output (Privilege Verification)</h4>
+                <pre>
+$ db2 "CREATE TABLESPACE userspace2 PAGESIZE 4K MANAGED BY AUTOMATIC STORAGE"
+DB20000I  The CREATE TABLESPACE command completed successfully.
+
+$ db2 "SELECT * FROM bank.Accounts"
+SQL0551N  The statement failed because the authorization ID "DB_MANAGER" does not
+have the required privilege or authority to perform the operation on the 
+object "BANK.ACCOUNTS".  SQLSTATE=42501</pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t21-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-star"></i> Separation of Duties Best Practices</h5>
+                  <ul>
+                    <li><strong>Enforce WITHOUT DATA ACCESS:</strong> Standardize on <code>WITHOUT DATA ACCESS</code>
+                      when granting DBADM to production database administrators. Operational DBAs do not need to view
+                      actual credit card numbers or account balances to monitor disk usage or reorg tables.</li>
+                    <li><strong>Keep SECADM Roles Distinct:</strong> Restrict the SECADM authority to dedicated security
+                      officers. Avoid granting both <code>SECADM</code> and <code>DBADM</code> to the same system
+                      administrator.</li>
+                    <li><strong>Regular Authority Auditing:</strong> Periodically query the DB2 administrative catalog
+                      view <code>SYSCAT.DBAUTH</code> to verify which users hold administrative privileges.</li>
+                  </ul>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-shield-alt"></i> Administrative Authority Review Query</h5>
+                  <p>
+                    Run this SQL statement to list all accounts holding system or database administrative authority:
+                  </p>
+                  <div class="code-example">
+                    <div class="code-language">DB2 Catalog Query</div>
+                    <pre><code>SELECT GRANTEE, GRANTEETYPE, 
+       DBADMAUTH, SECADMAUTH, DATAACCESSAUTH
+FROM SYSCAT.DBAUTH
+WHERE DBADMAUTH = 'Y' OR SECADMAUTH = 'Y';</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Diagnostic Codes &amp; Remedies</h4>
+                <ul>
+                  <li>
+                    <strong>SQL0552N ("Authorized ID does not have the privilege to perform operation")</strong>
+                    <br><em>Root Cause:</em> A DBADM account attempted to perform security operations (such as creating
+                    a role, granting privileges, or altering an audit policy) that require the SECADM authority.
+                    <br><em>Remedy:</em> Log in with the SECADM user account to execute security-related statements.
+                  </li>
+                  <li>
+                    <strong>SQL0551N ("The statement failed because the authorization ID does not have the required
+                      privilege or authority to perform the operation")</strong>
+                    <br><em>Root Cause:</em> A DBADM granted <code>WITHOUT DATA ACCESS</code> attempted to execute an
+                    SQL DML statement (like <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>) on a user
+                    table.
+                    <br><em>Remedy:</em> If the DBA requires data access for testing, have the SECADM explicitly grant
+                    them privileges on that specific table or schema:
+                    <code>db2 "GRANT SELECT ON TABLE bank.Accounts TO USER db_manager"</code>.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t21-summary">
+              <h3 class="subsection-title">5. Topic 21 Summary Cheat-Sheet Table</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Authority Type</th>
+                      <th>Primary Domain Responsibility</th>
+                      <th>Implicit Data Visibility?</th>
+                      <th>Allowed to Grant Authorities?</th>
+                      <th>Typical DBA Troubleshooting Scenario</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>SECADM</strong></td>
+                      <td>Security policy, roles, privileges, auditing, and RCAC.</td>
+                      <td><span style="color:#d35400;">No</span> (Must be explicitly granted)</td>
+                      <td><span style="color:#27ae60; font-weight:bold;">Yes</span> (Exclusive authority)</td>
+                      <td>Investigating audit trail failures and resolving role assignment blocks.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>DBADM</strong> (Default)</td>
+                      <td>Operational database management, database tuning, utility execution.</td>
+                      <td><span style="color:#27ae60; font-weight:bold;">Yes</span></td>
+                      <td><span style="color:#c0392b;">No</span></td>
+                      <td>Tuning queries, resolving lock contention, and storage capacity planning.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>DBADM WITHOUT DATA ACCESS</strong></td>
+                      <td>Operational database management under strict privacy controls.</td>
+                      <td><span style="color:#c0392b; font-weight:bold;">No</span> (Data is completely hidden)</td>
+                      <td><span style="color:#c0392b;">No</span></td>
+                      <td>Troubleshooting SQL0551N errors when running diagnostic routines.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Topic 22: DB2 Privileges & Role-Based Access Control (RBAC) -->
+          <section id="topic22" class="section">
+            <h2 class="section-title">Topic 22: DB2 Privileges &amp; Role-Based Access Control (RBAC)</h2>
+
+            <div class="subsection" id="t22-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture</h3>
+              <p>
+                Authorization in DB2 is managed through a hierarchical system of <strong>Authorities</strong>,
+                <strong>Database Privileges</strong>, and <strong>Object Privileges</strong>.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-key"></i> The Database Privilege Model</h4>
+                <p>
+                  Database privileges grant users the authority to perform general actions within the database. These
+                  include:
+                </p>
+                <ul>
+                  <li><strong>CONNECT:</strong> Permission to connect to the database.</li>
+                  <li><strong>CREATETAB:</strong> Permission to create new tables.</li>
+                  <li><strong>BINDADD:</strong> Permission to bind new packages or compile static SQL.</li>
+                  <li><strong>IMPLICIT_SCHEMA:</strong> Permitted to automatically create a schema if an object is
+                    qualified with a schema name that does not exist.</li>
+                </ul>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-cube"></i> Object-Level Privileges</h5>
+                  <p>
+                    Provide access control to specific database objects:
+                  </p>
+                  <ul>
+                    <li><strong>Tables &amp; Views:</strong> <code>SELECT</code>, <code>INSERT</code>,
+                      <code>UPDATE</code>, <code>DELETE</code>, <code>ALTER</code>, and <code>INDEX</code>.
+                    </li>
+                    <li><strong>Sequences:</strong> <code>USAGE</code> (needed to retrieve sequence values via
+                      <code>NEXT VALUE</code>).
+                    </li>
+                    <li><strong>Stored Procedures &amp; UDFs:</strong> <code>EXECUTE</code>.</li>
+                  </ul>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-users-cog"></i> Role-Based Access Control (RBAC)</h5>
+                  <p>
+                    Instead of granting privileges directly to individual users, DBAs use database
+                    <strong>Roles</strong>.
+                  </p>
+                  <p>
+                    A role is a database security object that groups privileges. Roles are superior to operating system
+                    groups because they are defined inside the database engine, do not require OS intervention, and are
+                    dynamically activated during connection.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="subsection" id="t22-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                Role creation and privilege management are administered via the CLP using standard <code>GRANT</code>
+                and <code>REVOKE</code> syntax.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP: Role Creation &amp; Privilege Management</div>
+                <pre><code>-- 1. Create a specialized database security role
+CREATE ROLE BankTellers;
+
+-- 2. Grant core database privileges to the role
+GRANT CONNECT ON DATABASE TO ROLE BankTellers;
+
+-- 3. Grant specific table-level privileges to the role
+GRANT SELECT, INSERT ON TABLE bank.Accounts TO ROLE BankTellers;
+
+-- 4. Grant access to sequence generation
+GRANT USAGE ON SEQUENCE bank.AccountNumberSeq TO ROLE BankTellers;
+
+-- 5. Assign the role to specific database users
+GRANT ROLE BankTellers TO USER teller_ali;
+GRANT ROLE BankTellers TO USER teller_fatima;
+
+-- 6. Revoke access from the role
+REVOKE INSERT ON TABLE bank.Accounts FROM ROLE BankTellers;
+
+-- 7. Remove role assignments and drop the role
+REVOKE ROLE BankTellers FROM USER teller_ali;
+DROP ROLE BankTellers;</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> Understanding "WITH GRANT OPTION"</h4>
+                <p>
+                  When granting privileges (e.g.,
+                  <code>GRANT SELECT ON TABLE... TO USER user1 WITH GRANT OPTION</code>), the target user is permitted
+                  to grant those same privileges to other users. Avoid using this in secure environments to maintain
+                  control over privilege distribution.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="t22-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab</h3>
+              <p>
+                <strong>Scenario:</strong> A bank wants to deploy a new transactional application. Tellers require
+                connection access, read/write privileges on the <code>Accounts</code> table, and access to the account
+                number generator sequence. Tellers must be blocked from deleting account records.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DBA SECADM Lab Script</div>
+                <pre><code># [Log in as SECADM: sec_admin]
+db2 "CONNECT TO ITIDB"
+
+# Step 1: Create the BankTellers role
+db2 "CREATE ROLE BankTellers"
+
+# Step 2: Grant connection and operational privileges to the role
+db2 "GRANT CONNECT ON DATABASE TO ROLE BankTellers"
+db2 "GRANT SELECT, INSERT, UPDATE ON TABLE bank.Accounts TO ROLE BankTellers"
+db2 "GRANT USAGE ON SEQUENCE bank.AccountNumberSeq TO ROLE BankTellers"
+
+# Step 3: Assign the role to the teller accounts
+db2 "GRANT ROLE BankTellers TO USER teller_ali"
+db2 "TERMINATE"
+
+# [Log in as the Teller: teller_ali]
+db2 "CONNECT TO ITIDB"
+
+# Step 4: Verify connection and attempt to query the Accounts table
+db2 "SELECT * FROM bank.Accounts"
+
+# Step 5: Test adding a record using the sequence (Should succeed)
+db2 "INSERT INTO bank.Accounts VALUES (NEXT VALUE FOR bank.AccountNumberSeq, 101, 250.00)"
+
+# Step 6: Test deleting a record (Should be rejected)
+db2 "DELETE FROM bank.Accounts WHERE BranchID = 101"</code></pre>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Expected CLI Output (Teller Access Verification)</h4>
+                <pre>
+$ db2 "INSERT INTO bank.Accounts VALUES (NEXT VALUE FOR bank.AccountNumberSeq, 101, 250.00)"
+DB20000I  The INSERT command completed successfully.
+
+$ db2 "DELETE FROM bank.Accounts WHERE BranchID = 101"
+SQL0551N  The statement failed because the authorization ID "TELLER_ALI" does not
+have the required privilege or authority to perform the operation on the 
+object "BANK.ACCOUNTS".  SQLSTATE=42501</pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t22-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-star"></i> Privilege Management Best Practices</h5>
+                  <ul>
+                    <li><strong>Apply the Principle of Least Privilege:</strong> Limit user access to the minimum set of
+                      privileges required to perform their role. Never grant database authorities (like DBADM or
+                      DATAACCESS) to general application logins.</li>
+                    <li><strong>Wrap Privileges in Roles:</strong> Standardize on granting privileges to database roles
+                      rather than individual users. This simplifies user onboarding and role configuration.</li>
+                    <li><strong>De-authorize PUBLIC:</strong> By default, DB2 grants select privileges to the special
+                      group <code>PUBLIC</code> on many system catalog views. Restrict public access to protect database
+                      metadata.</li>
+                  </ul>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-shield-alt"></i> Dynamic Role Auditing Query</h5>
+                  <p>
+                    Use this administrative query to identify which roles are assigned to which users:
+                  </p>
+                  <div class="code-example">
+                    <div class="code-language">DB2 Catalog Query</div>
+                    <pre><code>SELECT ROLENAME, GRANTEE, GRANTEETYPE, 
+       ADMINOPTION 
+FROM SYSCAT.ROLEAUTH
+ORDER BY ROLENAME;</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Diagnostic Codes &amp; Remedies</h4>
+                <ul>
+                  <li>
+                    <strong>SQL0551N ("Authorization error: user does not have privilege")</strong>
+                    <br><em>Root Cause:</em> The user or assigned role does not hold the required object privilege
+                    (e.g., trying to run a query without <code>SELECT</code>, or using a sequence without
+                    <code>USAGE</code>).
+                    <br><em>Remedy:</em> Check system catalog permissions. Grant the missing privilege to the user's
+                    role: <code>GRANT SELECT ON TABLE [table] TO ROLE [role]</code>.
+                  </li>
+                  <li>
+                    <strong>SQL0567N ("Invalid authorization ID specified")</strong>
+                    <br><em>Root Cause:</em> A <code>GRANT</code> or <code>REVOKE</code> statement referenced a user or
+                    role name that does not exist in the operating system or database catalog.
+                    <br><em>Remedy:</em> Verify that the user exists at the operating system level (or central
+                    directory), or that the role was created using <code>CREATE ROLE</code>.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t22-summary">
+              <h3 class="subsection-title">5. Topic 22 Summary Cheat-Sheet Table</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Privilege / Object Type</th>
+                      <th>Scope of Authority</th>
+                      <th>Database Object Target</th>
+                      <th>Key DBA Catalog Audit View</th>
+                      <th>Typical Privilege Misconfiguration</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>CONNECT</strong></td>
+                      <td>Database Privilege</td>
+                      <td>Database Level</td>
+                      <td><code>SYSCAT.DBAUTH</code></td>
+                      <td>Failing to grant <code>CONNECT</code> to new roles, resulting in immediate connection
+                        rejection.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>SELECT / INSERT</strong></td>
+                      <td>Object Privilege</td>
+                      <td>Tables &amp; Views</td>
+                      <td><code>SYSCAT.TABAUTH</code></td>
+                      <td>Granting write permissions to read-only reporting roles.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>USAGE</strong></td>
+                      <td>Object Privilege</td>
+                      <td>Sequence Objects</td>
+                      <td><code>SYSCAT.SEQUENCEAUTH</code></td>
+                      <td>Omitting <code>USAGE</code> on sequences, blocking table insert routines. (SQL0551N)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>EXECUTE</strong></td>
+                      <td>Object Privilege</td>
+                      <td>Stored Procedures / UDFs</td>
+                      <td><code>SYSCAT.ROUTINEAUTH</code></td>
+                      <td>Failing to grant <code>EXECUTE</code> on dynamic routines, preventing query runtime calls.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Topic 23: Database Auditing & Introduction to RCAC -->
+          <section id="topic23" class="section">
+            <h2 class="section-title">Topic 23: Database Auditing &amp; Introduction to RCAC</h2>
+
+            <div class="subsection" id="t23-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture</h3>
+              <p>
+                IBM DB2 LUW provides advanced security monitoring and fine-grained data access control through
+                <strong>Database Auditing</strong> and <strong>Row and Column Access Control (RCAC)</strong>.
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-fingerprint"></i> Database Auditing (db2audit)</h5>
+                  <p>
+                    The DB2 audit facility runs as an independent process outside the standard database engine. It
+                    records an auditable trail of database events.
+                  </p>
+                  <p>
+                    The audit system is categorized into key areas:
+                  </p>
+                  <ul>
+                    <li><strong>SECMAINT:</strong> Tracks security modifications (grants, revokes, role alterations).
+                    </li>
+                    <li><strong>CHECKING:</strong> Tracks authorization checks, recording successes and failures during
+                      query executions.</li>
+                    <li><strong>OBJMAINT:</strong> Tracks database structure modifications (DDL).</li>
+                    <li><strong>VALIDATE:</strong> Tracks user authentication events (logins, logouts).</li>
+                    <li><strong>EXECUTE:</strong> Records actual SQL statements executed by users (typically introduces
+                      significant system I/O overhead).</li>
+                  </ul>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-mask"></i> Row &amp; Column Access Control (RCAC)</h5>
+                  <p>
+                    <strong>RCAC</strong> provides fine-grained access control enforced directly at the database engine
+                    level. It is superior to standard views because it filters data transparently on the base tables.
+                  </p>
+                  <p>
+                    RCAC consists of two main mechanisms:
+                  </p>
+                  <ul>
+                    <li><strong>Row Permissions:</strong> Dynamically filters row visibility based on the session user's
+                      role or attributes (e.g., a teller can only view accounts associated with their assigned branch).
+                    </li>
+                    <li><strong>Column Masks:</strong> Masks sensitive column values (e.g., credit card numbers or
+                      balances) with placeholder characters unless the user holds the appropriate role or security
+                      clearance.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="subsection" id="t23-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                Auditing configuration requires system administrative authority, while RCAC policies are created and
+                managed by the <strong>SECADM</strong>.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP: Auditing Setup &amp; RCAC Declarations</div>
+                <pre><code>-- 1. Configure global auditing categories and start the audit daemon
+db2audit configure scope SECMAINT, CHECKING, VALIDATE status BOTH;
+db2audit start;
+
+-- 2. Create a targeted audit policy for financial tables
+CREATE AUDIT POLICY BankAuditPolicy 
+  CATEGORIES SECMAINT STATUS BOTH, CHECKING STATUS FAILURE ERROR;
+
+-- 3. Associate the audit policy with a table
+ASSOCIATE AUDIT POLICY BankAuditPolicy WITH TABLE bank.Accounts;
+
+-- 4. Create an RCAC Row Permission (Restrict tellers to their own branch)
+CREATE PERMISSION bank.restrict_teller_branch 
+  ON bank.Accounts 
+  FOR ROWS WHERE 
+    VERIFY_ROLE_FOR_USER(SESSION_USER, 'ManagerRole') = 1 
+    OR BranchID = (SELECT BranchID FROM bank.StaffMapping WHERE Username = SESSION_USER)
+  ENFORCED FOR ALL ACCESS;
+
+-- 5. Create an RCAC Column Mask (Mask balance details)
+CREATE MASK bank.mask_account_balance 
+  ON bank.Accounts 
+  FOR COLUMN Balance RETURN 
+    CASE 
+      WHEN VERIFY_ROLE_FOR_USER(SESSION_USER, 'ManagerRole') = 1 THEN Balance 
+      ELSE 0.00 
+    END
+  ENFORCED FOR ALL ACCESS;
+
+-- 6. Activate RCAC on the table
+ALTER TABLE bank.Accounts ACTIVATE ROW ACCESS CONTROL;
+ALTER TABLE bank.Accounts ACTIVATE COLUMN ACCESS CONTROL;</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> How RCAC Modifies Query Execution</h4>
+                <p>
+                  When RCAC is active, the DB2 optimizer dynamically injects the defined <code>PERMISSION</code> filters
+                  and <code>MASK</code> evaluation logic directly into the query access plan. This occurs transparently
+                  to applications, ensuring security rules are enforced regardless of how the query is written.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="t23-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab</h3>
+              <p>
+                <strong>Scenario:</strong> A bank must comply with financial privacy regulations. Tellers are permitted
+                to query the <code>Accounts</code> table but should only see accounts associated with their branch, and
+                sensitive balances must be masked to <code>0.00</code>. Managers must retain full visibility into all
+                accounts.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DBA SECADM Lab Script</div>
+                <pre><code># Log in as SECADM: sec_admin
+db2 "CONNECT TO ITIDB"
+
+# Step 1: Create staff mapping and populate data
+db2 "CREATE TABLE bank.StaffMapping (Username VARCHAR(20), BranchID INT)"
+db2 "INSERT INTO bank.StaffMapping VALUES ('TELLER_ALI', 101)"
+
+# Step 2: Create the Manager role
+db2 "CREATE ROLE ManagerRole"
+db2 "GRANT ROLE ManagerRole TO USER manager_sarah"
+
+# Step 3: Create the Row Permission restricting branch access
+db2 "CREATE PERMISSION bank.restrict_teller_branch ON bank.Accounts \
+     FOR ROWS WHERE \
+       VERIFY_ROLE_FOR_USER(SESSION_USER, 'ManagerRole') = 1 \
+       OR BranchID = (SELECT BranchID FROM bank.StaffMapping WHERE Username = SESSION_USER) \
+     ENFORCED FOR ALL ACCESS"
+
+# Step 4: Create the Column Mask protecting the Balance column
+db2 "CREATE MASK bank.mask_account_balance ON bank.Accounts \
+     FOR COLUMN Balance RETURN \
+       CASE \
+         WHEN VERIFY_ROLE_FOR_USER(SESSION_USER, 'ManagerRole') = 1 THEN Balance \
+         ELSE 0.00 \
+       END \
+     ENFORCED FOR ALL ACCESS"
+
+# Step 5: Enforce the security rules on the table
+db2 "ALTER TABLE bank.Accounts ACTIVATE ROW ACCESS CONTROL"
+db2 "ALTER TABLE bank.Accounts ACTIVATE COLUMN ACCESS CONTROL"
+db2 "COMMIT"
+db2 "TERMINATE"</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-eye"></i> Step 6: Verifying Access Control Rules</h4>
+                <p>
+                  Below is the expected behavior when querying the table as a teller compared to a manager.
+                </p>
+
+                <h5>A. Querying as a Teller (teller_ali)</h5>
+                <div class="code-example">
+                  <div class="code-language">Teller Terminal Query</div>
+                  <pre><code>db2 "CONNECT TO ITIDB"
+db2 "SELECT * FROM bank.Accounts"</code></pre>
+                </div>
+                <div class="advantages-box font-code">
+                  <pre>
+ACCOUNTNO            BRANCHID    BALANCE
+-------------------- ----------- -----------------
+              500000         101              0.00
+              500002         101              0.00
+
+  2 record(s) selected.</pre>
+                  <p><small>Notice: Rows for branch 102 and 103 are automatically filtered out, and balances are masked
+                      to 0.00.</small></p>
+                </div>
+
+                <h5>B. Querying as a Manager (manager_sarah)</h5>
+                <div class="code-example">
+                  <div class="code-language">Manager Terminal Query</div>
+                  <pre><code>db2 "CONNECT TO ITIDB"
+db2 "SELECT * FROM bank.Accounts"</code></pre>
+                </div>
+                <div class="advantages-box font-code">
+                  <pre>
+ACCOUNTNO            BRANCHID    BALANCE
+-------------------- ----------- -----------------
+              500000         101          75000.00
+              500002         101           3400.00
+              500001         102         120000.50
+              500004         102          15000.25
+              500003         103         980000.00
+
+  5 record(s) selected.</pre>
+                  <p><small>Notice: The manager can see all branch records with their actual decimal balances.</small>
+                  </p>
+                </div>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-history"></i> Step 7: Configuring and Extracting Audits</h4>
+                <p>
+                  To capture administrative and access actions, the DBA configures and extracts system audit logs:
+                </p>
+                <div class="code-example">
+                  <div class="code-language">DBA Audit Extraction Commands</div>
+                  <pre><code># Flush active audit records to disk
+db2audit flush
+
+# Extract binary records into a readable text format
+db2audit extract file /tmp/audit_report.txt</code></pre>
+                </div>
+                <pre
+                  style="background: #111; color: #3498db; padding: 15px; border-radius: var(--radius-md); font-family: var(--font-code);">
+$ cat /tmp/audit_report.txt
+timestamp=2026-05-22-12.38.10; category=SECMAINT; userid=SEC_ADMIN;
+  event=CREATE PERMISSION; object=RESTRICT_TELLER_BRANCH; status=SUCCESS;
+timestamp=2026-05-22-12.39.01; category=CHECKING; userid=TELLER_ALI;
+  event=SELECT; object=BANK.ACCOUNTS; status=SUCCESS;
+                </pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t23-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-star"></i> Auditing &amp; RCAC Best Practices</h5>
+                  <ul>
+                    <li><strong>Limit Audit Scope:</strong> Auditing introduces disk I/O overhead. Avoid auditing the
+                      <code>EXECUTE</code> category in high-transaction OLTP environments. Focus auditing on
+                      <code>CHECKING</code> failures and <code>SECMAINT</code> changes.
+                    </li>
+                    <li><strong>Automate Log Management:</strong> Establish crontab scripts to regularly run
+                      <code>db2audit flush</code> and archive audit logs to a secure external storage server, preventing
+                      local disk exhaustion.
+                    </li>
+                    <li><strong>Evaluate RCAC Application Impact:</strong> Be aware that RCAC dynamically alters query
+                      results. If an application executes standard mathematical aggregations (e.g.,
+                      <code>SUM(Balance)</code>), a user with masked balances will receive an incorrect sum of
+                      <code>0.00</code>. Design applications to account for access control rules.
+                    </li>
+                  </ul>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-shield-alt"></i> Managing RCAC Performance</h5>
+                  <ul>
+                    <li><strong>Optimize Subqueries:</strong> If a row permission uses dynamic subqueries (e.g.,
+                      querying a staff mapping table), ensure the lookup tables are small and highly indexed to prevent
+                      query performance degradation.</li>
+                    <li><strong>Optimize Cache:</strong> Leverage DB2's package cache to store pre-compiled access
+                      plans, reducing the parsing overhead introduced by RCAC rules.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Diagnostic Codes &amp; Remedies</h4>
+                <ul>
+                  <li>
+                    <strong>SQL20204N ("An audit policy cannot be associated with the specified object type")</strong>
+                    <br><em>Root Cause:</em> An attempt was made to associate an audit policy with a database object
+                    type that does not support direct auditing policies.
+                    <br><em>Remedy:</em> Audit policies can be associated with tables, views, database authorities, or
+                    roles. They cannot be associated with individual columns or sequences.
+                  </li>
+                  <li>
+                    <strong>SQL20408N ("The action failed because of a column mask or row permission
+                      definition")</strong>
+                    <br><em>Root Cause:</em> A user attempted to insert or update a row with values that violate an
+                    active row permission rule.
+                    <br><em>Remedy:</em> Ensure the application logic validates that user inputs comply with database
+                    access control rules.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t23-summary">
+              <h3 class="subsection-title">5. Topic 23 Summary Cheat-Sheet Table</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Security Subsystem</th>
+                      <th>Primary Administrative Purpose</th>
+                      <th>Core Performance Parameter</th>
+                      <th>Key Administrative Command Tool</th>
+                      <th>Typical DBA Troubleshooting Vector</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>db2audit Utility</strong></td>
+                      <td>Chronological forensic auditing of database access, structure changes, and security events.
+                      </td>
+                      <td>Category scope selections (avoid global <code>EXECUTE</code>).</td>
+                      <td><code>db2audit configure</code> / <code>db2audit extract</code></td>
+                      <td>Disk space exhaustion from rapid audit log growth.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Row Permissions</strong></td>
+                      <td>Fine-grained row-level access control enforced transparently at the engine level.</td>
+                      <td>Optimization of subqueries inside the <code>FOR ROWS WHERE</code> clause.</td>
+                      <td><code>CREATE PERMISSION</code> and <code>ALTER TABLE ACTIVATE ROW ACCESS</code></td>
+                      <td>Application logic errors when computing mathematical data aggregations.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Column Masks</strong></td>
+                      <td>Granular column-level data masking for sensitive fields.</td>
+                      <td>Evaluation of conditions within the <code>RETURN CASE</code> block.</td>
+                      <td><code>CREATE MASK</code> and <code>ALTER TABLE ACTIVATE COLUMN ACCESS</code></td>
+                      <td>SQLSTATE violations when applications attempt to update masked values. (SQL20408N)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="footer">
+          <p style="margin-top: 10px">
+            <strong>Created By:</strong> Abdelghany
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Shared JavaScript for dark mode and features -->
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

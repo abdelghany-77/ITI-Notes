@@ -1,19 +1,24 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JavaScript Complete Study Guide</title>
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="../assets/css/main.css" />
 </head>
+
 <body>
   <!-- Reading Progress Indicator -->
   <div class="reading-progress" id="reading-progress"></div>
   <div class="layout-container">
     <!-- TOC Toggle Button -->
-    <button class="toc-toggle" onclick="toggleTOC()"><i class="fas fa-bars"></i></button>
+    <button class="toc-toggle" aria-expanded="false" aria-label="Toggle Table of Contents"><i
+        class="fas fa-bars"></i></button>
     <!-- TOC Backdrop -->
     <div class="toc-backdrop" onclick="closeTOC()"></div>
     <!-- Sidebar Navigation -->
@@ -24,7 +29,8 @@
       <div class="toc-list">
         <ul>
           <li>
-            <a href="#introduction" onclick="setActive(this)"><i class="fas fa-star"></i> Day 1: Introduction & Basics</a>
+            <a href="#introduction" onclick="setActive(this)"><i class="fas fa-star"></i> Day 1: Introduction &
+              Basics</a>
           </li>
           <li>
             <a href="#js-intro" onclick="setActive(this)">What is JavaScript?</a>
@@ -72,7 +78,8 @@
             <a href="#ajax" onclick="setActive(this)"><i class="fas fa-globe"></i> AJAX & XMLHttpRequest</a>
           </li>
           <li>
-            <a href="#error-handling" onclick="setActive(this)"><i class="fas fa-exclamation-circle"></i> Error Handling</a>
+            <a href="#error-handling" onclick="setActive(this)"><i class="fas fa-exclamation-circle"></i> Error
+              Handling</a>
           </li>
           <li>
             <a href="#dom" onclick="setActive(this)"><i class="fas fa-clipboard"></i> Document Object Model</a>
@@ -84,11 +91,12 @@
     </nav>
     <main class="main-content">
       <div class="container">
-        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Main Page</a><div class="header">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+        <div class="header">
           <h1><i class="fas fa-book"></i> JavaScript Complete Study Guide</h1>
           <p>From Fundamentals to Advanced Web Development</p>
         </div>
-        <a href="../index.html" class="back-button"> ? Back to Main Page </a>
+        <a href="../index.html" class="back-button"> ? </a>
         <div class="content">
           <section id="introduction" class="section">
             <div class="day-title">
@@ -657,11 +665,13 @@
                   <span class="comment">// Local scope</span>
                   <span class="variable">console</span><span class="operator">.</span><span
                     class="method">log</span><span class="bracket">(</span><span class="variable">globalVar</span><span
-                    class="bracket">)</span><span class="punctuation">;</span> <span class="comment">// <i class="fas fa-check"></i>
+                    class="bracket">)</span><span class="punctuation">;</span> <span class="comment">// <i
+                      class="fas fa-check"></i>
                     Accessible</span>
                   <span class="variable">console</span><span class="operator">.</span><span
                     class="method">log</span><span class="bracket">(</span><span class="variable">localVar</span><span
-                    class="bracket">)</span><span class="punctuation">;</span> <span class="comment">// <i class="fas fa-check"></i>
+                    class="bracket">)</span><span class="punctuation">;</span> <span class="comment">// <i
+                      class="fas fa-check"></i>
                     Accessible</span>
                   <span class="comment">// Declaring without var makes it global (avoid this!)</span>
                   <span class="variable">implicitGlobal</span> <span class="operator">=</span> <span class="string">"I'm
@@ -672,13 +682,15 @@
                     class="punctuation">;</span>
                   <span class="variable">console</span><span class="operator">.</span><span
                     class="method">log</span><span class="bracket">(</span><span class="variable">globalVar</span><span
-                    class="bracket">)</span><span class="punctuation">;</span> <span class="comment">// <i class="fas fa-check"></i>
+                    class="bracket">)</span><span class="punctuation">;</span> <span class="comment">// <i
+                      class="fas fa-check"></i>
                     Accessible</span>
                   <span class="comment">// console.log(localVar); // <i class="fas fa-times"></i> ReferenceError</span>
                   <span class="variable">console</span><span class="operator">.</span><span
                     class="method">log</span><span class="bracket">(</span><span
                     class="variable">implicitGlobal</span><span class="bracket">)</span><span
-                    class="punctuation">;</span> <span class="comment">// <i class="fas fa-check"></i> Accessible (bad practice!)</span>
+                    class="punctuation">;</span> <span class="comment">// <i class="fas fa-check"></i> Accessible (bad
+                    practice!)</span>
                   <span class="comment">// Hoisting example</span>
                   <span class="variable">console</span><span class="operator">.</span><span
                     class="method">log</span><span class="bracket">(</span><span class="variable">hoistedVar</span><span
@@ -734,12 +746,15 @@
                     class="method">log</span><span class="bracket">(</span><span
                     class="variable">varVariable</span><span class="bracket">)</span><span class="punctuation">;</span>
                   <span class="comment">// <i class="fas fa-check"></i> "I'm function scoped"</span>
-                  <span class="comment">// console.log(letVariable); // <i class="fas fa-times"></i> ReferenceError</span>
-                  <span class="comment">// console.log(constVariable); // <i class="fas fa-times"></i> ReferenceError</span>
+                  <span class="comment">// console.log(letVariable); // <i class="fas fa-times"></i>
+                    ReferenceError</span>
+                  <span class="comment">// console.log(constVariable); // <i class="fas fa-times"></i>
+                    ReferenceError</span>
                   <span class="comment">// const rules</span>
                   <span class="keyword">const</span> <span class="variable">PI</span> <span class="operator">=</span>
                   <span class="number">3.14159</span><span class="punctuation">;</span>
-                  <span class="comment">// PI = 3.14; // <i class="fas fa-times"></i> TypeError: Assignment to constant variable</span>
+                  <span class="comment">// PI = 3.14; // <i class="fas fa-times"></i> TypeError: Assignment to constant
+                    variable</span>
                   <span class="comment">// const with objects (content can change)</span>
                   <span class="keyword">const</span> <span class="variable">person</span> <span
                     class="operator">=</span> <span class="bracket">{</span> <span class="property">name</span><span
@@ -752,13 +767,15 @@
                   <span class="variable">person</span><span class="operator">.</span><span class="property">city</span>
                   <span class="operator">=</span> <span class="string">"Boston"</span><span class="punctuation">;</span>
                   <span class="comment">// <i class="fas fa-check"></i> Allowed (adding properties)</span>
-                  <span class="comment">// person = {}; // <i class="fas fa-times"></i> TypeError (reassigning variable)</span>
+                  <span class="comment">// person = {}; // <i class="fas fa-times"></i> TypeError (reassigning
+                    variable)</span>
                   <span class="comment">// Temporal Dead Zone</span>
                   <span class="variable">console</span><span class="operator">.</span><span
                     class="method">log</span><span class="bracket">(</span><span class="keyword">typeof</span> <span
                     class="variable">notDeclaredYet</span><span class="bracket">)</span><span
                     class="punctuation">;</span> <span class="comment">// undefined</span>
-                  <span class="comment">// console.log(letVar); // <i class="fas fa-times"></i> ReferenceError (temporal dead zone)</span>
+                  <span class="comment">// console.log(letVar); // <i class="fas fa-times"></i> ReferenceError (temporal
+                    dead zone)</span>
                   <span class="keyword">let</span> <span class="variable">letVar</span> <span class="operator">=</span>
                   <span class="string">"now I exist"</span><span class="punctuation">;</span>
                   <span class="comment">// Loop behavior difference</span>
@@ -813,7 +830,8 @@
                   <span class="keyword">function</span> <span class="function">strictExample</span><span
                     class="bracket">()</span> <span class="bracket">{</span>
                   <span class="string">"use strict"</span><span class="punctuation">;</span>
-                  <span class="comment">// myUndeclaredVar = "error"; // <i class="fas fa-times"></i> ReferenceError</span>
+                  <span class="comment">// myUndeclaredVar = "error"; // <i class="fas fa-times"></i>
+                    ReferenceError</span>
                   <span class="keyword">var</span> <span class="variable">myDeclaredVar</span> <span
                     class="operator">=</span> <span class="string">"ok"</span><span class="punctuation">;</span> <span
                     class="comment">// <i class="fas fa-check"></i> OK</span>
@@ -821,13 +839,16 @@
                   <span class="comment">// 2. Deleting variables (not allowed)</span>
                   <span class="keyword">var</span> <span class="variable">testVar</span> <span class="operator">=</span>
                   <span class="string">"test"</span><span class="punctuation">;</span>
-                  <span class="comment">// delete testVar; // <i class="fas fa-times"></i> SyntaxError in strict mode</span>
+                  <span class="comment">// delete testVar; // <i class="fas fa-times"></i> SyntaxError in strict
+                    mode</span>
                   <span class="comment">// 3. Duplicate parameter names</span>
-                  <span class="comment">// function duplicateParams(a, a) { // <i class="fas fa-times"></i> SyntaxError</span>
+                  <span class="comment">// function duplicateParams(a, a) { // <i class="fas fa-times"></i>
+                    SyntaxError</span>
                   <span class="comment">// return a;</span>
                   <span class="comment">// }</span>
                   <span class="comment">// 4. Octal literals (not allowed)</span>
-                  <span class="comment">// var octalNumber = 010; // <i class="fas fa-times"></i> SyntaxError in strict mode</span>
+                  <span class="comment">// var octalNumber = 010; // <i class="fas fa-times"></i> SyntaxError in strict
+                    mode</span>
                   <span class="comment">// 5. Writing to read-only properties</span>
                   <span class="keyword">var</span> <span class="variable">readOnlyObj</span> <span
                     class="operator">=</span> <span class="bracket">{}</span><span class="punctuation">;</span>
@@ -840,7 +861,8 @@
                   <span class="variable">writable</span><span class="operator">:</span> <span
                     class="keyword">false</span>
                   <span class="bracket">}</span><span class="bracket">)</span><span class="punctuation">;</span>
-                  <span class="comment">// readOnlyObj.prop = 77; // <i class="fas fa-times"></i> TypeError in strict mode</span>
+                  <span class="comment">// readOnlyObj.prop = 77; // <i class="fas fa-times"></i> TypeError in strict
+                    mode</span>
                   <span class="comment">// Benefits of strict mode</span>
                   <span class="keyword">function</span> <span class="function">strictBenefits</span><span
                     class="bracket">()</span> <span class="bracket">{</span>
@@ -1232,9 +1254,10 @@
                   class="string">"default"</span><span class="bracket">)</span><span class="punctuation">;</span> <span
                   class="comment">// "default" (0 is falsy)</span>
                 <span class="variable">console</span><span class="operator">.</span><span class="method">log</span><span
-                  class="bracket">(</span><span class="number">0</span> <span class="operator"><i class="fas fa-star"></i></span> <span
-                  class="string">"default"</span><span class="bracket">)</span><span class="punctuation">;</span> <span
-                  class="comment">// 0 (0 is not null/undefined)</span>
+                  class="bracket">(</span><span class="number">0</span> <span class="operator"><i
+                    class="fas fa-star"></i></span> <span class="string">"default"</span><span
+                  class="bracket">)</span><span class="punctuation">;</span> <span class="comment">// 0 (0 is not
+                  null/undefined)</span>
               </div>
               <button class="demo-button" onclick="demonstrateLogical()">
                 Test Logical
@@ -1735,7 +1758,8 @@
                       <span class="bracket">}</span>
                       <span class="variable">console</span><span class="operator">.</span><span
                         class="method">log</span><span class="bracket">(</span><span class="string">"Blast off!
-                        <i class="fas fa-rocket"></i>"</span><span class="bracket">)</span><span class="punctuation">;</span>
+                        <i class="fas fa-rocket"></i>"</span><span class="bracket">)</span><span
+                        class="punctuation">;</span>
                       <span class="comment">// for...in loop (object properties)</span>
                       <span class="keyword">let</span> <span class="variable">student</span> <span
                         class="operator">=</span> <span class="bracket">{</span><span class="variable">name</span><span
@@ -1846,7 +1870,7 @@
                       <span class="keyword">do</span> <span class="bracket">{</span>
                       <span class="variable">console</span><span class="operator">.</span><span
                         class="method">log</span><span class="bracket">(</span><span class="string">
-umber:
+                        umber:
                       </span><span class="operator">${</span><span class="variable">num</span><span
                         class="operator">}</span><span class="string">`</span><span class="bracket">)</span><span
                         class="punctuation">;</span>
@@ -3561,7 +3585,8 @@ umber:
                   <div class="description"> .replace(/[^\w\s.-]/g, '') // Remove special characters except . and -</div>
                   <div class="description"> .trim(); // Remove leading/trailing spaces</div>
                   <div class="description">}</div>
-                  <div class="description">let messyText = " Hello!!! World<i class="fas fa-star"></i> How are you<i class="fas fa-star"></i> ";</div>
+                  <div class="description">let messyText = " Hello!!! World<i class="fas fa-star"></i> How are you<i
+                      class="fas fa-star"></i> ";</div>
                   <div class="description">console.log("Cleaned:", cleanText(messyText)); // "Hello World How are you"
                   </div>
                   <div class="description"></div>
@@ -4552,7 +4577,7 @@ umber:
               <div class="description"> console.log("Validation failed:", error.message);</div>
               <div class="description"> } else if (error instanceof NetworkError) {</div>
               <div class="description"> console.log(
-etwork error (${error.statusCode}):`, error.message);</div>
+                etwork error (${error.statusCode}):`, error.message);</div>
               <div class="description"> } else {</div>
               <div class="description"> console.log("Unknown error:", error.message);</div>
               <div class="description"> }</div>
@@ -5478,7 +5503,7 @@ etwork error (${error.statusCode}):`, error.message);</div>
                   <div class="description"> return element;</div>
                   <div class="description"> } else {</div>
                   <div class="description"> console.warn(
-o element found with selector: ${selector}`);</div>
+                    o element found with selector: ${selector}`);</div>
                   <div class="description"> return null;</div>
                   <div class="description"> }</div>
                   <div class="description">}</div>
@@ -6400,7 +6425,5 @@ o element found with selector: ${selector}`);</div>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>
+
 </html>
-
-
-

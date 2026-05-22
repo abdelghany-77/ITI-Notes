@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IBM DB2 Database Study Notes - Group E (Topics 32-36)</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    /* Custom overrides for advantages and disadvantages boxes to ensure perfect rendering */
+    .advantages-box {
+      background: var(--tip-bg, #e8f5e9);
+      border-left: 4px solid var(--success-color, #27ae60);
+      padding: 1.25rem 1.5rem;
+      margin: var(--spacing-md, 1.25rem) 0;
+      border-radius: var(--radius-md, 0.625rem);
+      box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.08));
+    }
+
+    .advantages-box h4 {
+      color: var(--success-color, #27ae60);
+      margin-bottom: var(--spacing-sm, 0.625rem);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm, 0.625rem);
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .advantages-box p,
+    .advantages-box li {
+      color: var(--text-secondary, #555555);
+      margin: 0;
+    }
+
+    .advantages-box ul {
+      margin-top: 0.5rem;
+      margin-bottom: 0;
+      padding-left: 1.25rem;
+    }
+
+    .disadvantages-box {
+      background: var(--important-bg, #fce4ec);
+      border-left: 4px solid var(--error-color, #e74c3c);
+      padding: 1.25rem 1.5rem;
+      margin: var(--spacing-md, 1.25rem) 0;
+      border-radius: var(--radius-md, 0.625rem);
+      box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.08));
+    }
+
+    .disadvantages-box h4 {
+      color: var(--error-color, #e74c3c);
+      margin-bottom: var(--spacing-sm, 0.625rem);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm, 0.625rem);
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .disadvantages-box p,
+    .disadvantages-box li {
+      color: var(--text-secondary, #555555);
+      margin: 0;
+    }
+
+    .disadvantages-box ul {
+      margin-top: 0.5rem;
+      margin-bottom: 0;
+      padding-left: 1.25rem;
+    }
+
+    .font-code pre,
+    .font-code code {
+      font-family: var(--font-code, monospace) !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sidebar Navigation -->
+  <button class="sidebar-toggle" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="sidebar-overlay"></div>
+
+  <div class="layout-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-book"></i> Course Navigation</h3>
+        <p>IBM DB2 Administration</p>
+        <small>Group E: Topics 32-36</small>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li>
+            <a href="#group-e-overview"><i class="fas fa-home"></i> Group E Overview</a>
+          </li>
+          <li>
+            <a href="#topic-32"><i class="fas fa-file-export"></i> Topic 32: Data Movement</a>
+            <ul>
+              <li><a href="#export-import-arch">&nbsp;&nbsp;Concept & Architecture</a></li>
+              <li><a href="#export-import-syntax">&nbsp;&nbsp;Syntax & CLP Commands</a></li>
+              <li><a href="#export-import-lab">&nbsp;&nbsp;Practical Lab Study</a></li>
+              <li><a href="#export-import-trouble">&nbsp;&nbsp;Best Practices & Debug</a></li>
+              <li><a href="#export-import-summary">&nbsp;&nbsp;Summary Table</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic-33"><i class="fas fa-bolt"></i> Topic 33: High-Speed LOAD</a>
+            <ul>
+              <li><a href="#load-arch">&nbsp;&nbsp;Concept & Architecture</a></li>
+              <li><a href="#load-syntax">&nbsp;&nbsp;Syntax & CLP Commands</a></li>
+              <li><a href="#load-lab">&nbsp;&nbsp;Practical Ingestion Lab</a></li>
+              <li><a href="#load-trouble">&nbsp;&nbsp;Troubleshooting Load</a></li>
+              <li><a href="#load-summary">&nbsp;&nbsp;Summary Comparison</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic-34"><i class="fas fa-graduation-cap"></i> Topic 34: DB2 Fundamentals</a>
+            <ul>
+              <li><a href="#exam-overview">&nbsp;&nbsp;Exam Domains Overview</a></li>
+              <li><a href="#exam-syllabus">&nbsp;&nbsp;Key Technical Review</a></li>
+              <li><a href="#exam-drill">&nbsp;&nbsp;High-Fidelity Practice</a></li>
+              <li><a href="#exam-prep">&nbsp;&nbsp;DBA Preparation Strategy</a></li>
+              <li><a href="#exam-summary">&nbsp;&nbsp;Isolation Level Matrix</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic-35"><i class="fas fa-network-wired"></i> Topic 35: HADR Architecture</a>
+            <ul>
+              <li><a href="#hadr-arch">&nbsp;&nbsp;HADR Log Shipping Engine</a></li>
+              <li><a href="#hadr-modes">&nbsp;&nbsp;Replication Sync Modes</a></li>
+              <li><a href="#hadr-params">&nbsp;&nbsp;Database Parameters</a></li>
+              <li><a href="#hadr-monitoring">&nbsp;&nbsp;Monitoring States</a></li>
+              <li><a href="#hadr-sync-summary">&nbsp;&nbsp;Sync Mode Comparison</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic-36"><i class="fas fa-shield-alt"></i> Topic 36: HADR Failover</a>
+            <ul>
+              <li><a href="#hadr-setup">&nbsp;&nbsp;HADR Build & Config</a></li>
+              <li><a href="#hadr-commands">&nbsp;&nbsp;Operational CLP Commands</a></li>
+              <li><a href="#hadr-failover-lab">&nbsp;&nbsp;Ingestion & DR Simulation</a></li>
+              <li><a href="#hadr-trouble">&nbsp;&nbsp;Split-Brain & Debugging</a></li>
+              <li><a href="#hadr-summary">&nbsp;&nbsp;Operational Summary Table</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="container">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+
+        <div class="header">
+          <h1><i class="fas fa-server"></i> IBM DB2 Administration</h1>
+          <p>Expert Guide to Data Ingestion Utilities (EXPORT, IMPORT, LOAD) &amp; High Availability Disaster Recovery
+            (HADR)</p>
+          <div class="subtitle">ITI Lab &amp; Theory Study Notes — Group E (Topics 32-36)</div>
+        </div>
+
+        <div class="content">
+          <!-- Section Overview -->
+          <section id="group-e-overview" class="section">
+            <h2 class="section-title">Group E Overview: High-Performance Data Utilities &amp; Disaster Recovery</h2>
+            <div class="definition-box">
+              <h4><i class="fas fa-info-circle"></i> Introduction to Group E Content</h4>
+              <p>
+                In high-transaction enterprise databases, managing data movement safely and maintaining absolute system
+                availability during disasters are the two primary pillars of a Senior DB2 DBA's role.
+                This guide provides deep academic and practical training on two major sub-fields of DB2 LUW (Linux,
+                UNIX, and Windows) administration:
+              </p>
+              <ul>
+                <li>
+                  <strong>Data Ingestion &amp; Movement (Topics 32 &amp; 33):</strong> Detailed architectural analysis
+                  of standard utilities (EXPORT, IMPORT) versus high-performance direct page write mechanics (LOAD),
+                  focusing on resource usage, logging bypasses, and recovery state management.
+                </li>
+                <li>
+                  <strong>IBM DB2 Fundamentals Certification (Topic 34):</strong> Exam preparation and detailed review
+                  of core DBA syllabus concepts including privileges, authorities (SYSADM, SECADM, DBADM), and isolation
+                  levels (UR, CS, RS, RR).
+                </li>
+                <li>
+                  <strong>High Availability Disaster Recovery (Topics 35 &amp; 36):</strong> Architectural foundations
+                  and execution parameters for DB2 HADR replication. Focuses on the four synchronization modes (SYNC,
+                  NEARSYNC, ASYNC, SUPERASYNC), planned role reversals, and simulated catastrophic takeover drills.
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- TOPIC 32 -->
+          <section id="topic-32" class="section">
+            <h2 class="section-title">Topic 32: Data Movement Utilities (EXPORT and IMPORT)</h2>
+
+            <!-- 1. Concept & Architecture -->
+            <div class="subsection" id="export-import-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture</h3>
+              <p>
+                Database administrators often need to move data between databases, migrate schemas, or interface with
+                external systems (such as BI tools, spreadsheets, or third-party databases). IBM DB2 provides the
+                standard <strong>EXPORT</strong> and <strong>IMPORT</strong> utilities as SQL-driven interfaces to
+                handle these requirements.
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-file-export"></i> The EXPORT Process Model</h5>
+                  <p>
+                    EXPORT reads data from database tables by compiling and executing a standard SQL <code>SELECT</code>
+                    statement. The retrieved data rows are formatted and written to an external operating system file.
+                  </p>
+                  <ul>
+                    <li><strong>Locking:</strong> EXPORT acquires an <strong>Intent Share (IS)</strong> lock on the
+                      source table, allowing concurrent users to perform SELECT, INSERT, UPDATE, and DELETE operations.
+                    </li>
+                    <li><strong>Consistency:</strong> The DBA can configure isolation levels (such as UR or CS) inside
+                      the export call to control dirty reads.</li>
+                  </ul>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-file-import"></i> The IMPORT Process Model</h5>
+                  <p>
+                    IMPORT parses data rows from an external operating system file and inserts them row-by-row into the
+                    target DB2 table using native SQL <code>INSERT</code> statements under the hood.
+                  </p>
+                  <ul>
+                    <li><strong>Logging:</strong> Every inserted row generates standard transactional log records,
+                      making IMPORT fully recoverable.</li>
+                    <li><strong>Enforcement:</strong> Since it uses standard INSERT statements, IMPORT evaluates and
+                      enforces all table constraints, unique indexes, and triggers automatically.</li>
+                    <li><strong>Locking:</strong> IMPORT acquires Row Exclusive (NX) locks, which can escalate to Table
+                      Exclusive (X) locks during bulk transfers.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-folder-open"></i> Supported File Formats</h4>
+                <ul>
+                  <li>
+                    <strong>DEL (Delimited ASCII):</strong> A standard text format where columns are separated by
+                    delimiters (e.g., commas or tabs) and character strings are optionally wrapped in double quotes.
+                    Extremely portable for exchanges with tools like Microsoft Excel or PostgreSQL.
+                  </li>
+                  <li>
+                    <strong>IXF (Integration Exchange Format):</strong> IBM's proprietary binary format. It stores not
+                    only the raw data but also the complete <strong>schema metadata</strong> (column names, exact data
+                    types, constraints, and indexes). It is the premier format for DB2-to-DB2 database migrations
+                    because it can reconstruct a dropped table automatically.
+                  </li>
+                  <li>
+                    <strong>ASC (Non-delimited ASCII):</strong> A fixed-width text format where fields are defined by
+                    precise start and end position offsets. Common when importing legacy mainframe or COBOL-generated
+                    flat files.
+                  </li>
+                  <li>
+                    <strong>WSF (Worksheet Format):</strong> Legacy spreadsheet format (such as Lotus 1-2-3 or older
+                    Excel formats). Rarely used in modern environments but still supported.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 2. Syntax & CLP Commands -->
+            <div class="subsection" id="export-import-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                Both EXPORT and IMPORT are executed directly via the DB2 Command Line Processor (CLP). The syntax
+                supports a wide range of file modifiers to handle formatting variations.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 EXPORT CLP Syntax</div>
+                <pre><code>db2 "EXPORT TO &lt;filename&gt; OF &lt;format&gt; \
+     [LOBS TO &lt;lob_path&gt; LOBFILE &lt;lob_filename&gt;] \
+     [MODIFIED BY &lt;modifiers&gt;] \
+     SELECT &lt;columns&gt; FROM &lt;tables&gt; [WHERE &lt;conditions&gt;]"</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">DB2 IMPORT CLP Syntax</div>
+                <pre><code>db2 "IMPORT FROM &lt;filename&gt; OF &lt;format&gt; \
+     [COMMITCOUNT &lt;n&gt;] \
+     [MODIFIED BY &lt;modifiers&gt;] \
+     [INSERT | INSERT_UPDATE | REPLACE | CREATE | REPLACE_CREATE] \
+     INTO &lt;target_table&gt; [(&lt;columns&gt;)]"</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-sliders-h"></i> Core Modifiers &amp; Modes Explained</h4>
+                <ul>
+                  <li><strong>Import Modes:</strong>
+                    <ul>
+                      <li><code>INSERT</code>: Appends the imported rows to the existing target table data.</li>
+                      <li><code>INSERT_UPDATE</code>: Appends new rows and updates existing rows that have matching
+                        primary keys (requires a primary key on the target table).</li>
+                      <li><code>REPLACE</code>: Deletes all existing rows from the target table (clearing it completely)
+                        and then inserts the new rows.</li>
+                      <li><code>CREATE</code>: Creates a new table based on the metadata in the IXF file, then inserts
+                        the data (only works with <strong>IXF</strong> files).</li>
+                      <li><code>REPLACE_CREATE</code>: If the target table exists, acts like <code>REPLACE</code>. If it
+                        does not exist, creates the table using the IXF metadata and inserts the rows.</li>
+                    </ul>
+                  </li>
+                  <li><strong>Common File Modifiers:</strong>
+                    <ul>
+                      <li><code>coldel;</code>: Overrides the default column delimiter (e.g.,
+                        <code>modified by coldel|</code> uses a pipe symbol).
+                      </li>
+                      <li><code>chardel""</code>: Overrides the character string delimiter.</li>
+                      <li><code>identityignore</code>: Tells the engine to ignore values in the import file for an
+                        identity column, allowing DB2 to auto-generate sequence numbers.</li>
+                      <li><code>identityoverride</code>: Tells the engine to force insertion of the exact identity
+                        column values present in the import file.</li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 3. Practical Lab -->
+            <div class="subsection" id="export-import-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Retail Analytics Ingestion</h3>
+              <p>
+                <strong>Scenario:</strong> The DBA needs to migrate employee tables from a legacy branch database into
+                the central analytical database. We will export data as a Delimited ASCII (DEL) file and then import it
+                into the central system, overriding automatic identity sequences.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">Step 1: Create the Source Table &amp; Insert Seed Data</div>
+                <pre><code><span class="comment">-- Connect to source branch database</span>
+db2 "CONNECT TO BRANCHDB"
+
+<span class="comment">-- Create source employee table with an identity column</span>
+db2 "CREATE TABLE BranchEmployees ( \
+     EmpID INT GENERATED ALWAYS AS IDENTITY (START WITH 100 INCREMENT BY 1), \
+     EmpName VARCHAR(50) NOT NULL, \
+     HireDate DATE NOT NULL, \
+     Salary DECIMAL(10,2) NOT NULL \
+     )"
+
+<span class="comment">-- Insert test seed records</span>
+db2 "INSERT INTO BranchEmployees (EmpName, HireDate, Salary) VALUES ('Ahmed Ali', '2021-05-15', 7500.00)"
+db2 "INSERT INTO BranchEmployees (EmpName, HireDate, Salary) VALUES ('Sarah John', '2023-01-10', 9200.00)"
+db2 "INSERT INTO BranchEmployees (EmpName, HireDate, Salary) VALUES ('Mostafa Omar', '2024-03-22', 6800.00)"</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Step 2: Export Data to a Delimited Text File</div>
+                <pre><code><span class="comment">-- Export the data to a delimited file using a pipe delimiter</span>
+db2 "EXPORT TO '/dbdata/exports/emp_migration.del' OF DEL \
+     MODIFIED BY coldel| \
+     SELECT EmpID, EmpName, HireDate, Salary FROM BranchEmployees"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-check-circle"></i> Expected CLI Export Terminal Output</h4>
+                <pre>SQL3104N  The EXPORT utility is beginning to export data to file 
+"/dbdata/exports/emp_migration.del".
+
+SQL3105N  The EXPORT utility has finished exporting "3" rows.
+
+Number of rows exported: 3</pre>
+              </div>
+
+              <p>If we inspect the exported file using OS tools (e.g.,
+                <code>cat /dbdata/exports/emp_migration.del</code>), we see:
+              </p>
+              <div class="code-example">
+                <div class="code-language">Raw Exported DEL File Contents</div>
+                <pre><code>100|"Ahmed Ali"|"2021-05-15"|7500.00
+101|"Sarah John"|"2023-01-10"|9200.00
+102|"Mostafa Omar"|"2024-03-22"|6800.00</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Step 3: Connect to Central DB, Create Target Table, &amp; Execute Import
+                </div>
+                <pre><code><span class="comment">-- Connect to the central database</span>
+db2 "CONNECT TO CENTRALDB"
+
+<span class="comment">-- Create a matching target warehouse table</span>
+db2 "CREATE TABLE WarehouseEmployees ( \
+     EmpID INT GENERATED ALWAYS AS IDENTITY (START WITH 500 INCREMENT BY 1), \
+     EmpName VARCHAR(50) NOT NULL, \
+     HireDate DATE NOT NULL, \
+     Salary DECIMAL(10,2) NOT NULL \
+     )"
+
+<span class="comment">-- Execute the import, forcing the engine to retain the original branch IDs</span>
+db2 "IMPORT FROM '/dbdata/exports/emp_migration.del' OF DEL \
+     MODIFIED BY coldel| identityoverride \
+     INSERT INTO WarehouseEmployees"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-check-circle"></i> Expected CLI Import Terminal Output</h4>
+                <pre>SQL3109N  The IMPORT utility is beginning to import data from file 
+"/dbdata/exports/emp_migration.del".
+
+SQL3150C  The HASH JOIN or SORT engine was initialized successfully.
+SQL3110N  The IMPORT utility has finished processing.  "3" rows were read from 
+the input file.  "3" rows were inserted into the target table.
+
+Number of rows read         = 3
+Number of rows inserted     = 3
+Number of rows rejected     = 0
+Number of rows committed    = 3</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cogs"></i> Technical Walkthrough: Behind the Scenes</h4>
+                <ol>
+                  <li>
+                    <strong>Connection and Parser:</strong> The DBA fires the EXPORT command. The connection agent
+                    (<code>db2agent</code>) parses the SQL query and requests metadata details.
+                  </li>
+                  <li>
+                    <strong>Buffer and File Write:</strong> DB2 reads rows into Database Shared Memory (buffer pool).
+                    The export engine writes these rows to the local filesystem (<code>emp_migration.del</code>) using
+                    the specified delimiter (<code>|</code>).
+                  </li>
+                  <li>
+                    <strong>Target Lock Acquisition:</strong> During IMPORT, the <code>db2agent</code> issues individual
+                    <code>INSERT</code> statements. It acquires Intent Share (IS) locks on the tablespace and Row
+                    Exclusive (NX) locks on target rows.
+                  </li>
+                  <li>
+                    <strong>Identity Overriding:</strong> Because the <code>identityoverride</code> modifier is set, the
+                    DB2 engine disables internal sequence generators and directly writes the values (100, 101, 102) into
+                    the target identity column.
+                  </li>
+                  <li>
+                    <strong>Log Buffer Write:</strong> Each insert generates standard transactional recovery logs. A
+                    transaction commit is issued at the end, writing logs to disk.
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- 4. Best Practices & Troubleshooting -->
+            <div class="subsection" id="export-import-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Common Import Pitfall: Transaction Log Full</h4>
+                <p><strong>Diagnostic Code:</strong>
+                  <code>SQL0964C  The transaction log for the database is full.</code>
+                </p>
+                <p><strong>Root Cause:</strong> During large imports (hundreds of thousands of rows), the utility
+                  performs one long continuous transaction. If the total size of inserted records exceeds the available
+                  active transaction logs (defined by <code>LOGFILSIZ</code>, <code>LOGPRIMARY</code>, and
+                  <code>LOGSECOND</code> in the DB CFG), the database runs out of active log space and rollbacks the
+                  entire import.
+                </p>
+                <p><strong>Remedy:</strong> Always specify the <code>COMMITCOUNT</code> parameter when importing large
+                  datasets. This forces DB2 to commit transactions and release log space periodically:</p>
+                <pre>db2 "IMPORT FROM data.del OF DEL COMMITCOUNT 10000 INSERT INTO target_table"</pre>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Common Error: Character Code Page Mismatches</h4>
+                <p><strong>Diagnostic Code:</strong>
+                  <code>SQL0332N  Character conversion from the source code page "1252" to the target code page "1208" is not supported.</code>
+                </p>
+                <p><strong>Root Cause:</strong> The operating system console environment has a different code page
+                  setting than the target database (e.g., importing Windows-1252 characters into a UTF-8 Unicode
+                  database).</p>
+                <p><strong>Remedy:</strong> Prior to starting the import, force the DB2 application client environment
+                  to align with the target database's code page using the system environment variables:</p>
+                <pre><span class="comment"># On Windows (cmd/PowerShell):</span>
+set DB2CODEPAGE=1208
+
+<span class="comment"># On Linux/UNIX:</span>
+export DB2CODEPAGE=1208
+db2 terminate</pre>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-star"></i> DBA Best Practices for Data Movement</h4>
+                <ul>
+                  <li>
+                    <strong>Table Reconstruction:</strong> When moving database structures between different DB2
+                    environments, always prefer the <strong>IXF</strong> format. It contains the exact schema
+                    definition, eliminating manual DDL creations.
+                  </li>
+                  <li>
+                    <strong>Lock Escalation Management:</strong> Sizable imports can trigger lock escalation, locking
+                    out concurrent operations. Monitor this using <code>db2pd -db CENTRALDB -locks</code>. To minimize
+                    lock footprints, increase the database parameters <code>LOCKLIST</code> and <code>MAXLOCKS</code>.
+                  </li>
+                  <li>
+                    <strong>Delimiters:</strong> When exporting text columns that may contain commas or quotes (e.g.,
+                    comments, addresses), use a rare character as your column delimiter (e.g.,
+                    <code>modified by coldel;</code> or <code>coldel|</code>) to avoid parsing failures.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 5. Summary Cheat-Sheet Table -->
+            <div class="subsection" id="export-import-summary">
+              <h3 class="subsection-title">5. Topic 32 Summary Cheat-Sheet Table</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>File Format</th>
+                      <th>Type &amp; Encoding</th>
+                      <th>Includes Metadata?</th>
+                      <th>DB2-to-DB2 Portability</th>
+                      <th>Third-Party Portability</th>
+                      <th>Primary Administrative Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>IXF</strong></td>
+                      <td>Binary (IBM Proprietary)</td>
+                      <td><strong>Yes</strong> (Complete Schema &amp; Indexes)</td>
+                      <td>Excellent (Self-creating tables)</td>
+                      <td>Poor (Strictly IBM systems)</td>
+                      <td>Moving tables between DB2 instances; full schema migrations.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>DEL</strong></td>
+                      <td>Text (ASCII / Delimited)</td>
+                      <td>No (Requires pre-existing table)</td>
+                      <td>Good (Requires manual DDL setup)</td>
+                      <td>Excellent (Reads in Excel, Python, MySQL)</td>
+                      <td>Exchanging data with non-IBM systems, external reporting, and BI extraction.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>ASC</strong></td>
+                      <td>Text (ASCII / Fixed-width)</td>
+                      <td>No (Requires positional specs)</td>
+                      <td>Fair (Positional definitions mandatory)</td>
+                      <td>Good (Mainframe standard files)</td>
+                      <td>Ingesting legacy COBOL mainframe raw files and fixed-length telemetry data.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>WSF</strong></td>
+                      <td>Binary (Lotus/Spreadsheet)</td>
+                      <td>No</td>
+                      <td>Poor</td>
+                      <td>Poor (Modern systems use DEL/CSV)</td>
+                      <td>Interfacing with legacy business tools (rarely used today).</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOPIC 33 -->
+          <section id="topic-33" class="section">
+            <h2 class="section-title">Topic 33: High-Performance Data Ingestion (The LOAD Utility)</h2>
+
+            <!-- 1. Concept & Architecture -->
+            <div class="subsection" id="load-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture</h3>
+              <p>
+                When ingesting massive datasets (e.g., millions of transactional rows in a data warehouse), the standard
+                IMPORT utility is often too slow because of its row-by-row SQL processing, index updating, and
+                transaction logging overhead. DB2 provides the highly optimized <strong>LOAD</strong> utility to solve
+                this bottleneck.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-tachometer-alt"></i> The LOAD Ingestion Paradigm</h4>
+                <p>
+                  Instead of issuing individual SQL <code>INSERT</code> statements, the LOAD utility bypasses the entire
+                  database engine's query processor and SQL engine. It parses input data, formats it into binary
+                  database <strong>data pages</strong> in memory, and writes these pages <strong>directly onto physical
+                    disk tablespace containers</strong>.
+                </p>
+                <p>
+                  Because it bypasses the SQL layer, referential integrity check engines, triggers, and—most
+                  importantly—<strong>transaction logging</strong>, LOAD runs 10 to 50 times faster than IMPORT.
+                </p>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-list-ol"></i> The Four Operational Phases of LOAD</h5>
+                  <ol>
+                    <li>
+                      <strong>1. LOAD Phase:</strong> Reads input records, converts the data to internal DB2 storage
+                      format, and writes formatted pages directly to the database containers. Simultaneously, it
+                      extracts index keys and writes them to a dedicated sorting area in memory.
+                    </li>
+                    <li>
+                      <strong>2. BUILD Phase:</strong> Reads the sorted index keys from the sort buffer and rebuilds all
+                      indexes defined on the target table in a highly optimized linear sweep.
+                    </li>
+                    <li>
+                      <strong>3. DELETE Phase:</strong> If unique indexes or constraints are defined, LOAD scans for
+                      duplicate rows, deletes violating records from the table, and logs the deleted rows to a
+                      user-defined <strong>Exception Table</strong>.
+                    </li>
+                    <li>
+                      <strong>4. INDEXING Phase:</strong> The final evaluation phase where the system ensures all
+                      indexes are physically consistent and ready for queries.
+                    </li>
+                  </ol>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-shield-alt"></i> Logging Bypass &amp; Database Recoverability</h5>
+                  <p>
+                    Because LOAD bypasses transaction logging to achieve maximum performance, DB2 needs to protect the
+                    database against media failures. If a crash occurs and archive logging is enabled, a standard LOAD
+                    leaves the target tablespace in a <strong>Backup Pending</strong> state (non-accessible).
+                  </p>
+                  <p>
+                    DBAs manage this recovery requirement using two options:
+                  </p>
+                  <ul>
+                    <li><strong><code>COPY YES</code>:</strong> Writes a physical backup copy of the loaded data blocks
+                      to a designated location (e.g., a backup directory or Tivoli Storage Manager) during the load,
+                      keeping the tablespace fully accessible.</li>
+                    <li><strong><code>NONRECOVERABLE</code>:</strong> Avoids the Backup Pending state without generating
+                      a copy. However, if you later perform a roll-forward database recovery, the table is marked as
+                      unusable and must be dropped and recreated.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Syntax & CLP Commands -->
+            <div class="subsection" id="load-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                The LOAD command supports options for error routing, recoverability settings, and load lifecycle
+                management.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 LOAD CLP Command Syntax</div>
+                <pre><code>db2 "LOAD FROM &lt;filename&gt; OF &lt;format&gt; \
+     [METHOD P (&lt;col_offsets&gt;)] \
+     [MODIFIED BY &lt;modifiers&gt;] \
+     [INSERT | REPLACE | RESTART | TERMINATE] \
+     INTO &lt;target_table&gt; \
+     [FOR EXCEPTION &lt;exception_table&gt;] \
+     [COPY YES TO &lt;backup_directory&gt; | NONRECOVERABLE]"</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-tools"></i> Administrative Parameter Definitions</h4>
+                <ul>
+                  <li><strong><code>INSERT</code> / <code>REPLACE</code>:</strong> Standard operations to either append
+                    data or replace all existing data in the table.</li>
+                  <li><strong><code>RESTART</code>:</strong> If a load fails midway (e.g., due to a disk space
+                    exhaustion), fixing the resource and running <code>LOAD ... RESTART</code> automatically resumes
+                    processing from the last internal commit checkpoint.</li>
+                  <li><strong><code>TERMINATE</code>:</strong> Rolls back the failed load, cleans up all temporary
+                    files, and removes the tablespace from its locked state.</li>
+                  <li><strong><code>FOR EXCEPTION</code>:</strong> Specifies an existing database table where the
+                    utility will route any records that violate unique or primary key constraints.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 3. Practical Lab -->
+            <div class="subsection" id="load-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Retail Analytics Ingestion</h3>
+              <p>
+                <strong>Scenario:</strong> The DBA must load 1 million new transaction records into a data warehouse
+                table (<code>TransactionStore</code>). To maintain recoverability without placing the tablespace in
+                backup pending, the DBA configures the load with <code>COPY YES</code> and sets up an exception table to
+                capture duplicate records.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">Step 1: Set Up Tables &amp; Exception Capture</div>
+                <pre><code><span class="comment">-- Connect to Data Warehouse Database</span>
+db2 "CONNECT TO DWDB"
+
+<span class="comment">-- Create main transaction store table</span>
+db2 "CREATE TABLE TransactionStore ( \
+     TxID BIGINT NOT NULL PRIMARY KEY, \
+     StoreCode VARCHAR(10) NOT NULL, \
+     TxAmount DECIMAL(10,2) NOT NULL, \
+     TxTimestamp TIMESTAMP NOT NULL \
+     )"
+
+<span class="comment">-- Create an Exception Table matching the schema of TransactionStore,</span>
+<span class="comment">-- plus two specialized columns required by DB2 to log violations.</span>
+db2 "CREATE TABLE TransactionExceptions ( \
+     TxID BIGINT, \
+     StoreCode VARCHAR(10), \
+     TxAmount DECIMAL(10,2), \
+     TxTimestamp TIMESTAMP, \
+     TimestampCol TIMESTAMP, \
+     MsgCol CLOB(32K) \
+     )"</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Step 2: Execute the High-Speed Load Utility</div>
+                <pre><code><span class="comment">-- Execute bulk load using COPY YES to keep the tablespace active</span>
+db2 "LOAD FROM '/dbdata/raw/tx_may2026.del' OF DEL \
+     MODIFIED BY coldel, \
+     REPLACE INTO TransactionStore \
+     FOR EXCEPTION TransactionExceptions \
+     COPY YES TO '/dbdata/backups/load_copies'"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-check-circle"></i> Expected CLI Load Terminal Output</h4>
+                <pre>SQL3109N  The Action Utility is beginning to import data from file 
+"/dbdata/raw/tx_may2026.del".
+
+SQL3500W  The table "DB2INST1.TRANSACTIONSTORE" is in "Load Pending" state.
+SQL3519W  Begin Load Phase. Time: 05/22/2026 12:45:00.
+SQL3520W  Load Phase completed successfully.  Time: 05/22/2026 12:45:12.
+SQL3521W  Begin Build Phase. Time: 05/22/2026 12:45:12.
+SQL3522W  Build Phase completed successfully.  Time: 05/22/2026 12:45:14.
+SQL3523W  Begin Delete Phase. Time: 05/22/2026 12:45:14.
+SQL3524W  Delete Phase completed successfully.  Time: 05/22/2026 12:45:15.
+
+Number of rows read         = 1000000
+Number of rows skipped      = 0
+Number of rows loaded       = 999980
+Number of rows rejected     = 0
+Number of rows deleted      = 20
+Number of rows committed    = 1000000
+
+SQL3110N  The Action Utility has finished processing.</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-search"></i> Technical Walkthrough: Behind the Scenes</h4>
+                <ol>
+                  <li>
+                    <strong>Utility Heap Allocation:</strong> DB2 allocates memory from the utility heap (sized by
+                    <code>UTIL_HEAP_SZ</code>) to hold internal parsing and processing buffers.
+                  </li>
+                  <li>
+                    <strong>Thread Dispatching:</strong> The engine spawns parallel EDUs (Load Readers, Formatters,
+                    Writers) to maximize CPU core utilization.
+                  </li>
+                  <li>
+                    <strong>Direct Block Writing (LOAD Phase):</strong> Formatters build DB2 pages in memory. Writers
+                    write these pages directly to the tablespace containers. No SQL statements are compiled or executed.
+                  </li>
+                  <li>
+                    <strong>Index Rebuilding (BUILD Phase):</strong> All index keys are extracted and sorted in memory
+                    (using <code>SORTHEAP</code>), then written to the index tablespace block.
+                  </li>
+                  <li>
+                    <strong>Duplicate Removal (DELETE Phase):</strong> Unique key violations are located, deleted, and
+                    routed to the <code>TransactionExceptions</code> table.
+                  </li>
+                  <li>
+                    <strong>Backup Generation (COPY YES):</strong> Simultaneously, physical page blocks are copied to
+                    <code>/dbdata/backups/load_copies</code>, keeping the tablespace fully accessible to applications.
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- 4. Best Practices & Troubleshooting -->
+            <div class="subsection" id="load-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Understanding and Clearing LOAD PENDING State</h4>
+                <p><strong>Diagnostic Warning:</strong>
+                  <code>SQL3500W  The table "DB2INST1.TRANSACTIONSTORE" is in "Load Pending" state.</code>
+                </p>
+                <p><strong>Root Cause:</strong> If a LOAD utility run is interrupted midway (due to a power failure,
+                  transaction rollback, disk exhaustion, or manual termination), the DB2 engine locks the target table.
+                  The table enters <strong>LOAD PENDING</strong> state, blocking all read and write queries to protect
+                  data integrity.</p>
+                <p><strong>Remedy:</strong> To clear this state, the DBA must perform one of two actions:</p>
+                <ol>
+                  <li>
+                    <strong>Option A: Abort and Rollback (Restore to initial state):</strong>
+                    <pre>db2 "LOAD TERMINATE INTO TransactionStore"</pre>
+                  </li>
+                  <li>
+                    <strong>Option B: Resume and Complete (Continue from checkpoint):</strong>
+                    <p>Fix the underlying issue (e.g., add disk space) and run:</p>
+                    <pre>db2 "LOAD RESTART FROM '/dbdata/raw/tx_may2026.del' OF DEL INTO TransactionStore"</pre>
+                  </li>
+                </ol>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Tablespace Access Blocked (Backup Pending State)</h4>
+                <p><strong>Diagnostic Code:</strong>
+                  <code>SQL0290N  Table space access is not allowed. SQLSTATE=55039</code>
+                </p>
+                <p><strong>Root Cause:</strong> The database is configured for archival logging, and a LOAD utility was
+                  run using default settings (<code>COPY NO</code>) without specifying the <code>NONRECOVERABLE</code>
+                  flag. To prevent potential restore inconsistencies, DB2 locks the tablespace, putting it into a
+                  <strong>Backup Pending</strong> state.
+                </p>
+                <p><strong>Remedy:</strong> Take a backup of the tablespace to make it accessible again:</p>
+                <pre>db2 "BACKUP DATABASE DWDB TABLESPACE (USERSPACE1) ONLINE TO '/dbdata/backups'"</pre>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-sliders-h"></i> Performance Tuning Parameters for LOAD</h4>
+                <ul>
+                  <li>
+                    <strong>Sizing the Utility Heap (<code>UTIL_HEAP_SZ</code>):</strong> Sizing this parameter
+                    appropriately is critical for bulk loads. Set this database configuration parameter to at least
+                    50,000 pages for large loads:
+                    <pre>db2 "UPDATE DATABASE CONFIGURATION FOR DWDB USING UTIL_HEAP_SZ 50000 AUTOMATIC"</pre>
+                  </li>
+                  <li>
+                    <strong>Parallelism:</strong> Sizing CPU and Disk parallelism helps optimize throughput:
+                    <ul>
+                      <li><code>CPU_PARALLELISM</code>: Number of processes/threads spawned to parse data. Defaults to
+                        the number of physical cores.</li>
+                      <li><code>DISK_PARALLELISM</code>: Sized according to the number of storage containers per
+                        tablespace.</li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 5. Summary Cheat-Sheet Table -->
+            <div class="subsection" id="load-summary">
+              <h3 class="subsection-title">5. Topic 33 Summary Cheat-Sheet: IMPORT vs. LOAD</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Administrative Aspect</th>
+                      <th>The IMPORT Utility</th>
+                      <th>The LOAD Utility</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Execution Layer</strong></td>
+                      <td>SQL engine (runs individual <code>INSERT</code> statements)</td>
+                      <td>Direct storage engine block writer (writes data pages directly)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Ingestion Velocity</strong></td>
+                      <td>Moderate (1x baseline)</td>
+                      <td>High-Speed (10x to 50x faster)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Logging Behavior</strong></td>
+                      <td>Standard transaction logging for each row</td>
+                      <td>Bypasses logging (writes direct physical database pages)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Constraint &amp; Trigger Support</strong></td>
+                      <td>Evaluated and enforced immediately</td>
+                      <td>Triggers ignored; constraints checked in check/delete phases</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Backup Pending Potential?</strong></td>
+                      <td>No</td>
+                      <td><strong>Yes</strong> (if run with <code>COPY NO</code> under archive logging)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Handling Duplicates</strong></td>
+                      <td>Fails individual rows during insert</td>
+                      <td>Routes duplicate rows to an <strong>Exception Table</strong></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Memory Requirements</strong></td>
+                      <td>Minimal (uses normal agent shared memory)</td>
+                      <td>Significant (demands sizing of <code>UTIL_HEAP_SZ</code>)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOPIC 34 -->
+          <section id="topic-34" class="section">
+            <h2 class="section-title">Topic 34: DB2 9 Fundamentals Exam Review (Exam 730)</h2>
+
+            <!-- 1. Exam Domains Overview -->
+            <div class="subsection" id="exam-overview">
+              <h3 class="subsection-title">1. Exam Domains Overview</h3>
+              <p>
+                The <strong>IBM Certified Database Associate - DB2 9 Fundamentals Exam (Exam 730)</strong> validates a
+                candidate's basic understanding of DB2 LUW database administration. Understanding these core concepts is
+                highly relevant for both certification preparation and daily database operations.
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-map-signs"></i> Syllabus Domain Breakdown</h5>
+                  <ul>
+                    <li><strong>Domain 1: Planning (18%):</strong> DB2 products, data structures, features, licensing
+                      models, and database creation.</li>
+                    <li><strong>Domain 2: Security (20%):</strong> Authentication, authorization, authorities (SYSADM,
+                      SECADM, etc.), database privileges, and security roles.</li>
+                    <li><strong>Domain 3: Database Objects (18%):</strong> Creating tables, indexes, views, schemas, and
+                      constraint configurations.</li>
+                    <li><strong>Domain 4: Working with Data (24%):</strong> Standard SQL commands, isolation levels,
+                      concurrency anomalies, and locking.</li>
+                    <li><strong>Domain 5: Tools &amp; Utilities (20%):</strong> Operating the CLP, EXPORT, IMPORT, LOAD,
+                      RUNSTATS, and REORG utilities.</li>
+                  </ul>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-lock"></i> DB2 Security &amp; Authority Architecture</h5>
+                  <p>
+                    A key focus of DB2 security is the strict separation of database access roles:
+                  </p>
+                  <ul>
+                    <li><strong><code>SYSADM</code> (System Administrator):</strong> The highest instance-level
+                      authority. Can start/stop the instance, configure environments, and create databases, but has no
+                      default access to user table data in newer versions.</li>
+                    <li><strong><code>SECADM</code> (Security Administrator):</strong> The highest database-level
+                      security authority. Manages security policies, grants database privileges, and configures
+                      auditing.</li>
+                    <li><strong><code>DBADM</code> (Database Administrator):</strong> Manages database objects,
+                      configurations, and grants object privileges.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Key Technical Review -->
+            <div class="subsection" id="exam-syllabus">
+              <h3 class="subsection-title">2. Key Technical Review: Isolation Levels &amp; Concurrency</h3>
+              <p>
+                The exam heavily tests a candidate's understanding of **database isolation levels** and their ability to
+                prevent concurrency anomalies.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-compress-alt"></i> The Three Concurrency Anomalies</h4>
+                <ul>
+                  <li>
+                    <strong>Dirty Read:</strong> A transaction reads uncommitted data modifications made by another
+                    transaction. If the other transaction rolls back, the data read becomes invalid.
+                  </li>
+                  <li>
+                    <strong>Non-repeatable Read:</strong> A transaction reads a row, and a concurrent transaction
+                    updates or deletes that row. If the first transaction re-reads the row, it receives different
+                    values.
+                  </li>
+                  <li>
+                    <strong>Phantom Read:</strong> A transaction executes a query returning a set of rows matching a
+                    search criteria. A concurrent transaction inserts new matching rows. If the first transaction
+                    repeats the query, it receives a different set of rows.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-shield-alt"></i> DB2 Isolation Levels and Locking Behaviors</h4>
+                <ul>
+                  <li>
+                    <strong>Uncommitted Read (UR - "Dirty Read"):</strong> Acquires almost no locks during read
+                    operations. Offers maximum concurrency but allows dirty reads, non-repeatable reads, and phantoms.
+                  </li>
+                  <li>
+                    <strong>Cursor Stability (CS - "Default"):</strong> Acquires a lock on the row currently pointed to
+                    by the cursor. The lock is released as soon as the cursor moves to the next row. Prevents dirty
+                    reads.
+                  </li>
+                  <li>
+                    <strong>Read Stability (RS):</strong> Locks all rows returned by the query until the transaction
+                    completes. Concurrent transactions cannot modify or delete these rows, but they can insert new
+                    records that match the query criteria (allowing phantom reads).
+                  </li>
+                  <li>
+                    <strong>Repeatable Read (RR - "Serializable"):</strong> Locks the entire range of data queried,
+                    including any scanned pages. Prevents all concurrency anomalies (dirty reads, non-repeatable reads,
+                    and phantoms) but significantly limits database concurrency.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 3. High-Fidelity Practice Questions -->
+            <div class="subsection" id="exam-drill">
+              <h3 class="subsection-title">3. High-Fidelity Practice Questions (Certification Drill)</h3>
+
+              <!-- Q1 -->
+              <div class="note-box">
+                <h4>Q1: Which utility writes formatted pages directly to the tablespace containers, bypassing
+                  transaction logging?</h4>
+                <p><strong>Options:</strong></p>
+                <ul>
+                  <li>A) IMPORT</li>
+                  <li>B) EXPORT</li>
+                  <li>C) LOAD</li>
+                  <li>D) db2move</li>
+                </ul>
+                <p><strong>Correct Answer:</strong> <strong>C</strong></p>
+                <p><strong>Technical Rationale:</strong> The LOAD utility is designed to write formatted pages directly
+                  to the tablespace containers. It bypasses the SQL engine, constraint checks, triggers, and transaction
+                  logging, making it the highest-performance utility for bulk data ingestion.</p>
+              </div>
+
+              <!-- Q2 -->
+              <div class="note-box">
+                <h4>Q2: An application developer needs to run a query that guarantees zero dirty reads while maintaining
+                  maximum concurrency. Which isolation level should be selected?</h4>
+                <p><strong>Options:</strong></p>
+                <ul>
+                  <li>A) Repeatable Read (RR)</li>
+                  <li>B) Read Stability (RS)</li>
+                  <li>C) Cursor Stability (CS)</li>
+                  <li>D) Uncommitted Read (UR)</li>
+                </ul>
+                <p><strong>Correct Answer:</strong> <strong>C</strong></p>
+                <p><strong>Technical Rationale:</strong> Cursor Stability (CS) is the default isolation level. It
+                  prevents dirty reads by acquiring a lock on the current row and releasing it as soon as the cursor
+                  moves, ensuring a good balance of data integrity and concurrency.</p>
+              </div>
+
+              <!-- Q3 -->
+              <div class="note-box">
+                <h4>Q3: A DBA needs to transfer a table structure, along with its indexes and constraints, from a
+                  development environment to production. Which file format should be selected during export?</h4>
+                <p><strong>Options:</strong></p>
+                <ul>
+                  <li>A) DEL</li>
+                  <li>B) IXF</li>
+                  <li>C) ASC</li>
+                  <li>D) CSV</li>
+                </ul>
+                <p><strong>Correct Answer:</strong> <strong>B</strong></p>
+                <p><strong>Technical Rationale:</strong> IXF (Integration Exchange Format) is a binary format that
+                  stores both the table data and its schema metadata (columns, constraints, and indexes). It allows DB2
+                  to automatically reconstruct the table during an import.</p>
+              </div>
+
+              <!-- Q4 -->
+              <div class="note-box">
+                <h4>Q4: In DB2 security, which authority is required to configure database audit policies and grant
+                  security-related privileges?</h4>
+                <p><strong>Options:</strong></p>
+                <ul>
+                  <li>A) SYSADM</li>
+                  <li>B) DBADM</li>
+                  <li>C) SECADM</li>
+                  <li>D) SQLADM</li>
+                </ul>
+                <p><strong>Correct Answer:</strong> <strong>C</strong></p>
+                <p><strong>Technical Rationale:</strong> SECADM (Security Administrator) is the database-level authority
+                  responsible for managing security policies, roles, audit configurations, and granting security
+                  privileges. This role is strictly separated from data administration tasks.</p>
+              </div>
+
+              <!-- Q5 -->
+              <div class="note-box">
+                <h4>Q5: A table is updated by Transaction A, but not yet committed. Transaction B attempts to read this
+                  table. Under which isolation level can Transaction B read Transaction A's uncommitted modifications?
+                </h4>
+                <p><strong>Options:</strong></p>
+                <ul>
+                  <li>A) Uncommitted Read (UR)</li>
+                  <li>B) Cursor Stability (CS)</li>
+                  <li>C) Read Stability (RS)</li>
+                  <li>D) Repeatable Read (RR)</li>
+                </ul>
+                <p><strong>Correct Answer:</strong> <strong>A</strong></p>
+                <p><strong>Technical Rationale:</strong> Uncommitted Read (UR) allows read operations to proceed without
+                  acquiring row locks. This allows transactions to read uncommitted changes (dirty reads) made by other
+                  concurrent connections.</p>
+              </div>
+            </div>
+
+            <!-- 4. DBA Preparation Strategy -->
+            <div class="subsection" id="exam-prep">
+              <h3 class="subsection-title">4. DBA Preparation Strategy</h3>
+              <div class="advantages-box">
+                <h4><i class="fas fa-graduation-cap"></i> Tips for DB2 Fundamentals Exam Success</h4>
+                <ul>
+                  <li>
+                    <strong>Understand Parameter Scopes:</strong> Always distinguish between instance-level settings
+                    (stored in the Database Manager Configuration - <code>dbm cfg</code>) and database-level settings
+                    (stored in the Database Configuration - <code>db cfg</code>).
+                  </li>
+                  <li>
+                    <strong>Study CLI Utilities:</strong> Memorize the primary administrative command-line tools:
+                    <ul>
+                      <li><code>db2look</code>: Generates the DDL statements for database objects.</li>
+                      <li><code>db2move</code>: Automates moving multiple tables between databases.</li>
+                      <li><code>db2exfmt</code>: Formats and displays query execution plans.</li>
+                    </ul>
+                  </li>
+                  <li>
+                    <strong>Analyze Locking Behaviors:</strong> Understand how lock escalations occur when the
+                    database-managed lock list (<code>LOCKLIST</code>) becomes full, and how to configure
+                    <code>MAXLOCKS</code> to prevent table locks.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 5. Isolation Level Matrix -->
+            <div class="subsection" id="exam-summary">
+              <h3 class="subsection-title">5. Topic 34 Cheat-Sheet: Isolation Level Concurrency Matrix</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Isolation Level</th>
+                      <th>Allowed Anomalies</th>
+                      <th>Prevented Anomalies</th>
+                      <th>Read Locking Scope</th>
+                      <th>Write Locking Scope</th>
+                      <th>Database Concurrency Level</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Uncommitted Read (UR)</strong></td>
+                      <td>Dirty Read, Non-repeatable, Phantom</td>
+                      <td>None</td>
+                      <td>None (No locks acquired)</td>
+                      <td>Acquires Row Exclusive locks</td>
+                      <td>Maximum (Highest throughput)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Cursor Stability (CS)</strong></td>
+                      <td>Non-repeatable, Phantom</td>
+                      <td>Dirty Read</td>
+                      <td>Lock placed only on the current row</td>
+                      <td>Acquires Row Exclusive locks</td>
+                      <td>Good (Balanced - DB Default)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Read Stability (RS)</strong></td>
+                      <td>Phantom</td>
+                      <td>Dirty Read, Non-repeatable</td>
+                      <td>Locks all qualified rows until commit</td>
+                      <td>Acquires Row Exclusive locks</td>
+                      <td>Moderate (Locks active datasets)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Repeatable Read (RR)</strong></td>
+                      <td>None</td>
+                      <td>Dirty Read, Non-repeatable, Phantom</td>
+                      <td>Locks entire scanned key range until commit</td>
+                      <td>Acquires Row Exclusive locks</td>
+                      <td>Low (Restricts concurrent updates)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOPIC 35 -->
+          <section id="topic-35" class="section">
+            <h2 class="section-title">Topic 35: HADR Standby Synchronization Modes (SYNC/NEARSYNC/ASYNC/SUPERASYNC)</h2>
+
+            <!-- 1. Concept & Architecture -->
+            <div class="subsection" id="hadr-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture</h3>
+              <p>
+                IBM DB2 <strong>High Availability Disaster Recovery (HADR)</strong> is an enterprise-class database
+                replication feature designed to protect databases against data loss and minimize downtime. HADR
+                replicates transactions from a primary database to a secondary, standby database.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-exchange-alt"></i> The Log Shipping Engine</h4>
+                <p>
+                  Unlike trigger-based or SQL-replication models that re-run SQL statements, DB2 HADR replicates
+                  transactions at the physical storage layer using **transaction log shipping**.
+                </p>
+                <p>
+                  As transactions are committed on the Primary database, its log writer EDU (<code>db2loggw</code>)
+                  writes log records to disk. The HADR primary thread (<code>db2hadrp</code>) intercepts these log
+                  records and sends them over a secure TCP/IP connection to the Standby database.
+                </p>
+                <p>
+                  On the Standby, the HADR standby process (<code>db2hadrs</code>) receives the logs into memory and
+                  passes them to a log replay engine, which performs continuous recovery to keep the standby database in
+                  sync.
+                </p>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-sync-alt"></i> HADR State Transitions</h5>
+                  <ul>
+                    <li>
+                      <strong>Local Catch-up:</strong> Occurs when HADR starts. The Standby database reads and replays
+                      transaction logs stored on its local disk.
+                    </li>
+                    <li>
+                      <strong>Remote Catch-up:</strong> The Standby reads and replays logs shipped by the Primary
+                      database over the network.
+                    </li>
+                    <li>
+                      <strong>Peer State:</strong> The Primary and Standby databases are in sync. Active transaction
+                      logs are replicated in real-time. This is the normal operating state for HADR replication.
+                    </li>
+                  </ul>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-heartbeat"></i> Heartbeats and Link Monitoring</h5>
+                  <p>
+                    While in Peer state, both databases exchange regular network **heartbeats** to monitor connection
+                    health. If the standby fails to respond within the timeout defined by the <code>HADR_TIMEOUT</code>
+                    parameter, the primary marks the standby as disconnected to prevent blocking active database
+                    transactions.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. In-Depth Sync Modes -->
+            <div class="subsection" id="hadr-modes">
+              <h3 class="subsection-title">2. In-Depth HADR Standby Synchronization Modes</h3>
+              <p>
+                The choice of HADR synchronization mode determines when a transaction on the primary database returns a
+                success code to the client application. DB2 supports four sync modes:
+              </p>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-lock"></i> 1. SYNC (Synchronous Replication)</h4>
+                <p><strong>Mechanism:</strong> The primary writes transaction logs to its local disk and sends them to
+                  the standby. The standby receives the logs and writes them to its local disk. The primary transaction
+                  commits only AFTER receiving confirmation that the logs are secured on the standby's disk.</p>
+                <ul>
+                  <li><strong>Data Loss Risk (RPO):</strong> Zero (RPO = 0). Guaranteed consistent replica.</li>
+                  <li><strong>Transaction Latency:</strong> High (includes network round-trip and standby I/O time).
+                  </li>
+                </ul>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-shipping-fast"></i> 2. NEARSYNC (Near-Synchronous Replication)</h4>
+                <p><strong>Mechanism:</strong> The primary writes logs locally and sends them to the standby. The
+                  standby receives the logs into its memory log buffer (RAM) and sends an acknowledgment to the primary.
+                  The primary commits the transaction as soon as it receives this RAM acknowledgment, without waiting
+                  for the standby to write the logs to disk.</p>
+                <ul>
+                  <li><strong>Data Loss Risk (RPO):</strong> Extremely low (data loss only if both primary and standby
+                    lose power simultaneously).</li>
+                  <li><strong>Transaction Latency:</strong> Low (network transit time only; bypasses standby disk I/O
+                    latency).</li>
+                </ul>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-share-square"></i> 3. ASYNC (Asynchronous Replication)</h4>
+                <p><strong>Mechanism:</strong> The primary writes transaction logs to its local disk and sends them to
+                  the local TCP/IP socket buffer. The primary commits the transaction immediately, without waiting for
+                  the standby to receive or acknowledge the logs.</p>
+                <ul>
+                  <li><strong>Data Loss Risk (RPO):</strong> Moderate (potential data loss if the primary crashes before
+                    logs transit the network).</li>
+                  <li><strong>Transaction Latency:</strong> Very low (independent of standby performance). Ideal for
+                    replication across wide area networks (WANs).</li>
+                </ul>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-bolt"></i> 4. SUPERASYNC (Super-Asynchronous Replication)</h4>
+                <p><strong>Mechanism:</strong> The primary database writes logs locally and commits transactions
+                  immediately. The log shipping engine runs entirely in the background, decoupled from transaction
+                  processing. The databases never enter Peer state.</p>
+                <ul>
+                  <li><strong>Data Loss Risk (RPO):</strong> Highest (subject to network latency and replication lag).
+                  </li>
+                  <li><strong>Transaction Latency:</strong> Zero HADR overhead. Ideal for unreliable networks or
+                    long-distance disaster recovery environments.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 3. Database Configuration Parameters -->
+            <div class="subsection" id="hadr-params">
+              <h3 class="subsection-title">3. HADR Database Configuration Parameters</h3>
+              <p>
+                To enable HADR, you must configure archival logging (circular logging is not supported) and set the
+                following parameters in the Database Configuration (<code>db cfg</code>) file:
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">HADR DB CFG Configuration Script</div>
+                <pre><code><span class="comment">-- 1. Enable archival logging (required for HADR)</span>
+db2 "UPDATE DB CFG FOR FINEDB USING LOGARCHMETH1 DISK:/dbdata/archive_logs"
+
+<span class="comment">-- 2. Configure network hosts and connection details</span>
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_LOCAL_HOST 192.168.10.51"
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_LOCAL_SVC 50010"
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_REMOTE_HOST 192.168.10.52"
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_REMOTE_SVC 50010"
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_REMOTE_INST db2inst1"
+
+<span class="comment">-- 3. Select replication mode (SYNC, NEARSYNC, ASYNC, SUPERASYNC)</span>
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_SYNCMODE NEARSYNC"
+
+<span class="comment">-- 4. Configure peer window timeout (seconds)</span>
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_PEER_WINDOW 120"</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-window-maximize"></i> Sizing the Peer Window (HADR_PEER_WINDOW)</h4>
+                <p>
+                  The <code>HADR_PEER_WINDOW</code> parameter is a key setting for high availability. It defines a
+                  duration (in seconds) that the Primary database will remain in a simulated peer state if the Standby
+                  database becomes unreachable.
+                </p>
+                <p>
+                  If the Primary crashes within this window, the Standby can perform a zero-data-loss failover safely.
+                  If this window is set to 0, any connection loss causes the primary to immediately exit peer state,
+                  increasing the risk of data loss on failover.
+                </p>
+              </div>
+            </div>
+
+            <!-- 4. Monitoring States -->
+            <div class="subsection" id="hadr-monitoring">
+              <h3 class="subsection-title">4. Monitoring HADR States</h3>
+              <p>
+                To inspect the health and performance of HADR replication, DBAs use the command-line utility
+                <code>db2pd</code>:
+              </p>
+              <div class="code-example">
+                <div class="code-language">Inspect HADR Health</div>
+                <pre><code>db2pd -db FINEDB -hadr</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-chart-line"></i> Analyzing db2pd Output Fields</h4>
+                <ul>
+                  <li><strong><code>HADR_ROLE = PRIMARY</code>:</strong> Indicates this database is the active primary
+                    instance.</li>
+                  <li><strong><code>HADR_STATE = PEER</code>:</strong> Confirms that the databases are in Peer state and
+                    logs are replicating in real-time.</li>
+                  <li><strong><code>HADR_CONNECT_STATUS = CONNECTED</code>:</strong> Confirms that the replication
+                    partner is online and communicating.</li>
+                  <li><strong><code>LOG_GAP_IN_BYTES = 0</code>:</strong> Shows the replication lag between the primary
+                    and standby databases. A value of 0 indicates the databases are in sync.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 5. Sync Mode Summary Table -->
+            <div class="subsection" id="hadr-sync-summary">
+              <h3 class="subsection-title">5. Topic 35 Summary Cheat-Sheet Table</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Sync Mode</th>
+                      <th>Standby Acknowledgment Point</th>
+                      <th>Data Loss Risk (RPO)</th>
+                      <th>Primary Latency Cost</th>
+                      <th>Ideal Network Environment</th>
+                      <th>Allowed Peer State?</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>SYNC</strong></td>
+                      <td>After transaction log is written to standby disk</td>
+                      <td><strong>Zero</strong> (RPO = 0)</td>
+                      <td>High (Network transit + standby disk write)</td>
+                      <td>Local Area Network (LAN) / Low Latency</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td><strong>NEARSYNC</strong></td>
+                      <td>After log is received in standby memory (RAM)</td>
+                      <td>Extremely Low</td>
+                      <td>Low (Network round-trip only)</td>
+                      <td>LAN / High-Speed Metro Networks</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td><strong>ASYNC</strong></td>
+                      <td>Once logs reach primary TCP socket buffer</td>
+                      <td>Moderate</td>
+                      <td>Very Low (Independent of standby load)</td>
+                      <td>Wide Area Network (WAN) / Shared Lines</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td><strong>SUPERASYNC</strong></td>
+                      <td>No acknowledgment (background shipping)</td>
+                      <td>Highest</td>
+                      <td><strong>Zero</strong> (Decoupled background engine)</td>
+                      <td>Global WAN / Inter-continental / Cloud</td>
+                      <td>No (Always Remote Catch-up)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOPIC 36 -->
+          <section id="topic-36" class="section">
+            <h2 class="section-title">Topic 36: HADR Implementation, Configuration &amp; Failover Management</h2>
+
+            <!-- 1. Concept & Architecture -->
+            <div class="subsection" id="hadr-setup">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture</h3>
+              <p>
+                Configuring and maintaining HADR replication is only the first part of database availability. DBAs must
+                also manage failovers during outages and maintain data consistency.
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-random"></i> Planned Graceful Takeover</h5>
+                  <p>
+                    A planned role reversal (e.g., during scheduled OS patching or database upgrades).
+                  </p>
+                  <ul>
+                    <li>The DBA issues the <code>TAKEOVER HADR</code> command on the Standby.</li>
+                    <li>The databases perform a clean swap: the current primary becomes the standby, and the standby
+                      becomes the new primary database.</li>
+                    <li><strong>Data Loss:</strong> Zero. All pending transaction logs are fully replayed before the
+                      role swap completes.</li>
+                  </ul>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-exclamation-triangle"></i> Unplanned Forced Takeover</h5>
+                  <p>
+                    Executed when the Primary database server suffers a catastrophic failure (e.g., power loss, hardware
+                    crash).
+                  </p>
+                  <ul>
+                    <li>The DBA issues the <code>TAKEOVER HADR ... BY FORCE</code> command on the Standby database.</li>
+                    <li>The Standby forces itself to become the active Primary.</li>
+                    <li><strong>Data Loss:</strong> Depends on the configured synchronization mode and network latency
+                      during the crash.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-brain"></i> Understanding and Preventing Split-Brain Scenarios</h4>
+                <p><strong>What is Split-Brain?</strong> Split-brain occurs when a network partition separates the
+                  Primary and Standby databases. If both databases assume they are the active Primary and begin writing
+                  client transactions independently, their data logs diverge, causing corruption.</p>
+                <p><strong>DB2 Protections:</strong> DB2 prevents split-brain using handshake checks when connections
+                  are restored. If a diverged standby attempts to connect, the primary rejects the handshake. To
+                  automate failover and node fencing, DB2 integrates with cluster managers like <strong>IBM Tivoli
+                    System Automation for Multiplatforms (TSAMP)</strong> or <strong>Pacemaker</strong>.</p>
+              </div>
+            </div>
+
+            <!-- 2. Operational CLP Commands -->
+            <div class="subsection" id="hadr-commands">
+              <h3 class="subsection-title">2. Step-by-Step Initialization &amp; Failover CLP Commands</h3>
+              <p>
+                The following commands outline the full procedure to initialize, start, and failover HADR replication.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">Step 1: Backup Primary Database</div>
+                <pre><code><span class="comment">-- On Primary Server: Take a complete database backup</span>
+db2 "BACKUP DATABASE FINEDB TO '/dbdata/backups' COMPRESS"</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Step 2: Restore Database on Standby Server</div>
+                <pre><code><span class="comment">-- On Standby Server: Restore the database from the primary backup</span>
+db2 "RESTORE DATABASE FINEDB FROM '/dbdata/backups' TAKING OLDER LOGS"</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Step 3: Update DB CFG Settings on Both Hosts</div>
+                <pre><code><span class="comment">-- Primary Database Configuration</span>
+db2 "CONNECT TO FINEDB"
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_LOCAL_HOST 192.168.10.51 HADR_LOCAL_SVC 50010"
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_REMOTE_HOST 192.168.10.52 HADR_REMOTE_SVC 50010"
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_REMOTE_INST db2inst1 HADR_SYNCMODE NEARSYNC"
+
+<span class="comment">-- Standby Database Configuration (Execute on Standby server)</span>
+db2 "CONNECT TO FINEDB"
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_LOCAL_HOST 192.168.10.52 HADR_LOCAL_SVC 50010"
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_REMOTE_HOST 192.168.10.51 HADR_REMOTE_SVC 50010"
+db2 "UPDATE DB CFG FOR FINEDB USING HADR_REMOTE_INST db2inst1 HADR_SYNCMODE NEARSYNC"</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Step 4: Start HADR Operations (Always start Standby first!)</div>
+                <pre><code><span class="comment">-- On Standby Host: Start as Standby (listens for incoming primary logs)</span>
+db2 "START HADR ON DATABASE FINEDB AS STANDBY"
+
+<span class="comment">-- On Primary Host: Start as Primary (initiates log shipping connection)</span>
+db2 "START HADR ON DATABASE FINEDB AS PRIMARY"</code></pre>
+              </div>
+            </div>
+
+            <!-- 3. Practical Lab -->
+            <div class="subsection" id="hadr-failover-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Retail Analytics Ingestion &amp; HADR
+                Failover</h3>
+              <p>
+                <strong>Scenario:</strong> The database administrators are conducting an annual Disaster Recovery (DR)
+                drill.
+                First, we will run a high-speed data load on the Primary database using <code>COPY YES</code> (to
+                maintain replication compatibility).
+                Next, we will simulate a primary server crash and execute a forced takeover on the Standby database.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">Step 1: Check Ingestion and HADR Status on the Primary Database</div>
+                <pre><code><span class="comment">-- Check HADR status to verify PEER state before loading data</span>
+db2pd -db FINEDB -hadr</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-check-circle"></i> Output: db2pd Output on Primary (Pre-Crash)</h4>
+                <pre>Database Member 0 -- Database FINEDB -- Active -- Up 2 days
+
+HADR Information:
+  Role      State   SyncMode    Heartbeat  ConnectStatus   StandbyID
+  PRIMARY   PEER    NEARSYNC    120        CONNECTED       1
+
+  PrimaryLogPos           StandbyLogPos           LogGapInBytes
+  000000000A15E22B        000000000A15E22B        0</pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Step 2: Run a High-Speed Load on Primary (with COPY YES)</div>
+                <pre><code><span class="comment">-- Perform direct block load. Using COPY YES ensures the load changes</span>
+<span class="comment">-- are replicated to the standby database.</span>
+db2 "LOAD FROM '/dbdata/raw/tx_may2026.del' OF DEL \
+     INSERT INTO TransactionStore \
+     COPY YES TO '/dbdata/backups/load_copies'"</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Step 3: Simulate Primary Server Crash</div>
+                <pre><code><span class="comment">-- Force-kill the active primary instance processes</span>
+db2stop force</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Step 4: Execute Forced Takeover on the Standby Server</div>
+                <pre><code><span class="comment">-- Log in to the Standby server. Execute takeover to force role swap.</span>
+db2 "TAKEOVER HADR ON DATABASE FINEDB BY FORCE"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-check-circle"></i> Output: Takeover Confirmation &amp; Standby Status
+                  (Post-Takeover)</h4>
+                <pre>DB20000I  The TAKEOVER HADR command completed successfully.
+
+<span class="comment">-- Verify that the Standby database has transitioned to Primary</span>
+db2pd -db FINEDB -hadr</pre>
+                <pre>Database Member 0 -- Database FINEDB -- Active -- Up 15 seconds
+
+HADR Information:
+  Role      State           SyncMode    Heartbeat  ConnectStatus   StandbyID
+  PRIMARY   DISCONNECTED    NEARSYNC    120        DISCONNECTED    1</pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Step 5: Reintegrate the Failed Primary Server as a Standby</div>
+                <pre><code><span class="comment">-- Once the old primary server recovers, restart the instance</span>
+<span class="comment">-- and configure it to run as the new Standby database.</span>
+db2start
+db2 "START HADR ON DATABASE FINEDB AS STANDBY"
+
+<span class="comment">-- Verify that the databases have re-established PEER state</span>
+db2pd -db FINEDB -hadr</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-check-circle"></i> Output: Final Reintegration Status</h4>
+                <pre>HADR Information:
+  Role      State   SyncMode    Heartbeat  ConnectStatus   StandbyID
+  STANDBY   PEER    NEARSYNC    120        CONNECTED       1</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cogs"></i> Technical Walkthrough: Behind the Scenes</h4>
+                <ol>
+                  <li>
+                    <strong>Load Shipping:</strong> When the <code>LOAD</code> utility runs with <code>COPY YES</code>
+                    on the Primary, DB2 replicates the data blocks to the Standby, keeping both tables in sync.
+                  </li>
+                  <li>
+                    <strong>Heartbeat Failure:</strong> Stopping the Primary instance breaks the connection. The Standby
+                    detects the failure once the <code>HADR_TIMEOUT</code> limit is reached.
+                  </li>
+                  <li>
+                    <strong>Forced Transition:</strong> Issuing the <code>TAKEOVER HADR BY FORCE</code> command tells
+                    the Standby to mount physical log spaces and transition to the active Primary role.
+                  </li>
+                  <li>
+                    <strong>Connection Handshake:</strong> When the old Primary restarts and is initialized as a
+                    Standby, it performs a connection handshake with the new Primary. The new Primary verifies the log
+                    sequences and completes the connection.
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- 4. Best Practices & Troubleshooting -->
+            <div class="subsection" id="hadr-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Resolving Diverged Log Sequences (HADR State Sync Issues)
+                </h4>
+                <p><strong>Diagnostic Code:</strong>
+                  <code>SQL1767N  Start HADR cannot be completed. Reason Code = "5".</code>
+                </p>
+                <p><strong>Root Cause:</strong> The log sequences on the primary and standby databases have diverged
+                  (e.g., a forced takeover was executed on the standby, and transactions were written to both databases
+                  before reconnecting). The databases cannot synchronize because their histories are inconsistent.</p>
+                <p><strong>Remedy:</strong> To resolve diverged log sequences, you must re-initialize the Standby
+                  database from a fresh backup of the Primary:</p>
+                <ol>
+                  <li>Take a fresh backup of the active Primary database.</li>
+                  <li>Restore this backup on the Standby host, overwriting the old database.</li>
+                  <li>Restart HADR on the Standby: <code>db2 "START HADR ON DB FINEDB AS STANDBY"</code>.</li>
+                </ol>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Connection Handshake Failure</h4>
+                <p><strong>Diagnostic Code:</strong>
+                  <code>SQL1768N  Unable to start HADR. Reason Code = "7" (Connection refused).</code>
+                </p>
+                <p><strong>Root Cause:</strong> Network configuration mismatch (e.g., incorrect port assignments, remote
+                  host IP misconfigurations, or local firewalls blocking replication traffic).</p>
+                <p><strong>Remedy:</strong> Verify that the parameters <code>HADR_LOCAL_HOST</code>,
+                  <code>HADR_LOCAL_SVC</code>, <code>HADR_REMOTE_HOST</code>, and <code>HADR_REMOTE_SVC</code> are
+                  correctly set and consistent on both servers. Also, ensure the replication ports (e.g., 50010) are
+                  open in system firewalls.
+                </p>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-star"></i> DBA Best Practices for HADR Management</h4>
+                <ul>
+                  <li>
+                    <strong>Use a Peer Window:</strong> Always configure the <code>HADR_PEER_WINDOW</code> parameter (to
+                    at least 120 seconds). This allows the standby database to perform a zero-data-loss failover if the
+                    primary crashes.
+                  </li>
+                  <li>
+                    <strong>Automate Monitoring:</strong> Write cron jobs or shell scripts that run
+                    <code>db2pd -hadr</code> periodically to monitor replication health and alert DBAs if a database
+                    exits PEER state.
+                  </li>
+                  <li>
+                    <strong>Replication Port Isolation:</strong> Use dedicated network ports for HADR replication
+                    traffic to prevent bandwidth competition from standard client application connections.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 5. Summary Cheat-Sheet Table -->
+            <div class="subsection" id="hadr-summary">
+              <h3 class="subsection-title">5. Topic 36 Summary: Operational HADR Commands</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Operational Command</th>
+                      <th>Target Server Execution</th>
+                      <th>HADR State Target</th>
+                      <th>Expected Result / Action</th>
+                      <th>Data Loss Risk Potential</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>START HADR ... AS STANDBY</code></td>
+                      <td>Standby Server</td>
+                      <td>Local / Remote Catch-up</td>
+                      <td>Initializes the Standby database and starts listening for incoming Primary logs.</td>
+                      <td>None</td>
+                    </tr>
+                    <tr>
+                      <td><code>START HADR ... AS PRIMARY</code></td>
+                      <td>Primary Server</td>
+                      <td>Peer State</td>
+                      <td>Initializes the Primary database and starts log shipping to the Standby.</td>
+                      <td>None</td>
+                    </tr>
+                    <tr>
+                      <td><code>TAKEOVER HADR ON DB</code></td>
+                      <td>Standby Server</td>
+                      <td>Role Swap (Standard)</td>
+                      <td>Performs a planned role reversal. The Standby becomes the Primary, and the Primary becomes the
+                        Standby.</td>
+                      <td><strong>Zero</strong> (Graceful swap)</td>
+                    </tr>
+                    <tr>
+                      <td><code>TAKEOVER HADR ON DB BY FORCE</code></td>
+                      <td>Standby Server</td>
+                      <td>Role Swap (Unplanned)</td>
+                      <td>Forces the Standby database to assume the Primary role. Used during primary outages.</td>
+                      <td>Dependent on configured synchronization mode</td>
+                    </tr>
+                    <tr>
+                      <td><code>STOP HADR ON DB</code></td>
+                      <td>Either Server</td>
+                      <td>Replication Deactivated</td>
+                      <td>Stops HADR replication on the target database, reverting it to a standard, non-replicated
+                        database.</td>
+                      <td>None</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="footer">
+          <p style="margin-top: 10px">
+            <strong>Created By:</strong> Abdelghany
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Shared JavaScript for dark mode and features -->
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

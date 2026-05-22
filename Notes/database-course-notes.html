@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Database Course Notes - Complete Guide</title>
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="../assets/css/main.css" />
 </head>
+
 <body>
   <!-- Sidebar Navigation -->
-  <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-  <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-  
+  <button class="sidebar-toggle" aria-expanded="false" aria-label="Toggle navigation"><i
+      class="fas fa-bars"></i></button>
+  <div class="sidebar-overlay"></div>
+
   <div class="layout-container">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -23,89 +28,89 @@
       <div class="sidebar-content">
         <ul>
           <li>
-            <a href="#introduction" onclick="setActive(this)"><i class="fas fa-home"></i> Introduction</a>
+            <a href="#introduction"><i class="fas fa-home"></i> Introduction</a>
           </li>
           <li>
-            <a href="#db-intro" onclick="setActive(this)"><i class="fas fa-chart-bar"></i> Database Introduction</a>
+            <a href="#db-intro"><i class="fas fa-chart-bar"></i> Database Introduction</a>
             <ul>
               <li>
-                <a href="#file-systems" onclick="setActive(this)">File-Based Systems</a>
+                <a href="#file-systems">File-Based Systems</a>
               </li>
               <li>
-                <a href="#dbms-advantages" onclick="setActive(this)">DBMS Advantages</a>
+                <a href="#dbms-advantages">DBMS Advantages</a>
               </li>
               <li>
-                <a href="#database-users" onclick="setActive(this)">Database Users</a>
+                <a href="#database-users">Database Users</a>
               </li>
             </ul>
           </li>
           <li>
-            <a href="#erd-concepts" onclick="setActive(this)"><i class="fas fa-link"></i> ERD Concepts</a>
+            <a href="#erd-concepts"><i class="fas fa-link"></i> ERD Concepts</a>
             <ul>
               <li>
-                <a href="#basic-constructs" onclick="setActive(this)">Basic Constructs</a>
+                <a href="#basic-constructs">Basic Constructs</a>
               </li>
               <li>
-                <a href="#entity-types" onclick="setActive(this)">Entity Types</a>
+                <a href="#entity-types">Entity Types</a>
               </li>
               <li>
-                <a href="#attribute-types" onclick="setActive(this)">Attribute Types</a>
+                <a href="#attribute-types">Attribute Types</a>
               </li>
               <li>
-                <a href="#relationships" onclick="setActive(this)">Relationships</a>
+                <a href="#relationships">Relationships</a>
               </li>
-              <li><a href="#keys" onclick="setActive(this)">Keys</a></li>
+              <li><a href="#keys">Keys</a></li>
             </ul>
           </li>
           <li>
-            <a href="#mapping" onclick="setActive(this)"><i class="fas fa-sync"></i> Relational Mapping</a>
+            <a href="#mapping"><i class="fas fa-sync"></i> Relational Mapping</a>
             <ul>
               <li>
-                <a href="#mapping-steps" onclick="setActive(this)">Mapping Steps</a>
+                <a href="#mapping-steps">Mapping Steps</a>
               </li>
               <li>
-                <a href="#relationship-mapping" onclick="setActive(this)">Relationship Mapping</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="#tsql" onclick="setActive(this)"><i class="fas fa-laptop-code"></i> T-SQL</a>
-            <ul>
-              <li>
-                <a href="#sql-categories" onclick="setActive(this)">SQL Categories</a>
-              </li>
-              <li>
-                <a href="#ddl-commands" onclick="setActive(this)">DDL Commands</a>
-              </li>
-              <li>
-                <a href="#dml-commands" onclick="setActive(this)">DML Commands</a>
-              </li>
-              <li>
-                <a href="#dql-select" onclick="setActive(this)">DQL - SELECT</a>
-              </li>
-              <li><a href="#joins" onclick="setActive(this)">Joins</a></li>
-              <li>
-                <a href="#subqueries" onclick="setActive(this)">Subqueries</a>
-              </li>
-              <li>
-                <a href="#aggregates" onclick="setActive(this)">Aggregate Functions</a>
-              </li>
-              <li>
-                <a href="#dcl-commands" onclick="setActive(this)">DCL Commands</a>
+                <a href="#relationship-mapping">Relationship Mapping</a>
               </li>
             </ul>
           </li>
           <li>
-            <a href="#normalization" onclick="setActive(this)"><i class="fas fa-ruler"></i> Normalization</a>
+            <a href="#tsql"><i class="fas fa-laptop-code"></i> T-SQL</a>
             <ul>
               <li>
-                <a href="#functional-dependency" onclick="setActive(this)">Functional Dependency</a>
+                <a href="#sql-categories">SQL Categories</a>
               </li>
               <li>
-                <a href="#normal-forms" onclick="setActive(this)">Normal Forms</a>
+                <a href="#ddl-commands">DDL Commands</a>
               </li>
               <li>
-                <a href="#normalization-example" onclick="setActive(this)">ITI Example</a>
+                <a href="#dml-commands">DML Commands</a>
+              </li>
+              <li>
+                <a href="#dql-select">DQL - SELECT</a>
+              </li>
+              <li><a href="#joins">Joins</a></li>
+              <li>
+                <a href="#subqueries">Subqueries</a>
+              </li>
+              <li>
+                <a href="#aggregates">Aggregate Functions</a>
+              </li>
+              <li>
+                <a href="#dcl-commands">DCL Commands</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#normalization"><i class="fas fa-ruler"></i> Normalization</a>
+            <ul>
+              <li>
+                <a href="#functional-dependency">Functional Dependency</a>
+              </li>
+              <li>
+                <a href="#normal-forms">Normal Forms</a>
+              </li>
+              <li>
+                <a href="#normalization-example">ITI Example</a>
               </li>
             </ul>
           </li>
@@ -115,7 +120,8 @@
     <!-- Main Content -->
     <main class="main-content">
       <div class="container">
-        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Main Page</a><div class="header">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+        <div class="header">
           <h1><i class="fas fa-star"></i> Database Course</h1>
           <p>Complete Guide to Database Design, SQL & Normalization</p>
         </div>
@@ -604,34 +610,28 @@
               <h3 class="subsection-title">DDL - Data Definition Language</h3>
               <div class="concept-card">
                 <h5><i class="fas fa-building"></i> CREATE TABLE</h5>
-                <div class="sql-code">
-                  <span class="keyword">CREATE TABLE</span> Employee ( ID
+                <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="keyword">CREATE TABLE</span> Employee ( ID
                   <span class="keyword">int PRIMARY KEY</span>, FName
                   <span class="keyword">char</span>(50)
                   <span class="keyword">NOT NULL</span>, LName
                   <span class="keyword">char</span>(50), Address
                   <span class="keyword">char</span>(50), Birth_Date
                   <span class="keyword">date</span>
-                  );
-                </div>
+                  );</code></pre></div>
               </div>
               <div class="concept-card">
                 <h5><i class="fas fa-star"></i> DROP TABLE</h5>
-                <div class="sql-code">
-                  <span class="keyword">DROP TABLE</span> Employee;
-                </div>
+                <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="keyword">DROP TABLE</span> Employee;</code></pre></div>
               </div>
               <div class="concept-card">
                 <h5><i class="fas fa-wrench"></i> ALTER TABLE</h5>
-                <div class="sql-code">
-                  <span class="comment">-- Add column</span>
+                <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Add column</span>
                   <span class="keyword">ALTER TABLE</span> employee
                   <span class="keyword">ADD</span> City
                   <span class="keyword">varchar</span>(30);
                   <span class="comment"> <br>-- Drop column</span>
                   <span class="keyword">ALTER TABLE</span> employee
-                  <span class="keyword">DROP</span> City;
-                </div>
+                  <span class="keyword">DROP</span> City;</code></pre></div>
               </div>
             </div>
             <div class="subsection" id="dml-commands">
@@ -641,8 +641,7 @@
               <!-- <div class="concept-grid"> -->
               <div class="concept-card">
                 <h5>? INSERT</h5>
-                <div class="sql-code">
-                  <span class="comment">-- Single row</span> <br>
+                <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Single row</span> <br>
                   <span class="keyword">INSERT INTO</span> Employee
                   <span class="keyword">VALUES</span> (1,
                   <span class="string">'John'</span>,
@@ -659,13 +658,11 @@
                   <span class="string">'Bob'</span>,
                   <span class="string">'Johnson'</span>,
                   <span class="string">'789 Pine St'</span>,
-                  <span class="string">'1992-12-20'</span>);
-                </div>
+                  <span class="string">'1992-12-20'</span>);</code></pre></div>
               </div>
               <div class="concept-card">
                 <h5><i class="fas fa-pencil-alt"></i> UPDATE</h5>
-                <div class="sql-code">
-                  <span class="comment">-- Update with WHERE clause</span> <br>
+                <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Update with WHERE clause</span> <br>
                   <span class="keyword">UPDATE</span> Employee
                   <span class="keyword">SET</span> Address =
                   <span class="string">'New Address'</span>
@@ -673,29 +670,23 @@
                   <span class="comment"> <br>-- Update with expression</span> <br>
                   <span class="keyword">UPDATE</span> Employee
                   <span class="keyword">SET</span> LName =
-                  <span class="keyword">UPPER</span>(LName);
-                </div>
+                  <span class="keyword">UPPER</span>(LName);</code></pre></div>
               </div>
               <div class="concept-card">
                 <h5><i class="fas fa-star"></i> DELETE</h5>
-                <div class="sql-code">
-                  <span class="comment">-- Delete specific rows</span> <br>
+                <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Delete specific rows</span> <br>
                   <span class="keyword">DELETE FROM</span> Employee
                   <span class="keyword">WHERE</span> ID = 1;
                   <span class="comment"> <br>-- Delete all rows</span> <br>
-                  <span class="keyword">DELETE FROM</span> Employee;
-                </div>
+                  <span class="keyword">DELETE FROM</span> Employee;</code></pre></div>
               </div>
               <div class="concept-card">
                 <h5><i class="fas fa-sync"></i> TRUNCATE</h5>
-                <div class="sql-code">
-                  <span class="comment">-- Faster than DELETE, cannot be used with FOREIGN KEY
+                <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Faster than DELETE, cannot be used with FOREIGN KEY
                     constraints</span>
-                  <span class="keyword"> <br>TRUNCATE TABLE</span> Employee;
-                </div>
+                  <span class="keyword"> <br>TRUNCATE TABLE</span> Employee;</code></pre></div>
               </div>
             </div>
-        </div>
         <div class="subsection" id="dql-select">
           <h3 class="subsection-title">DQL - SELECT Statement</h3>
           <div class="definition-box">
@@ -719,11 +710,10 @@
               <li><strong>ORDER BY:</strong> Sorts the result set</li>
             </ol>
           </div>
-          <div class="concept-card">
+          <div class="concept-grid">
             <div class="concept-card">
               <h5><i class="fas fa-search"></i> Basic SELECT</h5>
-              <div class="sql-code">
-                <span class="comment">-- All columns</span><br>
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- All columns</span><br>
                 <span class="keyword">SELECT</span> *
                 <span class="keyword">FROM</span> Employee;
                 <span class="comment"> <br>-- Specific columns</span><br>
@@ -735,13 +725,11 @@
                 <span class="string">'First Name'</span>, LName
                 <span class="keyword">AS</span>
                 <span class="string">'Last Name'</span>
-                <span class="keyword">FROM</span> Employee;
-              </div>
+                <span class="keyword">FROM</span> Employee;</code></pre></div>
             </div>
             <div class="concept-card">
               <h5><i class="fas fa-bullseye"></i> WHERE Clause</h5>
-              <div class="sql-code">
-                <span class="comment">-- Comparison operators</span><br>
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Comparison operators</span><br>
                 <span class="keyword">SELECT</span> *
                 <span class="keyword">FROM</span> Employee
                 <span class="keyword">WHERE</span> ID > 5;
@@ -759,13 +747,11 @@
                 <span class="keyword">AND</span> 10
                 <span class="keyword">AND</span> FName
                 <span class="keyword">IN</span> (<span class="string">'John'</span>, <span
-                  class="string">'Jane'</span>);
-              </div>
+                  class="string">'Jane'</span>);</code></pre></div>
             </div>
             <div class="concept-card">
               <h5><i class="fas fa-star"></i> NULL Handling</h5>
-              <div class="sql-code">
-                <span class="comment">-- Check for NULL</span><br>
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Check for NULL</span><br>
                 <span class="keyword">SELECT</span> *
                 <span class="keyword">FROM</span> Employee
                 <span class="keyword">WHERE</span> Address
@@ -779,13 +765,11 @@
                 <span class="keyword">SELECT</span>
                 <span class="keyword">COALESCE</span>(Address, City,
                 <span class="string">'Unknown'</span>)
-                <span class="keyword">FROM</span> Employee;
-              </div>
+                <span class="keyword">FROM</span> Employee;</code></pre></div>
             </div>
             <div class="concept-card">
               <h5><i class="fas fa-clipboard"></i> Sorting & Distinct</h5>
-              <div class="sql-code">
-                <span class="comment">-- Sort results</span><br>
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Sort results</span><br>
                 <span class="keyword">SELECT</span> *
                 <span class="keyword">FROM</span> Employee
                 <span class="keyword">ORDER BY</span> LName, FName;
@@ -794,70 +778,57 @@
                 <span class="keyword">FROM</span> Employee;
                 <span class="comment"><br>-- Limit results</span><br>
                 <span class="keyword">SELECT TOP</span> 10 *
-                <span class="keyword">FROM</span> Employee;
-              </div>
+                <span class="keyword">FROM</span> Employee;</code></pre></div>
             </div>
           </div>
         </div>
         <div class="subsection" id="joins">
           <h3 class="subsection-title">Joins</h3>
-          <div class="concept-card">
+          <div class="concept-grid">
             <div class="concept-card">
               <h5><i class="fas fa-link"></i> INNER JOIN</h5>
-              <div class="sql-code">
-                <span class="keyword">SELECT</span> e.FName, d.DeptName
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="keyword">SELECT</span> e.FName, d.DeptName
                 <span class="keyword">FROM</span> Employee e
                 <span class="keyword">INNER JOIN</span> Department d
-                <span class="keyword">ON</span> e.DeptID = d.DeptID;
-              </div>
+                <span class="keyword">ON</span> e.DeptID = d.DeptID;</code></pre></div>
             </div>
             <div class="concept-card">
               <h5><i class="fas fa-backward"></i> LEFT OUTER JOIN</h5>
-              <div class="sql-code">
-                <span class="keyword">SELECT</span> e.FName, d.DeptName
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="keyword">SELECT</span> e.FName, d.DeptName
                 <span class="keyword">FROM</span> Employee e
                 <span class="keyword">LEFT JOIN</span> Department d
-                <span class="keyword">ON</span> e.DeptID = d.DeptID;
-              </div>
+                <span class="keyword">ON</span> e.DeptID = d.DeptID;</code></pre></div>
             </div>
             <div class="concept-card">
               <h5><i class="fas fa-play"></i> RIGHT OUTER JOIN</h5>
-              <div class="sql-code">
-                <span class="keyword">SELECT</span> e.FName, d.DeptName
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="keyword">SELECT</span> e.FName, d.DeptName
                 <span class="keyword">FROM</span> Employee e
                 <span class="keyword">RIGHT JOIN</span> Department d
-                <span class="keyword">ON</span> e.DeptID = d.DeptID;
-              </div>
+                <span class="keyword">ON</span> e.DeptID = d.DeptID;</code></pre></div>
             </div>
             <div class="concept-card">
               <h5><i class="fas fa-globe"></i> FULL OUTER JOIN</h5>
-              <div class="sql-code">
-                <span class="keyword">SELECT</span> e.FName, d.DeptName
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="keyword">SELECT</span> e.FName, d.DeptName
                 <span class="keyword">FROM</span> Employee e
                 <span class="keyword">FULL OUTER JOIN</span> Department d
-                <span class="keyword">ON</span> e.DeptID = d.DeptID;
-              </div>
+                <span class="keyword">ON</span> e.DeptID = d.DeptID;</code></pre></div>
             </div>
             <div class="concept-card">
               <h5><i class="fas fa-times"></i> CROSS JOIN</h5>
-              <div class="sql-code">
-                <span class="comment">-- Cartesian product</span><br>
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Cartesian product</span><br>
                 <span class="keyword">SELECT</span> e.FName, d.DeptName
                 <span class="keyword">FROM</span> Employee e
-                <span class="keyword">CROSS JOIN</span> Department d;
-              </div>
+                <span class="keyword">CROSS JOIN</span> Department d;</code></pre></div>
             </div>
             <div class="concept-card">
               <h5><i class="fas fa-sync"></i> SELF JOIN</h5>
-              <div class="sql-code">
-                <span class="comment">-- Employee and their manager</span><br>
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Employee and their manager</span><br>
                 <span class="keyword">SELECT</span> e.FName
                 <span class="keyword">AS</span> Employee, m.FName
                 <span class="keyword">AS</span> Manager
                 <span class="keyword">FROM</span> Employee e
                 <span class="keyword">LEFT JOIN</span> Employee m
-                <span class="keyword">ON</span> e.ManagerID = m.ID;
-              </div>
+                <span class="keyword">ON</span> e.ManagerID = m.ID;</code></pre></div>
             </div>
           </div>
         </div>
@@ -865,42 +836,36 @@
           <h3 class="subsection-title">Subqueries</h3>
           <div class="concept-card">
             <h5><i class="fas fa-chart-bar"></i> Basic Subquery</h5>
-            <div class="sql-code">
-              <span class="comment">-- Find department with highest paid employee</span><br>
+            <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Find department with highest paid employee</span><br>
               <span class="keyword">SELECT</span> dname
               <span class="keyword">FROM</span> dept
               <span class="keyword">WHERE</span> deptno = (
               <span class="keyword">SELECT</span> deptno
               <span class="keyword">FROM</span> emp
               <span class="keyword">WHERE</span> sal = (<span class="keyword">SELECT MAX</span>(sal) <span
-                class="keyword">FROM</span> emp) );
-            </div>
+                class="keyword">FROM</span> emp) );</code></pre></div>
           </div>
           <div class="concept-card">
             <h5><i class="fas fa-search"></i> EXISTS Condition</h5>
-            <div class="sql-code">
-              <span class="comment">-- Find suppliers with orders</span><br>
+            <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Find suppliers with orders</span><br>
               <span class="keyword">SELECT</span> *
               <span class="keyword">FROM</span> suppliers s
               <span class="keyword">WHERE EXISTS</span> (
               <span class="keyword">SELECT</span> 1
               <span class="keyword">FROM</span> orders o
               <span class="keyword">WHERE</span> s.supplier_id =
-              o.supplier_id );
-            </div>
+              o.supplier_id );</code></pre></div>
           </div>
           <div class="concept-card">
             <h5><i class="fas fa-star"></i> ALL Keyword</h5>
-            <div class="sql-code">
-              <span class="comment">-- Salary greater than all in department 5</span> <br>
+            <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Salary greater than all in department 5</span> <br>
               <span class="keyword">SELECT</span> *
               <span class="keyword">FROM</span> employee
               <span class="keyword">WHERE</span> salary >
               <span class="keyword">ALL</span> (
               <span class="keyword">SELECT</span> salary
               <span class="keyword">FROM</span> employee
-              <span class="keyword">WHERE</span> Dno = 5 );
-            </div>
+              <span class="keyword">WHERE</span> Dno = 5 );</code></pre></div>
           </div>
         </div>
         <div class="subsection" id="aggregates">
@@ -908,8 +873,7 @@
           <div class="concept-card">
             <div class="concept-card">
               <h5><i class="fas fa-chart-bar"></i> Basic Aggregates</h5>
-              <div class="sql-code">
-                <span class="keyword">SELECT</span>
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="keyword">SELECT</span>
                 <span class="keyword">COUNT</span>(*)
                 <span class="keyword">AS</span> TotalEmployees,
                 <span class="keyword">SUM</span>(salary)
@@ -920,43 +884,37 @@
                 <span class="keyword">AS</span> MaxSalary,
                 <span class="keyword">MIN</span>(salary)
                 <span class="keyword">AS</span> MinSalary
-                <span class="keyword">FROM</span> Employee;
-              </div>
+                <span class="keyword">FROM</span> Employee;</code></pre></div>
             </div>
             <div class="concept-card">
               <h5><i class="fas fa-star"></i> GROUP BY</h5>
-              <div class="sql-code">
-                <span class="comment">-- Group by department</span><br>
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Group by department</span><br>
                 <span class="keyword">SELECT</span> dno,
                 <span class="keyword">COUNT</span>(*)
                 <span class="keyword">AS</span> EmpCount,
                 <span class="keyword">AVG</span>(salary)
                 <span class="keyword">AS</span> AvgSalary
                 <span class="keyword">FROM</span> employee
-                <span class="keyword">GROUP BY</span> dno;
-              </div>
+                <span class="keyword">GROUP BY</span> dno;</code></pre></div>
             </div>
             <div class="concept-card">
               <h5><i class="fas fa-bullseye"></i> HAVING</h5>
-              <div class="sql-code">
-                <span class="comment">-- Filter groups</span><br>
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Filter groups</span><br>
                 <span class="keyword">SELECT</span> pnumber, pname,
                 <span class="keyword">COUNT</span>(*)
                 <span class="keyword">AS</span> WorkerCount
                 <span class="keyword">FROM</span> project_assignments
                 <span class="keyword">GROUP BY</span> pnumber, pname
-                <span class="keyword">HAVING COUNT</span>(*) > 2;
-              </div>
+                <span class="keyword">HAVING COUNT</span>(*) > 2;</code></pre></div>
             </div>
           </div>
         </div>
         <div class="subsection" id="dcl-commands">
           <h3 class="subsection-title">DCL - Data Control Language</h3>
-          <div class="concept-card">
+          <div class="concept-grid">
             <div class="concept-card">
               <h5><i class="fas fa-check"></i> GRANT</h5>
-              <div class="sql-code">
-                <span class="comment">-- Grant SELECT permission</span><br>
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Grant SELECT permission</span><br>
                 <span class="keyword">GRANT SELECT ON</span> employees
                 <span class="keyword">TO</span> Ahmed;
                 <span class="comment"><br>-- Grant ALL permissions</span><br>
@@ -965,19 +923,16 @@
                 <span class="comment"><br>-- Grant with GRANT option</span><br>
                 <span class="keyword">GRANT SELECT ON</span> employees
                 <span class="keyword">TO</span> Ahmed
-                <span class="keyword">WITH GRANT OPTION</span>;
-              </div>
+                <span class="keyword">WITH GRANT OPTION</span>;</code></pre></div>
             </div>
             <div class="concept-card">
               <h5><i class="fas fa-times"></i> REVOKE</h5>
-              <div class="sql-code">
-                <span class="comment">-- Revoke specific permission</span><br>
+              <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Revoke specific permission</span><br>
                 <span class="keyword">REVOKE UPDATE ON</span> department
                 <span class="keyword">FROM</span> Mary;
                 <span class="comment"><br>-- Revoke all permissions</span><br>
                 <span class="keyword">REVOKE ALL ON</span> department
-                <span class="keyword">FROM</span> Mary, Ahmed;
-              </div>
+                <span class="keyword">FROM</span> Mary, Ahmed;</code></pre></div>
             </div>
           </div>
         </div>
@@ -1064,14 +1019,12 @@
                     Move repeating groups to new table with foreign key
                   </li>
                 </ul>
-                <div class="sql-code">
-                  <span class="comment">-- Before 1NF</span><br>
+                <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Before 1NF</span><br>
                   Student(SID, SName, Subjects) Subjects: Math, Physics,
                   Chemistry
                   <span class="comment"><br>-- After 1NF</span><br>
                   Student(SID, SName, Birthdate, City, ZipCode)
-                  Student_Subject(SID, Subject, Grade, Teacher)
-                </div>
+                  Student_Subject(SID, Subject, Grade, Teacher)</code></pre></div>
               </div>
               <div class="normalization-step">
                 <h5>2<i class="fas fa-star"></i> Second Normal Form (2NF)</h5>
@@ -1083,13 +1036,11 @@
                   </li>
                   <li>No partial dependencies on composite keys</li>
                 </ul>
-                <div class="sql-code">
-                  <span class="comment">-- Before 2NF (Teacher depends only on Subject)</span><br>
+                <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Before 2NF (Teacher depends only on Subject)</span><br>
                   Student_Subject(SID, Subject, Grade, Teacher)
                   <span class="comment"><br>-- After 2NF</span><br>
                   Student_Subject(SID, Subject, Grade) Subject(Subject,
-                  Teacher)
-                </div>
+                  Teacher)</code></pre></div>
               </div>
               <div class="normalization-step">
                 <h5>3<i class="fas fa-star"></i> Third Normal Form (3NF)</h5>
@@ -1099,13 +1050,11 @@
                   <li>No transitive dependencies (A -&gt; B -&gt; C)</li>
                   <li>Non-key attributes depend only on primary key</li>
                 </ul>
-                <div class="sql-code">
-                  <span class="comment">-- Before 3NF (ZipCode -&gt; City is transitive)</span><br>
+                <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Before 3NF (ZipCode -&gt; City is transitive)</span><br>
                   Student(SID, SName, Birthdate, City, ZipCode)
                   <span class="comment"><br>-- After 3NF</span><br>
                   Student(SID, SName, Birthdate, ZipCode) City_Info(ZipCode,
-                  City)
-                </div>
+                  City)</code></pre></div>
               </div>
             </div>
           </div>
@@ -1129,26 +1078,20 @@
                   <strong>Action:</strong> Separate multivalued telephone
                   numbers
                 </p>
-                <div class="concept-card">
+                <div class="concept-grid">
                   <div class="concept-card">
                     <h5><i class="fas fa-chart-bar"></i> Platform Table</h5>
-                    <div class="sql-code">
-                      Platform(pfname, pfdesc, pfManager)
-                    </div>
+                    <div class="code-example"><div class="code-language">SQL</div><pre><code>Platform(pfname, pfdesc, pfManager)</code></pre></div>
                   </div>
                   <div class="concept-card">
                     <h5><i class="fas fa-users"></i> Students_pf Table</h5>
-                    <div class="sql-code">
-                      Students_pf(pfname, appno, name, faculty, F-Code,
-                      address, grade, attd, start_date)
-                    </div>
+                    <div class="code-example"><div class="code-language">SQL</div><pre><code>Students_pf(pfname, appno, name, faculty, F-Code,
+                      address, grade, attd, start_date)</code></pre></div>
                   </div>
                   <div class="concept-card">
                     <h5><i class="fas fa-star"></i> Std_Tel Table</h5>
-                    <div class="sql-code">
-                      Std_Tel(appno, telno)
-                      <span class="comment">-- Separated multivalued telephone numbers</span>
-                    </div>
+                    <div class="code-example"><div class="code-language">SQL</div><pre><code>Std_Tel(appno, telno)
+                      <span class="comment">-- Separated multivalued telephone numbers</span></code></pre></div>
                   </div>
                 </div>
               </div>
@@ -1158,30 +1101,24 @@
                   <strong>Action:</strong> Remove partial dependencies -
                   separate student details
                 </p>
-                <div class="concept-card">
+                <div class="concept-grid">
                   <div class="concept-card">
                     <h5><i class="fas fa-user"></i> Students Table</h5>
-                    <div class="sql-code">
-                      Students(appno, name, faculty, FCode, address)
+                    <div class="code-example"><div class="code-language">SQL</div><pre><code>Students(appno, name, faculty, FCode, address)
                       <span class="comment">-- Student details separated from platform
-                        relationship</span>
-                    </div>
+                        relationship</span></code></pre></div>
                   </div>
                   <div class="concept-card">
                     <h5><i class="fas fa-books"></i> Students_pf Table</h5>
-                    <div class="sql-code">
-                      Students_pf(pfname, appno, grade, attd, start_date)
+                    <div class="code-example"><div class="code-language">SQL</div><pre><code>Students_pf(pfname, appno, grade, attd, start_date)
                       <span class="comment">-- Only attributes dependent on both pfname and
-                        appno</span>
-                    </div>
+                        appno</span></code></pre></div>
                   </div>
                   <div class="concept-card">
                     <h5><i class="fas fa-star"></i> Unchanged Tables</h5>
-                    <div class="sql-code">
-                      Platform(pfname, pfdesc, pfManager) Std_Tel(appno,
+                    <div class="code-example"><div class="code-language">SQL</div><pre><code>Platform(pfname, pfdesc, pfManager) Std_Tel(appno,
                       telno)
-                      <span class="comment">-- No changes needed</span>
-                    </div>
+                      <span class="comment">-- No changes needed</span></code></pre></div>
                   </div>
                 </div>
               </div>
@@ -1191,31 +1128,25 @@
                   <strong>Action:</strong> Remove transitive dependency -
                   faculty depends on F-Code
                 </p>
-                <div class="concept-card">
+                <div class="concept-grid">
                   <div class="concept-card">
                     <h5><i class="fas fa-user"></i> Students Table (Final)</h5>
-                    <div class="sql-code">
-                      Students(appno, name, FCode, address)
+                    <div class="code-example"><div class="code-language">SQL</div><pre><code>Students(appno, name, FCode, address)
                       <span class="comment">-- Faculty removed due to transitive
-                        dependency</span>
-                    </div>
+                        dependency</span></code></pre></div>
                   </div>
                   <div class="concept-card">
                     <h5><i class="fas fa-star"></i> Fac_majors Table</h5>
-                    <div class="sql-code">
-                      Fac_majors(FCode, faculty)
+                    <div class="code-example"><div class="code-language">SQL</div><pre><code>Fac_majors(FCode, faculty)
                       <span class="comment">-- Separate table for faculty and F-Code
-                        relationship</span>
-                    </div>
+                        relationship</span></code></pre></div>
                   </div>
                   <div class="concept-card">
                     <h5><i class="fas fa-star"></i> Unchanged Tables</h5>
-                    <div class="sql-code">
-                      Platform(pfname, pfdesc, pfManager) Std_Tel(appno,
+                    <div class="code-example"><div class="code-language">SQL</div><pre><code>Platform(pfname, pfdesc, pfManager) Std_Tel(appno,
                       telno) Students_pf(pfname, appno, grade, attd,
                       start_date)
-                      <span class="comment">-- No further changes needed</span>
-                    </div>
+                      <span class="comment">-- No further changes needed</span></code></pre></div>
                   </div>
                 </div>
               </div>
@@ -1336,8 +1267,7 @@
                 </li>
               </ul>
             </div>
-            <div class="sql-code">
-              <span class="comment">-- Good: Selective WHERE clause</span>
+            <div class="code-example"><div class="code-language">SQL</div><pre><code><span class="comment">-- Good: Selective WHERE clause</span>
               <span class="keyword">SELECT</span> CustomerID, CustomerName
               <span class="keyword">FROM</span> Customers
               <span class="keyword">WHERE</span> City =
@@ -1355,8 +1285,7 @@
               <span class="comment"> <br>-- Good: Using indexes effectively</span><br>
               <span class="keyword">CREATE INDEX</span>
               IX_Orders_CustomerID_Date
-              <span class="keyword">ON</span> Orders(CustomerID, OrderDate);
-            </div>
+              <span class="keyword">ON</span> Orders(CustomerID, OrderDate);</code></pre></div>
           </div>
           <div class="subsection">
             <h3 class="subsection-title">Data Security Considerations</h3>
@@ -1507,19 +1436,17 @@
             </div>
           </div>
         </section>
+        </div>
+        <div class="footer">
+          <p style="margin-top: 10px">
+            <strong>Created By:</strong> Abdelghany
+          </p>
+        </div>
       </div>
-      <div class="footer">
-        <p style="margin-top: 10px">
-          <strong>Created By:</strong> Abdelghany
-        </p>
-      </div>
-  </div>
-  </main>
+    </main>
   </div>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>
+
 </html>
-
-
-

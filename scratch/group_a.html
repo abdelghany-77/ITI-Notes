@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IBM DB2 Database Study Notes - Group A (Topics 14-18)</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    /* Fallback and Embedded Styles to guarantee absolute visual harmony with main.css */
+    :root {
+      --primary-color: #0f62fe;
+      --primary-hover: #0353e9;
+      --secondary-color: #393939;
+      --bg-color: #f4f4f4;
+      --card-bg: #ffffff;
+      --text-color: #161616;
+      --text-muted: #525252;
+      --border-color: #e0e0e0;
+      --code-bg: #161616;
+      --code-text: #f4f4f4;
+      --success-color: #24a148;
+      --warning-color: #f1c40f;
+      --danger-color: #da1e28;
+      --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      --font-code: 'IBM Plex Mono', 'Courier New', Courier, monospace;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    .layout-container {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .sidebar {
+      width: 280px;
+      background-color: #161616;
+      color: #ffffff;
+      padding: 20px;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+      border-right: 1px solid #393939;
+      flex-shrink: 0;
+    }
+
+    .sidebar-header {
+      padding-bottom: 20px;
+      border-bottom: 1px solid #393939;
+      margin-bottom: 20px;
+    }
+
+    .sidebar-header h3 {
+      font-size: 1.2rem;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #f4f4f4;
+    }
+
+    .sidebar-header p {
+      font-size: 0.85rem;
+      color: #a8a8a8;
+      margin: 5px 0 0 0;
+    }
+
+    .sidebar-content ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-content li {
+      margin-bottom: 15px;
+    }
+
+    .sidebar-content a {
+      color: #c6c6c6;
+      text-decoration: none;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s ease;
+    }
+
+    .sidebar-content a:hover {
+      color: var(--primary-color);
+    }
+
+    .sidebar-content ul ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+
+    .sidebar-content ul ul li {
+      margin-bottom: 8px;
+    }
+
+    .sidebar-content ul ul a {
+      font-size: 0.85rem;
+      color: #8d8d8d;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: var(--bg-color);
+    }
+
+    .container {
+      width: 100%;
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+      transition: all 0.2s ease;
+    }
+
+    .back-button:hover {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      border-color: var(--primary-color);
+    }
+
+    .header {
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      color: #161616;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin: 10px 0 0 0;
+    }
+
+    .section {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      color: #0f62fe;
+      margin-top: 0;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .subsection {
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+
+    .subsection-title {
+      font-size: 1.3rem;
+      color: var(--secondary-color);
+      margin-top: 0;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .code-example {
+      margin: 20px 0;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid #393939;
+    }
+
+    .code-language {
+      background-color: #262626;
+      color: #a8a8a8;
+      padding: 8px 16px;
+      font-family: var(--font-code);
+      font-size: 0.8rem;
+      font-weight: bold;
+      border-bottom: 1px solid #393939;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-example pre {
+      margin: 0;
+      background-color: var(--code-bg);
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .code-example code {
+      font-family: var(--font-code);
+      color: var(--code-text);
+      font-size: 0.9rem;
+    }
+
+    .code-example .comment {
+      color: #8d8d8d;
+      font-style: italic;
+    }
+
+    .definition-box {
+      background-color: #edf5ff;
+      border-left: 4px solid var(--primary-color);
+      padding: 20px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin: 20px 0;
+    }
+
+    .definition-box h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #002d9c;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .definition-box p,
+    .definition-box ul {
+      margin: 0;
+      color: #001d6c;
+      font-size: 0.95rem;
+    }
+
+    .definition-box ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+
+    .advantages-box {
+      background-color: #defbe6;
+      border-left: 4px solid var(--success-color);
+      padding: 20px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin: 20px 0;
+    }
+
+    .advantages-box h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #0e6027;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .advantages-box p,
+    .advantages-box ul {
+      margin: 0;
+      color: #073414;
+      font-size: 0.95rem;
+    }
+
+    .advantages-box ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+
+    .disadvantages-box {
+      background-color: #fff0f0;
+      border-left: 4px solid var(--danger-color);
+      padding: 20px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin: 20px 0;
+    }
+
+    .disadvantages-box h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #750e13;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .disadvantages-box p,
+    .disadvantages-box ul {
+      margin: 0;
+      color: #4c080b;
+      font-size: 0.95rem;
+    }
+
+    .disadvantages-box ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+
+    .font-code {
+      font-family: var(--font-code);
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 25px 0;
+    }
+
+    .concept-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .concept-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: #a8caff;
+    }
+
+    .concept-card h5 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      color: #161616;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .concept-card p,
+    .concept-card ul {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      padding-left: 0;
+    }
+
+    .concept-card ul {
+      padding-left: 18px;
+      margin-top: 8px;
+    }
+
+    .concept-card li {
+      margin-bottom: 6px;
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      margin: 25px 0;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--card-bg);
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .table th {
+      background-color: #f4f4f4;
+      color: #161616;
+      font-weight: bold;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-muted);
+      vertical-align: top;
+    }
+
+    .table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table tr:hover td {
+      background-color: #fcfcfc;
+      color: #161616;
+    }
+
+    .footer {
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+      margin-top: 60px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .badge-blue {
+      background-color: #edf5ff;
+      color: #002d9c;
+    }
+
+    .badge-green {
+      background-color: #defbe6;
+      color: #0e6027;
+    }
+
+    .badge-red {
+      background-color: #fff0f0;
+      color: #da1e28;
+    }
+
+    .badge-orange {
+      background-color: #fef0db;
+      color: #8a3c00;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-book"></i> DB2 Study Notes</h3>
+        <p>ITI course - Group A Manual</p>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li>
+            <a href="#topic14"><i class="fas fa-hdd"></i> Topic 14: Storage Architecture</a>
+            <ul>
+              <li><a href="#t14-concept">Concept & Architecture</a></li>
+              <li><a href="#t14-syntax">Syntax & CLP</a></li>
+              <li><a href="#t14-lab">Practical Lab</a></li>
+              <li><a href="#t14-troubleshoot">Best Practices</a></li>
+              <li><a href="#t14-summary">Cheat-Sheet</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic15"><i class="fas fa-file-signature"></i> Topic 15: Transaction Logging</a>
+            <ul>
+              <li><a href="#t15-concept">Concept & Architecture</a></li>
+              <li><a href="#t15-syntax">Syntax & CLP</a></li>
+              <li><a href="#t15-lab">Practical Lab</a></li>
+              <li><a href="#t15-troubleshoot">Best Practices</a></li>
+              <li><a href="#t15-summary">Cheat-Sheet</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic16"><i class="fas fa-toggle-on"></i> Topic 16: Lifecycle Management</a>
+            <ul>
+              <li><a href="#t16-concept">Concept & Architecture</a></li>
+              <li><a href="#t16-syntax">Syntax & CLP</a></li>
+              <li><a href="#t16-lab">Practical Lab</a></li>
+              <li><a href="#t16-troubleshoot">Best Practices</a></li>
+              <li><a href="#t16-summary">Cheat-Sheet</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic17"><i class="fas fa-exchange-alt"></i> Topic 17: DML & Transactions</a>
+            <ul>
+              <li><a href="#t17-concept">Concept & Architecture</a></li>
+              <li><a href="#t17-syntax">Syntax & CLP</a></li>
+              <li><a href="#t17-lab">Practical Lab</a></li>
+              <li><a href="#t17-troubleshoot">Best Practices</a></li>
+              <li><a href="#t17-summary">Cheat-Sheet</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic18"><i class="fas fa-user-lock"></i> Topic 18: Concurrency & Escalation</a>
+            <ul>
+              <li><a href="#t18-concept">Concept & Architecture</a></li>
+              <li><a href="#t18-syntax">Syntax & CLP</a></li>
+              <li><a href="#t18-lab">Practical Lab</a></li>
+              <li><a href="#t18-troubleshoot">Best Practices</a></li>
+              <li><a href="#t18-summary">Cheat-Sheet</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="container">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+
+        <div class="header">
+          <h1><i class="fas fa-database"></i> IBM DB2 Administration Study Notes</h1>
+          <p>Group A Course Manual: Topics 14, 15, 16, 17, & 18</p>
+        </div>
+
+        <div class="content">
+
+          <!-- TOPIC 14 -->
+          <section id="topic14" class="section">
+            <h2 class="section-title"><i class="fas fa-hdd"></i> Topic 14: Storage Architecture: Bufferpools & Custom
+              Tablespaces (SMS, DMS, & Automatic Storage)</h2>
+
+            <div class="subsection" id="t14-concept">
+              <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
+              <p>
+                In IBM DB2, the physical storage layer is abstracted through a highly structured <strong>Tablespace
+                  Architecture</strong>. Instead of mapping database tables directly to file systems, DB2 utilizes
+                tablespaces as logical layers that contain physical files or directory containers. Understanding
+                tablespaces and their dynamic relationship with memory is a key responsibility of DB2 administrators.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> The Three Tablespace Storage Models</h4>
+                <ul>
+                  <li>
+                    <strong>System Managed Space (SMS):</strong> In SMS tablespaces, the operating system's file system
+                    manages the storage. Each table is represented by files inside a specified OS directory. The
+                    operating system handles file growth and space allocation. While SMS has zero administration
+                    overhead, it is deprecated for user data in modern DB2 versions due to physical limits on high-speed
+                    directory writing.
+                  </li>
+                  <li>
+                    <strong>Database Managed Space (DMS):</strong> In DMS tablespaces, the DB2 engine directly manages
+                    raw storage partitions or pre-allocated files (containers). DB2 bypasses operating system buffering
+                    and schedules direct I/O. This provides massive performance benefits for enterprise systems but
+                    requires diligent DBA intervention to monitor and manually extend physical container files before
+                    they exhaust their allocated bounds.
+                  </li>
+                  <li>
+                    <strong>Automatic Storage:</strong> The modern enterprise gold standard. It combines the
+                    administration simplicity of SMS with the blazing direct performance of DMS. The DBA specifies
+                    system-wide storage paths at database creation, and DB2 automatically provisions containers, handles
+                    multi-path striping, and scales container sizes dynamically as tables expand.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-memory"></i> The Memory Cache Layer</h5>
+                  <p>
+                    <strong>Buffer Pools</strong> act as the dedicated memory cache layer for data pages. When an
+                    application issues a query, DB2 pre-loads pages from the tablespace containers on disk into the
+                    buffer pool. Future reads target this in-memory cache directly.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-broom"></i> The Dirty Pages Buffer</h5>
+                  <p>
+                    When rows are inserted or updated, DB2 modifies the data page inside the buffer pool immediately.
+                    This modified page is designated as a <strong>Dirty Page</strong>. Rather than forcing slow disk
+                    I/O, the page is held in the dirty pages buffer until background <strong>Page Cleaners
+                      (db2pclnr)</strong> flush it to disk asynchronously.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-bezier-curve"></i> Page Mapping Constraints</h5>
+                  <p>
+                    Every tablespace must be associated with a buffer pool. Crucially, the <strong>Page Size</strong> (4
+                    KB, 8 KB, 16 KB, or 32 KB) of a tablespace must match the page size of its assigned buffer pool
+                    exactly. A 16 KB tablespace cannot map to a 4 KB buffer pool, and attempting to link mismatched
+                    boundaries throws a fatal DB2 exception.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-layer-group"></i> Extents & Prefetching</h5>
+                  <p>
+                    An <strong>Extent</strong> is the block of pages written to a tablespace container before DB2
+                    stripes data to the next container. <strong>Prefetch Size</strong> specifies how many pages
+                    background prefetchers (db2pfch) read from disk in advance during sequential queries, resolving
+                    system bottlenecks.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-balance-scale"></i> Comparison: DB2 Tablespace Architecture vs. Other DBMS</h4>
+                <ul>
+                  <li>
+                    <strong>Oracle Comparison:</strong> Oracle uses tablespaces containing datafiles similarly to DB2's
+                    DMS model. However, DB2's Automatic Storage is built natively into the database configuration paths,
+                    whereas Oracle manages dynamic path scaling via external Oracle Automatic Storage Management (ASM)
+                    grid infrastructure.
+                  </li>
+                  <li>
+                    <strong>MySQL Comparison:</strong> MySQL InnoDB uses a single global system tablespace (`ibdata1`)
+                    or discrete table-based files (`.ibd` via `innodb_file_per_table`). MySQL lacks the native
+                    administrative facility to partition specific sets of user tables into highly customized, isolated
+                    physical tablespaces with different extent and prefetch granularities.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t14-syntax">
+              <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
+              <p>
+                Below is the raw, fully detailed SQL and Command Line Processor (CLP) syntax for creating bufferpools
+                and tablespaces using custom tuning parameters.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Bufferpools & Tablespaces Management</div>
+                <pre><code><span class="comment">-- 1. Create a custom 16 KB Buffer Pool with a size of 10,000 pages (approx. 160 MB)</span>
+CREATE BUFFERPOOL BP_RETAIL_16K SIZE 10000 PAGESIZE 16384;
+
+<span class="comment">-- 2. Alter the bufferpool to enable autonomic resizing via STMM</span>
+ALTER BUFFERPOOL BP_RETAIL_16K AUTOMATIC;
+
+<span class="comment">-- 3. Create a System Managed Space (SMS) Tablespace (Deprecated for User Data; optimal for Temp)</span>
+CREATE TABLESPACE TS_RETAIL_SMS
+  PAGESIZE 16384
+  MANAGED BY SYSTEM
+  USING ('D:\dbdata\sms_retail_container')
+  BUFFERPOOL BP_RETAIL_16K;
+
+<span class="comment">-- 4. Create a Database Managed Space (DMS) Tablespace with a pre-allocated file container of 20,000 pages (approx. 320 MB)</span>
+CREATE TABLESPACE TS_RETAIL_DMS
+  PAGESIZE 16384
+  MANAGED BY DATABASE
+  USING (FILE 'D:\dbdata\dms_retail_container.dat' 20000)
+  EXTENTSIZE 32
+  PREFETCHSIZE 64
+  BUFFERPOOL BP_RETAIL_16K
+  NO FILE SYSTEM CACHING;
+
+<span class="comment">-- 5. Create an Automatic Storage Tablespace (Modern Enterprise Standard)</span>
+CREATE TABLESPACE TS_RETAIL_AUTO
+  PAGESIZE 16384
+  MANAGED BY AUTOMATIC STORAGE
+  EXTENTSIZE 32
+  PREFETCHSIZE AUTOMATIC
+  BUFFERPOOL BP_RETAIL_16K
+  FILE SYSTEM CACHING;
+
+<span class="comment">-- 6. Check the physical state and configuration details of all active tablespaces</span>
+db2 "LIST TABLESPACES SHOW DETAIL"
+
+<span class="comment">-- 7. Inspect container structures for tablespace ID 3</span>
+db2 "LIST TABLESPACE CONTAINERS FOR 3 SHOW DETAIL"</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t14-lab">
+              <h3 class="subsection-title">3. Industry-Standard Lab: Retail Inventory & Warehousing</h3>
+              <p>
+                <strong>Scenario:</strong> The retail enterprise database `RET_DB` has high transactional data velocity.
+                We must design a robust database layout that isolates high-speed sales records from legacy customer
+                catalogs. We will build custom buffer pools, provision dedicated tablespaces, verify structural catalog
+                paths, and inspect tablespace status to ensure isolation.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">CLP Execution Script</div>
+                <pre><code><span class="comment"># Initialize database environment and connect to the retail database</span>
+db2 "CONNECT TO RET_DB"
+
+<span class="comment"># Provision dedicated high-performance buffer pools</span>
+db2 "CREATE BUFFERPOOL BP_CATALOG_8K SIZE 5000 PAGESIZE 8192"
+db2 "CREATE BUFFERPOOL BP_TX_16K SIZE 15000 PAGESIZE 16384"
+
+<span class="comment"># Provision isolated tablespaces matching bufferpool pagesize parameters</span>
+db2 "CREATE TABLESPACE TS_CATALOG
+     PAGESIZE 8192
+     MANAGED BY AUTOMATIC STORAGE
+     EXTENTSIZE 16
+     PREFETCHSIZE 32
+     BUFFERPOOL BP_CATALOG_8K"
+
+db2 "CREATE TABLESPACE TS_SALES_TX
+     PAGESIZE 16384
+     MANAGED BY AUTOMATIC STORAGE
+     EXTENTSIZE 32
+     PREFETCHSIZE AUTOMATIC
+     BUFFERPOOL BP_TX_16K"
+
+<span class="comment"># Create catalog and transactional tables within the targeted tablespaces</span>
+db2 "CREATE TABLE CatalogProducts (
+       ProductID INT NOT NULL PRIMARY KEY,
+       ProductName VARCHAR(100) NOT NULL,
+       Price DECIMAL(10,2) NOT NULL
+     ) IN TS_CATALOG"
+
+db2 "CREATE TABLE SalesTransactions (
+       TxID VARCHAR(30) NOT NULL PRIMARY KEY,
+       ProductID INT NOT NULL,
+       Qty INT NOT NULL,
+       TxTimestamp TIMESTAMP NOT NULL
+     ) IN TS_SALES_TX"
+
+<span class="comment"># Insert verification records</span>
+db2 "INSERT INTO CatalogProducts VALUES (101, 'Premium Wireless Earbuds', 89.99)"
+db2 "INSERT INTO SalesTransactions VALUES ('TX-2026-0001', 101, 2, CURRENT TIMESTAMP)"
+
+<span class="comment"># Verify tablespace metadata</span>
+db2 "LIST TABLESPACES SHOW DETAIL"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Mock CLI Console Output: db2 "LIST TABLESPACES SHOW DETAIL"</h4>
+                <pre>
+ Tablespaces for Current Database
+
+ Tablespace ID                        = 0
+ Name                                 = SYSCATSPACE
+ Type                                 = System managed space
+ Contents                             = All data
+ State                                = 0x0000
+   Detailed explanation:
+     Normal
+
+ Tablespace ID                        = 3
+ Name                                 = TS_CATALOG
+ Type                                 = Automatic storage
+ Contents                             = All data
+ State                                = 0x0000
+   Detailed explanation:
+     Normal
+ Total pages                          = 128000
+ Useable pages                        = 127968
+ Free pages                           = 127936
+ High water mark (pages)              = 32
+ Page size (bytes)                    = 8192
+ Extent size (pages)                  = 16
+ Prefetch size (pages)                = 32
+ Number of containers                 = 1
+
+ Tablespace ID                        = 4
+ Name                                 = TS_SALES_TX
+ Type                                 = Automatic storage
+ Contents                             = All data
+ State                                = 0x0000
+   Detailed explanation:
+     Normal
+ Total pages                          = 256000
+ Useable pages                        = 255936
+ Free pages                           = 255904
+ High water mark (pages)              = 64
+ Page size (bytes)                    = 16384
+ Extent size (pages)                  = 32
+ Prefetch size (pages)                = 64
+ Number of containers                 = 2</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cog"></i> ITI Lab Walkthrough: Inside the Engine</h4>
+                <ol>
+                  <li>
+                    <strong>Memory Isolation:</strong> When data is read from `CatalogProducts` or `SalesTransactions`,
+                    DB2 routes the pages to different buffer pools (`BP_CATALOG_8K` and `BP_TX_16K`). This guarantees
+                    that heavy transactional sales activity does not flush catalog pages from memory.
+                  </li>
+                  <li>
+                    <strong>Physical Segregation:</strong> The automatic storage tablespaces automatically allocate
+                    files across the active server paths. Because `TS_SALES_TX` has an extent size of 32 pages, DB2
+                    writes blocks of 512 KB (32 * 16 KB) to the first container before striping to the second container,
+                    optimizing write throughput.
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="t14-troubleshoot">
+              <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
+              <p>
+                Storage design errors can paralyze a production database. Modern DBAs must balance administration
+                overhead and baseline performance limits.
+              </p>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Storage Best Practices</h4>
+                <ul>
+                  <li><strong>Use Automatic Storage:</strong> Avoid SMS and manual DMS containers unless dealing with
+                    specialized environments (like legacy raw disks or bare-metal partitions).</li>
+                  <li><strong>Optimize Pagesize:</strong> Choose a 4 KB or 8 KB page size for transactional tables
+                    (OLTP) with small row widths. Use 16 KB or 32 KB page sizes for analytical tables (OLAP) to minimize
+                    indexing overhead and avoid row length limit overflow.</li>
+                  <li><strong>Align File System Caching:</strong> Use `NO FILE SYSTEM CACHING` for DMS/Automatic storage
+                    containers on databases where the DB2 engine handles raw caching. This prevents dual-caching memory
+                    waste (double-buffering in OS memory and DB2 bufferpools).</li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-triangle"></i> Troubleshooting Diagnostic Code: SQL0289N</h4>
+                <p><strong>Error Message:</strong> SQL0289N Cannot allocate new pages in table space "TS_SALES_TX".</p>
+                <p><strong>Root Cause:</strong> The tablespace container files are full. Either the system has run out
+                  of disk space, or a DMS tablespace has reached its pre-allocated boundaries and does not support
+                  automatic resizing.</p>
+                <p><strong>Immediate DBA Remediation:</strong></p>
+                <ul>
+                  <li>
+                    <strong>Remedy A: Extend the physical boundaries of the active container file (DMS)</strong>
+                    <br><code>db2 "ALTER TABLESPACE TS_SALES_TX RESIZE (FILE 'D:\dbdata\dms_retail_container.dat' 40000)"</code>
+                  </li>
+                  <li>
+                    <strong>Remedy B: Dynamically add a secondary container file (DMS)</strong>
+                    <br><code>db2 "ALTER TABLESPACE TS_SALES_TX ADD (FILE 'D:\dbdata\dms_retail_container_2.dat' 20000)"</code>
+                  </li>
+                  <li>
+                    <strong>Remedy C: Turn on Autoresize for the Tablespace (Automatic Storage / Resizable DMS)</strong>
+                    <br><code>db2 "ALTER TABLESPACE TS_SALES_TX AUTORESIZE YES INCREASESIZE 10 PERCENT MAXSIZE 2000 M"</code>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t14-summary">
+              <h3 class="subsection-title">5. Topic 14 Summary: Storage Architecture Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Tablespace Type</th>
+                      <th>Space Allocator</th>
+                      <th>Dynamic Growth Mode</th>
+                      <th>I/O Performance Profile</th>
+                      <th>Administrative Cost</th>
+                      <th>Optimal Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>System Managed (SMS)</strong></td>
+                      <td>Operating System</td>
+                      <td>OS file system writes files dynamically</td>
+                      <td>Moderate (bottlenecked by OS file system buffering)</td>
+                      <td>Very Low (zero manual containers)</td>
+                      <td>System temporary tablespaces and basic catalog structures.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Database Managed (DMS)</strong></td>
+                      <td>DB2 Database Engine</td>
+                      <td>Requires explicit manual container resizing/addition</td>
+                      <td>Extreme (direct disk block access, bypasses OS filesystem)</td>
+                      <td>High (DBA must monitor tablespace space constantly)</td>
+                      <td>Ultra-low-latency high-frequency tables on raw disk partitions.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Automatic Storage</strong></td>
+                      <td>DB2 Engine via paths</td>
+                      <td>Auto-resizes and auto-stripes dynamically by DB2</td>
+                      <td>Outstanding (matches DMS direct file speeds)</td>
+                      <td>Low (fully automated by global config paths)</td>
+                      <td>All modern enterprise transaction and analytical tables (Standard).</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOPIC 15 -->
+          <section id="topic15" class="section">
+            <h2 class="section-title"><i class="fas fa-file-signature"></i> Topic 15: Transaction Logging & ACID
+              Properties: Write-Ahead Logging (WAL)</h2>
+
+            <div class="subsection" id="t15-concept">
+              <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
+              <p>
+                IBM DB2 ensures data integrity, recovery, and absolute consistency (ACID compliance) by adhering
+                strictly to the <strong>Write-Ahead Logging (WAL)</strong> protocol.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> The Write-Ahead Logging (WAL) Protocol</h4>
+                <p>
+                  WAL mandates that <strong>no modified data pages (dirty pages) inside the buffer pool are written to
+                    disk before the corresponding log records describing those modifications are written to persistent
+                    log files on disk.</strong> This guarantees that in the event of a sudden system crash, power
+                  failure, or core panic, DB2 can reconstruct committed states and roll back uncommitted changes.
+                </p>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-inbox"></i> The Log Buffer</h5>
+                  <p>
+                    A designated memory segment defined by `LOGBUFSZ` inside the Database Shared Memory pool. It
+                    temporarily stores transactional change records as they are executed by client applications.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-pencil-alt"></i> db2loggw (Log Writer)</h5>
+                  <p>
+                    The dedicated background Engine Dispatchable Unit (EDU) responsible for flushing transactional logs
+                    from the Log Buffer to disk. It writes immediately upon a `COMMIT`, when the buffer is full, or
+                    every 1 second.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-glasses"></i> db2loggr (Log Reader)</h5>
+                  <p>
+                    The background thread that retrieves physical logs from storage during rollback operations
+                    (`ROLLBACK TO SAVEPOINT`) or recovery phases.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-history"></i> Recovery Engines</h5>
+                  <p>
+                    <strong>Crash Recovery</strong> processes the active log files on startup, replaying committed
+                    transactions (REDO) and reversing uncommitted changes (UNDO). <strong>Rollforward Recovery</strong>
+                    replays archived logs to restore a database to a specific point-in-time.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-balance-scale"></i> Comparison: Circular Logging vs. Archival Logging</h4>
+                <ul>
+                  <li>
+                    <strong>Circular Logging (Default):</strong> Active log files are reused in a ring-style queue. Once
+                    the last log file is full, the engine wraps around to overwrite the first file, provided it does not
+                    contain active transactions.
+                    <br><em>Limit:</em> Only supports offline backups and crash recovery. Does not support point-in-time
+                    rollforward recovery.
+                  </li>
+                  <li>
+                    <strong>Archival Logging:</strong> As each log file becomes full, it is locked, flagged as filled,
+                    and backed up asynchronously by DB2 to a dedicated archive storage path.
+                    <br><em>Advantage:</em> Supports online backups and point-in-time recovery, ensuring zero data loss
+                    during major storage crashes.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t15-syntax">
+              <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
+              <p>
+                Below is the syntax to configure database logging parameters, inspect transaction logging directories,
+                and switch from circular logging to archival logging.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Logging Configuration Commands</div>
+                <pre><code><span class="comment">-- 1. Inspect current logging parameters in the database configuration</span>
+db2 "GET DATABASE CONFIGURATION FOR ITIDB"
+
+<span class="comment">-- 2. Size the Log Buffer to 1024 pages (4 MB of memory)</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING LOGBUFSZ 1024"
+
+<span class="comment">-- 3. Set primary log files to 12 and secondary (overflow) logs to 8</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING LOGPRIMARY 12 LOGSECOND 8"
+
+<span class="comment">-- 4. Set the size of each log file to 8192 pages (8192 * 4 KB = 32 MB per log file)</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING LOGFILSIZ 8192"
+
+<span class="comment">-- 5. Redirect transaction logs to a dedicated high-speed disk directory</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING NEWLOGPATH /dblogs/retail_active/"
+
+<span class="comment">-- 6. Enable Archival Logging (Switches database recovery model)</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING LOGARCHMETH1 DISK:/dblogs/retail_archive/"
+
+<span class="comment">-- 7. NOTE: Changing LOGARCHMETH1 puts the database into BACKUP PENDING state. Run an offline backup to clear the block</span>
+db2 "BACKUP DATABASE ITIDB TO /dbbackups/"
+
+<span class="comment">-- 8. Command to execute rollforward recovery after restoring an online backup</span>
+db2 "ROLLFORWARD DATABASE ITIDB TO END OF LOGS AND STOP"</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t15-lab">
+              <h3 class="subsection-title">3. Industry-Standard Lab: Retail Inventory & Warehousing</h3>
+              <p>
+                <strong>Scenario:</strong> A retail warehouse database must support online transactions with zero data
+                loss. We will configure the database to use archival logging, trigger a backup to clear the pending
+                state, simulate an uncommitted transaction state, execute a simulated crash, and verify the transaction
+                rollback upon crash recovery.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">CLP Setup and Execution Script</div>
+                <pre><code><span class="comment"># Connect to the transactional database</span>
+db2 "CONNECT TO RET_DB"
+
+<span class="comment"># Configure high-performance logging boundaries</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR RET_DB USING LOGPRIMARY 5 LOGSECOND 3 LOGFILSIZ 2048 LOGBUFSZ 512"
+
+<span class="comment"># Enable archival logging to a dedicated storage path</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR RET_DB USING LOGARCHMETH1 DISK:/var/db2/logs/archive/"
+
+<span class="comment"># Disconnect all applications to enable backup processing</span>
+db2 "FORCE APPLICATION ALL"
+db2 "TERMINATE"
+
+<span class="comment"># Run the mandatory offline backup to clear the BACKUP PENDING status</span>
+db2 "BACKUP DATABASE RET_DB TO /var/db2/backups/"
+
+<span class="comment"># Reconnect and insert records</span>
+db2 "CONNECT TO RET_DB"
+db2 "CREATE TABLE Orders (OrderID INT PRIMARY KEY, TotalAmount DECIMAL(10,2))"
+
+<span class="comment"># Initiate transaction block</span>
+db2 "INSERT INTO Orders VALUES (1, 1500.50)"
+db2 "INSERT INTO Orders VALUES (2, 2900.00)"
+
+<span class="comment"># Simulate uncommitted dirty state (DO NOT COMMIT)</span>
+<span class="comment"># Now, simulate a sudden engine crash in a parallel terminal using 'db2stop force'</span>
+db2stop force</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Mock CLI Console Output: db2stop force & Restart Database</h4>
+                <pre>
+$ db2stop force
+2026-05-22 12:45:12     0   0   SQL1064N  DB2STOP processing was successful.
+
+$ db2 "CONNECT TO RET_DB"
+SQL1015N  The database "RET_DB" is in an inconsistent state. SQLSTATE=55039
+
+$ db2 "RESTART DATABASE RET_DB"
+DB20000I  The RESTART DATABASE command completed successfully.
+
+$ db2 "CONNECT TO RET_DB"
+   Database Connection Information
+ Database server        = DB2/LINUXU64 11.5.0
+ SQL authorization ID   = DB2INST1
+ Local database alias   = RET_DB
+
+$ db2 "SELECT * FROM Orders"
+
+ORDERID     TOTALAMOUNT
+----------- -----------
+
+  0 record(s) selected.</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cog"></i> ITI Lab Walkthrough: Inside the Engine</h4>
+                <ol>
+                  <li>
+                    <strong>Crash Sequence:</strong> When the database was forcefully stopped via `db2stop force`, the
+                    two inserted records existed only as dirty pages in the buffer pool and as active uncommitted
+                    records in the log buffer.
+                  </li>
+                  <li>
+                    <strong>Inconsistent State:</strong> On reconnect, DB2 detected that the database was not shut down
+                    cleanly. The database controls flagged an inconsistent state (`SQL1015N`), preventing connections.
+                  </li>
+                  <li>
+                    <strong>RESTART DATABASE Processing:</strong>
+                    <ul>
+                      <li><strong>REDO Phase:</strong> The engine scanned the active logs, replaying committed changes
+                        to disk.</li>
+                      <li><strong>UNDO Phase:</strong> The engine identified that transactions 1 and 2 did not have a
+                        corresponding `COMMIT` log entry. DB2 read the logs backward using `db2loggr` and reversed the
+                        uncommitted changes, ensuring the database restarted in a clean, consistent state.</li>
+                    </ul>
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="t15-troubleshoot">
+              <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
+              <p>
+                Logging operations are I/O intensive. DBAs must monitor active transaction log allocations to prevent
+                write delays and database locks.
+              </p>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Log Performance Best Practices</h4>
+                <ul>
+                  <li><strong>Isolate Log I/O:</strong> Always redirect active log paths (`NEWLOGPATH`) to a dedicated,
+                    low-latency, RAID-10 SSD disk array. This keeps write operations separated from tablespace read
+                    activity, avoiding disk head contention.</li>
+                  <li><strong>Size LOGBUFSZ Appropriately:</strong> Size the log buffer (`LOGBUFSZ`) to at least 1024 or
+                    2048 pages for high-throughput OLTP workloads to prevent applications from waiting on disk writes
+                    during transaction logging.</li>
+                  <li><strong>Account for Transaction Volume:</strong> Balance `LOGPRIMARY` and `LOGSECOND` settings.
+                    Allocate enough primary logs to handle standard daily operations, and use secondary logs only to
+                    absorb sudden transaction spikes.</li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-triangle"></i> Troubleshooting Diagnostic Code: SQL0964C</h4>
+                <p><strong>Error Message:</strong> SQL0964C The transaction log for the database is full.</p>
+                <p><strong>Root Cause:</strong> The active log space is exhausted. This occurs when an application
+                  executes a massive bulk update without issuing commits, or when a long-running transaction remains
+                  open (uncommitted) for hours, preventing DB2 from reusing log space.</p>
+                <p><strong>Immediate DBA Remediation:</strong></p>
+                <ul>
+                  <li>
+                    <strong>Remedy A: Identify the locking agent and forcefully terminate its session</strong>
+                    <br>Run `db2 "LIST APPLICATIONS SHOW DETAIL"` to locate the application with the oldest transaction
+                    status. Force it:
+                    <br><code>db2 "FORCE APPLICATION (AGENT_ID)"</code>
+                  </li>
+                  <li>
+                    <strong>Remedy B: Dynamically allocate secondary log capacity to absorb the load</strong>
+                    <br><code>db2 "UPDATE DB CFG FOR RET_DB USING LOGSECOND 15"</code>
+                    <br><small>(Note: DB2 dynamically provisions secondary logs at execution time if needed, bypassing
+                      database restart requirements).</small>
+                  </li>
+                  <li>
+                    <strong>Remedy C: Optimize application code patterns to execute batch commits</strong>
+                    <br>Ensure batch processing applications run `COMMIT` statements periodically (e.g., every 5,000 row
+                    modifications).
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t15-summary">
+              <h3 class="subsection-title">5. Topic 15 Summary: Transaction Logging Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Metric / Aspect</th>
+                      <th>Circular Logging (Default)</th>
+                      <th>Archival Logging (Production Standard)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Log Reuse Method</strong></td>
+                      <td>Overwrites inactive log files in a circular loop.</td>
+                      <td>Copies full logs to archive directories before reuse.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Online Database Backups</strong></td>
+                      <td>Not Supported. The database must be offline to back up.</td>
+                      <td>Fully Supported. Users can read and write during backups.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Point-in-Time Recovery</strong></td>
+                      <td>No. Can only recover to the exact moment of a crash.</td>
+                      <td>Yes. Can restore database to any specific second in the past.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Storage Footprint</strong></td>
+                      <td>Fixed (pre-allocated primary and secondary logs).</td>
+                      <td>Growing (requires constant archiving disk monitoring).</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Tuning Focus</strong></td>
+                      <td>`LOGFILSIZ`, `LOGPRIMARY` to prevent Log Full states.</td>
+                      <td>`LOGARCHMETH1`, `NEWLOGPATH` to isolate write speeds.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOPIC 16 -->
+          <section id="topic16" class="section">
+            <h2 class="section-title"><i class="fas fa-toggle-on"></i> Topic 16: Database & Instance Lifecycle
+              Management (Activation, Deactivation, & DBM/DB CFG)</h2>
+
+            <div class="subsection" id="t16-concept">
+              <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
+              <p>
+                In IBM DB2, operations are split into two management scopes: the <strong>Instance Level</strong>, which
+                runs as an isolated server environment, and the <strong>Database Level</strong>, which represents
+                individual data stores inside the instance.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> Understanding the Configuration Scopes</h4>
+                <ul>
+                  <li>
+                    <strong>Database Manager Configuration (DBM CFG):</strong> A global configuration file that controls
+                    parameters for the entire DB2 Instance. This determines settings like TCP/IP service ports,
+                    administrative groups, diagnostic levels (`DIAGLEVEL`), and global system memory limits
+                    (`INSTANCE_MEMORY`).
+                  </li>
+                  <li>
+                    <strong>Database Configuration (DB CFG):</strong> A local configuration file dedicated to a single
+                    database. This manages database-specific parameters such as default buffer pool sizes, logging
+                    settings, sorting memory (`SORTHEAP`), and concurrency lock lists (`LOCKLIST`).
+                  </li>
+                </ul>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-rocket"></i> Instance Creation & Lifecycle</h5>
+                  <p>
+                    DB2 instances are created via operating-system utilities (`db2icrt`), listed (`db2ilist`), started
+                    (`db2start`), and stopped (`db2stop`). Each instance runs as an isolated process group under the
+                    control of the main system controller thread `db2sysc`.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-link"></i> Implicit Database Activation</h5>
+                  <p>
+                    Occurs automatically when the first application executes a `CONNECT TO` command. DB2 dynamically
+                    allocates database shared memory and starts background prefetchers and cleaners. Memory is
+                    deallocated once the last application disconnects.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-play"></i> Explicit DB Activation</h5>
+                  <p>
+                    Executed via `ACTIVATE DATABASE`. This command pre-allocates all database memory pools and starts
+                    all background EDU threads, keeping the database resident in memory regardless of active client
+                    connections.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-power-off"></i> Explicit DB Deactivation</h5>
+                  <p>
+                    Executed via `DEACTIVATE DATABASE`. This command flushes remaining dirty memory buffers to disk,
+                    closes tablespaces, terminates background engine threads, and releases all database memory.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-bolt"></i> Why Explicit Activation is Essential for Enterprise Databases</h4>
+                <p>
+                  Relying on implicit activation creates massive performance overhead for the first connection as DB2
+                  mounts files and allocates memory. If applications connect and disconnect frequently, the database
+                  constant mounting and unmounting causes massive memory churn and high CPU overhead.
+                </p>
+                <p>
+                  <strong>Autonomic Benefit:</strong> Explicit activation ensures that the database shared memory pool
+                  and buffer pools remain loaded in memory, ensuring instant connection speeds and consistent
+                  application response times.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="t16-syntax">
+              <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
+              <p>
+                Below is the syntax to manage the DB2 instance service, modify DBM/DB configurations, and execute
+                explicit database activation or deactivation commands.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Instance & Configuration Utilities</div>
+                <pre><code><span class="comment">-- 1. Create a new DB2 Instance (Executed as OS root user)</span>
+sudo /opt/ibm/db2/V11.5/instance/db2icrt -u db2fenc1 db2inst1
+
+<span class="comment">-- 2. List all registered instances on this host</span>
+db2ilist
+
+<span class="comment">-- 3. Get the active instance name in your current shell</span>
+db2iget
+
+<span class="comment">-- 4. Start the instance database manager processes</span>
+db2start
+
+<span class="comment">-- 5. Forcefully stop the instance database manager</span>
+db2stop force
+
+<span class="comment">-- 6. Retrieve Database Manager (Instance) configurations</span>
+db2 "GET DATABASE MANAGER CONFIGURATION"
+
+<span class="comment">-- 7. Dynamically change DBM diagnostics details immediately in memory</span>
+db2 "UPDATE DATABASE MANAGER CONFIGURATION USING DIAGLEVEL 4 IMMEDIATE"
+
+<span class="comment">-- 8. Retrieve Database specific configurations</span>
+db2 "GET DATABASE CONFIGURATION FOR RET_DB"
+
+<span class="comment">-- 9. Update a dynamic DB configuration parameter immediately</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR RET_DB USING LOCKLIST 10000 IMMEDIATE"
+
+<span class="comment">-- 10. Update a static DB configuration parameter (requires deactivation to take effect)</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR RET_DB USING LOGBUFSZ 2048 DEFERRED"
+
+<span class="comment">-- 11. Explicitly activate and deactivate databases</span>
+db2 "ACTIVATE DATABASE RET_DB"
+db2 "DEACTIVATE DATABASE RET_DB"</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t16-lab">
+              <h3 class="subsection-title">3. Industry-Standard Lab: Retail Inventory & Warehousing</h3>
+              <p>
+                <strong>Scenario:</strong> As the DBA for a retail chain, you are preparing for high-volume database
+                maintenance. Before starting the batch load, you must configure instance diagnostic tracking,
+                dynamically update critical database memory allocations, explicitly activate the database to verify
+                performance, and safely deactivate it once maintenance is complete.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">CLP Deployment Script</div>
+                <pre><code><span class="comment"># 1. Verify you are logged in as the instance owner</span>
+whoami
+
+<span class="comment"># 2. Source the DB2 profile to load terminal environment variables</span>
+source /home/db2inst1/sqllib/db2profile
+
+<span class="comment"># 3. Start the instance</span>
+db2start
+
+<span class="comment"># 4. Set the global instance diagnostic path to a custom directory</span>
+db2 "UPDATE DATABASE MANAGER CONFIGURATION USING DIAGPATH '/var/db2/diagnostics/'"
+
+<span class="comment"># 5. Dynamically increase application connection limits in the DBM configuration</span>
+db2 "UPDATE DATABASE MANAGER CONFIGURATION USING MAX_CONNECTIONS 500"
+
+<span class="comment"># 6. Check database status and explicitly activate RET_DB</span>
+db2 "ACTIVATE DATABASE RET_DB"
+
+<span class="comment"># 7. Dynamically modify DB memory parameters to handle bulk inventory modifications</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR RET_DB USING LOCKLIST 5000 IMMEDIATE"
+db2 "UPDATE DATABASE CONFIGURATION FOR RET_DB USING SORTHEAP 2048 IMMEDIATE"
+
+<span class="comment"># 8. Perform application query verification</span>
+db2 "CONNECT TO RET_DB"
+db2 "SELECT COUNT(*) FROM CatalogProducts"
+db2 "TERMINATE"
+
+<span class="comment"># 9. Gracefully deactivate the database</span>
+db2 "DEACTIVATE DATABASE RET_DB"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Mock CLI Console Output: Activation and Deactivation Pipeline</h4>
+                <pre>
+$ db2 "ACTIVATE DATABASE RET_DB"
+DB20000I  The ACTIVATE DATABASE command completed successfully.
+
+$ db2 "UPDATE DB CFG FOR RET_DB USING LOCKLIST 5000 IMMEDIATE"
+DB20000I  The UPDATE DATABASE CONFIGURATION command completed successfully.
+
+$ db2 "UPDATE DB CFG FOR RET_DB USING LOGBUFSZ 2048 DEFERRED"
+DB20000I  The UPDATE DATABASE CONFIGURATION command completed successfully.
+SQL1363W  One or more of the parameters submitted for immediate modification 
+could not be changed dynamically. For these parameters, the database 
+configuration will not reflect the changes until the next database activation.
+
+$ db2 "DEACTIVATE DATABASE RET_DB"
+DB20000I  The DEACTIVATE DATABASE command completed successfully.
+
+$ db2 "ACTIVATE DATABASE RET_DB"
+DB20000I  The ACTIVATE DATABASE command completed successfully.
+<span class="comment"># LOGBUFSZ has now taken effect in database shared memory</span></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cog"></i> ITI Lab Walkthrough: Inside the Engine</h4>
+                <ol>
+                  <li>
+                    <strong>Activation Phase:</strong> When `ACTIVATE DATABASE` is executed, DB2 reserves the
+                    `DATABASE_MEMORY` shared memory pool in the OS, spawns thread workers (`db2pfch`, `db2pclnr`), and
+                    allocates buffer pools. The engine remains initialized and active even after `TERMINATE` is called
+                    to end connection sessions.
+                  </li>
+                  <li>
+                    <strong>Dynamic updates (SQL1363W warning):</strong> `LOCKLIST` can be modified in-memory
+                    immediately using the `IMMEDIATE` keyword because the lock manager supports dynamic sizing. However,
+                    changes to `LOGBUFSZ` must be `DEFERRED` because the log buffer structure cannot be resized without
+                    recycling the database shared memory pool via deactivation and reactivation.
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="t16-troubleshoot">
+              <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
+              <p>
+                Configuring instance and database parameters requires an understanding of physical memory allocations
+                and operating system level access permissions.
+              </p>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Configuration Best Practices</h4>
+                <ul>
+                  <li><strong>Enable Dynamic Configuration:</strong> Where possible, execute `UPDATE DB CFG` with the
+                    `IMMEDIATE` keyword to apply changes dynamically in memory without restarting production databases.
+                  </li>
+                  <li><strong>Set DIAGLEVEL Safely:</strong> Set `DIAGLEVEL` to `3` in production environments. Setting
+                    it to `4` (Capture All) logs comprehensive engine traces, which causes high I/O overhead and quickly
+                    fills diagnostic disks.</li>
+                  <li><strong>Explicitly Activate Production Databases:</strong> Always run `ACTIVATE DATABASE` on
+                    database servers immediately after instance boot scripts (`db2start`) to prevent application
+                    connection latency.</li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-triangle"></i> Troubleshooting Diagnostic Code: SQL1390C / SQL1024N
+                </h4>
+                <p><strong>Error Message:</strong> SQL1390C The environment variable DB2INSTANCE is not defined, or
+                  SQL1024N A database connection does not exist.</p>
+                <p><strong>Root Cause:</strong> The active operating system shell does not know which DB2 instance to
+                  target. This occurs when logging in as a system user other than the instance owner, or when DB2
+                  environment profiles are not loaded on shell startup.</p>
+                <p><strong>Immediate DBA Remediation:</strong></p>
+                <ul>
+                  <li>
+                    <strong>Remedy A: Source the instance profile manually inside the active shell</strong>
+                    <br>Run this command to load the standard DB2 environment settings:
+                    <br><code>source /home/db2inst1/sqllib/db2profile</code>
+                  </li>
+                  <li>
+                    <strong>Remedy B: Explicitly set the target instance environment variable</strong>
+                    <br>Identify the instance owner name and export the variable:
+                    <br><code>export DB2INSTANCE=db2inst1</code>
+                  </li>
+                  <li>
+                    <strong>Remedy C: Verify DB2 system group memberships</strong>
+                    <br>Ensure your active operating system user is a registered member of the DB2 administrative groups
+                    (`db2iadm1` or `sysadm`).
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t16-summary">
+              <h3 class="subsection-title">5. Topic 16 Summary: Configuration & Lifecycle Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Configuration Level</th>
+                      <th>Primary Scope</th>
+                      <th>Command to Retrieve Settings</th>
+                      <th>Example Key Parameters</th>
+                      <th>Dynamic Modification Mode</th>
+                      <th>Typical Lifecycle Scope</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>DBM CFG</strong></td>
+                      <td>Entire DB2 Instance (all local databases)</td>
+                      <td>`db2 "GET DBM CFG"`</td>
+                      <td>`DIAGLEVEL`, `SVCENAME`, `INSTANCE_MEMORY`</td>
+                      <td>Supports `IMMEDIATE` for diagnostic level paths</td>
+                      <td>Controlled via `db2start` and `db2stop` services</td>
+                    </tr>
+                    <tr>
+                      <td><strong>DB CFG</strong></td>
+                      <td>Single Target Database</td>
+                      <td>`db2 "GET DB CFG FOR <dbname>"`</td>
+                      <td>`LOCKLIST`, `LOGBUFSZ`, `LOGPRIMARY`</td>
+                      <td>Supports `IMMEDIATE` and `DEFERRED` parameters</td>
+                      <td>Controlled via `ACTIVATE` and `DEACTIVATE` commands</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOPIC 17 -->
+          <section id="topic17" class="section">
+            <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Topic 17: Core DML Operations, Transaction
+              Boundaries, & Savepoints</h2>
+
+            <div class="subsection" id="t17-concept">
+              <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
+              <p>
+                IBM DB2 relies on Data Manipulation Language (DML) statements to process data, utilizing
+                <strong>Transaction Boundaries</strong> and <strong>Savepoints</strong> to ensure transactional
+                consistency.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> Transaction Boundaries Demystified</h4>
+                <p>
+                  A transaction is a logical unit of work that contains one or more DML statements. In DB2, a
+                  transaction starts implicitly with the first executable DML statement. It is terminated explicitly by
+                  issuing a `COMMIT` or `ROLLBACK` command.
+                </p>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-database"></i> COMMIT Internals</h5>
+                  <p>
+                    When a transaction commits, DB2 writes a `COMMIT` record to the log buffer, and the log writer
+                    `db2loggw` immediately flushes the log buffer to disk. Once written, the changes are permanent. Data
+                    pages in the buffer pool are modified immediately but may be flushed to disk later by background
+                    cleaners.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-undo"></i> ROLLBACK Internals</h5>
+                  <p>
+                    A rollback reverses all changes made during the active transaction. DB2 reads the active logs
+                    backward using the log reader `db2loggr` and restores data in both the buffer pool and tablespaces
+                    to its pre-transaction state, releasing all locks.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-map-pin"></i> Savepoint Architecture</h5>
+                  <p>
+                    A <strong>Savepoint</strong> is a logical checkpoint established inside a transaction block. It
+                    allows applications to rollback a subset of changes (partial rollback) to a specific point without
+                    aborting or committing the entire transaction.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-tasks"></i> Compilation Pipeline</h5>
+                  <p>
+                    Every DML statement (SELECT, INSERT, UPDATE, DELETE, MERGE) is processed by the SQL compiler, which
+                    performs syntax checking, catalog validation, and selects the lowest-cost access plan via the
+                    Optimizer before execution.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-balance-scale"></i> Comparison: DB2 Savepoints vs. Oracle/MySQL</h4>
+                <ul>
+                  <li>
+                    <strong>Oracle Comparison:</strong> Oracle supports standard savepoints similarly to DB2. However,
+                    DB2 provides the unique option `ON ROLLBACK RETAIN CURSORS`, which allows open SELECT cursors to
+                    remain active even after a partial rollback to a savepoint occurs, reducing application overhead.
+                  </li>
+                  <li>
+                    <strong>MySQL Comparison:</strong> MySQL InnoDB supports basic SAVEPOINT commands. However, MySQL
+                    lacks advanced cursor retention controls and handles bulk rollback tasks slower because it relies on
+                    undo tablespaces rather than high-performance log-directed pointer rollbacks.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t17-syntax">
+              <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
+              <p>
+                Below is the standard DML syntax for data manipulation alongside transaction control and savepoint
+                commands.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 SQL - DML & Transaction Controls</div>
+                <pre><code><span class="comment">-- 1. Standard INSERT statement</span>
+INSERT INTO Inventory (ItemID, ItemName, Qty, WarehouseID) 
+VALUES (201, 'High-Tensile Steel Bracket', 450, 'WH-02');
+
+<span class="comment">-- 2. Standard UPDATE statement</span>
+UPDATE Inventory SET Qty = Qty - 50 WHERE ItemID = 201;
+
+<span class="comment">-- 3. Standard DELETE statement</span>
+DELETE FROM Inventory WHERE Qty = 0;
+
+<span class="comment">-- 4. MERGE (Upsert) Statement: Merges incoming rows into the target table</span>
+MERGE INTO Inventory AS Target
+USING (VALUES (201, 'High-Tensile Steel Bracket', 600, 'WH-02')) AS Source (ItemID, ItemName, Qty, WarehouseID)
+ON Target.ItemID = Source.ItemID
+WHEN MATCHED THEN
+  UPDATE SET Target.Qty = Source.Qty
+WHEN NOT MATCHED THEN
+  INSERT (ItemID, ItemName, Qty, WarehouseID) 
+  VALUES (Source.ItemID, Source.ItemName, Source.Qty, Source.WarehouseID);
+
+<span class="comment">-- 5. Transaction Commit and Rollback</span>
+COMMIT;
+ROLLBACK;
+
+<span class="comment">-- 6. Establish a Savepoint with cursor retention</span>
+SAVEPOINT SP_RESERVED_QTY ON ROLLBACK RETAIN CURSORS;
+
+<span class="comment">-- 7. Execute partial rollback to a designated savepoint</span>
+ROLLBACK TO SAVEPOINT SP_RESERVED_QTY;
+
+<span class="comment">-- 8. Explicitly release a savepoint to free memory resources</span>
+RELEASE SAVEPOINT SP_RESERVED_QTY;</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t17-lab">
+              <h3 class="subsection-title">3. Industry-Standard Lab: Retail Inventory & Warehousing</h3>
+              <p>
+                <strong>Scenario:</strong> Designing a robust checkout system for a retail warehouse. When a client
+                places an order, the system reserves Item A (deducting quantity from inventory), sets a Savepoint, and
+                attempts to reserve Item B. If Item B is out of stock (causing an application error or business logic
+                exception), the database rolls back only the reservation of Item B, records the purchase of Item A, and
+                commits the overall transaction successfully.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">CLP Setup and Execution Script</div>
+                <pre><code><span class="comment"># Connect to the retail database</span>
+db2 "CONNECT TO RET_DB"
+
+<span class="comment"># Create the Inventory table and add a validation check constraint to prevent negative quantities</span>
+db2 "CREATE TABLE Inventory (
+       ItemID INT NOT NULL PRIMARY KEY,
+       ItemName VARCHAR(50) NOT NULL,
+       Qty INT NOT NULL CHECK (Qty &gt;= 0)
+     )"
+
+<span class="comment"># Create the Orders table</span>
+db2 "CREATE TABLE OrderBookings (
+       BookingID INT NOT NULL PRIMARY KEY,
+       ItemID INT NOT NULL,
+       OrderedQty INT NOT NULL
+     )"
+
+<span class="comment"># Insert baseline stock quantities</span>
+db2 "INSERT INTO Inventory VALUES (10, 'Heavy Industrial Bolt', 100)"
+db2 "INSERT INTO Inventory VALUES (20, 'Premium Brass Valve', 5)"
+
+<span class="comment"># --- Begin Checkout Transaction ---</span>
+<span class="comment"># Step A: Reserve 10 Heavy Industrial Bolts</span>
+db2 "UPDATE Inventory SET Qty = Qty - 10 WHERE ItemID = 10"
+
+<span class="comment"># Step B: Establish a Savepoint named SP_BOLTS_RESERVED</span>
+db2 "SAVEPOINT SP_BOLTS_RESERVED ON ROLLBACK RETAIN CURSORS"
+
+<span class="comment"># Step C: Attempt to reserve 10 Premium Brass Valves (Stock is only 5; this will violate the check constraint)</span>
+db2 "UPDATE Inventory SET Qty = Qty - 10 WHERE ItemID = 20"
+
+<span class="comment"># Step D: The update fails. Catch the exception and roll back ONLY to the savepoint SP_BOLTS_RESERVED</span>
+db2 "ROLLBACK TO SAVEPOINT SP_BOLTS_RESERVED"
+
+<span class="comment"># Step E: Insert the successful order booking for Item 10</span>
+db2 "INSERT INTO OrderBookings VALUES (1001, 10, 10)"
+
+<span class="comment"># Step F: Commit the overall transaction block</span>
+db2 "COMMIT"
+
+<span class="comment"># Query the tables to verify the final data states</span>
+db2 "SELECT * FROM Inventory"
+db2 "SELECT * FROM OrderBookings"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Mock CLI Console Output: Checkout Transaction Execution</h4>
+                <pre>
+$ db2 "UPDATE Inventory SET Qty = Qty - 10 WHERE ItemID = 20"
+DB21034E  The command was processed as an SQL statement because it was not a 
+valid Command Line Processor command. During SQL processing it returned:
+SQL0545N  The requested operation is not allowed because a row does not 
+satisfy the check constraint. SQLSTATE=23513
+
+$ db2 "ROLLBACK TO SAVEPOINT SP_BOLTS_RESERVED"
+DB20000I  The ROLLBACK TO SAVEPOINT command completed successfully.
+
+$ db2 "INSERT INTO OrderBookings VALUES (1001, 10, 10)"
+DB20000I  The INSERT command completed successfully.
+
+$ db2 "COMMIT"
+DB20000I  The COMMIT command completed successfully.
+
+$ db2 "SELECT * FROM Inventory"
+
+ITEMID      ITEMNAME                                           QTY
+----------- -------------------------------------------------- -----------
+         10 Heavy Industrial Bolt                                       90
+         20 Premium Brass Valve                                          5
+
+  2 record(s) selected.
+
+$ db2 "SELECT * FROM OrderBookings"
+
+BOOKINGID   ITEMID      ORDEREDQTY
+----------- ----------- -----------
+       1001          10          10
+
+  1 record(s) selected.</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cog"></i> ITI Lab Walkthrough: Inside the Engine</h4>
+                <ol>
+                  <li>
+                    <strong>Constraint Failure (SQL0545N):</strong> The attempt to deduct 10 Premium Brass Valves failed
+                    because the check constraint `Qty >= 0` prevented the stock level from going negative (-5).
+                  </li>
+                  <li>
+                    <strong>Partial Rollback:</strong> When `ROLLBACK TO SAVEPOINT` was executed, DB2 read the active
+                    transaction logs backward to the savepoint record, re-added the 10 Heavy Industrial Bolts
+                    temporarily, and cleared only the failed update on Item 20, preserving the deduction on Item 10.
+                  </li>
+                  <li>
+                    <strong>Commit Phase:</strong> `COMMIT` flushed the log buffer to disk, saving the deduction of Item
+                    10 and the new order booking record while releasing all row locks.
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="t17-troubleshoot">
+              <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
+              <p>
+                In high-concurrency enterprise databases, poor transaction management can cause log exhaustion, lock
+                escalation, and system slowdowns.
+              </p>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Transaction Management Best Practices</h4>
+                <ul>
+                  <li><strong>Keep Transactions Compact:</strong> Minimize the time between the start of a transaction
+                    and its `COMMIT` or `ROLLBACK` to reduce lock duration and prevent blocking other sessions.</li>
+                  <li><strong>Commit Bulk Loads in Batches:</strong> Avoid updating millions of rows in a single
+                    transaction. Instead, write loops that modify and commit rows in smaller, manageable batches (e.g.,
+                    10,000 records per batch) to prevent active log exhaustion.</li>
+                  <li><strong>Use Savepoints Judiciously:</strong> Use savepoints only where necessary for complex,
+                    multi-step application logic, as excessive savepoints consume database memory resources.</li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-triangle"></i> Troubleshooting Diagnostic Code: SQL0501N</h4>
+                <p><strong>Error Message:</strong> SQL0501N The cursor specified in a FETCH statement or CLOSE statement
+                  is not open.</p>
+                <p><strong>Root Cause:</strong> By default, DB2 automatically closes all active cursors when a
+                  transaction block commits or rolls back. If an application attempts to fetch from a cursor after a
+                  transaction completes, SQL0501N is returned.</p>
+                <p><strong>Immediate DBA Remediation:</strong></p>
+                <ul>
+                  <li>
+                    <strong>Remedy A: Declare the cursor with the WITH HOLD clause</strong>
+                    <br>Add the `WITH HOLD` option to keep the cursor open and preserve its fetch position across
+                    transaction boundaries:
+                    <br><code>DECLARE cursor_name CURSOR WITH HOLD FOR SELECT * FROM Inventory;</code>
+                  </li>
+                  <li>
+                    <strong>Remedy B: Preserve cursors during partial savepoint rollbacks</strong>
+                    <br>Ensure savepoint declarations include the `RETAIN CURSORS` option:
+                    <br><code>SAVEPOINT savepoint_name ON ROLLBACK RETAIN CURSORS;</code>
+                  </li>
+                  <li>
+                    <strong>Remedy C: Restructure application logic</strong>
+                    <br>Configure the application to complete all cursor fetches and close the cursor before executing
+                    `COMMIT` or `ROLLBACK` commands.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t17-summary">
+              <h3 class="subsection-title">5. Topic 17 Summary: Transaction Commands Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Transaction Command</th>
+                      <th>Log Buffer Impact</th>
+                      <th>Disk I/O Impact</th>
+                      <th>Active Lock Status</th>
+                      <th>Cursor Status (Default)</th>
+                      <th>Primary DBA Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>COMMIT</strong></td>
+                      <td>Writes a Commit record to the log buffer.</td>
+                      <td>Triggers immediate log flushing by `db2loggw` to disk.</td>
+                      <td>All row and table locks are released.</td>
+                      <td>All open cursors are closed immediately.</td>
+                      <td>Permanently saving transaction modifications.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>ROLLBACK</strong></td>
+                      <td>Writes a Rollback record to the log buffer.</td>
+                      <td>Reads active logs backward to reverse changes.</td>
+                      <td>All row and table locks are released.</td>
+                      <td>All open cursors are closed immediately.</td>
+                      <td>Discarding changes due to errors or constraint violations.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>SAVEPOINT</strong></td>
+                      <td>Creates an in-memory marker record in the log.</td>
+                      <td>No immediate disk I/O.</td>
+                      <td>Locks are retained in active status.</td>
+                      <td>No impact on open cursors.</td>
+                      <td>Establishing logical recovery checkpoints in code.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>ROLLBACK TO SAVEPOINT</strong></td>
+                      <td>Writes partial rollback records to the log.</td>
+                      <td>Reads logs back to the savepoint marker to restore states.</td>
+                      <td>Locks acquired post-savepoint are retained.</td>
+                      <td>Closed (unless `RETAIN CURSORS` is active).</td>
+                      <td>Recovering from minor errors without aborting transactions.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOPIC 18 -->
+          <section id="topic18" class="section">
+            <h2 class="section-title"><i class="fas fa-user-lock"></i> Topic 18: Concurrency Control, Lock Escalation, &
+              Diagnostic Troubleshooting</h2>
+
+            <div class="subsection" id="t18-concept">
+              <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
+              <p>
+                In a multi-user database environment, DB2 manages concurrent access using robust <strong>Locking
+                  Mechanisms</strong>. The Lock Manager assigns locks to data objects to maintain data isolation,
+                preventing anomalies like dirty reads, non-repeatable reads, and phantom reads.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> Understanding DB2 Lock Modes</h4>
+                <ul>
+                  <li><strong>Shared (S):</strong> Acquired for read operations. S locks allow other concurrent sessions
+                    to read data, but prevent them from modifying it.</li>
+                  <li><strong>Exclusive (X):</strong> Acquired for write operations. X locks prevent other sessions from
+                    reading or modifying the locked data.</li>
+                  <li><strong>Intent Locks (IS, IX, SIX):</strong> Table-level locks that indicate row-level locking is
+                    active inside the table. Intent locks prevent table-level conflicts (e.g., preventing a session from
+                    dropping a table while another session is updating its rows).</li>
+                </ul>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-list-ol"></i> Lock List Memory Allocation</h5>
+                  <p>
+                    Locks are managed in a dedicated database memory pool called the <strong>Lock List</strong>
+                    (`LOCKLIST`). Each lock acquired by an application consumes a small amount of space in this list.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-level-up-alt"></i> Lock Escalation Mechanics</h5>
+                  <p>
+                    If an application acquires thousands of row locks, it risks exhausting the lock list memory. To
+                    prevent this, DB2 executes **Lock Escalation**: converting thousands of fine-grained row locks into
+                    a single coarse-grained table lock, which instantly frees memory but severely limits concurrency.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-hourglass-half"></i> Lock Timeout Anomalies</h5>
+                  <p>
+                    If Session A holds an X lock on a row, Session B's attempt to modify that row enters a lock wait
+                    state. If Session A does not release the lock before the database `LOCKTIMEOUT` expires, Session B's
+                    request is aborted, returning error `SQL0911N RC 68`.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-skull-crossbones"></i> Deadlock Anomalies</h5>
+                  <p>
+                    A deadlock occurs when Session A holds Row 1 and waits for Row 2, while Session B holds Row 2 and
+                    waits for Row 1. The background deadlock detector thread `db2dlock` monitors for these loops,
+                    terminates one session (the "victim"), and returns error `SQL0911N RC 2` to resolve the block.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-balance-scale"></i> Comparison: Lock Escalation vs. Other RDBMS</h4>
+                <ul>
+                  <li>
+                    <strong>MySQL Comparison:</strong> MySQL InnoDB uses an in-memory lock table that scales dynamically
+                    without size limits. It does not perform lock escalation, meaning individual row locks never
+                    escalate to block entire tables.
+                  </li>
+                  <li>
+                    <strong>Oracle Comparison:</strong> Oracle InnoDB does not maintain a centralized lock list; lock
+                    indicators are stored directly inside the data blocks. Oracle never escalates row locks to table
+                    locks, ensuring consistent concurrency even under massive transaction volume.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t18-syntax">
+              <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
+              <p>
+                Below is the syntax to configure database locking limits, monitor active locks using engine utilities,
+                and use the `NOT LOGGED INITIALLY` performance hint.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Locking Configurations & Inspections</div>
+                <pre><code><span class="comment">-- 1. Set Lock List Memory Size to 4000 pages (approx. 16 MB)</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING LOCKLIST 4000"
+
+<span class="comment">-- 2. Set the Lock Escalation threshold to 25% for a single application</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING MAXLOCKS 25"
+
+<span class="comment">-- 3. Set the Lock Timeout limit to 15 seconds</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING LOCKTIMEOUT 15"
+
+<span class="comment">-- 4. Check dynamic locks in real-time using engine command tools</span>
+db2pd -db ITIDB -locks
+
+<span class="comment">-- 5. Capture a detailed locking snapshot</span>
+db2 "GET SNAPSHOT FOR LOCKS ON ITIDB"
+
+<span class="comment">-- 6. Create a table using the NOT LOGGED INITIALLY performance hint (optimizes bulk imports by bypassing logs)</span>
+CREATE TABLE TempSales (
+  TxID INT NOT NULL,
+  Qty INT NOT NULL
+) NOT LOGGED INITIALLY;
+
+<span class="comment">-- 7. Activate NOT LOGGED INITIALLY for an existing table (applies only to the current transaction block)</span>
+ALTER TABLE TempSales ACTIVATE NOT LOGGED INITIALLY;
+INSERT INTO TempSales SELECT * FROM SalesTransactions;
+COMMIT;</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t18-lab">
+              <h3 class="subsection-title">3. Industry-Standard Lab: Retail Inventory & Warehousing</h3>
+              <p>
+                <strong>Scenario:</strong> Simulating concurrent access anomalies in a retail inventory table. We will
+                set the database lock timeout limit to 10 seconds, open two parallel terminal sessions to update the
+                same stock record, and monitor the resulting lock wait, timeout expiration, and transaction rollback.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">CLP Setup and Execution Script</div>
+                <pre><code><span class="comment"># Connect to the database</span>
+db2 "CONNECT TO RET_DB"
+
+<span class="comment"># Set the Lock Timeout limit to 10 seconds</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR RET_DB USING LOCKTIMEOUT 10"
+
+<span class="comment"># Ensure database modifications take effect in memory</span>
+db2 "TERMINATE"
+db2 "CONNECT TO RET_DB"
+
+<span class="comment"># Create the target inventory table</span>
+db2 "CREATE TABLE StockLevel (ItemID INT PRIMARY KEY, Qty INT)"
+db2 "INSERT INTO StockLevel VALUES (101, 500)"
+db2 "COMMIT"
+
+<span class="comment"># =====================================================================</span>
+<span class="comment"># TERMINAL SESSION 1 (Simulated Session A)</span>
+<span class="comment"># =====================================================================</span>
+db2 "CONNECT TO RET_DB"
+<span class="comment"># Acquire an Exclusive (X) lock on Item 101 by executing an update without committing</span>
+db2 "UPDATE StockLevel SET Qty = 450 WHERE ItemID = 101"
+
+<span class="comment"># =====================================================================</span>
+<span class="comment"># TERMINAL SESSION 2 (Simulated Session B - Executed in parallel shell)</span>
+<span class="comment"># =====================================================================</span>
+db2 "CONNECT TO RET_DB"
+<span class="comment"># Attempt to update the locked record; this session will enter a lock wait state</span>
+db2 "UPDATE StockLevel SET Qty = 400 WHERE ItemID = 101"
+
+<span class="comment"># Session B pauses for 10 seconds, then returns lock timeout error SQL0911N RC 68</span></code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Mock CLI Console Output: Session B Lock Timeout Failure</h4>
+                <pre>
+$ db2 "UPDATE StockLevel SET Qty = 400 WHERE ItemID = 101"
+<span class="comment"># [System pauses for 10 seconds...]</span>
+DB21034E  The command was processed as an SQL statement because it was not a 
+valid Command Line Processor command. During SQL processing it returned:
+SQL0911N  The current transaction has been rolled back because of a deadlock 
+or timeout. Reason code "68". SQLSTATE=40001</pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Mock CLI Console Output: db2pd -db RET_DB -locks Analysis</h4>
+                <pre>
+$ db2pd -db RET_DB -locks
+
+Database Member 0 -- Database RET_DB -- Active -- Up 0 days 00:15:30
+
+Locks:
+Address    TranElm    Mode  Sts  Type       TbspaceID  TableID  RowID
+0x7F2B1002 2          X    *G   ROW        3          5        0x0000000E
+0x7F2B108E 3          X    *W   ROW        3          5        0x0000000E
+
+<span class="comment"># TranElm 2 holds the Exclusive (X) row lock with Granted Status (*G)</span>
+<span class="comment"># TranElm 3 is waiting (*W) for the Exclusive lock on the same RowID</span></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cog"></i> ITI Lab Walkthrough: Inside the Engine</h4>
+                <ol>
+                  <li>
+                    <strong>Lock Acquisition:</strong> Session A's update statement acquired an Exclusive (X) row lock
+                    on the record `ItemID = 101`.
+                  </li>
+                  <li>
+                    <strong>Lock Conflict:</strong> When Session B attempted to modify the same row, the Lock Manager
+                    detected the lock conflict. S and X locks are incompatible. Session B was placed in a Wait (*W)
+                    state, starting the 10-second timeout counter.
+                  </li>
+                  <li>
+                    <strong>Timeout Expiration:</strong> When Session A did not commit before the 10-second
+                    `LOCKTIMEOUT` limit expired, the Lock Manager cancelled Session B's request, rolled back its
+                    transaction, and returned error `SQL0911N RC 68` to release the lock wait block.
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="t18-troubleshoot">
+              <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
+              <p>
+                Concurrency issues like deadlocks and lock escalation can quickly degrade database performance and cause
+                application timeouts.
+              </p>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Concurrency Best Practices</h4>
+                <ul>
+                  <li><strong>Implement Proper Indexes:</strong> Ensure columns used in `WHERE` clauses of `UPDATE` and
+                    `DELETE` statements are fully indexed. If DB2 has to perform a table scan to locate a row, it must
+                    acquire locks on every row it scans, quickly triggering lock escalation.</li>
+                  <li><strong>Size LOCKLIST and MAXLOCKS Appropriately:</strong> In high-concurrency systems, increase
+                    `LOCKLIST` allocation and set `MAXLOCKS` to a reasonable threshold (e.g., 20% to 30%) to prevent
+                    individual applications from triggering premature lock escalation.</li>
+                  <li><strong>Use NOT LOGGED INITIALLY with Caution:</strong> While the `NOT LOGGED INITIALLY` hint
+                    optimizes bulk data imports by bypassing log writes, it must be used with caution. If a transaction
+                    crash or rollback occurs, the table becomes corrupted, is flagged as unusable, and must be dropped.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-triangle"></i> Troubleshooting Concurrency Failures: SQL0911N RC 2 and
+                  RC 68</h4>
+                <p><strong>Error Message:</strong> SQL0911N The current transaction has been rolled back because of a
+                  deadlock or timeout. Reason code "2" or "68".</p>
+                <p><strong>Detailed Analysis & Remedies:</strong></p>
+                <ul>
+                  <li>
+                    <strong>Reason Code 2: Deadlock Detected</strong>
+                    <br><em>Cause:</em> Two or more concurrent application sessions are blocked waiting for locks held
+                    by each other, forming a cyclic dependency loop.
+                    <br><em>Remedy A:</em> Optimize application access patterns to ensure all sessions access and lock
+                    tables in the same sequential order.
+                    <br><em>Remedy B:</em> Create composite indexes on foreign key and join columns to speed up query
+                    execution and reduce lock duration.
+                    <br><em>Remedy C:</em> Implement retry logic in application code to catch exception `SQL0911N` and
+                    automatically re-run the failed transaction block.
+                  </li>
+                  <li>
+                    <strong>Reason Code 68: Lock Timeout Exceeded</strong>
+                    <br><em>Cause:</em> A transaction remained blocked waiting for a lock held by another session until
+                    the `LOCKTIMEOUT` limit expired.
+                    <br><em>Remedy A:</em> Set `LOCKTIMEOUT` to a reasonable limit (e.g., 15 to 30 seconds) to prevent
+                    sessions from hanging indefinitely while waiting for locks.
+                    <br><em>Remedy B:</em> Identify long-running uncommitted transactions using administrative
+                    snapshots, and configure applications to commit changes promptly.
+                    <br><em>Remedy C:</em> Use looser isolation levels like Cursor Stability (CS) or Uncommitted Read
+                    (UR) for read-only queries where strict lock isolation is not required.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t18-summary">
+              <h3 class="subsection-title">5. Topic 18 Summary: Concurrency & Locks Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Lock Mode</th>
+                      <th>Lock Mode Name</th>
+                      <th>Lock Target Scope</th>
+                      <th>Compatibility Profile</th>
+                      <th>Acquired During Operation</th>
+                      <th>DBA Concurrency Impact</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>S</strong></td>
+                      <td>Shared Lock</td>
+                      <td>Row-level or Table-level</td>
+                      <td>Compatible with S and IS locks. Incompatible with X locks.</td>
+                      <td>SELECT query blocks (under CS or RS isolation levels)</td>
+                      <td>Low. Allows multiple concurrent read sessions but blocks write operations.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>X</strong></td>
+                      <td>Exclusive Lock</td>
+                      <td>Row-level or Table-level</td>
+                      <td>Incompatible with all other lock modes.</td>
+                      <td>INSERT, UPDATE, DELETE modifications</td>
+                      <td>High. Blocks all other read and write sessions on target rows.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>IX</strong></td>
+                      <td>Intent Exclusive Lock</td>
+                      <td>Table-level only</td>
+                      <td>Compatible with IX and IS locks. Incompatible with S and X locks.</td>
+                      <td>Row-level INSERT, UPDATE, or DELETE modifications</td>
+                      <td>Moderate. Indicates row-level write activity is active inside the table.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>SIX</strong></td>
+                      <td>Shared with Intent Exclusive</td>
+                      <td>Table-level only</td>
+                      <td>Compatible with IS locks. Incompatible with S, IX, and X locks.</td>
+                      <td>SELECT query with active row-level updates</td>
+                      <td>High. Allows other sessions to read rows but prevents any write operations on the table.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="footer">
+          <p style="margin-top: 10px">
+            <strong>Created By:</strong> Abdelghany
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Shared JavaScript for dark mode and features -->
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

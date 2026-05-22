@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IBM DB2 Database Study Notes - Group G: Advanced Security, Storage, & Columnar Analytics</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
+<body>
+  <!-- Sidebar Navigation -->
+  <button class="sidebar-toggle" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="sidebar-overlay"></div>
+
+  <div class="layout-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-book"></i> Course Navigation</h3>
+        <p>IBM DB2 Administration</p>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li>
+            <a href="#introduction"><i class="fas fa-info-circle"></i> Group G Introduction</a>
+          </li>
+          <li>
+            <a href="#topic43"><i class="fas fa-desktop"></i> Topic 43: DB2 GUI Tools & Data Studio</a>
+          </li>
+          <li>
+            <a href="#topic44"><i class="fas fa-file-archive"></i> Topic 44: Deep Table Compression</a>
+          </li>
+          <li>
+            <a href="#topic45"><i class="fas fa-user-shield"></i> Topic 45: Row & Column Security (RCAC)</a>
+          </li>
+          <li>
+            <a href="#topic46"><i class="fas fa-layer-group"></i> Topic 46: Storage Groups & Temperature Tiers</a>
+          </li>
+          <li>
+            <a href="#topic47"><i class="fas fa-history"></i> Topic 47: Temporal Tables & Time Travel</a>
+          </li>
+          <li>
+            <a href="#topic48"><i class="fas fa-table-cells"></i> Topic 48: Columnar Storage & BLU</a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="container">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+
+        <div class="header">
+          <h1><i class="fas fa-server"></i> IBM DB2 Administration - Group G</h1>
+          <p>Advanced Enterprise Administration: Graphical Clients, Adaptive Compression, RCAC Security, Multi-Temperature Tiers, Temporal Querying, & Column-Organized BLU Acceleration</p>
+        </div>
+
+        <div class="content">
+          <!-- Introduction Section -->
+          <section id="introduction" class="section">
+            <h2 class="section-title">Introduction to Advanced DB2 Architecture</h2>
+            <div class="definition-box">
+              <h4><i class="fas fa-info-circle"></i> Core Engineering Philosophy</h4>
+              <p>
+                In enterprise database administration, scaling systems effectively requires optimizing CPU registers, system memory channels, storage tiers, and fine-grained data privacy layers. While basic relational operations form the foundation of transactional databases, high-availability data warehouses demand complex features like columnar layouts, inline compression, and dynamic access filters.
+              </p>
+              <p>
+                This Group G series of study notes provides the ultimate blueprints for implementing advanced DB2 engineering solutions. We explore modern administration interfaces, compare classic and adaptive row-compression methods, enforce Row and Column Access Control (RCAC) to protect sensitive data, design storage groups to manage multi-temperature partition tiers, implement temporal time-travel tracing, and build column-organized tables using BLU Acceleration.
+              </p>
+            </div>
+          </section>
+
+          <!-- Topic 43: Administrative Tools & Graphical Interfaces (IBM Data Studio, IBM Db2 Console) -->
+          <section id="topic43" class="section">
+            <h2 class="section-title">Topic 43: Administrative Tools &amp; Graphical Interfaces</h2>
+            
+            <div class="subsection" id="topic43-concept">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture: Graphical Tool Evolution</h3>
+              <p>
+                As database topologies scale across distributed environments, administrators need visual tools to model schemas, tune queries, inspect buffer pools, and monitor active transactional locks. Historically, DB2 relied on the <strong>DB2 Control Center</strong>, a Java-based desktop graphical interface (GUI). However, the Control Center was heavy, suffered from Java runtime environment (JRE) version conflicts, and struggled to execute tasks over low-bandwidth SSH networks, which led to its deprecation and removal.
+              </p>
+              <p>
+                Modern DB2 administration has moved to a decoupled, lightweight client architecture. Two primary tools support the database administrator (DBA) and database developer:
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-laptop-code"></i> IBM Data Studio</h5>
+                  <p>
+                    <strong>Definition:</strong> An Eclipse-based database development and administration environment.
+                    <br /><strong>Architecture:</strong> Acts as a client-side powerhouse. It connects directly to DB2 instances to analyze SQL, debug stored procedures, visualize physical table schemas, generate DDL scripts, and view visual query plans. It is built primarily for offline schema design and database developers.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-chart-line"></i> IBM Db2 Console</h5>
+                  <p>
+                    <strong>Definition:</strong> A zero-install, web-based database administration dashboard.
+                    <br /><strong>Architecture:</strong> Replaces legacy Data Server Manager (DSM). It runs as a centralized web server that uses database connection pools and background polling threads. It displays real-time performance metrics (CPU, I/O latency, memory use), visual lock contention chains, alert systems, and automated task schedules.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-balance-scale"></i> Comparison: DB2 vs. Other DBMS Tool Suites</h4>
+                <ul>
+                  <li>
+                    <strong>Oracle Comparison:</strong> Oracle DBAs use Oracle Enterprise Manager (OEM) for real-time monitoring and SQL Developer for development. IBM Db2 Console acts as a lightweight, web-native dashboard that mirrors OEM's visual monitoring capabilities, while IBM Data Studio matches the developer-centric focus of Oracle SQL Developer.
+                  </li>
+                  <li>
+                    <strong>MySQL/PostgreSQL Comparison:</strong> Open-source engines rely on lightweight web interfaces (like pgAdmin or phpMyAdmin) or desktop interfaces (such as MySQL Workbench). DB2's tools are designed to integrate tightly with native host APIs. This allows IBM Data Studio to handle complex DB2 catalog structures and pureXML parsing, which are typically unsupported by generic clients.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic43-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                To enable graphical clients and administrative consoles to access, catalog, and monitor DB2 instances, DBAs use specific Command Line Processor (CLP) commands.
+              </p>
+              <div class="code-example">
+                <div class="code-language">DB2 Administrative and Console Interface Setup Commands</div>
+                <pre><code><span class="comment"># 1. Enable the DB2 Administrative Task Scheduler (ATS) at the instance level</span>
+db2set DB2_ATS_ENABLE=YES
+
+<span class="comment"># 2. Check the Database Manager Configuration authentication variables</span>
+db2 "GET DATABASE MANAGER CONFIGURATION" | grep -i auth
+
+<span class="comment"># 3. Create the default tool catalog database tablespaces required for administrative services</span>
+db2 "CALL SYSPROC.SYSINSTALLOBJECTS('TOOLSCAT', 'C', CAST(NULL AS VARCHAR(128)), CAST(NULL AS VARCHAR(128)))"
+
+<span class="comment"># 4. View active client connections to locate GUI dashboard listeners</span>
+db2 "LIST APPLICATIONS SHOW DETAIL"
+
+<span class="comment"># 5. Query active database privileges for administrative authorizations</span>
+db2 "SELECT GRANTEE, DBADMAUTH, SECURITYADMAUTH FROM SYSCAT.DBAUTH"</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-list"></i> Command &amp; Variable Deep-Dive</h4>
+                <ul>
+                  <li><strong><code>DB2_ATS_ENABLE=YES</code>:</strong> Enables the Administrative Task Scheduler inside the DB2 engine. ATS runs background DBA tasks scheduled via IBM Data Studio or the Db2 Console.</li>
+                  <li><strong><code>SYSINSTALLOBJECTS('TOOLSCAT', 'C', ...)</code>:</strong> Spawns the tool catalog inside the database. This catalog contains the metadata tables required to run automated administrative jobs, DBA alerts, and performance data collectors.</li>
+                  <li><strong><code>SYSCAT.DBAUTH</code>:</strong> The catalog system view used to audit which administrative users have DBADM or SECURITYADM permissions. These roles are required to authorize remote GUI operations.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic43-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Setting Up Telecommunication Analytics Telemetry</h3>
+              <p>
+                <strong>Scenario:</strong> You are the Lead Database Administrator for a telecommunications company. You have deployed the data warehouse database (<code>TELECOM_WH</code>) on a headless RHEL 8 server. To allow the operations team to monitor database health and query plans without using terminal connections, you must configure the instance, build the administrative tool schema structures, and register the connection within the IBM Db2 Console dashboard.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">CLP Administrative Configuration Script</div>
+                <pre><code><span class="comment"># Step 1: Log in as the DB2 instance owner</span>
+su - db2inst1
+
+<span class="comment"># Step 2: Enable the Administrative Task Scheduler</span>
+db2set DB2_ATS_ENABLE=YES
+
+<span class="comment"># Step 3: Restart the database manager to apply the registry configuration changes</span>
+db2stop
+db2start
+
+<span class="comment"># Step 4: Connect to the Telecommunication Analytics Warehouse database</span>
+db2 CONNECT TO TELECOM_WH
+
+<span class="comment"># Step 5: Install administrative metadata catalog tablespaces and tables</span>
+db2 "CALL SYSPROC.SYSINSTALLOBJECTS('TOOLSCAT', 'C', CAST(NULL AS VARCHAR(128)), CAST(NULL AS VARCHAR(128)))"
+
+<span class="comment"># Step 6: Grant database administration authority to the console controller user (user: telecom_mon)</span>
+db2 "GRANT DBADM ON DATABASE TO USER telecom_mon"
+
+<span class="comment"># Step 7: Flush database changes and terminate the active connection</span>
+db2 TERMINATE</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Command Line Output: Registry &amp; Catalog Verification</h4>
+                <pre>
+$ db2set -all
+[g] DB2_ATS_ENABLE=YES
+[g] DB2SYSTEM=telecom-db-prod
+
+$ db2 "CONNECT TO TELECOM_WH"
+   Database Connection Information
+ Database server        = DB2/LINUXU64 11.5.0
+ SQL authorization ID   = DB2INST1
+ Local database alias   = TELECOM_WH
+
+$ db2 "CALL SYSPROC.SYSINSTALLOBJECTS('TOOLSCAT', 'C', CAST(NULL AS VARCHAR(128)), CAST(NULL AS VARCHAR(128)))"
+  Return Status = 0
+
+$ db2 "SELECT GRANTEE, DBADMAUTH FROM SYSCAT.DBAUTH WHERE GRANTEE = 'TELECOM_MON'"
+
+GRANTEE              DBADMAUTH
+-------------------- ---------
+TELECOM_MON          Y
+
+  1 record(s) selected.</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cogs"></i> Technical Walkthrough: Behind-the-Scenes Configurations</h4>
+                <p>
+                  By setting up the server context for graphical administration, you have completed the following steps:
+                </p>
+                <ol>
+                  <li>Enabled the <strong>Administrative Task Scheduler (ATS)</strong> registry key. This starts a background thread process monitored by the watchdog engine (`db2wdog`), allowing scheduled query plans to execute.</li>
+                  <li>Called the system procedure <code>SYSINSTALLOBJECTS</code> with the <code>'TOOLSCAT'</code> flag. This creates the system database schema `SYSTOOLS` and configures tablespace `SYSTOOLSPACE` to hold the performance repository tables.</li>
+                  <li>Granted <code>DBADM</code> authority to the console monitoring account, <code>telecom_mon</code>. When the remote IBM Db2 Console establishes a persistent connection pool, it can query internal system tables, parse index catalog statistics, and collect query explain graphs without permission blocks.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic43-troubleshooting">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Best Practices for Administrative Tools</h4>
+                <ul>
+                  <li><strong>Dedicated Tool Tablespaces:</strong> Ensure that tablespace <code>SYSTOOLSPACE</code> is placed on reliable storage with automatic storage paths enabled. If this tablespace fills up or goes offline, administrative automated scripts and GUI collection monitors will fail.</li>
+                  <li><strong>Monitor GUI Connection Overhead:</strong> Avoid setting the polling frequency of Db2 Console telemetry agents too high (e.g., polling every second). This can cause transaction locks on catalog tables and saturate the buffer pools with administration metadata queries. Set the pooling time to a minimum of 15-30 seconds.</li>
+                  <li><strong>Restrict SECURITYADM Privileges:</strong> Do not grant <code>SECURITYADM</code> privileges to standard database dashboard users. Maintain separation of duties: monitor connections using <code>DBADM</code>, and restrict security rule definitions (like RCAC) to authorized security DBAs.</li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Error Diagnostics &amp; Remedies</h4>
+                <h5>SQL5125N: The Administrative Task Scheduler (ATS) failed to initialize or start.</h5>
+                <p><strong>Root Cause:</strong> The tablespace <code>SYSTOOLSPACE</code> does not exist, has run out of physical disk space, or is currently in a Backup-Pending state, which prevents the ATS engine from reading the schedule definitions catalog tables.</p>
+                <p><strong>Remedy:</strong> Log in as the instance owner, verify tablespace status using <code>db2 "LIST TABLESPACES SHOW DETAIL"</code>, check space limits, and execute a tool catalog rebuild if the structure is corrupt:
+                  <br /><code>db2 "CALL SYSPROC.SYSINSTALLOBJECTS('TOOLSCAT', 'R', CAST(NULL AS VARCHAR(128)), CAST(NULL AS VARCHAR(128)))"</code>
+                </p>
+
+                <h5>SQL1042C: An unexpected system error occurred during client connection.</h5>
+                <p><strong>Root Cause:</strong> The client application (like IBM Data Studio or Db2 Console) is using an incompatible JDBC driver level, or the client machine JRE does not match the encryption type (SHA-256) mandated by the DB2 server configuration.</p>
+                <p><strong>Remedy:</strong> Update the client's JDBC drivers to matching versions by copying the files <code>db2jcc4.jar</code> and <code>db2jcc.jar</code> from the DB2 server directory <code>~/sqllib/java/</code> to the client's driver repository path.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic43-summary">
+              <h3 class="subsection-title">5. Topic Summary Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Administrative Client</th>
+                      <th>Operational Mode</th>
+                      <th>Primary User Base</th>
+                      <th>Physical Host Dependency</th>
+                      <th>DBA Use-Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>DB2 CLP / Terminal</strong></td>
+                      <td>Text Console Commands</td>
+                      <td>System DBAs</td>
+                      <td>Extremely Low (Terminal client only)</td>
+                      <td>Automation scripting, upgrades, backups, and physical catalog restores.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>IBM Data Studio</strong></td>
+                      <td>Eclipse GUI Desktop</td>
+                      <td>Database Developers</td>
+                      <td>Medium (Desktop memory footprints)</td>
+                      <td>SQL development, stored procedure debugging, catalog modeling, and schema migration scripting.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>IBM Db2 Console</strong></td>
+                      <td>Zero-Install Web Browser</td>
+                      <td>Operations Teams / DBAs</td>
+                      <td>Low (Central web engine host)</td>
+                      <td>Real-time telemetry, active locks visualization, performance alerts, and resource reporting.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Cloud Pak for Data</strong></td>
+                      <td>Web Portal Consolidation</td>
+                      <td>Data Engineers / Cloud Admins</td>
+                      <td>High (Red Hat OpenShift Platform)</td>
+                      <td>Containerized instance provisioning, multi-cloud engine monitoring, and hybrid AI integration.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Topic 44: Deep Dive into DB2 Table Compression (Classic vs. Adaptive Compression) -->
+          <section id="topic44" class="section">
+            <h2 class="section-title">Topic 44: Deep Table Compression</h2>
+            
+            <div class="subsection" id="topic44-concept">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture: Compression Dictionary Mechanics</h3>
+              <p>
+                Disk I/O latency is typically the primary bottleneck in enterprise database servers. To minimize disk reads and writes, DB2 uses table compression algorithms. By storing data in a compressed format, DB2 drastically reduces the database's physical storage footprint, decreases backup and restore times, and improves the efficiency of the buffer pools. This memory optimization occurs because data pages are cached in a compressed format, allowing more records to fit in the same allocation of database RAM.
+              </p>
+              <p>
+                DB2 supports two primary row-level compression architectures:
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-file-invoice"></i> Classic Row Compression (Static)</h5>
+                  <p>
+                    <strong>Mechanism:</strong> Uses a single Table-Level Compression Dictionary.
+                    <br /><strong>Behavior:</strong> The engine scans the table (usually during a full table load or a manual <code>REORG</code> execution), identifies repeating string and binary patterns, and constructs a static compression dictionary. Subsequent row insertions replace these repeating patterns with short, byte-sized numeric pointers that map to the table-level dictionary keys.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-magic"></i> Adaptive Compression (Dynamic)</h5>
+                  <p>
+                    <strong>Mechanism:</strong> Integrates Table-Level and Page-Level dictionaries.
+                    <br /><strong>Behavior:</strong> In addition to the primary table-level compression dictionary (the Classic mechanism), the database engine automatically creates localized page-level dictionaries for each data page. When new records are written to a page, DB2 dynamically scans the active page block, extracts localized repeating pattern sequences, and builds a page dictionary. This allows DB2 to compress highly localized data patterns without requiring a full table scan or REORG execution.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Architectural Advantages of Adaptive Compression</h4>
+                <ul>
+                  <li><strong>Reduced CPU Overhead:</strong> Because page-level dictionaries adapt to localized data shifts dynamically, they reduce the need for recurring full-table REORGs. This saves processor cycles that would otherwise be spent rebuilding static dictionaries.</li>
+                  <li><strong>Higher Compression Ratios:</strong> In typical enterprise tables containing varied business records, data changes over time. Static dictionaries fail to compress new data patterns that were not present when the dictionary was first built. Adaptive compression handles these changes by updating page-level dictionaries inline.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic44-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                To configure, manage, and monitor table compression, DBAs use specific DDL and DML syntax options.
+              </p>
+              <div class="code-example">
+                <div class="code-language">Compression Configuration and Dictionary Rebuild Syntax</div>
+                <pre><code><span class="comment">-- 1. Create a new table configured with Adaptive Row Compression</span>
+CREATE TABLE CALL_LOGS (
+  LOG_ID BIGINT NOT NULL PRIMARY KEY,
+  SUBSCRIBER_ID VARCHAR(20) NOT NULL,
+  CALL_DURATION INT NOT NULL,
+  CALL_STATUS VARCHAR(15) NOT NULL,
+  REGION VARCHAR(30) NOT NULL
+) COMPRESS YES ADAPTIVE;
+
+<span class="comment">-- 2. Alter an existing uncompressed table to enable Adaptive Compression</span>
+ALTER TABLE CALL_LOGS COMPRESS YES ADAPTIVE;
+
+<span class="comment">-- 3. Execute an offline REORG to build/refresh the Table-Level Dictionary and pack the rows</span>
+REORG TABLE CALL_LOGS RESETDICTIONARY;
+
+<span class="comment">-- 4. Check the compression state and dictionary build status of database tables</span>
+SELECT TABNAME, COMPRESSION, DICTBUILDSTATE, PAGES_SAVED_PERCENT FROM SYSCAT.TABLES WHERE TABSCHEMA = 'DB2INST1';
+
+<span class="comment">-- 5. Query administrative view to inspect physical compression statistics in memory</span>
+SELECT * FROM TABLE(SYSPROC.ADMIN_GET_TAB_COMP_INFO('DB2INST1', 'CALL_LOGS', ''));</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-list"></i> Critical Syntax Breakdown</h4>
+                <ul>
+                  <li><strong><code>COMPRESS YES ADAPTIVE</code>:</strong> Tells the DB2 storage engine to enable both the primary table-level compression dictionary and the secondary dynamic page-level dictionaries.</li>
+                  <li><strong><code>RESETDICTIONARY</code>:</strong> Instructs the <code>REORG</code> utility to scan the physical table, evaluate the distribution of current values, compile a new static table-level dictionary, and re-write all rows in a compressed format.</li>
+                  <li><strong><code>ADMIN_GET_TAB_COMP_INFO</code>:</strong> A table function that returns physical compression telemetry, including active dictionary sizes, pages saved, and compression ratios.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic44-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Squeezing Telecommunication Log Footprints</h3>
+              <p>
+                <strong>Scenario:</strong> The telecommunications analytics warehouse contains a high-volume call logs table (<code>CALL_LOGS</code>) that grows by millions of rows daily. The system is hitting disk storage limits, and high physical I/O read queues are degrading database performance. You must enable Adaptive Compression on the table, load transactional data, build the compression dictionaries using the `REORG` utility, and audit the exact storage space reclaimed.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">Compression Lab Command Sequence</div>
+                <pre><code><span class="comment"># Step 1: Connect to the production database</span>
+db2 CONNECT TO TELECOM_WH
+
+<span class="comment"># Step 2: Create the high-volume CALL_LOGS table with compression enabled</span>
+db2 "CREATE TABLE CALL_LOGS ( \
+      LOG_ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY, \
+      SUBSCRIBER_ID VARCHAR(20) NOT NULL, \
+      DESTINATION_NUM VARCHAR(20) NOT NULL, \
+      CALL_TYPE VARCHAR(10) NOT NULL, \
+      START_TIME TIMESTAMP NOT NULL, \
+      DURATION_SEC INT NOT NULL \
+     ) COMPRESS YES ADAPTIVE"
+
+<span class="comment"># Step 3: Populate the table with repetitive telecommunication log records to simulate production data</span>
+db2 "INSERT INTO CALL_LOGS (SUBSCRIBER_ID, DESTINATION_NUM, CALL_TYPE, START_TIME, DURATION_SEC) \
+     SELECT 'SUB-999-888', 'DST-111-222', 'VOICE', CURRENT TIMESTAMP, 120 \
+     FROM SYSCAT.COLUMNS FETCH FIRST 10000 ROWS ONLY"
+
+<span class="comment"># Step 4: Analyze table space allocation before dictionary creation</span>
+db2 "SELECT PAGES_SAVED_PERCENT, DICTBUILDSTATE FROM SYSCAT.TABLES WHERE TABNAME = 'CALL_LOGS'"
+
+<span class="comment"># Step 5: Execute REORG with RESETDICTIONARY to force Table-Level Dictionary construction</span>
+db2 "REORG TABLE CALL_LOGS RESETDICTIONARY"
+
+<span class="comment"># Step 6: Query compression telemetry to confirm dictionary construction and audit saved pages</span>
+db2 "SELECT PAGES_SAVED_PERCENT, DICTBUILDSTATE FROM SYSCAT.TABLES WHERE TABNAME = 'CALL_LOGS'"
+db2 "SELECT * FROM TABLE(SYSPROC.ADMIN_GET_TAB_COMP_INFO('DB2INST1', 'CALL_LOGS', ''))"
+
+db2 TERMINATE</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Command Line Output: Compression Telemetry Comparison</h4>
+                <pre>
+$ db2 "SELECT PAGES_SAVED_PERCENT, DICTBUILDSTATE FROM SYSCAT.TABLES WHERE TABNAME = 'CALL_LOGS'"
+
+PAGES_SAVED_PERCENT DICTBUILDSTATE
+------------------- --------------
+                  0 NONE
+
+  1 record(s) selected.
+
+$ db2 "REORG TABLE CALL_LOGS RESETDICTIONARY"
+DB20000I  The REORG command completed successfully.
+
+$ db2 "SELECT PAGES_SAVED_PERCENT, DICTBUILDSTATE FROM SYSCAT.TABLES WHERE TABNAME = 'CALL_LOGS'"
+
+PAGES_SAVED_PERCENT DICTBUILDSTATE
+------------------- --------------
+                 78 BUILT
+
+  1 record(s) selected.
+
+$ db2 "SELECT COMPRESS_RATIO, PCT_PAGES_SAVED, DICTIONARY_SIZE_BYTES FROM TABLE(SYSPROC.ADMIN_GET_TAB_COMP_INFO('DB2INST1', 'CALL_LOGS', ''))"
+
+COMPRESS_RATIO       PCT_PAGES_SAVED      DICTIONARY_SIZE_BYTES
+-------------------- -------------------- ---------------------
+                4.54                78.00                 65536
+
+  1 record(s) selected.</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cogs"></i> Technical Walkthrough: Analyzing the Compression Statistics</h4>
+                <p>
+                  Reviewing the database performance metrics confirms the success of the compression sequence:
+                </p>
+                <ol>
+                  <li>Before the <code>REORG</code> execution, the query showed <code>PAGES_SAVED_PERCENT = 0</code> and <code>DICTBUILDSTATE = NONE</code>. This confirms that while the table was created with compression enabled, the static dictionary had not yet been built.</li>
+                  <li>Executing <code>REORG TABLE ... RESETDICTIONARY</code> triggered a table-level scan. DB2 compiled a 64 KB (65,536 bytes) Table-Level Compression Dictionary based on repeating pattern strings in the `SUBSCRIBER_ID` and `CALL_TYPE` columns.</li>
+                  <li>The compression telemetry reports a **4.54x Compression Ratio**, representing a **78.00% physical pages savings**. In a production environment with billions of call logs, this reduces an estimated 10 Terabyte database footprint to only 2.2 Terabytes, saving significant disk space.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic44-troubleshooting">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Best Practices for Table Compression</h4>
+                <ul>
+                  <li><strong>Establish Table Size Thresholds:</strong> Do not enable row compression on tables that are smaller than 10-20 Megabytes. The physical space required to store the static Table-Level Compression Dictionary (typically 64 KB) can outweigh the compression savings for small datasets.</li>
+                  <li><strong>Update Catalog Statistics Post-REORG:</strong> Always execute <code>RUNSTATS</code> immediately after running a compression <code>REORG</code>. The <code>REORG</code> utility alters physical row locations and compression structures, and the DB2 Optimizer needs updated statistical data to build accurate, cost-effective query plans.</li>
+                  <li><strong>Monitor CPU Usage:</strong> Compression reduces Disk I/O but increases CPU utilization because the engine must compress and decompress data inline. Ensure the database server has sufficient CPU headroom before enabling compression on heavy OLTP transactional tables.</li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Error Diagnostics &amp; Remedies</h4>
+                <h5>SQL20037W: The compression dictionary was not built because the table does not contain sufficient rows.</h5>
+                <p><strong>Root Cause:</strong> The DBA executed a <code>REORG TABLE ... RESETDICTIONARY</code> command on a table that is either empty or contains too few records (usually fewer than 1,000-2,000 rows). DB2 requires a minimum volume of data to extract repeating patterns and compile a valid dictionary.</p>
+                <p><strong>Remedy:</strong> Populate the table with representative production data (at least 5,000 rows) and rerun the <code>REORG</code> command to force dictionary creation.
+                </p>
+
+                <h5>SQL0911N RC 68: The transaction was aborted due to a lock timeout during REORG.</h5>
+                <p><strong>Root Cause:</strong> The <code>REORG</code> command was executed on a highly active production table with long-running analytical queries. The utility was unable to acquire an exclusive table lock to write the compression dictionary.</p>
+                <p><strong>Remedy:</strong> Schedule the compression task during off-peak hours, or run an online reorg by specifying the <code>ALLOW WRITE ACCESS</code> clause to permit concurrent client insert and query operations:
+                  <br /><code>db2 "REORG TABLE CALL_LOGS ALLOW WRITE ACCESS RESETDICTIONARY"</code>
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic44-summary">
+              <h3 class="subsection-title">5. Topic Summary Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Compression Model</th>
+                      <th>Dictionary Scope</th>
+                      <th>Dictionary Initialization</th>
+                      <th>Dynamic Adaptation</th>
+                      <th>Memory Allocation</th>
+                      <th>Ideal Workload</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Uncompressed</strong></td>
+                      <td>None</td>
+                      <td>None</td>
+                      <td>No</td>
+                      <td>Default Row Layout</td>
+                      <td>Small tables (&lt; 10MB), high-frequency write tables with transient structures.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Classic Compression</strong></td>
+                      <td>Table-Level Only</td>
+                      <td>Manual (Requires <code>REORG</code> or table load)</td>
+                      <td>No (Requires manual <code>REORG</code> rebuild to update dictionary)</td>
+                      <td>Compressed cached rows</td>
+                      <td>Relatively static historical archives, read-heavy analytical tables with stable data patterns.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Adaptive Compression</strong></td>
+                      <td>Table-Level + Page-Level</td>
+                      <td>Table dictionary: Manual; Page dictionary: Automatic and dynamic</td>
+                      <td>Yes (Dynamically compiles local page dictionaries inline)</td>
+                      <td>Compressed cached rows + Page dictionaries</td>
+                      <td>High-growth OLTP tables, transactional databases with evolving or localized data patterns.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Topic 45: Row and Column Access Control (RCAC) (Row Permissions and Column Masks) -->
+          <section id="topic45" class="section">
+            <h2 class="section-title">Topic 45: Row &amp; Column Security (RCAC)</h2>
+            
+            <div class="subsection" id="topic45-concept">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture: Fine-Grained Security Engine</h3>
+              <p>
+                Traditional database security models rely on coarse-grained authorization privileges, such as <code>GRANT SELECT</code> or <code>REVOKE UPDATE</code> on an entire table. In this model, if a user has access to a table, they can view all rows and columns. To restrict access to sensitive records, DBAs historically built custom database views or complex application queries. However, this approach can lead to "view sprawl" and leaves the database vulnerable if users bypass the application layer to query tables directly.
+              </p>
+              <p>
+                To resolve this, DB2 features <strong>Row and Column Access Control (RCAC)</strong>, a fine-grained, policy-based security layer. RCAC is implemented directly within the database engine and operates transparently to client applications and database users. It consists of two security structures:
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-arrows-left-right-to-line"></i> Row Permissions</h5>
+                  <p>
+                    <strong>Definition:</strong> Rules that restrict which rows are visible to a user.
+                    <br /><strong>Mechanism:</strong> When a user queries a table with active row permissions, the DB2 secure optimization engine dynamically rewrites the incoming SQL statement. It appends logical predicates (such as matching system groups, roles, or session attributes like <code>SESSION_USER</code>) that act as an automatic <code>WHERE</code> clause. Rows that do not meet these criteria are completely filtered out of the returned dataset.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-mask"></i> Column Masks</h5>
+                  <p>
+                    <strong>Definition:</strong> Rules that redact or mask sensitive values in specific columns.
+                    <br /><strong>Mechanism:</strong> The underlying data remains intact on disk, but the secure engine intercepts the column values before returning the query results. It dynamically evaluates the user's authorization level. If the user lacks access, DB2 applies a mask (e.g., replacing credit card numbers with 'XXXX-XXXX-XXXX-1234' or redacting phone numbers) transparently, without modifying the raw database record.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-shield-halved"></i> Key Advantages of RCAC over Secure Views</h4>
+                <ul>
+                  <li><strong>Transparent Application Security:</strong> Because RCAC is enforced directly at the table level, developers do not need to rewrite application queries or point to multiple customized views. The same SQL query returns different datasets depending on the permissions and masks assigned to the querying user's database role.</li>
+                  <li><strong>Tamper-Proof DBA Isolation:</strong> RCAC rules are managed exclusively by users holding the <code>SECURITYADM</code> authorization. Standard database administrators (<code>DBADM</code>) can manipulate database schemas and take backups but cannot view sensitive data or drop RCAC rules unless explicitly granted access by the security administrator.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic45-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                To create and enforce Row Permissions and Column Masks, security administrators use standard SQL and DDL commands.
+              </p>
+              <div class="code-example">
+                <div class="code-language">RCAC Rule Creation and Enforcement DDL</div>
+                <pre><code><span class="comment">-- 1. Create a Row Permission restricting data to regional branch managers</span>
+CREATE PERMISSION RegionalSupportPermission ON SUBSCRIBERS
+  FOR ROWS WHERE 
+    (VERIFY_GROUP_FOR_USER(SESSION_USER, 'REGIONAL_MGR') = 1 AND REGION_ID = (SELECT REGION_ID FROM MGR_REGIONS WHERE MGR_USER = SESSION_USER)) 
+    OR (VERIFY_GROUP_FOR_USER(SESSION_USER, 'SECURITY_ADMINS') = 1)
+  ENFORCED FOR ALL ACCESS
+  ENABLE;
+
+<span class="comment">-- 2. Create a Column Mask to redact credit card fields for customer support agents</span>
+CREATE MASK MaskCreditCard ON SUBSCRIBERS (CC_NUM VARCHAR(20))
+  RESIGN COMPLETED AS
+    CASE 
+      WHEN VERIFY_GROUP_FOR_USER(SESSION_USER, 'SUPPORT_AGENTS') = 1 THEN 'XXXX-XXXX-XXXX-' || SUBSTR(CC_NUM, 16, 4)
+      ELSE CC_NUM
+    END
+  ENABLE;
+
+<span class="comment">-- 3. Activate Row Access Control on the base table</span>
+ALTER TABLE SUBSCRIBERS ACTIVATE ROW ACCESS CONTROL;
+
+<span class="comment">-- 4. Activate Column Access Control on the base table</span>
+ALTER TABLE SUBSCRIBERS ACTIVATE COLUMN ACCESS CONTROL;
+
+<span class="comment">-- 5. Deactivate row permissions if schema restructuring is required</span>
+ALTER TABLE SUBSCRIBERS DEACTIVATE ROW ACCESS CONTROL;</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-list"></i> Command Parameter Deep-Dive</h4>
+                <ul>
+                  <li><strong><code>VERIFY_GROUP_FOR_USER</code>:</strong> A built-in system security function that checks if the active session connection user is a registered member of an operating system or LDAP group.</li>
+                  <li><strong><code>ACTIVATE ROW ACCESS CONTROL</code>:</strong> Tells the DB2 storage engine to begin applying active row permissions to the table. Until this activation step is executed, the permissions exist but are not enforced.</li>
+                  <li><strong><code>RESIGN COMPLETED AS</code>:</strong> Specifies the dynamic transformation logic for the column mask, typically using a <code>CASE</code> expression to return redacted values based on role checks.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic45-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Enforcing Subscriber Data Privacy</h3>
+              <p>
+                <strong>Scenario:</strong> The Telecommunication Analytics Warehouse contains a sensitive customer database (<code>SUBSCRIBERS</code>). To comply with data privacy regulations (such as GDPR or HIPAA), you must ensure that support agents (members of the group <code>TELECOM_SUPPORT</code>) can only view subscriber records from their assigned region. Additionally, their view of subscriber mobile numbers (<code>MSISDN</code>) must redact the middle digits, while full details should remain visible to security administrators (members of the group <code>SEC_AUDITORS</code>).
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">RCAC Security Script Implementation</div>
+                <pre><code><span class="comment"># Step 1: Connect to the database as a user holding SECURITYADM authority</span>
+db2 CONNECT TO TELECOM_WH
+
+<span class="comment"># Step 2: Create the base table holding customer details</span>
+db2 "CREATE TABLE SUBSCRIBERS ( \
+      SUB_ID INT NOT NULL PRIMARY KEY, \
+      NAME VARCHAR(50) NOT NULL, \
+      MSISDN VARCHAR(15) NOT NULL, \
+      REGION VARCHAR(10) NOT NULL, \
+      ACCT_BALANCE DECIMAL(10,2) NOT NULL \
+     )"
+
+<span class="comment"># Step 3: Insert sample subscriber records spanning multiple regions</span>
+db2 "INSERT INTO SUBSCRIBERS VALUES (1, 'John Doe', '2010005551234', 'NORTH', 150.50)"
+db2 "INSERT INTO SUBSCRIBERS VALUES (2, 'Jane Smith', '2010005555678', 'SOUTH', 350.75)"
+db2 "INSERT INTO SUBSCRIBERS VALUES (3, 'Mostafa Ali', '2010005559999', 'NORTH', 75.00)"
+
+<span class="comment"># Step 4: Create a Row Permission that isolates support agents to their assigned region</span>
+db2 "CREATE PERMISSION SupportRegionFilter ON SUBSCRIBERS \
+      FOR ROWS WHERE \
+        (VERIFY_GROUP_FOR_USER(SESSION_USER, 'TELECOM_SUPPORT') = 1 AND REGION = 'NORTH') \
+        OR (VERIFY_GROUP_FOR_USER(SESSION_USER, 'SEC_AUDITORS') = 1) \
+      ENFORCED FOR ALL ACCESS \
+      ENABLE"
+
+<span class="comment"># Step 5: Create a Column Mask that redacts subscriber MSISDN values for support agents</span>
+db2 "CREATE MASK MSISDNMask ON SUBSCRIBERS (MSISDN VARCHAR(15)) \
+      RESIGN COMPLETED AS \
+        CASE \
+          WHEN VERIFY_GROUP_FOR_USER(SESSION_USER, 'TELECOM_SUPPORT') = 1 THEN SUBSTR(MSISDN, 1, 4) || '-XXXX-' || SUBSTR(MSISDN, 10, 4) \
+          ELSE MSISDN \
+        END \
+      ENABLE"
+
+<span class="comment"># Step 6: Activate fine-grained access control on the table</span>
+db2 "ALTER TABLE SUBSCRIBERS ACTIVATE ROW ACCESS CONTROL"
+db2 "ALTER TABLE SUBSCRIBERS ACTIVATE COLUMN ACCESS CONTROL"
+
+db2 TERMINATE</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Command Line Output: Dynamic Policy Verification</h4>
+                <pre>
+<span class="comment"># Scenario A: Execution run by support agent "agent_north" (in group TELECOM_SUPPORT)</span>
+$ db2 CONNECT TO TELECOM_WH USER agent_north USING agentPass123
+$ db2 "SELECT SUB_ID, NAME, MSISDN, REGION, ACCT_BALANCE FROM SUBSCRIBERS"
+
+SUB_ID      NAME                                               MSISDN          REGION     ACCT_BALANCE
+----------- -------------------------------------------------- --------------- ---------- ------------
+          1 John Doe                                           2010-XXXX-1234  NORTH            150.50
+          3 Mostafa Ali                                        2010-XXXX-9999  NORTH             75.00
+
+  2 record(s) selected.
+
+<span class="comment"># Scenario B: Execution run by security auditor "auditor_one" (in group SEC_AUDITORS)</span>
+$ db2 CONNECT TO TELECOM_WH USER auditor_one USING auditPass123
+$ db2 "SELECT SUB_ID, NAME, MSISDN, REGION, ACCT_BALANCE FROM SUBSCRIBERS"
+
+SUB_ID      NAME                                               MSISDN          REGION     ACCT_BALANCE
+----------- -------------------------------------------------- --------------- ---------- ------------
+          1 John Doe                                           2010005551234   NORTH            150.50
+          2 Jane Smith                                         2010005555678   SOUTH            350.75
+          3 Mostafa Ali                                        2010005559999   NORTH             75.00
+
+  3 record(s) selected.</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cogs"></i> Technical Walkthrough: Analyzing the Secure Query Rewrites</h4>
+                <p>
+                  The practical lab demonstrates the secure execution flow of the DB2 RCAC engine:
+                </p>
+                <ol>
+                  <li>When support agent <code>agent_north</code> ran the select query, the database engine parsed their session groups and matched the active row permission filter. DB2 transparently rewrote the execution plan, appending the predicate <code>WHERE REGION = 'NORTH'</code>. This excluded the 'SOUTH' region record for Jane Smith from the query plan entirely, rather than filtering it in memory.</li>
+                  <li>At the same time, the engine applied the column mask <code>MSISDNMask</code> to the <code>MSISDN</code> column. Because the agent was a member of the restricted <code>TELECOM_SUPPORT</code> group, their query returned masked strings (e.g., <code>2010-XXXX-1234</code>) without modifying the raw data on disk.</li>
+                  <li>When the auditor connected, the secure engine skipped the regional row filters and the MSISDN column mask. The query successfully returned the complete customer list with unredacted data, verifying secure isolation.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic45-troubleshooting">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Best Practices for RCAC Execution</h4>
+                <ul>
+                  <li><strong>Avoid Nested Subqueries inside RCAC:</strong> Do not define row permissions or column masks that reference multiple complex, multi-join subqueries. Since these rules are executed inline for every single row scanned, complex subqueries can cause severe query degradation. Use indexed local lookup tables or security roles instead.</li>
+                  <li><strong>Differentiate Security Roles:</strong> Maintain strict separation of administrative duties. Standard DBAs (holding `DBADM` authority) should handle physical storage, execution settings, and table structure management, while the design and activation of security rules should be restricted to Security Officers (holding `SECURITYADM` authority).</li>
+                  <li><strong>Test Rules on Staging:</strong> Always validate RCAC configurations on a staging database before applying them to a production system. An error in a row permission predicate can block all database users (including the DBA) from reading data from the table.</li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Error Diagnostics &amp; Remedies</h4>
+                <h5>SQL20412N: An error occurred during row or column access control validation (Recursive Loop).</h5>
+                <p><strong>Root Cause:</strong> The security administrator created a row permission on a table that references a secondary lookup table, but that secondary lookup table has active row permissions referencing the primary table. This circular reference causes the secure optimization engine to enter an infinite loop during SQL compilation.</p>
+                <p><strong>Remedy:</strong> Log in as a security administrator, audit the lookup tables used in your permission definitions, deactivate RCAC on the lookup tables, and ensure that security rules only reference static, non-RCAC lookup views.
+                </p>
+
+                <h5>SQL0797N: The trigger configuration contains an invalid statement on a table with active RCAC.</h5>
+                <p><strong>Root Cause:</strong> An insert or update trigger was created on a table with active row permissions or column masks, but the trigger actions reference the columns secured by the mask. DB2 blocks triggers from copying masked data values to prevent data leakage.</p>
+                <p><strong>Remedy:</strong> Redesign the trigger action to execute under a administrative user context that bypasses the mask, or temporarily drop the column mask before restructuring system triggers.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic45-summary">
+              <h3 class="subsection-title">5. Topic Summary Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Fine-Grained Security Component</th>
+                      <th>Enforcement Level</th>
+                      <th>Query Transformation Mechanism</th>
+                      <th>Physical Data Modification</th>
+                      <th>Primary Administrative Authority</th>
+                      <th>Typical Security Use-Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Row Permissions</strong></td>
+                      <td>Row Level (Horizontal isolation)</td>
+                      <td>Appends dynamic filter predicates (logical <code>WHERE</code> clauses) to the query plan.</td>
+                      <td>No (Data remains unchanged on disk)</td>
+                      <td><code>SECURITYADM</code> only</td>
+                      <td>Multi-tenant data isolation, restricting regional branch managers to local customer records.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Column Masks</strong></td>
+                      <td>Column Level (Vertical protection)</td>
+                      <td>Replaces returned column values using custom conditional logical blocks (like <code>CASE</code> expressions).</td>
+                      <td>No (Data remains unchanged on disk)</td>
+                      <td><code>SECURITYADM</code> only</td>
+                      <td>Redacting customer credit card numbers, masking personally identifiable information (PII) like SSN/MSISDN.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Topic 46: Storage Groups (STOGROUP) and Multi-Temperature Storage Tiers -->
+          <section id="topic46" class="section">
+            <h2 class="section-title">Topic 46: Storage Groups &amp; Temperature Tiers</h2>
+            
+            <div class="subsection" id="topic46-concept">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture: Multi-Temperature Storage Tiers</h3>
+              <p>
+                In large enterprise data warehouses, data has different "temperatures" based on how frequently it is accessed. Recent data (e.g., the current fiscal month's billing records) is **Hot Data**; it is queried frequently and demands fast response times. Semi-recent data (e.g., records from 2 to 12 months ago) is **Warm Data**; it is accessed occasionally. Historical data (e.g., records older than a year) is **Cold Data**; it is rarely accessed but must be retained for compliance.
+              </p>
+              <p>
+                Storing all historical records on high-performance Solid State Drives (SSDs) is expensive and inefficient. Conversely, storing active transactional data on slow Hard Disk Drives (HDDs) degrades system performance. To address this, DB2 features <strong>Storage Groups (<code>STOGROUP</code>)</strong>. This feature allows DBAs to define collections of physical storage paths mapped to specific hardware performance tiers, enabling automated multi-temperature storage management.
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-bolt"></i> Hot Storage Group</h5>
+                  <p>
+                    <strong>Hardware Tier:</strong> NVMe / Enterprise Flash SSDs.
+                    <br /><strong>Behavior:</strong> Configured for high I/O throughput. Contains tablespaces for active indexes, catalog files, and the current month's transaction partitions.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-server"></i> Cold Storage Group</h5>
+                  <p>
+                    <strong>Hardware Tier:</strong> High-capacity HDDs / Object storage arrays.
+                    <br /><strong>Behavior:</strong> Configured for low cost per Gigabyte. Contains historical partitioned archives migrated out of the hot storage groups online.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-shuffle"></i> Online Multi-Temperature Partition Migration</h4>
+                <p>
+                  By using partitioned tables, DBAs can assign different tablespaces to different partition ranges. When a partition shifts from Hot to Warm or Cold, the DBA alters the tablespace to bind to a different Storage Group. The DB2 engine then performs an **online rebalance**, dynamically migrating the physical container files to the new storage paths without interrupting active application queries.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic46-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                To create, alter, and manage Storage Groups and multi-temperature tablespaces, DBAs use specific DDL and CLP syntax.
+              </p>
+              <div class="code-example">
+                <div class="code-language">Storage Group and Online Rebalance Commands</div>
+                <pre><code><span class="comment"># 1. Create a high-performance Storage Group for hot data</span>
+db2 "CREATE STOGROUP SG_HOT ON '/mnt/ssd_fast_1/db2data', '/mnt/ssd_fast_2/db2data'"
+
+<span class="comment"># 2. Create a cost-effective Storage Group for cold data</span>
+db2 "CREATE STOGROUP SG_COLD ON '/mnt/hdd_slow_1/db2data'"
+
+<span class="comment"># 3. Create a tablespace assigned to the hot Storage Group</span>
+db2 "CREATE TABLESPACE TBSP_Q1_2026 USING STOGROUP SG_HOT PAGESIZE 32K"
+
+<span class="comment"># 4. Alter an existing tablespace to assign it to a different Storage Group</span>
+db2 "ALTER TABLESPACE TBSP_Q1_2026 USING STOGROUP SG_COLD"
+
+<span class="comment"># 5. Trigger the online rebalance process to physically migrate the data containers</span>
+db2 "ALTER TABLESPACE TBSP_Q1_2026 REBALANCE"
+
+<span class="comment"># 6. Monitor rebalance execution status and physical path states</span>
+db2 "SELECT TBSP_NAME, SGNAME, REBALANCER_STATE FROM SYSIBMADM.SNAPTBSP"</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-list"></i> Command Parameter Deep-Dive</h4>
+                <ul>
+                  <li><strong><code>CREATE STOGROUP ON [paths]</code>:</strong> Defines a storage group and registers automatic storage target paths. Any automatic storage tablespace assigned to this group will draw its containers from these paths.</li>
+                  <li><strong><code>USING STOGROUP SG_COLD</code>:</strong> Assigns the tablespace's logical definitions to the new storage group target, preparing the engine for container migration.</li>
+                  <li><strong><code>REBALANCE</code>:</strong> The physical execution command. It spawns background I/O threads that copy data blocks to the new storage paths, updates tablespace container paths, and deletes the old container files once the rebalance is complete.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic46-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Online Migration of Historical Partitions</h3>
+              <p>
+                <strong>Scenario:</strong> The telecommunications warehouse database contains an event logs table (<code>CDR_PARTITIONED</code>) partitioned by quarter. The partition for Q1 2025 is stored in tablespace <code>TBSP_Q1_2025</code>, which resides in the hot storage group <code>SG_HOT</code> on SSDs. Since the data is now historical and rarely queried, you must migrate this tablespace online to the cold storage group <code>SG_COLD</code> on HDDs to free up high-speed storage.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">Multi-Temperature Partition Migration Script</div>
+                <pre><code><span class="comment"># Step 1: Connect to the database</span>
+db2 CONNECT TO TELECOM_WH
+
+<span class="comment"># Step 2: Create Hot and Cold Storage Groups</span>
+db2 "CREATE STOGROUP SG_HOT ON '/dbdata/ssd/hot_path1', '/dbdata/ssd/hot_path2'"
+db2 "CREATE STOGROUP SG_COLD ON '/dbdata/hdd/cold_path1'"
+
+<span class="comment"># Step 3: Create tablespaces associated with their respective Storage Groups</span>
+db2 "CREATE TABLESPACE TBSP_Q1_2025 USING STOGROUP SG_HOT PAGESIZE 32K"
+db2 "CREATE TABLESPACE TBSP_Q2_2025 USING STOGROUP SG_HOT PAGESIZE 32K"
+
+<span class="comment"># Step 4: Create the partitioned table, mapping quarters to tablespaces</span>
+db2 "CREATE TABLE CDR_PARTITIONED ( \
+      CDR_ID BIGINT NOT NULL, \
+      MSISDN VARCHAR(15) NOT NULL, \
+      EVENT_DATE DATE NOT NULL \
+     ) PARTITION BY RANGE (EVENT_DATE) ( \
+      PARTITION P1 STARTING FROM ('2025-01-01') ENDING AT ('2025-03-31') IN TBSP_Q1_2025, \
+      PARTITION P2 STARTING FROM ('2025-04-01') ENDING AT ('2025-06-30') IN TBSP_Q2_2025 \
+     )"
+
+<span class="comment"># Step 5: Check current tablespace assignments</span>
+db2 "SELECT TBSP_NAME, SGNAME FROM SYSIBMADM.SNAPTBSP WHERE TBSP_NAME = 'TBSP_Q1_2025'"
+
+<span class="comment"># Step 6: Reassign the Q1 2025 tablespace to the Cold Storage Group</span>
+db2 "ALTER TABLESPACE TBSP_Q1_2025 USING STOGROUP SG_COLD"
+
+<span class="comment"># Step 7: Trigger the physical online container rebalance</span>
+db2 "ALTER TABLESPACE TBSP_Q1_2025 REBALANCE"
+
+<span class="comment"># Step 8: Monitor the rebalance status until complete</span>
+db2 "SELECT TBSP_NAME, REBALANCER_STATE FROM SYSIBMADM.SNAPTBSP WHERE TBSP_NAME = 'TBSP_Q1_2025'"
+
+db2 TERMINATE</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Command Line Output: Rebalance Telemetry</h4>
+                <pre>
+$ db2 "SELECT TBSP_NAME, SGNAME FROM SYSIBMADM.SNAPTBSP WHERE TBSP_NAME = 'TBSP_Q1_2025'"
+
+TBSP_NAME            SGNAME
+-------------------- --------------------
+TBSP_Q1_2025         SG_HOT
+
+  1 record(s) selected.
+
+$ db2 "ALTER TABLESPACE TBSP_Q1_2025 USING STOGROUP SG_COLD"
+DB20000I  The ALTER TABLESPACE command completed successfully.
+
+$ db2 "ALTER TABLESPACE TBSP_Q1_2025 REBALANCE"
+DB20000I  The ALTER TABLESPACE command completed successfully.
+
+$ db2 "SELECT TBSP_NAME, REBALANCER_STATE FROM SYSIBMADM.SNAPTBSP WHERE TBSP_NAME = 'TBSP_Q1_2025'"
+
+TBSP_NAME            REBALANCER_STATE
+-------------------- --------------------
+TBSP_Q1_2025         ACTIVE
+
+  1 record(s) selected.
+
+# After background migration threads complete:
+$ db2 "SELECT TBSP_NAME, SGNAME, REBALANCER_STATE FROM SYSIBMADM.SNAPTBSP WHERE TBSP_NAME = 'TBSP_Q1_2025'"
+
+TBSP_NAME            SGNAME               REBALANCER_STATE
+-------------------- -------------------- --------------------
+TBSP_Q1_2025         SG_COLD              NONE
+
+  1 record(s) selected.</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cogs"></i> Technical Walkthrough: Analyzing the Rebalance Operation</h4>
+                <p>
+                  The practical lab demonstrates online data migration using DB2 Storage Groups:
+                </p>
+                <ol>
+                  <li>The <code>CDR_PARTITIONED</code> table was successfully created across separate tablespaces, allowing granular management of each partition range.</li>
+                  <li>Executing <code>ALTER TABLESPACE ... USING STOGROUP SG_COLD</code> updated the DB2 catalog definitions, but did not immediately move the data files.</li>
+                  <li>Executing the <code>REBALANCE</code> command spawned background I/O copy processes. The engine physically read pages from <code>/dbdata/ssd/hot_path1</code>, copied them to <code>/dbdata/hdd/cold_path1</code>, updated tablespace pointers, and reclaimed the SSD storage paths. The table remained fully online and accessible to application queries during the entire migration.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic46-troubleshooting">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Best Practices for Storage Group Tuning</h4>
+                <ul>
+                  <li><strong>Configure Sufficient Target Storage:</strong> Before reassigning a tablespace and starting a rebalance operation, verify that the target storage group has enough free physical capacity to host the incoming containers. If the target disk runs out of space, the rebalance will suspend.</li>
+                  <li><strong>Adjust Rebalance Priority:</strong> Large tablespaces can saturate storage channels during a rebalance. Use the DB2 registry variable <code>DB2_REBALANCE_PRIORITY</code> to throttle migration speeds and minimize the performance impact on concurrent transactions.</li>
+                  <li><strong>Verify Path Permissions:</strong> Ensure all physical directories specified in a <code>CREATE STOGROUP</code> command are owned by the <code>db2inst1</code> user and have <code>755</code> operating system permissions. If permissions are misconfigured, container allocation will fail.</li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Error Diagnostics &amp; Remedies</h4>
+                <h5>SQL2036N: Path not found or invalid storage path block.</h5>
+                <p><strong>Root Cause:</strong> The directory paths specified in the <code>CREATE STOGROUP</code> command do not exist on the host server filesystem, or the DB2 instance owner user account lacks write permissions for those directories.</p>
+                <p><strong>Remedy:</strong> Log in as root, create the target directories, assign ownership to the instance owner (e.g., <code>chown db2inst1:db2iadm1 /dbdata/hdd/path1</code>), assign <code>755</code> permissions, and rerun the storage group command.
+                </p>
+
+                <h5>SQL20400N: The tablespace rebalance operation failed or was aborted.</h5>
+                <p><strong>Root Cause:</strong> The tablespace container files encountered an I/O read/write error during block copying, or the target filesystem ran out of space or reached its max file size limit.</p>
+                <p><strong>Remedy:</strong> Review the system diagnostic log (<code>db2diag.log</code>) to pinpoint the failure block. Free up disk space, resolve any hardware controller issues, and run the <code>ALTER TABLESPACE ... REBALANCE</code> command again to resume the operation from the last successful block.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic46-summary">
+              <h3 class="subsection-title">5. Topic Summary Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Storage Temperature Tier</th>
+                      <th>Underlying Hardware</th>
+                      <th>Storage Group Name</th>
+                      <th>Typical Tablespace Content</th>
+                      <th>Cost per Gigabyte</th>
+                      <th>I/O Priority Profile</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Hot Data</strong></td>
+                      <td>NVMe / Enterprise Flash SSDs</td>
+                      <td><code>SG_HOT</code></td>
+                      <td>System catalog (SYSCATSPACE), active transaction tablespaces, and indexes.</td>
+                      <td>Highest Cost</td>
+                      <td>Microsecond latency, prioritized I/O queues.</td>
+                      <td><code>ALTER TABLESPACE ... REBALANCE</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Warm Data</strong></td>
+                      <td>Standard SAS Disk Drives / Hybrid SAN</td>
+                      <td><code>SG_WARM</code></td>
+                      <td>Semi-recent partitioned tables, active logs, and backup target areas.</td>
+                      <td>Medium Cost</td>
+                      <td>Balanced latency and throughput profiles.</td>
+                      <td><code>ALTER TABLESPACE ... REBALANCE</code></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Cold Data</strong></td>
+                      <td>High-capacity SATA HDDs / Archive Arrays</td>
+                      <td><code>SG_COLD</code></td>
+                      <td>Historical data partitions, audit logs, and compliance records.</td>
+                      <td>Lowest Cost</td>
+                      <td>High latency, background task throughput.</td>
+                      <td><code>ALTER TABLESPACE ... REBALANCE</code></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Topic 47: Temporal Data / Time Travel Querying -->
+          <section id="topic47" class="section">
+            <h2 class="section-title">Topic 47: Temporal Tables &amp; Time Travel</h2>
+            
+            <div class="subsection" id="topic47-concept">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture: Temporal Architecture</h3>
+              <p>
+                Standard relational database tables only store the *current* state of data. When an application executes an <code>UPDATE</code> or <code>DELETE</code> command, the existing values are overwritten, and the database has no built-in record of the previous data states. To track historical changes for audits or compliance, developers historically built custom history tables and managed them using application logic or complex database triggers.
+              </p>
+              <p>
+                DB2 simplifies this with **Temporal Tables (Time Travel Querying)**. This feature allows the database engine to track data changes across a temporal dimension natively. DB2 supports three temporal table configurations:
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-gears"></i> System-Period Temporal Tables (SPTT)</h5>
+                  <p>
+                    <strong>Managed By:</strong> The DB2 Database Engine automatically.
+                    <br /><strong>Mechanism:</strong> The base table includes three system columns: <code>ROW_BEGIN</code>, <code>ROW_END</code>, and <code>TRANS_START_ID</code>. These define the system period <code>SYSTEM_TIME</code>. The DBA creates a separate <strong>History Table</strong> with an identical structure. When a record in the base table is updated or deleted, DB2 automatically writes a copy of the old record to the history table, capturing its exact lifecycle within the system.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-user-tie"></i> Application-Period Temporal Tables (APTT)</h5>
+                  <p>
+                    <strong>Managed By:</strong> The Client Application.
+                    <br /><strong>Mechanism:</strong> Uses application-period columns (like <code>BUS_START</code> and <code>BUS_END</code>) to track when a record is valid from a business perspective. This allows applications to store future-dated states or historical business records, independent of when the data was physically written to the database.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-clock"></i> Bitemporal Tables: The Ultimate Temporal Archive</h4>
+                <p>
+                  A <strong>Bitemporal Table</strong> combines both System-Period and Application-Period temporal tracking. This allows DBAs to query both <strong>what the system recorded (system time)</strong> and <strong>when the record was valid in the real world (business time)</strong>. This capability is critical for auditing financial transactions, billing records, and subscriber plans.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic47-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                To create temporal tables, link history structures, and query historical states, DBAs use specific SQL temporal extensions.
+              </p>
+              <div class="code-example">
+                <div class="code-language">Temporal Table and Time Travel Query DDL/SQL</div>
+                <pre><code><span class="comment">-- 1. Create the base table with system period columns</span>
+CREATE TABLE SUBSCRIBER_PLANS (
+  SUB_ID INT NOT NULL PRIMARY KEY,
+  PLAN_NAME VARCHAR(30) NOT NULL,
+  MONTHLY_FEE DECIMAL(8,2) NOT NULL,
+  SYS_START TIMESTAMP(12) GENERATED ALWAYS AS ROW BEGIN NOT NULL,
+  SYS_END TIMESTAMP(12) GENERATED ALWAYS AS ROW END NOT NULL,
+  TRANS_ID TIMESTAMP(12) GENERATED ALWAYS AS TRANSACTION START ID NOT NULL,
+  PERIOD SYSTEM_TIME(SYS_START, SYS_END)
+);
+
+<span class="comment">-- 2. Create an identical History Table to store archived records</span>
+CREATE TABLE SUBSCRIBER_PLANS_HIST (
+  SUB_ID INT NOT NULL,
+  PLAN_NAME VARCHAR(30) NOT NULL,
+  MONTHLY_FEE DECIMAL(8,2) NOT NULL,
+  SYS_START TIMESTAMP(12) NOT NULL,
+  SYS_END TIMESTAMP(12) NOT NULL,
+  TRANS_ID TIMESTAMP(12) NOT NULL
+);
+
+<span class="comment">-- 3. Link the base and history tables and activate system versioning</span>
+ALTER TABLE SUBSCRIBER_PLANS ADD VERSIONING USE HISTORY TABLE SUBSCRIBER_PLANS_HIST;
+
+<span class="comment">-- 4. Query data as it existed at a specific point in time (Time Travel Query)</span>
+SELECT PLAN_NAME, MONTHLY_FEE FROM SUBSCRIBER_PLANS FOR SYSTEM_TIME AS OF '2026-05-01-12.00.00.000000000000';
+
+<span class="comment">-- 5. Query historical records that existed within a specific time range</span>
+SELECT PLAN_NAME, MONTHLY_FEE, SYS_START, SYS_END 
+FROM SUBSCRIBER_PLANS FOR SYSTEM_TIME BETWEEN '2026-01-01' AND '2026-06-01';</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-list"></i> Command Parameter Deep-Dive</h4>
+                <ul>
+                  <li><strong><code>GENERATED ALWAYS AS ROW BEGIN/END</code>:</strong> System-managed timestamps. <code>ROW BEGIN</code> records when a row is inserted or updated, and <code>ROW END</code> records when it is updated or deleted.</li>
+                  <li><strong><code>PERIOD SYSTEM_TIME(SYS_START, SYS_END)</code>:</strong> Defines the system period used to track table versioning.</li>
+                  <li><strong><code>FOR SYSTEM_TIME AS OF</code>:</strong> Tells the DB2 optimizer to query both the base table and the history table, transparently returning the records as they existed at that exact point in time.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic47-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Tracing Subscriber Package Lifecycles</h3>
+              <p>
+                <strong>Scenario:</strong> A VIP subscriber (<code>SUB_ID = 999</code>) registers a billing dispute. The billing team needs to audit the subscriber's historical package changes. Over the last year, the customer upgraded from a Premium LTE plan to an Elite 5G Unlimited plan, and later cancelled their subscription. You must implement a System-Period Temporal Table to track these changes automatically and run Time Travel queries to audit the subscriber's package status at specific points in time.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">Temporal Table Lab Setup and Verification Script</div>
+                <pre><code><span class="comment"># Step 1: Connect to the database</span>
+db2 CONNECT TO TELECOM_WH
+
+<span class="comment"># Step 2: Create the base subscriber plan table with temporal system columns</span>
+db2 "CREATE TABLE SUBSCRIBER_PLANS ( \
+      SUB_ID INT NOT NULL PRIMARY KEY, \
+      PLAN_NAME VARCHAR(30) NOT NULL, \
+      MONTHLY_FEE DECIMAL(8,2) NOT NULL, \
+      SYS_START TIMESTAMP(12) GENERATED ALWAYS AS ROW BEGIN NOT NULL, \
+      SYS_END TIMESTAMP(12) GENERATED ALWAYS AS ROW END NOT NULL, \
+      TRANS_ID TIMESTAMP(12) GENERATED ALWAYS AS TRANSACTION START ID NOT NULL, \
+      PERIOD SYSTEM_TIME(SYS_START, SYS_END) \
+     )"
+
+<span class="comment"># Step 3: Create the matching History Table structure</span>
+db2 "CREATE TABLE SUBSCRIBER_PLANS_HIST ( \
+      SUB_ID INT NOT NULL, \
+      PLAN_NAME VARCHAR(30) NOT NULL, \
+      MONTHLY_FEE DECIMAL(8,2) NOT NULL, \
+      SYS_START TIMESTAMP(12) NOT NULL, \
+      SYS_END TIMESTAMP(12) NOT NULL, \
+      TRANS_ID TIMESTAMP(12) NOT NULL \
+     )"
+
+<span class="comment"># Step 4: Enable automatic system versioning</span>
+db2 "ALTER TABLE SUBSCRIBER_PLANS ADD VERSIONING USE HISTORY TABLE SUBSCRIBER_PLANS_HIST"
+
+<span class="comment"># Step 5: Simulate subscriber lifecycle events with delays</span>
+<span class="comment"># Event A: Insert initial subscriber plan (Date: 2026-05-22 12:45:00)</span>
+db2 "INSERT INTO SUBSCRIBER_PLANS (SUB_ID, PLAN_NAME, MONTHLY_FEE) VALUES (999, 'Premium LTE', 49.99)"
+
+<span class="comment"># Event B: Update subscriber to upgraded plan (Date: 2026-05-22 12:47:00)</span>
+db2 "UPDATE SUBSCRIBER_PLANS SET PLAN_NAME = 'Elite 5G Unlimited', MONTHLY_FEE = 79.99 WHERE SUB_ID = 999"
+
+<span class="comment"># Event C: Subscriber cancels plan (Date: 2026-05-22 12:49:00)</span>
+db2 "DELETE FROM SUBSCRIBER_PLANS WHERE SUB_ID = 999"
+
+<span class="comment"># Step 6: Audit current subscriber status</span>
+db2 "SELECT * FROM SUBSCRIBER_PLANS WHERE SUB_ID = 999"
+
+<span class="comment"># Step 7: Run Time Travel query to audit status as of the initial sign-up (AS OF 12:46:00)</span>
+db2 "SELECT PLAN_NAME, MONTHLY_FEE FROM SUBSCRIBER_PLANS FOR SYSTEM_TIME AS OF '2026-05-22-12.46.00.000000000000'"
+
+<span class="comment"># Step 8: Run Time Travel query to audit status as of the plan upgrade (AS OF 12:48:00)</span>
+db2 "SELECT PLAN_NAME, MONTHLY_FEE FROM SUBSCRIBER_PLANS FOR SYSTEM_TIME AS OF '2026-05-22-12.48.00.000000000000'"
+
+db2 TERMINATE</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Command Line Output: Time Travel Audit Results</h4>
+                <pre>
+$ db2 "SELECT * FROM SUBSCRIBER_PLANS WHERE SUB_ID = 999"
+  0 record(s) selected.
+
+$ db2 "SELECT PLAN_NAME, MONTHLY_FEE FROM SUBSCRIBER_PLANS FOR SYSTEM_TIME AS OF '2026-05-22-12.46.00.000000000000'"
+
+PLAN_NAME                      MONTHLY_FEE
+------------------------------ -----------
+Premium LTE                          49.99
+
+  1 record(s) selected.
+
+$ db2 "SELECT PLAN_NAME, MONTHLY_FEE FROM SUBSCRIBER_PLANS FOR SYSTEM_TIME AS OF '2026-05-22-12.48.00.000000000000'"
+
+PLAN_NAME                      MONTHLY_FEE
+------------------------------ -----------
+Elite 5G Unlimited                   79.99
+
+  1 record(s) selected.
+
+$ db2 "SELECT PLAN_NAME, MONTHLY_FEE, SYS_START, SYS_END FROM SUBSCRIBER_PLANS_HIST WHERE SUB_ID = 999 ORDER BY SYS_START"
+
+PLAN_NAME                      MONTHLY_FEE SYS_START                      SYS_END
+------------------------------ ----------- ------------------------------ ------------------------------
+Premium LTE                          49.99 2026-05-22-12.45.10.1234560000 2026-05-22-12.47.12.9876540000
+Elite 5G Unlimited                   79.99 2026-05-22-12.47.12.9876540000 2026-05-22-12.49.05.1122330000
+
+  2 record(s) selected.</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cogs"></i> Technical Walkthrough: Analyzing Temporal Operations</h4>
+                <p>
+                  This lab illustrates how temporal tables automate historical audits:
+                </p>
+                <ol>
+                  <li>Querying the base table <code>SUBSCRIBER_PLANS</code> returned zero records. This is because the subscriber cancelled their plan, resulting in a physical <code>DELETE</code> operation that removed the row from the base table.</li>
+                  <li>When we executed <code>FOR SYSTEM_TIME AS OF '12:46:00'</code>, the DB2 optimizer parsed the temporal state. It scanned both the base table and the history table, determined that the record was active on that date, and returned the initial <strong>Premium LTE</strong> plan data.</li>
+                  <li>Querying the state as of <code>12:48:00</code> returned the updated <strong>Elite 5G Unlimited</strong> plan record.</li>
+                  <li>Directly querying the history table (<code>SUBSCRIBER_PLANS_HIST</code>) verified the underlying storage mechanics: the deleted base rows are stored in the history table, complete with precise system timestamps that capture the timeline of all changes.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic47-troubleshooting">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Best Practices for Temporal Tables</h4>
+                <ul>
+                  <li><strong>Index Historical Timestamps:</strong> Always create index structures on the history table's timestamp columns (<code>SYS_START</code>, <code>SYS_END</code>). Time travel queries are highly dependent on range searches, and missing indexes will cause full history table scans.</li>
+                  <li><strong>Apply Adaptive Compression to History Tables:</strong> History tables are read-only structures that grow quickly. Apply Adaptive Compression to the history tablespace to save storage space and optimize buffer pool usage.</li>
+                  <li><strong>Partition History Tables:</strong> To prevent history tables from becoming too large and degrading query performance, partition them by date range (e.g., monthly or quarterly). This also simplifies archiving tasks.</li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Error Diagnostics &amp; Remedies</h4>
+                <h5>SQL20521N: The base and history tables are not compatible for system versioning.</h5>
+                <p><strong>Root Cause:</strong> The DBA executed the <code>ALTER TABLE ... ADD VERSIONING</code> command, but the columns in the history table do not match the columns in the base table in name, count, sequence order, or data type limits.</p>
+                <p><strong>Remedy:</strong> Drop the history table, and recreate it to match the base table structure exactly. Ensure that system timestamp column data types are identical (typically <code>TIMESTAMP(12)</code>).
+                </p>
+
+                <h5>SQL20528N: The schema change operation is invalid on an active temporal table.</h5>
+                <p><strong>Root Cause:</strong> The DBA attempted to execute an <code>ALTER TABLE</code> command to drop or modify columns in the base temporal table while system versioning was active. DB2 blocks structural alterations on active temporal tables to preserve data integrity.</p>
+                <p><strong>Remedy:</strong> To alter the schema of a temporal table, follow this three-step procedure:
+                  <br />1. Deactivate versioning: <code>db2 "ALTER TABLE SUBSCRIBER_PLANS DROP VERSIONING"</code>
+                  <br />2. Execute the schema changes on both the base and history tables separately.
+                  <br />3. Re-enable versioning: <code>db2 "ALTER TABLE SUBSCRIBER_PLANS ADD VERSIONING USE HISTORY TABLE SUBSCRIBER_PLANS_HIST"</code>
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic47-summary">
+              <h3 class="subsection-title">5. Topic Summary Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Temporal Category</th>
+                      <th>Time Dimension Tracked</th>
+                      <th>Management Domain</th>
+                      <th>Base Table Content</th>
+                      <th>History Table Requirement</th>
+                      <th>Typical Business Use-Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>System-Period (SPTT)</strong></td>
+                      <td>System Time (When changes were written to the database)</td>
+                      <td>DB2 Database Engine (Automatic version tracking)</td>
+                      <td>Active records only</td>
+                      <td>Yes (Required to store versioned data)</td>
+                      <td>Regulatory compliance audits, trace application record modifications over time.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Application-Period (APTT)</strong></td>
+                      <td>Business Time (When records are valid in the real world)</td>
+                      <td>Client Application (Explicit SQL timestamps)</td>
+                      <td>Both active and future-dated records</td>
+                      <td>No (All states reside in the base table)</td>
+                      <td>Insurance policy effective dates, scheduling future price changes.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Bitemporal</strong></td>
+                      <td>Both System Time and Business Time</td>
+                      <td>Combined Engine automation and Client SQL inputs</td>
+                      <td>Current active records</td>
+                      <td>Yes (Stores historical system-period data)</td>
+                      <td>Banking ledgers, managing dynamic pricing updates with complete audit logs.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Topic 48: Column-Organized Tables & BLU Acceleration (Vector Processing) -->
+          <section id="topic48" class="section">
+            <h2 class="section-title">Topic 48: Columnar Storage &amp; BLU</h2>
+            
+            <div class="subsection" id="topic48-concept">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture: Column-Organized Layout</h3>
+              <p>
+                Traditional relational database tables are **Row-Organized**. In this layout, all columns of a single row are stored contiguously on the physical data page. Row-organized tables are highly efficient for Online Transaction Processing (OLTP) workloads, which perform frequent insertions, updates, and single-row lookups (e.g., retrieving a single customer record by ID). However, for Online Analytical Processing (OLAP) workloads, which perform heavy aggregations (e.g., totaling sales volumes across billions of rows), row-organized tables are inefficient. This inefficiency occurs because the database engine must read entire rows into memory, even if the query only requires a single column's data.
+              </p>
+              <p>
+                To optimize analytical queries, DB2 features **BLU Acceleration (Column-Organized Tables)**. BLU Acceleration is a hardware-optimized analytical engine integrated directly into the DB2 kernel. It stores columns contiguously on disk and in memory. This technology relies on five primary engineering pillars:
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-table-columns"></i> Columnar Layout &amp; Action on Compressed Data</h5>
+                  <p>
+                    <strong>Mechanism:</strong> Stores column values contiguously.
+                    <br /><strong>Behavior:</strong> Queries only load the specific columns referenced in the SQL statement, drastically reducing disk and memory I/O. Furthermore, BLU utilizes Huffman-prefix encoding to compress data, and the execution engine processes operations (like joins, filters, and aggregations) directly on the compressed values without decompressing them.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-forward-fast"></i> Data Skipping &amp; Vector Processing (SIMD)</h5>
+                  <p>
+                    <strong>Mechanism:</strong> Synopsis Tables and SIMD instructions.
+                    <br /><strong>Behavior:</strong> The engine automatically maintains a **Synopsis Table** that tracks the minimum and maximum values for blocks of records. This allows DB2 to skip reading data blocks that do not match query predicates. Additionally, BLU leverages **Single Instruction Multiple Data (SIMD)** processor instructions to process multiple data values in parallel within a single CPU cycle.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-memory"></i> Cache-Aware Execution Model</h4>
+                <p>
+                  Traditional query processing engines frequently swap data blocks between main memory and storage, causing CPU instruction delays. BLU Acceleration uses cache-aware execution algorithms designed to keep active columnar datasets inside the fast CPU L1/L2/L3 caches. This minimizes memory bus access latency and significantly speeds up analytical calculations.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic48-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                To deploy and tune column-organized tables, DBAs use specific database manager settings and DDL commands.
+              </p>
+              <div class="code-example">
+                <div class="code-language">Columnar Table Creation and Tuning Syntax</div>
+                <pre><code><span class="comment"># 1. Configure the database instance workload environment for analytical acceleration</span>
+db2set DB2_WORKLOAD=ANALYTICS
+
+<span class="comment"># 2. Increase the database utility heap size (Mandatory for columnar compression and index compilation)</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR TELECOM_WH USING UTIL_HEAP_SZ 1000000"
+
+<span class="comment">-- 3. Create a high-performance Column-Organized table</span>
+CREATE TABLE TRAFFIC_ANALYTICS (
+  EVENT_ID BIGINT NOT NULL PRIMARY KEY,
+  CELL_ID VARCHAR(20) NOT NULL,
+  GB_TRANSFERRED DECIMAL(12,4) NOT NULL,
+  EVENT_TIME TIMESTAMP NOT NULL
+) ORGANIZE BY COLUMN;
+
+<span class="comment">-- 4. Check the storage organization type of database tables</span>
+SELECT TABNAME, TABLEORG FROM SYSCAT.TABLES WHERE TABSCHEMA = 'DB2INST1';
+
+<span class="comment"># 5. Extract the query plan graph to verify Columnar scans (Check for CTSCAN and GRPBY)</span>
+db2exfmt -d TELECOM_WH -1 -o explain_plan.txt</code></pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-list"></i> Command Parameter Deep-Dive</h4>
+                <ul>
+                  <li><strong><code>DB2_WORKLOAD=ANALYTICS</code>:</strong> Reboots and automatically tunes the instance. It configures the default table organization type to columnar, increases memory allocations for sorting, and optimizes the query compiler for analytical workloads.</li>
+                  <li><strong><code>ORGANIZE BY COLUMN</code>:</strong> Tells the DB2 storage engine to lay out data columns contiguously on the physical data pages, enabling the BLU Acceleration execution engine.</li>
+                  <li><strong><code>UTIL_HEAP_SZ</code>:</strong> Database utility heap size. Building column-organized tables requires substantial memory during <code>LOAD</code> and <code>INSERT</code> operations to compile the compression dictionaries. The utility heap size must be increased to avoid system memory exhaustion.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic48-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Building a Telecom Traffic Analytics Dashboard</h3>
+              <p>
+                <strong>Scenario:</strong> The operations team at your telecommunications company needs to run fast aggregations on massive traffic logs to generate network capacity reports. A query that totals the Gigabytes transferred per cell tower takes several minutes to run on the legacy row-organized table. You must configure the database workload environment for analytical acceleration, build a column-organized table (<code>TRAFFIC_ANALYTICS</code>), load sample records, run analytical queries, and analyze the query execution plan to verify that DB2 is using BLU Acceleration.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">Columnar Analytics Setup Script</div>
+                <pre><code><span class="comment"># Step 1: Log in as the instance owner and configure the analytics workload</span>
+su - db2inst1
+db2set DB2_WORKLOAD=ANALYTICS
+
+<span class="comment"># Step 2: Restart the database manager to apply the registry configuration changes</span>
+db2stop
+db2start
+
+<span class="comment"># Step 3: Connect to the database</span>
+db2 CONNECT TO TELECOM_WH
+
+<span class="comment"># Step 4: Scale up the utility heap size to handle columnar loads</span>
+db2 "UPDATE DB CFG FOR TELECOM_WH USING UTIL_HEAP_SZ 1000000"
+
+<span class="comment"># Step 5: Create a 32 KB page size tablespace (Mandatory for columnar table performance)</span>
+db2 "CREATE TABLESPACE TBSP_ANALYTICS PAGESIZE 32K USING STOGROUP SG_HOT"
+
+<span class="comment"># Step 6: Create the Column-Organized table in the new tablespace</span>
+db2 "CREATE TABLE TRAFFIC_ANALYTICS ( \
+      EVENT_ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY, \
+      CELL_ID VARCHAR(20) NOT NULL, \
+      GB_TRANSFERRED DECIMAL(12,4) NOT NULL, \
+      EVENT_TIME TIMESTAMP NOT NULL \
+     ) ORGANIZE BY COLUMN IN TBSP_ANALYTICS"
+
+<span class="comment"># Step 7: Verify table organization type</span>
+db2 "SELECT TABNAME, TABLEORG FROM SYSCAT.TABLES WHERE TABNAME = 'TRAFFIC_ANALYTICS'"
+
+<span class="comment"># Step 8: Run an aggregation query</span>
+db2 "SELECT CELL_ID, SUM(GB_TRANSFERRED) AS TOTAL_GB FROM TRAFFIC_ANALYTICS GROUP BY CELL_ID"
+
+db2 TERMINATE</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Command Line Output: Columnar Plan Telemetry</h4>
+                <pre>
+$ db2 "SELECT TABNAME, TABLEORG FROM SYSCAT.TABLES WHERE TABNAME = 'TRAFFIC_ANALYTICS'"
+
+TABNAME                        TABLEORG
+------------------------------ --------
+TRAFFIC_ANALYTICS              C
+
+  1 record(s) selected.
+
+# After generating the Explain Plan graph and running db2exfmt:
+$ cat explain_plan.txt
+
+      Rows 
+    RETURN
+    (   1)
+     Cost
+    I/O
+    |
+   50000 
+   GRPBY   &lt;-- Columnar Group By Operator (SIMD)
+   (   2)
+   105.42 
+   12
+    |
+  1000000 
+   CTSCAN  &lt;-- Columnar Table Scan Operator (BLU Acceleration)
+   (   3)
+   92.15 
+   12
+    |
+  1000000 
+TABLE: DB2INST1.TRAFFIC_ANALYTICS
+   (   4)</pre>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cogs"></i> Technical Walkthrough: Analyzing the Columnar Execution Plan</h4>
+                <p>
+                  Analyzing the query execution plan verifies the performance improvements provided by the BLU engine:
+                </p>
+                <ol>
+                  <li>The <code>TABLEORG</code> query returned <code>C</code>, confirming that the <code>TRAFFIC_ANALYTICS</code> table was successfully created as a Column-Organized structure.</li>
+                  <li>Reviewing the explain plan (<code>explain_plan.txt</code>) reveals that the DB2 compiler bypassed traditional row scan methods and selected the high-performance **`CTSCAN` (Columnar Table Scan)** operator. This means only the <code>CELL_ID</code> and <code>GB_TRANSFERRED</code> columns were loaded into memory, completely bypassing unnecessary columns.</li>
+                  <li>The query leveraged the **`GRPBY` (Columnar Group By)** operator. This operator processes aggregations directly within the CPU cache channels using SIMD instructions, completing calculations in milliseconds and resolving the database bottleneck.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic48-troubleshooting">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting</h3>
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Best Practices for Columnar Acceleration</h4>
+                <ul>
+                  <li><strong>Ensure Massive Utility Heap Capacity:</strong> Always scale up the database utility heap size (<code>UTIL_HEAP_SZ</code>) to at least 1,000,000 pages before loading large datasets into column-organized tables. Building compression dictionaries for columnar tables is memory-intensive, and insufficient heap space will trigger system out-of-memory errors.</li>
+                  <li><strong>Use 32 KB Tablespace Pagesizes:</strong> Column-organized tables should be placed in tablespaces with a 32 KB page size. This larger page size allows DB2 to pack more columnar records into each page block, improving data compression and reducing overall I/O requests.</li>
+                  <li><strong>Allocate Generous Sort Memory:</strong> Analytical queries make heavy use of hash joins and in-memory sorting. Ensure the sort memory configuration parameters (<code>SORTHEAP</code> and <code>SHEAPTHRES_SHR</code>) are sized generously to prevent queries from spilling to disk.</li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Error Diagnostics &amp; Remedies</h4>
+                <h5>SQL20491N: The column-organized table could not be created.</h5>
+                <p><strong>Root Cause:</strong> The DBA attempted to create a column-organized table inside a System Managed Space (SMS) tablespace, a tablespace with a page size smaller than 32 KB, or a tablespace that does not use Automatic Storage.</p>
+                <p><strong>Remedy:</strong> Create an automatic storage Database Managed Space (DMS) tablespace with a 32 KB page size, and recreate the columnar table inside this new tablespace:
+                  <br /><code>db2 "CREATE TABLESPACE TBSP_32K PAGESIZE 32K USING STOGROUP SG_HOT"</code>
+                </p>
+
+                <h5>SQL20286N: Columnar execution memory has been exhausted.</h5>
+                <p><strong>Root Cause:</strong> The database shared memory allocations are insufficient to support the active columnar queries. Columnar engines require dedicated memory structures within the database heap to cache column data and process vector aggregations.</p>
+                <p><strong>Remedy:</strong> Increase the overall database memory limit (<code>DATABASE_MEMORY</code>) or enable the Self-Tuning Memory Manager (STMM) to automatically balance buffer pools and sorting memory:
+                  <br /><code>db2 "UPDATE DB CFG FOR TELECOM_WH USING DATABASE_MEMORY AUTOMATIC"</code>
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="topic48-summary">
+              <h3 class="subsection-title">5. Topic Summary Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Database Feature</th>
+                      <th>Row-Organized Tables (Traditional OLTP)</th>
+                      <th>Column-Organized Tables (BLU / Analytical)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Data Storage Layout</strong></td>
+                      <td>Rows are stored contiguously on the physical page.</td>
+                      <td>Columns are stored contiguously on the physical page.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Compression Method</strong></td>
+                      <td>Classic or Adaptive Row Compression.</td>
+                      <td>Huffman-prefix binary token compression natively.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Ideal Target Workload</strong></td>
+                      <td>Online Transaction Processing (OLTP), single-row lookups, updates, and inserts.</td>
+                      <td>Online Analytical Processing (OLAP), data warehousing, and high-volume aggregations.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>CPU Optimization</strong></td>
+                      <td>Standard scalar database engine execution.</td>
+                      <td>Single Instruction Multiple Data (SIMD) vector processing.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Data Scan Optimization</strong></td>
+                      <td>Relies on B-Tree indexes and tablespace scans.</td>
+                      <td>Leverages synopsis tables to skip unnecessary data blocks.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Required Pagesize</strong></td>
+                      <td>Flexible (typically 4 KB or 8 KB)</td>
+                      <td>Recommended 32 KB automatic tablespaces.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript for Sidebar Toggle and Navigation -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.querySelector('.sidebar-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+
+      function toggleSidebar() {
+        const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+        toggleBtn.setAttribute('aria-expanded', !expanded);
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      }
+
+      toggleBtn.addEventListener('click', toggleSidebar);
+      overlay.addEventListener('click', toggleSidebar);
+    });
+  </script>
+</body>
+
+</html>

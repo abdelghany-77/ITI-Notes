@@ -1,18 +1,23 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MySQL Database Study Notes</title>
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="../assets/css/main.css" />
 </head>
+
 <body>
   <!-- Sidebar Navigation -->
-  <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+  <button class="sidebar-toggle" aria-expanded="false" aria-label="Toggle navigation"><i
+      class="fas fa-bars"></i></button>
   <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-  
+
   <div class="layout-container">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -64,7 +69,8 @@
     <!-- Main Content -->
     <main class="main-content">
       <div class="container" id="mainContainer">
-        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Main Page</a><div class="header">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+        <div class="header">
           <h1><i class="fas fa-star"></i> MySQL Database</h1>
           <p>Comprehensive Study Guide & Notes</p>
         </div>
@@ -123,14 +129,19 @@
               <div class="highlight-box">
                 <p><strong>Key Features:</strong></p>
                 <ul>
-                  <li><i class="fas fa-chart-bar"></i> <strong>Relational Database:</strong> Data stored in tables with relationships</li>
-                  <li><i class="fas fa-bolt"></i> <strong>High Performance:</strong> Fast data retrieval and processing</li>
-                  <li><i class="fas fa-lock"></i> <strong>Secure:</strong> User authentication and privilege management</li>
+                  <li><i class="fas fa-chart-bar"></i> <strong>Relational Database:</strong> Data stored in tables with
+                    relationships</li>
+                  <li><i class="fas fa-bolt"></i> <strong>High Performance:</strong> Fast data retrieval and processing
+                  </li>
+                  <li><i class="fas fa-lock"></i> <strong>Secure:</strong> User authentication and privilege management
+                  </li>
                   <li><i class="fas fa-star"></i> <strong>Open Source:</strong> Free to use under GPL license</li>
                   <li><i class="fas fa-sync"></i> <strong>ACID Compliant:</strong> Ensures data integrity</li>
-                  <li><i class="fas fa-star"></i> <strong>Scalable:</strong> Handles millions of records efficiently</li>
+                  <li><i class="fas fa-star"></i> <strong>Scalable:</strong> Handles millions of records efficiently
+                  </li>
                   <li><i class="fas fa-globe"></i> <strong>Cross-Platform:</strong> Runs on Windows, Linux, macOS</li>
-                  <li><i class="fas fa-plug"></i> <strong>Multi-Language Support:</strong> Works with PHP, Python, Java, Node.js, etc.</li>
+                  <li><i class="fas fa-plug"></i> <strong>Multi-Language Support:</strong> Works with PHP, Python, Java,
+                    Node.js, etc.</li>
                 </ul>
               </div>
             </div>
@@ -548,8 +559,10 @@ Bye
               <div class="highlight-box">
                 <p><strong>Key Design Goals:</strong></p>
                 <ul>
-                  <li><i class="fas fa-chart-bar"></i> <strong>Data Integrity:</strong> Ensure data accuracy and consistency</li>
-                  <li><i class="fas fa-sync"></i> <strong>Minimize Redundancy:</strong> Avoid storing duplicate data</li>
+                  <li><i class="fas fa-chart-bar"></i> <strong>Data Integrity:</strong> Ensure data accuracy and
+                    consistency</li>
+                  <li><i class="fas fa-sync"></i> <strong>Minimize Redundancy:</strong> Avoid storing duplicate data
+                  </li>
                   <li><i class="fas fa-bolt"></i> <strong>Performance:</strong> Optimize for query speed</li>
                   <li><i class="fas fa-star"></i> <strong>Scalability:</strong> Design for growth</li>
                   <li><i class="fas fa-lock"></i> <strong>Security:</strong> Protect sensitive information</li>
@@ -3149,9 +3162,12 @@ ORDER BY total_revenue DESC;
                 <div class="highlight-box">
                   <p><strong>Index Benefits:</strong></p>
                   <ul>
-                    <li><i class="fas fa-bolt"></i> <strong>Faster Queries:</strong> Can be 100x-1000x faster for large tables</li>
-                    <li><i class="fas fa-search"></i> <strong>Efficient Searching:</strong> Quickly locates rows without full table scan</li>
-                    <li><i class="fas fa-chart-bar"></i> <strong>Better Sorting:</strong> ORDER BY operations are faster</li>
+                    <li><i class="fas fa-bolt"></i> <strong>Faster Queries:</strong> Can be 100x-1000x faster for large
+                      tables</li>
+                    <li><i class="fas fa-search"></i> <strong>Efficient Searching:</strong> Quickly locates rows without
+                      full table scan</li>
+                    <li><i class="fas fa-chart-bar"></i> <strong>Better Sorting:</strong> ORDER BY operations are faster
+                    </li>
                     <li><i class="fas fa-link"></i> <strong>JOIN Optimization:</strong> Speeds up JOIN operations</li>
                     <li><i class="fas fa-check"></i> <strong>Uniqueness:</strong> Enforces unique constraints</li>
                   </ul>
@@ -3772,11 +3788,16 @@ LIMIT 100;
                 <div class="highlight-box">
                   <p><strong>View Benefits:</strong></p>
                   <ul>
-                    <li><i class="fas fa-lock"></i> <strong>Security:</strong> Hide sensitive columns, show only necessary data</li>
-                    <li><i class="fas fa-star"></i> <strong>Reusability:</strong> Store complex queries for repeated use</li>
-                    <li><i class="fas fa-bullseye"></i> <strong>Simplification:</strong> Hide complexity of JOINs and subqueries</li>
-                    <li><i class="fas fa-chart-bar"></i> <strong>Abstraction:</strong> Present data differently without changing base tables</li>
-                    <li><i class="fas fa-star"></i> <strong>Logical Layer:</strong> Create virtual data marts for analytics</li>
+                    <li><i class="fas fa-lock"></i> <strong>Security:</strong> Hide sensitive columns, show only
+                      necessary data</li>
+                    <li><i class="fas fa-star"></i> <strong>Reusability:</strong> Store complex queries for repeated use
+                    </li>
+                    <li><i class="fas fa-bullseye"></i> <strong>Simplification:</strong> Hide complexity of JOINs and
+                      subqueries</li>
+                    <li><i class="fas fa-chart-bar"></i> <strong>Abstraction:</strong> Present data differently without
+                      changing base tables</li>
+                    <li><i class="fas fa-star"></i> <strong>Logical Layer:</strong> Create virtual data marts for
+                      analytics</li>
                   </ul>
                 </div>
                 <div class="sql-command">
@@ -4141,10 +4162,13 @@ DELIMITER ;
                   <div class="warning-box">
                     <strong>Trigger Best Practices:</strong>
                     <ul>
-                      <li><i class="fas fa-exclamation-triangle"></i> Keep triggers simple and fast (they execute with every operation)</li>
-                      <li><i class="fas fa-exclamation-triangle"></i> Avoid complex logic in triggers (use stored procedures instead)</li>
+                      <li><i class="fas fa-exclamation-triangle"></i> Keep triggers simple and fast (they execute with
+                        every operation)</li>
+                      <li><i class="fas fa-exclamation-triangle"></i> Avoid complex logic in triggers (use stored
+                        procedures instead)</li>
                       <li><i class="fas fa-exclamation-triangle"></i> Don't call other triggers (can create loops)</li>
-                      <li><i class="fas fa-exclamation-triangle"></i> Document trigger behavior (they're "invisible" to developers)</li>
+                      <li><i class="fas fa-exclamation-triangle"></i> Document trigger behavior (they're "invisible" to
+                        developers)</li>
                       <li><i class="fas fa-check"></i> Use for audit logging, automatic timestamps, data validation</li>
                       <li><i class="fas fa-check"></i> Test thoroughly (triggers can cause unexpected behavior)</li>
                     </ul>
@@ -4439,11 +4463,16 @@ ORDER BY fragmentation_pct DESC;
                   <div class="highlight-box">
                     <p><strong>Partitioning Benefits:</strong></p>
                     <ul>
-                      <li><i class="fas fa-bolt"></i> <strong>Improved I/O:</strong> Queries access only relevant partitions</li>
-                      <li><i class="fas fa-random"></i> <strong>Parallel Processing:</strong> Different partitions processed concurrently</li>
-                      <li><i class="fas fa-box"></i> <strong>Easier Maintenance:</strong> Backup, restore, or drop old data by partition</li>
-                      <li><i class="fas fa-chart-bar"></i> <strong>Better Performance:</strong> Smaller indexes per partition</li>
-                      <li><i class="fas fa-star"></i> <strong>Efficient Archiving:</strong> Drop old partitions instead of DELETE</li>
+                      <li><i class="fas fa-bolt"></i> <strong>Improved I/O:</strong> Queries access only relevant
+                        partitions</li>
+                      <li><i class="fas fa-random"></i> <strong>Parallel Processing:</strong> Different partitions
+                        processed concurrently</li>
+                      <li><i class="fas fa-box"></i> <strong>Easier Maintenance:</strong> Backup, restore, or drop old
+                        data by partition</li>
+                      <li><i class="fas fa-chart-bar"></i> <strong>Better Performance:</strong> Smaller indexes per
+                        partition</li>
+                      <li><i class="fas fa-star"></i> <strong>Efficient Archiving:</strong> Drop old partitions instead
+                        of DELETE</li>
                     </ul>
                   </div>
                   <div class="subsection">
@@ -4983,11 +5012,15 @@ mysql -u user -p db < backup.sql
                     <div class="highlight-box">
                       <p><strong>Day 2 Topics Covered:</strong></p>
                       <ul>
-                        <li><i class="fas fa-chart-bar"></i> <strong>Subqueries:</strong> Nested queries in SELECT, FROM, WHERE clauses</li>
-                        <li><i class="fas fa-link"></i> <strong>UNION:</strong> Combining results from multiple SELECT statements</li>
-                        <li><i class="fas fa-clipboard"></i> <strong>CTE (Common Table Expressions):</strong> WITH clause for temporary result sets
+                        <li><i class="fas fa-chart-bar"></i> <strong>Subqueries:</strong> Nested queries in SELECT,
+                          FROM, WHERE clauses</li>
+                        <li><i class="fas fa-link"></i> <strong>UNION:</strong> Combining results from multiple SELECT
+                          statements</li>
+                        <li><i class="fas fa-clipboard"></i> <strong>CTE (Common Table Expressions):</strong> WITH
+                          clause for temporary result sets
                         </li>
-                        <li><i class="fas fa-cog"></i> <strong>Stored Procedures:</strong> Reusable SQL code with parameters and logic</li>
+                        <li><i class="fas fa-cog"></i> <strong>Stored Procedures:</strong> Reusable SQL code with
+                          parameters and logic</li>
                       </ul>
                     </div>
                     <div class="code-box">
@@ -5057,7 +5090,8 @@ mysql -u user -p db < backup.sql
                       </tbody>
                     </table>
                     <div class="warning-box">
-                      <strong><i class="fas fa-lightbulb"></i> Study Tip:</strong> Click the links above to jump to detailed sections with
+                      <strong><i class="fas fa-lightbulb"></i> Study Tip:</strong> Click the links above to jump to
+                      detailed sections with
                       comprehensive examples,
                       syntax explanations, and real-world use cases for each topic.
                     </div>
@@ -5104,7 +5138,8 @@ mysql -u user -p db < backup.sql
                         <tr>
                           <td><strong>UNION</strong></td>
                           <td>Combine similar data from different sources</td>
-                          <td><i class="fas fa-exclamation-triangle"></i> UNION slower (removes duplicates), UNION ALL faster</td>
+                          <td><i class="fas fa-exclamation-triangle"></i> UNION slower (removes duplicates), UNION ALL
+                            faster</td>
                         </tr>
                       </tbody>
                     </table>
@@ -5700,11 +5735,15 @@ DELIMITER ;
                     <div class="warning-box">
                       <strong><i class="fas fa-exclamation-triangle"></i> Trigger Best Practices & Warnings:</strong>
                       <ul>
-                        <li><i class="fas fa-times"></i> Triggers execute with EVERY operation - keep them fast and simple</li>
+                        <li><i class="fas fa-times"></i> Triggers execute with EVERY operation - keep them fast and
+                          simple</li>
                         <li><i class="fas fa-times"></i> Don't call other triggers (can create infinite loops)</li>
-                        <li><i class="fas fa-times"></i> Avoid complex business logic in triggers (use stored procedures)</li>
-                        <li><i class="fas fa-exclamation-triangle"></i> Triggers are "invisible" to developers - document thoroughly</li>
-                        <li><i class="fas fa-check"></i> Use for: audit logging, data validation, automatic timestamps</li>
+                        <li><i class="fas fa-times"></i> Avoid complex business logic in triggers (use stored
+                          procedures)</li>
+                        <li><i class="fas fa-exclamation-triangle"></i> Triggers are "invisible" to developers -
+                          document thoroughly</li>
+                        <li><i class="fas fa-check"></i> Use for: audit logging, data validation, automatic timestamps
+                        </li>
                         <li><i class="fas fa-check"></i> Test thoroughly before deploying to production</li>
                         <li><i class="fas fa-check"></i> Consider performance impact on bulk operations</li>
                         <li><i class="fas fa-check"></i> Use BEFORE triggers for validation, AFTER for logging</li>
@@ -5783,17 +5822,24 @@ echo "Backup completed: ${DB_NAME}_${DATE}.sql.gz"
                     <div class="warning-box">
                       <strong>Backup Best Practices:</strong>
                       <ul>
-                        <li><i class="fas fa-check"></i> <strong>Regular Schedule:</strong> Automated daily backups (cron jobs)</li>
-                        <li><i class="fas fa-check"></i> <strong>Test Restores:</strong> Regularly test that backups can be restored</li>
-                        <li><i class="fas fa-check"></i> <strong>Multiple Locations:</strong> Store backups in different locations (offsite/cloud)
+                        <li><i class="fas fa-check"></i> <strong>Regular Schedule:</strong> Automated daily backups
+                          (cron jobs)</li>
+                        <li><i class="fas fa-check"></i> <strong>Test Restores:</strong> Regularly test that backups can
+                          be restored</li>
+                        <li><i class="fas fa-check"></i> <strong>Multiple Locations:</strong> Store backups in different
+                          locations (offsite/cloud)
                         </li>
                         <li><i class="fas fa-check"></i> <strong>Compression:</strong> Use gzip to save disk space</li>
-                        <li><i class="fas fa-check"></i> <strong>Retention Policy:</strong> Keep daily for 7 days, weekly for 4 weeks, monthly for
+                        <li><i class="fas fa-check"></i> <strong>Retention Policy:</strong> Keep daily for 7 days,
+                          weekly for 4 weeks, monthly for
                           1 year</li>
-                        <li><i class="fas fa-check"></i> <strong>--single-transaction:</strong> For InnoDB tables (consistent backup without locks)
+                        <li><i class="fas fa-check"></i> <strong>--single-transaction:</strong> For InnoDB tables
+                          (consistent backup without locks)
                         </li>
-                        <li><i class="fas fa-exclamation-triangle"></i> <strong>Security:</strong> Protect backup files (contain sensitive data)</li>
-                        <li><i class="fas fa-exclamation-triangle"></i> <strong>Monitor:</strong> Check backup logs for errors</li>
+                        <li><i class="fas fa-exclamation-triangle"></i> <strong>Security:</strong> Protect backup files
+                          (contain sensitive data)</li>
+                        <li><i class="fas fa-exclamation-triangle"></i> <strong>Monitor:</strong> Check backup logs for
+                          errors</li>
                       </ul>
                     </div>
                     <table class="comparison-table">
@@ -5833,13 +5879,19 @@ echo "Backup completed: ${DB_NAME}_${DATE}.sql.gz"
                     <div class="highlight-box">
                       <p><strong>Popular MySQL GUI Tools:</strong></p>
                       <ul>
-                        <li><i class="fas fa-chart-bar"></i> <strong>MySQL Workbench:</strong> Official GUI tool for database design, SQL development,
+                        <li><i class="fas fa-chart-bar"></i> <strong>MySQL Workbench:</strong> Official GUI tool for
+                          database design, SQL development,
                           and administration</li>
-                        <li><i class="fas fa-star"></i> <strong>phpMyAdmin:</strong> Web-based interface for managing MySQL databases</li>
-                        <li><i class="fas fa-wrench"></i> <strong>HeidiSQL:</strong> Lightweight Windows client for MySQL management</li>
-                        <li><i class="fas fa-laptop-code"></i> <strong>DBeaver:</strong> Universal database tool supporting multiple databases</li>
-                        <li><i class="fas fa-rocket"></i> <strong>DataGrip:</strong> JetBrains professional database IDE</li>
-                        <li><i class="fas fa-mobile-alt"></i> <strong>Sequel Pro:</strong> Mac-only MySQL management application</li>
+                        <li><i class="fas fa-star"></i> <strong>phpMyAdmin:</strong> Web-based interface for managing
+                          MySQL databases</li>
+                        <li><i class="fas fa-wrench"></i> <strong>HeidiSQL:</strong> Lightweight Windows client for
+                          MySQL management</li>
+                        <li><i class="fas fa-laptop-code"></i> <strong>DBeaver:</strong> Universal database tool
+                          supporting multiple databases</li>
+                        <li><i class="fas fa-rocket"></i> <strong>DataGrip:</strong> JetBrains professional database IDE
+                        </li>
+                        <li><i class="fas fa-mobile-alt"></i> <strong>Sequel Pro:</strong> Mac-only MySQL management
+                          application</li>
                       </ul>
                     </div>
                     <div class="code-box">
@@ -5868,17 +5920,23 @@ echo "Backup completed: ${DB_NAME}_${DATE}.sql.gz"
                     <div class="highlight-box">
                       <p><strong><i class="fas fa-bullseye"></i> Key Concepts Covered:</strong></p>
                       <ul>
-                        <li><i class="fas fa-check"></i> <strong>Transactions:</strong> ACID properties, COMMIT, ROLLBACK, SAVEPOINT</li>
-                        <li><i class="fas fa-check"></i> <strong>Built-in Functions:</strong> Comparison (ELT, FIELD, GREATEST), Cast (CONVERT),
+                        <li><i class="fas fa-check"></i> <strong>Transactions:</strong> ACID properties, COMMIT,
+                          ROLLBACK, SAVEPOINT</li>
+                        <li><i class="fas fa-check"></i> <strong>Built-in Functions:</strong> Comparison (ELT, FIELD,
+                          GREATEST), Cast (CONVERT),
                           String (ASCII, CONCAT, SUBSTRING), Numeric (ROUND, CEILING, FLOOR, trigonometric), Date/Time
                           (CURDATE, ADDDATE, DATEDIFF)</li>
-                        <li><i class="fas fa-check"></i> <strong>Stored Functions:</strong> User-defined functions returning values, used like
+                        <li><i class="fas fa-check"></i> <strong>Stored Functions:</strong> User-defined functions
+                          returning values, used like
                           built-in functions</li>
-                        <li><i class="fas fa-check"></i> <strong>Triggers:</strong> Automatic execution on INSERT/UPDATE/DELETE, OLD/NEW keywords,
+                        <li><i class="fas fa-check"></i> <strong>Triggers:</strong> Automatic execution on
+                          INSERT/UPDATE/DELETE, OLD/NEW keywords,
                           audit logging</li>
-                        <li><i class="fas fa-check"></i> <strong>Backup & Restore:</strong> mysqldump for logical backups, automated backup
+                        <li><i class="fas fa-check"></i> <strong>Backup & Restore:</strong> mysqldump for logical
+                          backups, automated backup
                           scripts, restore procedures</li>
-                        <li><i class="fas fa-check"></i> <strong>GUI Tools:</strong> MySQL Workbench, phpMyAdmin, and other management interfaces
+                        <li><i class="fas fa-check"></i> <strong>GUI Tools:</strong> MySQL Workbench, phpMyAdmin, and
+                          other management interfaces
                         </li>
                       </ul>
                     </div>
@@ -5893,7 +5951,5 @@ echo "Backup completed: ${DB_NAME}_${DATE}.sql.gz"
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>
+
 </html>
-
-
-

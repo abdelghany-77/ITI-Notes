@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IBM DB2 Advanced Concurrency &amp; Lock Administration — Group D Notes</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    /* Custom styles to guarantee perfect rendering of standard ITI advantages and disadvantages boxes */
+    .advantages-box {
+      background: var(--tip-bg, #e8f5e9);
+      border-left: 4px solid var(--success-color, #27ae60);
+      padding: 1.25rem 1.5rem;
+      margin: var(--spacing-md, 1.25rem) 0;
+      border-radius: var(--radius-md, 0.625rem);
+      box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.08));
+    }
+
+    .advantages-box h4 {
+      color: var(--success-color, #27ae60);
+      margin-bottom: var(--spacing-sm, 0.625rem);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm, 0.625rem);
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .advantages-box ul {
+      margin-bottom: 0;
+    }
+
+    .disadvantages-box {
+      background: var(--important-bg, #fce4ec);
+      border-left: 4px solid var(--error-color, #e74c3c);
+      padding: 1.25rem 1.5rem;
+      margin: var(--spacing-md, 1.25rem) 0;
+      border-radius: var(--radius-md, 0.625rem);
+      box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.08));
+    }
+
+    .disadvantages-box h4 {
+      color: var(--error-color, #e74c3c);
+      margin-bottom: var(--spacing-sm, 0.625rem);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm, 0.625rem);
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .disadvantages-box ul {
+      margin-bottom: 0;
+    }
+
+    .font-code pre,
+    .font-code code {
+      font-family: var(--font-code, monospace);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sidebar Navigation Toggle -->
+  <button class="sidebar-toggle" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="sidebar-overlay"></div>
+
+  <div class="layout-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-book"></i> Group D Navigation</h3>
+        <p>IBM DB2 Concurrency &amp; Locks</p>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li>
+            <a href="#topic28"><i class="fas fa-sync-alt"></i> Topic 28: Isolation Levels</a>
+            <ul>
+              <li><a href="#t28-arch"><i class="fas fa-sitemap"></i> Theory &amp; Phenomena</a></li>
+              <li><a href="#t28-syntax"><i class="fas fa-code"></i> Override Syntax</a></li>
+              <li><a href="#t28-lab"><i class="fas fa-laptop-code"></i> Booking Lab (Part 1)</a></li>
+              <li><a href="#t28-best"><i class="fas fa-star"></i> Currently Committed</a></li>
+              <li><a href="#t28-summary"><i class="fas fa-clipboard-list"></i> T28 Summary Table</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic29"><i class="fas fa-key"></i> Topic 29: Locking &amp; Modes</a>
+            <ul>
+              <li><a href="#t29-arch"><i class="fas fa-sitemap"></i> Lock Modes &amp; Matrix</a></li>
+              <li><a href="#t29-syntax"><i class="fas fa-code"></i> Monitoring Queries</a></li>
+              <li><a href="#t29-lab"><i class="fas fa-laptop-code"></i> Lock Upgrade Lab</a></li>
+              <li><a href="#t29-best"><i class="fas fa-star"></i> S/X/U Optimization</a></li>
+              <li><a href="#t29-summary"><i class="fas fa-clipboard-list"></i> T29 Matrix Table</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic30"><i class="fas fa-sliders-h"></i> Topic 30: Memory &amp; Config</a>
+            <ul>
+              <li><a href="#t30-arch"><i class="fas fa-sitemap"></i> Lock List Memory</a></li>
+              <li><a href="#t30-syntax"><i class="fas fa-code"></i> Config Modification</a></li>
+              <li><a href="#t30-lab"><i class="fas fa-laptop-code"></i> Escalation Lab</a></li>
+              <li><a href="#t30-best"><i class="fas fa-star"></i> Sizing &amp; Parameters</a></li>
+              <li><a href="#t30-summary"><i class="fas fa-clipboard-list"></i> T30 Tuning Table</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#topic31"><i class="fas fa-bug"></i> Topic 31: Diagnostics</a>
+            <ul>
+              <li><a href="#t31-arch"><i class="fas fa-sitemap"></i> Deadlocks &amp; Victims</a></li>
+              <li><a href="#t31-syntax"><i class="fas fa-code"></i> db2pd Lock Trace</a></li>
+              <li><a href="#t31-lab"><i class="fas fa-laptop-code"></i> Collision Lab</a></li>
+              <li><a href="#t31-best"><i class="fas fa-star"></i> db2diag.log Analysis</a></li>
+              <li><a href="#t31-summary"><i class="fas fa-clipboard-list"></i> T31 Tool Summary</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <div class="container">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+
+        <div class="header">
+          <h1><i class="fas fa-shield-alt"></i> IBM DB2 Concurrency &amp; Lock Administration</h1>
+          <p>Elite ITI Study Notes — Group D: Topics 28, 29, 30, &amp; 31</p>
+          <div class="subtitle">A Deep-Dive Architectural Guide for Enterprise DBAs on Concurrency Control, Lock
+            Internals, Parameter Tuning, and Deadlock Diagnostics</div>
+        </div>
+
+        <div class="content">
+
+          <!-- ============================================
+               TOPIC 28: CONCURRENCY & ISOLATION LEVELS
+               ============================================ -->
+          <section id="topic28" class="section">
+            <h2 class="section-title">Topic 28: DB2 Concurrency Control &amp; Isolation Levels</h2>
+
+            <div class="subsection" id="t28-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture: The Concurrency Puzzle</h3>
+              <p>
+                In a high-throughput relational database management system (RDBMS) like IBM DB2, thousands of client
+                applications execute transactions simultaneously against the same logical tables. Concurrency control is
+                the architectural safeguard that guarantees **Isolation** (the "I" in ACID), ensuring that concurrent
+                operations execute safely without corrupting data or returning inconsistent, illogical results.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> Defining the Three Classical ANSI SQL Read Anomalies</h4>
+                <p>
+                  To design secure transaction models, a DBA must understand the exact physical data phenomena that
+                  occur when transactions run without sufficient isolation:
+                </p>
+                <ul>
+                  <li>
+                    <strong>Dirty Read (Uncommitted Read):</strong> Occurs when Transaction A updates a row but does not
+                    commit. Transaction B reads this modified row. If Transaction A subsequently aborts and executes a
+                    <code>ROLLBACK</code>, Transaction B is left operating on "dirty", non-existent data that never
+                    formally entered the database.
+                  </li>
+                  <li>
+                    <strong>Non-Repeatable Read (Fuzzy Read):</strong> Occurs when Transaction A reads a row.
+                    Transaction B then modifies or deletes that row and executes a <code>COMMIT</code>. Transaction A
+                    reads the exact same row again inside the same transaction boundary and finds that the row's values
+                    have changed, or that the row has vanished.
+                  </li>
+                  <li>
+                    <strong>Phantom Read:</strong> Occurs when Transaction A executes a query evaluating a range
+                    predicate (e.g., retrieving all reservations for Room 101 to 200). Transaction B inserts new rows
+                    matching this range predicate and commits. Transaction A re-executes the exact same query and finds
+                    newly created "phantom" records that were not visible in the initial read.
+                  </li>
+                </ul>
+              </div>
+
+              <p>
+                To address these anomalies, IBM DB2 implements four distinct **Isolation Levels**, mapped directly to
+                physical database locking mechanisms:
+              </p>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-eye-slash"></i> Uncommitted Read (UR)</h5>
+                  <p>
+                    Read transactions do not acquire **Share (S) locks** on rows or index pages, permitting them to read
+                    uncommitted (dirty) rows modified by active transactions. It offers maximum performance and zero
+                    read blocking. DB2 still acquires **Exclusive (X) locks** for modifying actions (inserts, updates,
+                    deletes) to protect physical data structures.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-check-circle"></i> Cursor Stability (CS - Default)</h5>
+                  <p>
+                    Acquires an S lock on the single row at the cursor's current position. As soon as the application
+                    advances the cursor to the next row, the previous S lock is immediately released. If the application
+                    modifies the row, the lock is upgraded to an X lock and held until the transaction finishes. This
+                    prevents Dirty Reads but permits Non-Repeatable and Phantom Reads.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-lock"></i> Read Stability (RS)</h5>
+                  <p>
+                    Acquires S locks on all rows that satisfy the query's criteria and holds them until the transaction
+                    executes a <code>COMMIT</code> or <code>ROLLBACK</code>. Because these locks are held, concurrent
+                    transactions cannot modify or delete the records. This prevents both Dirty and Non-Repeatable Reads,
+                    but allows Phantom Reads (as gaps are not locked, permitting inserts).
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-shield-alt"></i> Repeatable Read (RR)</h5>
+                  <p>
+                    Acquires S locks on all rows scanned by the query (even if they fail the predicate check) and locks
+                    the index keys using next-key locking. These locks are held until transaction completion, preventing
+                    other applications from inserting, updating, or deleting any rows in the range. It prevents all read
+                    anomalies, but reduces concurrency and increases memory consumption.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-balance-scale"></i> DB2 Pessimistic Locking vs. Oracle/MySQL MVCC Architectures
+                </h4>
+                <ul>
+                  <li>
+                    <strong>Oracle RDBMS:</strong> Implements a pure optimistic Multi-Version Concurrency Control (MVCC)
+                    model. Read queries do not acquire locks and instead reconstruct older committed versions of rows
+                    from undo segments (rollback tablespaces). Dirty reads are architecturally impossible, and read
+                    blocking is highly rare.
+                  </li>
+                  <li>
+                    <strong>MySQL (InnoDB):</strong> Uses MVCC via undo logs. Read transactions read a consistent
+                    snapshot of the database at a specific point in time, avoiding read locks under its Repeatable Read
+                    isolation level.
+                  </li>
+                  <li>
+                    <strong>IBM DB2:</strong> Historically uses a strict, pessimistic locking-first architecture,
+                    leveraging the memory in the `locklist` to govern concurrencies. To match the low blockings of MVCC
+                    while retaining precise transaction states, DB2 introduced the **Currently Committed** engine
+                    feature, allowing CS reads to read the last committed transaction log state instead of blocking.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t28-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                DBAs and application developers can override the active isolation level at the query level, transaction
+                level, or terminal level using specific Command Line Processor (CLP) operations and SQL commands.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 SQL Query-Level Isolation Override</div>
+                <pre><code><span class="comment">-- 1. Read uncommitted data directly (Dirty read enabled)</span>
+SELECT * FROM HOTELDB.Bookings WHERE RoomNumber = 204 WITH UR;
+
+<span class="comment">-- 2. Force Cursor Stability (Release row locks as cursor moves)</span>
+SELECT * FROM HOTELDB.Bookings WHERE RoomNumber = 204 WITH CS;
+
+<span class="comment">-- 3. Lock all qualifying rows until transaction completion (Prevent updates/deletes)</span>
+SELECT * FROM HOTELDB.Bookings WHERE PriceTier = 'SUITE' WITH RS;
+
+<span class="comment">-- 4. Lock all scanned rows and ranges completely (Seal entire table segment)</span>
+SELECT * FROM HOTELDB.Bookings WHERE PriceTier = 'SUITE' WITH RR;</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">CLP Terminal and Package Binding Commands</div>
+                <pre><code><span class="comment"># 1. Connect to the database and override isolation level for the active session</span>
+db2 CONNECT TO HOTELDB
+db2 SET CURRENT ISOLATION = UR
+
+<span class="comment"># 2. Bind a DB2 package containing SQL scripts with a designated isolation level</span>
+db2 BIND my_app_package.bnd ISOLATION UR
+
+<span class="comment"># 3. Terminate connection to apply modifications and clean up memory</span>
+db2 TERMINATE</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t28-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Hotel Booking Concurrency Simulation</h3>
+              <p>
+                In this lab, we simulate two concurrent connections to a database named <code>HOTELDB</code>. Terminal 1
+                performs an uncommitted database modification, while Terminal 2 observes the data behavior under
+                different isolation levels.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">Database Setup Script (Run once as DBA)</div>
+                <pre><code><span class="comment"># Connect as DBA and create the schema tables</span>
+db2 CONNECT TO HOTELDB
+
+db2 "CREATE TABLE HOTELDB.Bookings ( \
+     BookingID INT NOT NULL PRIMARY KEY, \
+     GuestName VARCHAR(50) NOT NULL, \
+     RoomNumber INT NOT NULL, \
+     BookingStatus VARCHAR(20) NOT NULL, \
+     TotalPrice DECIMAL(10,2) NOT NULL \
+     )"
+
+<span class="comment"># Insert base booking records</span>
+db2 "INSERT INTO HOTELDB.Bookings VALUES (1, 'John Doe', 204, 'AVAILABLE', 150.00)"
+db2 "INSERT INTO HOTELDB.Bookings VALUES (2, 'Jane Smith', 305, 'AVAILABLE', 220.00)"
+db2 "COMMIT"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Step-by-Step Dual Terminal Simulation</h4>
+
+                <h5>Step 1: Terminal 1 begins booking Room 204 (Uncommitted update)</h5>
+                <pre>db2 +c "UPDATE HOTELDB.Bookings SET BookingStatus = 'OCCUPIED', GuestName = 'Alice Brown' WHERE RoomNumber = 204"</pre>
+                <p><em>DBA Note: The <code>+c</code> flag disables DB2 autocommit, leaving the transaction active and
+                    holding an Exclusive (X) row lock.</em></p>
+
+                <h5>Step 2: Terminal 2 queries the booking under Uncommitted Read (UR)</h5>
+                <pre>db2 "SELECT GuestName, RoomNumber, BookingStatus FROM HOTELDB.Bookings WHERE RoomNumber = 204 WITH UR"</pre>
+                <p><strong>Expected Output:</strong></p>
+                <pre style="background: #111; color: #fff; padding: 10px; font-family: monospace;">
+GUESTNAME                                          ROOMNUMBER  BOOKINGSTATUS       
+-------------------------------------------------- ----------- --------------------
+Alice Brown                                                204 OCCUPIED            
+
+  1 record(s) selected.</pre>
+                <p class="color-warning"><strong>Result:</strong> Terminal 2 experiences a Dirty Read anomaly,
+                  displaying Alice Brown before the transaction is committed.</p>
+
+                <h5>Step 3: Terminal 2 queries the booking under Cursor Stability (CS)</h5>
+                <pre>db2 "SELECT GuestName, RoomNumber, BookingStatus FROM HOTELDB.Bookings WHERE RoomNumber = 204 WITH CS"</pre>
+                <p><strong>Expected Output:</strong> The terminal suspends immediately, entering a **Lock Wait** state
+                  because it tries to acquire a Share (S) lock on row 204, which is blocked by the active Exclusive (X)
+                  lock held by Terminal 1.</p>
+
+                <h5>Step 4: Terminal 1 rolls back the reservation</h5>
+                <pre>db2 "ROLLBACK"</pre>
+                <p><em>DBA Note: This action aborts Terminal 1's transaction and releases the Exclusive lock.</em></p>
+
+                <h5>Step 5: Terminal 2 completes execution instantly</h5>
+                <p><strong>Expected Output:</strong></p>
+                <pre style="background: #111; color: #fff; padding: 10px; font-family: monospace;">
+GUESTNAME                                          ROOMNUMBER  BOOKINGSTATUS       
+-------------------------------------------------- ----------- --------------------
+John Doe                                                   204 AVAILABLE           
+
+  1 record(s) selected.</pre>
+                <p class="color-success"><strong>Result:</strong> Terminal 2's CS query safely waited for the lock
+                  release, preventing a dirty read and correctly displaying the original guest state.</p>
+              </div>
+            </div>
+
+            <div class="subsection" id="t28-best">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting: Tuning "Currently Committed"
+              </h3>
+              <p>
+                By default, DB2 LUW uses the **Currently Committed** behavior for Cursor Stability queries. This feature
+                instructs the database manager to return the last committed version of a row to a read transaction if
+                the current version is locked by a concurrent write transaction.
+              </p>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-bolt"></i> Advantages of Currently Committed (cur_commit)</h4>
+                <ul>
+                  <li>Reduces lock contention and eliminates standard read-writer blockings without using uncommitted
+                    read dirty states.</li>
+                  <li>Saves memory in the lock list by preventing active queues of waiting reader threads.</li>
+                  <li>Does not require application-level code modifications or query overrides.</li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-triangle"></i> When to Disable Currently Committed</h4>
+                <ul>
+                  <li>When processing financial ledgers or inventory bookings where the reader *must* wait for the
+                    active write transaction to determine exact balance calculations.</li>
+                  <li>When legacy systems depend on explicit reader-writer lock queues to guarantee sequential
+                    transaction execution.</li>
+                </ul>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Checking and Adjusting the cur_commit Configuration</div>
+                <pre><code><span class="comment"># 1. View the current setting of cur_commit</span>
+db2 GET DATABASE CONFIGURATION FOR HOTELDB | grep CUR_COMMIT
+
+<span class="comment"># 2. Toggle the database setting ON (Default for v9.7+)</span>
+db2 UPDATE DATABASE CONFIGURATION FOR HOTELDB USING cur_commit ON
+
+<span class="comment"># 3. Toggle the database setting OFF (Forces readers to block on write locks)</span>
+db2 UPDATE DATABASE CONFIGURATION FOR HOTELDB USING cur_commit OFF
+
+<span class="comment"># 4. Force changes to take effect by resetting connections</span>
+db2 TERMINATE
+db2 DEACTIVATE DATABASE HOTELDB
+db2 ACTIVATE DATABASE HOTELDB</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t28-summary">
+              <h3 class="subsection-title">5. Topic 28 Summary Table</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Isolation Level</th>
+                      <th>Dirty Reads</th>
+                      <th>Non-Repeatable Reads</th>
+                      <th>Phantom Reads</th>
+                      <th>Lock Footprint Duration</th>
+                      <th>Primary Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Uncommitted Read (UR)</strong></td>
+                      <td style="color: var(--error-color); font-weight: bold;">Allowed</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Allowed</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Allowed</td>
+                      <td>None (Reads without lock requests)</td>
+                      <td>OLAP analytical reporting, audits on static historical tables</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Cursor Stability (CS)</strong></td>
+                      <td style="color: var(--success-color); font-weight: bold;">Prevented</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Allowed</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Allowed</td>
+                      <td>Released as cursor advances (short duration)</td>
+                      <td>Default OLTP operations, high concurrency transactional updates</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Read Stability (RS)</strong></td>
+                      <td style="color: var(--success-color); font-weight: bold;">Prevented</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Prevented</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Allowed</td>
+                      <td>Held until COMMIT/ROLLBACK</td>
+                      <td>Multi-item checkouts, ensuring processed rows are not updated by others</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Repeatable Read (RR)</strong></td>
+                      <td style="color: var(--success-color); font-weight: bold;">Prevented</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Prevented</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Prevented</td>
+                      <td>All scanned rows/indexes locked until COMMIT</td>
+                      <td>Strict financial balancing, end-of-day ledger aggregations</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================
+               TOPIC 29: LOCKING ARCHITECTURE & MODES
+               ============================================ -->
+          <section id="topic29" class="section">
+            <h2 class="section-title">Topic 29: DB2 Locking Architecture &amp; Advanced Lock Modes</h2>
+
+            <div class="subsection" id="t29-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture: DB2 Lock Hierarchy</h3>
+              <p>
+                IBM DB2 employs a multi-layered locking engine to balance concurrency and system resources. DB2 executes
+                locks against physical assets in a strict hierarchy: **Database &rarr; Tablespace &rarr; Table &rarr;
+                Row**. To access individual rows, DB2 requests intention locks at higher levels to ensure concurrent
+                transactions do not drop the tables or modify the physical schema layout.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> Demystifying Core Lock Modes</h4>
+                <ul>
+                  <li>
+                    <strong>S (Share):</strong> The reader lock. Allows the holding transaction and concurrent users to
+                    read data, but prevents concurrent modifications.
+                  </li>
+                  <li>
+                    <strong>X (Exclusive):</strong> The writer lock. Gives the holding transaction exclusive
+                    modification access. Blocks all other locks (S, U, X).
+                  </li>
+                  <li>
+                    <strong>IS (Intent Share):</strong> Acquired at the table level. Indicates the transaction intends
+                    to acquire S locks on individual rows.
+                  </li>
+                  <li>
+                    <strong>IX (Intent Exclusive):</strong> Acquired at the table level. Indicates the transaction
+                    intends to acquire X locks on individual rows.
+                  </li>
+                  <li>
+                    <strong>U (Update):</strong> Acquired when a query intends to update a row (e.g.,
+                    <code>SELECT FOR UPDATE</code>). A U lock is compatible with S locks, but blocks other U or X locks,
+                    preventing potential conversion deadlocks. It upgrades to an X lock when the row is modified.
+                  </li>
+                  <li>
+                    <strong>SIX (Share with Intent Exclusive):</strong> Acquired at the table level when a transaction
+                    reads the entire table but plans to perform updates on specific rows.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-exchange-alt"></i> Mechanics of Lock Conversion</h4>
+                <p>
+                  A lock conversion occurs when a transaction already holds a lock on a resource but must transition to
+                  a stronger lock mode (e.g., upgrading an S lock to an X lock to perform an update). If two
+                  transactions hold S locks on the same row and both attempt to convert to X locks concurrently, they
+                  block each other indefinitely, resulting in a **Lock Conversion Deadlock**.
+                </p>
+                <p>
+                  DB2 utilizes **U (Update) locks** to prevent this issue. Because only one transaction can acquire a U
+                  lock on a row at a time, it acts as a gatekeeper, preventing concurrent conversion requests and
+                  ensuring smooth serialization.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="t29-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                A DBA can force explicit locks on tables to run heavy batch scripts, or query DB2's real-time
+                administrative system views to identify active locks and lock waits.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">Explicit Table Locking Command</div>
+                <pre><code><span class="comment">-- 1. Explicitly lock a table in Share Mode (Read allowed, updates blocked)</span>
+LOCK TABLE HOTELDB.Bookings IN SHARE MODE;
+
+<span class="comment">-- 2. Explicitly lock a table in Exclusive Mode (No concurrent reads/writes allowed)</span>
+LOCK TABLE HOTELDB.Bookings IN EXCLUSIVE MODE;</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">DBA Lock Monitoring SQL Queries</div>
+                <pre><code><span class="comment">-- 1. View all active lock allocations in memory</span>
+SELECT 
+    MEMBER, 
+    LOCK_NAME, 
+    LOCK_OBJECT_TYPE, 
+    LOCK_MODE, 
+    LOCK_STATUS, 
+    AGENT_ID 
+FROM SYSIBMADM.LOCKS;
+
+<span class="comment">-- 2. Retrieve detailed active lock wait situations</span>
+SELECT 
+    AGENT_ID AS WAITING_AGENT,
+    LOCK_OBJECT_TYPE,
+    LOCK_MODE AS REQUESTED_LOCK,
+    HOLDER_AGENT_ID AS BLOCKING_AGENT,
+    LOCK_WAIT_ELAPSED_TIME / 1000 AS WAIT_TIME_SECONDS
+FROM SYSIBMADM.MON_LOCKWAITS;</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t29-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Lock Upgrades &amp; U Lock Protection
+              </h3>
+              <p>
+                This lab simulates an upgrade operation on hotel suite accounts, demonstrating how S lock conversions
+                cause deadlocks and how U locks protect database integrity.
+              </p>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Step-by-Step Dual Terminal Simulation</h4>
+
+                <h5>Part A: The Conversion Deadlock (Unsafe Upgrade Pattern)</h5>
+
+                <h5>Step 1: Terminal 1 acquires an S lock on Room 305</h5>
+                <pre>db2 +c "SELECT TotalPrice FROM HOTELDB.Bookings WHERE RoomNumber = 305 WITH RS"</pre>
+
+                <h5>Step 2: Terminal 2 acquires an S lock on the same room</h5>
+                <pre>db2 +c "SELECT TotalPrice FROM HOTELDB.Bookings WHERE RoomNumber = 305 WITH RS"</pre>
+                <p><em>DBA Note: Since S locks are compatible, both sessions succeed.</em></p>
+
+                <h5>Step 3: Terminal 1 attempts to upgrade the suite price (Converts S to X)</h5>
+                <pre>db2 "UPDATE HOTELDB.Bookings SET TotalPrice = TotalPrice + 50.00 WHERE RoomNumber = 305"</pre>
+                <p><strong>Expected Behavior:</strong> Terminal 1 blocks, waiting for Terminal 2 to release its S lock.
+                </p>
+
+                <h5>Step 4: Terminal 2 attempts to upgrade the suite price (Converts S to X)</h5>
+                <pre>db2 "UPDATE HOTELDB.Bookings SET TotalPrice = TotalPrice + 50.00 WHERE RoomNumber = 305"</pre>
+                <p><strong>Expected Behavior:</strong> The database engine halts. The deadlock detector discovers the
+                  cyclic wait. Within seconds, Terminal 2 is terminated as the victim:
+                <pre style="background: #111; color: #ff5555; padding: 10px; font-family: monospace;">
+SQL0911N  The current transaction has been rolled back because of a deadlock 
+or timeout. Reason code "2".  SQLSTATE=40001</pre>
+
+                <hr style="border: 1px solid var(--border-color); margin: 20px 0;" />
+
+                <h5>Part B: Safe Upgrade Pattern utilizing Update (U) Locks</h5>
+                <p>Ensure both sessions execute <code>ROLLBACK</code> before starting Part B.</p>
+
+                <h5>Step 1: Terminal 1 requests a U lock on Room 305</h5>
+                <pre>db2 +c "SELECT TotalPrice FROM HOTELDB.Bookings WHERE RoomNumber = 305 FOR UPDATE"</pre>
+                <p><em>DBA Note: Using <code>FOR UPDATE</code> instructs DB2 to acquire a U lock instead of an S
+                    lock.</em></p>
+
+                <h5>Step 2: Terminal 2 attempts to read Room 305 with upgrade intentions</h5>
+                <pre>db2 +c "SELECT TotalPrice FROM HOTELDB.Bookings WHERE RoomNumber = 305 FOR UPDATE"</pre>
+                <p><strong>Expected Behavior:</strong> Terminal 2 blocks immediately. Because U locks are incompatible
+                  with other U locks, Terminal 2 must wait for Terminal 1 to complete.</p>
+
+                <h5>Step 3: Terminal 1 executes the update safely</h5>
+                <pre>db2 "UPDATE HOTELDB.Bookings SET TotalPrice = TotalPrice + 50.00 WHERE RoomNumber = 305"</pre>
+                <p><em>DBA Note: Terminal 1's U lock is successfully promoted to an X lock. Since no other S or U locks
+                    exist, it completes instantly.</em></p>
+
+                <h5>Step 4: Terminal 1 commits its transaction</h5>
+                <pre>db2 "COMMIT"</pre>
+                <p><strong>Result:</strong> Terminal 2 is instantly unblocked, receives the updated pricing, and
+                  acquires its U lock safely without any deadlock errors.</p>
+              </div>
+            </div>
+
+            <div class="subsection" id="t29-best">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting: Index Optimization</h3>
+              <p>
+                Locks are managed in memory by DB2's engine. If a query does not utilize an index to find a row, the
+                optimizer is forced to perform a **Table Scan**. During a table scan, DB2 must lock every row in the
+                table to evaluate the predicate.
+              </p>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-triangle"></i> The Danger of Unindexed Table Scans</h4>
+                <ul>
+                  <li>Drastically increases lock memory footprint, often leading to lock escalations.</li>
+                  <li>Blocks concurrent transactions from performing operations on unrelated rows.</li>
+                  <li>Forces S locks on every record under RS and RR isolation levels, freezing the entire table.</li>
+                </ul>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> DBA Remedies &amp; Index Design Rules</h4>
+                <ul>
+                  <li>Ensure all foreign key columns are indexed to prevent share locks from climbing to parent tables
+                    during deletes.</li>
+                  <li>Regularly execute <code>RUNSTATS</code> on active tables to provide the optimizer with accurate
+                    stats, ensuring it selects index scans over table scans:
+                    <div class="code-example">
+                      <div class="code-language">DB2 Runstats command</div>
+                      <pre><code>db2 RUNSTATS ON TABLE HOTELDB.Bookings AND INDEXES ALL</code></pre>
+                    </div>
+                  </li>
+                  <li>Use the DB2 Design Advisor (<code>db2advis</code>) to suggest optimal index layouts for complex
+                    join statements.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t29-summary">
+              <h3 class="subsection-title">5. Topic 29 Summary Table</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Lock Mode Compatibility</th>
+                      <th>IS</th>
+                      <th>IX</th>
+                      <th>S</th>
+                      <th>SIX</th>
+                      <th>U</th>
+                      <th>X</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>IS (Intent Share)</strong></td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                    </tr>
+                    <tr>
+                      <td><strong>IX (Intent Exclusive)</strong></td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                    </tr>
+                    <tr>
+                      <td><strong>S (Share)</strong></td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                    </tr>
+                    <tr>
+                      <td><strong>SIX (Share Intent Exclusive)</strong></td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                    </tr>
+                    <tr>
+                      <td><strong>U (Update)</strong></td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Compatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                    </tr>
+                    <tr>
+                      <td><strong>X (Exclusive)</strong></td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                      <td style="color: var(--error-color); font-weight: bold;">Incompatible</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================
+               TOPIC 30: LOCKING CFG & TUNING
+               ============================================ -->
+          <section id="topic30" class="section">
+            <h2 class="section-title">Topic 30: DB2 Lock Administration &amp; Configuration Tuning</h2>
+
+            <div class="subsection" id="t30-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture: Memory Allocation</h3>
+              <p>
+                In IBM DB2, the allocation and governance of lock memory are defined by three critical Database
+                Configuration (DB CFG) parameters: **LOCKLIST**, **MAXLOCKS**, and **LOCKTIMEOUT**. Understanding these
+                parameters is essential for database stability.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-memory"></i> Lock Memory Configuration Parameters</h4>
+                <ul>
+                  <li>
+                    <strong>LOCKLIST:</strong> Defines the amount of database memory (allocated in **4 KB pages**)
+                    dedicated to storing row and table locks. Every lock in DB2 requires a small memory entry (roughly
+                    128 bytes per lock). If this memory pool is exhausted, the engine must free space using **Lock
+                    Escalation**.
+                  </li>
+                  <li>
+                    <strong>MAXLOCKS:</strong> Defines the maximum percentage of the overall <code>LOCKLIST</code>
+                    memory that a single transaction is allowed to consume. If a transaction's lock count exceeds this
+                    threshold, DB2 immediately triggers lock escalation on that transaction.
+                  </li>
+                  <li>
+                    <strong>LOCKTIMEOUT:</strong> Specifies the duration (in seconds) that an application will wait to
+                    acquire a locked resource before timing out. By default, <code>LOCKTIMEOUT</code> is set to
+                    <code>-1</code>, meaning the application will **wait indefinitely**. In production, this can cause
+                    permanent application hangs and database blockages.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> The Lock Escalation Phenomenon</h4>
+                <p>
+                  <strong>How it works:</strong> When the <code>LOCKLIST</code> is full, or a single transaction exceeds
+                  its <code>MAXLOCKS</code> percentage, DB2 frees memory by converting multiple row-level locks on a
+                  table into a single table-level lock (e.g., converting 5,000 Row Exclusive (X) locks into one Table
+                  Exclusive (X) lock).
+                </p>
+                <p>
+                  <strong>Why it is catastrophic:</strong> While escalation instantly frees up lock memory, it severely
+                  degrades database concurrency. An Exclusive (X) table lock prevents all concurrent transactions from
+                  accessing, reading, or modifying *any* row inside that table, causing widespread application blockage.
+                </p>
+              </div>
+            </div>
+
+            <div class="subsection" id="t30-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                DBAs configure lock parameters using DB CFG utilities. These parameters are dynamic, allowing
+                modifications to take effect without database restarts.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">CLP Configuration Operations</div>
+                <pre><code><span class="comment"># 1. Inspect current locking configuration parameters</span>
+db2 GET DATABASE CONFIGURATION FOR HOTELDB | grep -E "LOCKLIST|MAXLOCKS|LOCKTIMEOUT"
+
+<span class="comment"># 2. Update LOCKLIST memory pool to 50,000 pages (approx. 200 MB)</span>
+db2 UPDATE DATABASE CONFIGURATION FOR HOTELDB USING LOCKLIST 50000
+
+<span class="comment"># 3. Restrict any single transaction from consuming more than 20% of the lock list</span>
+db2 UPDATE DATABASE CONFIGURATION FOR HOTELDB USING MAXLOCKS 20
+
+<span class="comment"># 4. Set the lock wait timeout limit to 30 seconds (Eliminate infinite waiting)</span>
+db2 UPDATE DATABASE CONFIGURATION FOR HOTELDB USING LOCKTIMEOUT 30
+
+<span class="comment"># 5. Flush package cache and apply changes dynamically</span>
+db2 TERMINATE</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t30-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: Lock Escalation Simulation</h3>
+              <p>
+                In this lab, we temporarily configure extremely low lock thresholds to trigger a lock escalation,
+                demonstrating how it blocks concurrent queries and causes lock timeouts.
+              </p>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Step-by-Step Dual Terminal Simulation</h4>
+
+                <h5>Step 1: Set up strict locking constraints for testing</h5>
+                <pre>
+db2 CONNECT TO HOTELDB
+db2 UPDATE DATABASE CONFIGURATION FOR HOTELDB USING LOCKLIST 50
+db2 UPDATE DATABASE CONFIGURATION FOR HOTELDB USING MAXLOCKS 10
+db2 UPDATE DATABASE CONFIGURATION FOR HOTELDB USING LOCKTIMEOUT 15
+db2 TERMINATE</pre>
+                <p><em>DBA Note: We have restricted the lock list to 50 pages and limited individual transactions to 10%
+                    of that capacity (approx. 16 locks total).</em></p>
+
+                <h5>Step 2: Terminal 1 executes a bulk update (Deliberately triggering escalation)</h5>
+                <pre>db2 +c "UPDATE HOTELDB.Bookings SET TotalPrice = TotalPrice * 1.05"</pre>
+                <p><strong>Expected Log Event:</strong> In the background, DB2 immediately detects that Terminal 1 has
+                  exceeded its <code>MAXLOCKS</code> limit. It triggers a lock escalation, releasing all row locks and
+                  acquiring an **Exclusive (X) Table Lock** on <code>HOTELDB.Bookings</code>. A warning is written to
+                  the system logs.</p>
+
+                <h5>Step 3: Terminal 2 attempts a simple query under Cursor Stability (CS)</h5>
+                <pre>db2 "SELECT * FROM HOTELDB.Bookings WHERE RoomNumber = 204 WITH CS"</pre>
+                <p><strong>Expected Behavior:</strong> Terminal 2 blocks immediately. Even though it targets a single
+                  row, the Table-level Exclusive lock held by Terminal 1 blocks all access.</p>
+
+                <h5>Step 4: Terminal 2 waits for the locktimeout threshold (15 seconds)</h5>
+                <p><strong>Expected Output in Terminal 2:</strong> After 15 seconds, Terminal 2 times out, aborts the
+                  statement, and rolls back its active transaction block:</p>
+                <pre style="background: #111; color: #ff5555; padding: 10px; font-family: monospace;">
+SQL0911N  The current transaction has been rolled back because of a deadlock 
+or timeout. Reason code "68".  SQLSTATE=40001</pre>
+                <p class="color-warning"><strong>Result:</strong> Lock escalation combined with a strict lock timeout
+                  successfully prevented an indefinite system hang, throwing Reason Code 68.</p>
+              </div>
+            </div>
+
+            <div class="subsection" id="t30-best">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting: Memory Sizing &amp; Ratios</h3>
+              <p>
+                Configuring appropriate locking limits is essential to prevent lock escalations while avoiding system
+                memory waste.
+              </p>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-calculator"></i> The DBA Lock Sizing Formula</h4>
+                <p>
+                  Each lock consumes approximately **128 bytes** in memory. As a best practice, size the
+                  <code>LOCKLIST</code> page allocation using this standard formula:
+                </p>
+                <p style="text-align: center; font-weight: bold; font-size: 1.1rem; margin: 15px 0;">
+                  LOCKLIST (in 4 KB Pages) = (Active_Users &times; Average_Locks_Per_User &times; 128 Bytes) / 4096
+                  Bytes
+                </p>
+                <p>
+                  <em>Example:</em> For 500 active users averaging 100 row locks each:
+                  <br><code>(500 &times; 100 &times; 128) / 4096 = 1,562 pages</code>. Adding a 50% safety margin gives
+                  a recommended configuration of **2,500 pages**.
+                </p>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-check-circle"></i> Recommended Settings for Production Environments</h4>
+                <ul>
+                  <li><strong>MAXLOCKS:</strong> Set between **10% and 30%**. Setting it too high allows a single poorly
+                    written batch transaction to consume the entire lock pool, blocking all other transactions.</li>
+                  <li><strong>LOCKTIMEOUT:</strong> Set between **15 and 30 seconds**. Never leave it at <code>-1</code>
+                    in production. Setting a timeout ensures client connections fail quickly and cleanly rather than
+                    hanging indefinitely.</li>
+                  <li><strong>STMM Memory Tuning:</strong> Enable automatic tuning (STMM) for locklist memory to let DB2
+                    dynamically adjust the pool size based on active workloads:
+                    <div class="code-example">
+                      <div class="code-language">Enable automatic lock list tuning</div>
+                      <pre><code>db2 UPDATE DATABASE CONFIGURATION FOR HOTELDB USING LOCKLIST AUTOMATIC MAXLOCKS AUTOMATIC</code></pre>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t30-summary">
+              <h3 class="subsection-title">5. Topic 30 Summary Table</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Config Parameter</th>
+                      <th>Default Value</th>
+                      <th>Unit of Measure</th>
+                      <th>Dynamic?</th>
+                      <th>Impact of Sizing Too Low</th>
+                      <th>Impact of Sizing Too High</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>LOCKLIST</strong></td>
+                      <td>4096</td>
+                      <td>4 KB memory pages</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Yes</td>
+                      <td style="color: var(--error-color);">Frequent lock escalations, high blockings</td>
+                      <td>Unnecessary memory consumption, less RAM for buffer pools</td>
+                    </tr>
+                    <tr>
+                      <td><strong>MAXLOCKS</strong></td>
+                      <td>22</td>
+                      <td>Percentage (%)</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Yes</td>
+                      <td style="color: var(--error-color);">Premature row-to-table escalations</td>
+                      <td>Single transaction can exhaust lock memory, causing global failures</td>
+                    </tr>
+                    <tr>
+                      <td><strong>LOCKTIMEOUT</strong></td>
+                      <td>-1 (Infinite)</td>
+                      <td>Seconds</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Yes</td>
+                      <td style="color: var(--error-color);">Frequent timeouts and transaction aborts (RC 68)</td>
+                      <td>Indefinite application hangs, thread starvation</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================
+               TOPIC 31: ADVANCED DIAGNOSTICS & TROUBLESHOOTING
+               ============================================ -->
+          <section id="topic31" class="section">
+            <h2 class="section-title">Topic 31: Advanced Locking Diagnostics &amp; Troubleshooting</h2>
+
+            <div class="subsection" id="t31-arch">
+              <h3 class="subsection-title">1. High-Level Concept &amp; Architecture: Deadlock Detection</h3>
+              <p>
+                A **Deadlock** is a classic database concurrency conflict where two or more transactions are unable to
+                proceed because each holds a lock that the other requires to continue, creating a circular dependency.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> Deadlocks vs. Lock Timeouts</h4>
+                <ul>
+                  <li>
+                    <strong>Lock Timeout (SQL0911N RC 68):</strong> An application waits for a single resource held by
+                    another user. No circular dependency exists; the waiting transaction simply times out because the
+                    holder took too long.
+                  </li>
+                  <li>
+                    <strong>Deadlock (SQL0911N RC 2):</strong> A circular blockage (e.g., Transaction A locks Row 1,
+                    Transaction B locks Row 2. Transaction A then requests a lock on Row 2 and blocks; Transaction B
+                    requests a lock on Row 1 and blocks). Neither transaction can proceed, and they will wait
+                    indefinitely unless the database engine intervenes.
+                  </li>
+                </ul>
+              </div>
+
+              <p>
+                To resolve deadlocks, DB2 runs a background engine thread (EDU) called the **Deadlock Detector Daemon
+                (<code>db2dlock</code>)**. The daemon performs the following actions:
+              </p>
+              <ol>
+                <li>Wakes up at designated intervals defined by the database parameter <code>DLCHKTIME</code> (default:
+                  10,000 milliseconds / 10 seconds).</li>
+                <li>Scans active lock states in memory to construct a **Directed Wait-For Graph (WFG)**.</li>
+                <li>Searches for loops or cyclic dependencies inside the graph structure.</li>
+                <li>Selects a **Deadlock Victim** to break the cycle. DB2 chooses the victim transaction that has
+                  **written the least amount of transaction recovery logs** (minimizing rollback costs).</li>
+                <li>Aborts the victim's active transaction, releases its locks, and throws error **SQL0911N Reason Code
+                  2**, allowing the surviving transaction to complete successfully.</li>
+              </ol>
+            </div>
+
+            <div class="subsection" id="t31-syntax">
+              <h3 class="subsection-title">2. Full Syntax &amp; CLP Commands</h3>
+              <p>
+                DBAs utilize <code>db2pd</code>, a non-intrusive command-line tool, to inspect lock structures directly
+                from the engine's shared memory without the overhead of standard SQL execution.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">db2pd Diagnostic Commands</div>
+                <pre><code><span class="comment"># 1. Retrieve all active lock allocations for a database</span>
+db2pd -db HOTELDB -locks
+
+<span class="comment"># 2. Identify active lock waits (Shows waiting agents and blocking holders)</span>
+db2pd -db HOTELDB -wlocks
+
+<span class="comment"># 3. View detailed application information for waiting sessions</span>
+db2pd -db HOTELDB -apinfo
+
+<span class="comment"># 4. Combine transactions, locks, and application info into a single report</span>
+db2pd -db HOTELDB -transactions -locks -apinfo</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">Creating a Lock Event Monitor</div>
+                <pre><code><span class="comment">-- 1. Create a table-based event monitor to track deadlock and lock timeout details</span>
+CREATE EVENT MONITOR LOCK_MONITOR FOR LOCKING WRITE TO UNFORMATTED EVENT TABLE;
+
+<span class="comment">-- 2. Activate the lock event monitor</span>
+SET EVENT MONITOR LOCK_MONITOR STATE 1;</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t31-lab">
+              <h3 class="subsection-title">3. Industry-Standard Practical Lab: The Deadlock Collision Lab</h3>
+              <p>
+                This lab simulates a circular deadlock collision between two reception clerks updating rooms in
+                different sequences, demonstrating how DB2 resolves the conflict.
+              </p>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Step-by-Step Dual Terminal Simulation</h4>
+
+                <h5>Step 1: Terminal 1 locks Room 204 (Step A)</h5>
+                <pre>db2 +c "UPDATE HOTELDB.Bookings SET GuestName = 'Jack' WHERE RoomNumber = 204"</pre>
+                <p><em>DBA Note: Terminal 1 holds an Exclusive (X) lock on row 204.</em></p>
+
+                <h5>Step 2: Terminal 2 locks Room 305 (Step B)</h5>
+                <pre>db2 +c "UPDATE HOTELDB.Bookings SET GuestName = 'Jill' WHERE RoomNumber = 305"</pre>
+                <p><em>DBA Note: Terminal 2 holds an Exclusive (X) lock on row 305.</em></p>
+
+                <h5>Step 3: Terminal 1 requests a lock on Room 305 (Blocked)</h5>
+                <pre>db2 "UPDATE HOTELDB.Bookings SET GuestName = 'Jack' WHERE RoomNumber = 305"</pre>
+                <p><strong>Expected Behavior:</strong> Terminal 1 blocks, waiting for Terminal 2 to release its lock.
+                </p>
+
+                <h5>Step 4: Terminal 2 requests a lock on Room 204 (Circular Dependency Created)</h5>
+                <pre>db2 "UPDATE HOTELDB.Bookings SET GuestName = 'Jill' WHERE RoomNumber = 204"</pre>
+                <p><strong>Expected Behavior:</strong> Terminal 2 blocks. A circular wait is now created between
+                  Terminal 1 and Terminal 2.</p>
+
+                <h5>Step 5: The Deadlock Detector Daemon breaks the collision</h5>
+                <p>Within 10 seconds, Terminal 2 receives a rollback error, terminating its transaction:</p>
+                <pre style="background: #111; color: #ff5555; padding: 10px; font-family: monospace;">
+SQL0911N  The current transaction has been rolled back because of a deadlock 
+or timeout. Reason code "2".  SQLSTATE=40001</pre>
+                <p>Terminal 1 is instantly unblocked, its second update completes successfully, and it can commit its
+                  changes:</p>
+                <pre>db2 "COMMIT"</pre>
+                <p class="color-success"><strong>Result:</strong> DB2 successfully resolved the deadlock by rolling back
+                  the transaction with the smaller log footprint (Terminal 2), allowing Terminal 1 to finish. No
+                  infinite hang occurred.</p>
+              </div>
+            </div>
+
+            <div class="subsection" id="t31-best">
+              <h3 class="subsection-title">4. DBA Best Practices &amp; Troubleshooting: Log Parsing &amp; Deadlock
+                Prevention</h3>
+              <p>
+                When a deadlock or lock timeout occurs, details are written to the database diagnostic log file
+                (<code>db2diag.log</code>). DBAs must know how to parse these entries to identify and resolve
+                concurrency issues.
+              </p>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-search"></i> Parsing db2diag.log for Concurrency Failures</h4>
+                <p>
+                  Use the <code>db2diag</code> tool with targeted filter arguments to find deadlock (RC 2) and lock
+                  timeout (RC 68) records:
+                </p>
+                <div class="code-example">
+                  <div class="code-language">db2diag Filter Commands</div>
+                  <pre><code># 1. Search for deadlock victim events in db2diag.log
+db2diag -g "Reason code: 2" -level "Error, Severe"
+
+# 2. Search for lock timeout events in db2diag.log
+db2diag -g "Reason code: 68" -level "Error, Severe"</code></pre>
+                </div>
+                <p><strong>Typical db2diag.log Error Record Structure:</strong></p>
+                <pre
+                  style="background: #111; color: #ff7777; padding: 12px; border-radius: var(--radius-md); font-family: monospace; font-size: 0.85rem; line-height: 1.4;">
+2026-05-22-12.38.01.123456+180 I12345F678         LEVEL: Severe
+PID     : 9876                 TID : 140234567890123 PROC : db2sysc 0
+INSTANCE: db2inst1             NODE : 000         DB   : HOTELDB
+APPLID  : 192.168.1.100.50000.260522123500
+EDUID   : 24                   EDUNAME: db2agent (HOTELDB) 0
+FUNCTION: DB2 UDB, database monitor, pdLogLockTimeout, probe:800
+MESSAGE : SQL0911N RC="68" was returned to application.
+DATA #1 : Lock Timeout Info
+  Lock Name: 00020004000000030000000052
+  Lock Type: Row
+  Table Name: BOOKINGS
+  Schema Name: HOTELDB
+  Holder Agent ID: 45
+  Waiting Agent ID: 12</pre>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> DBA Best Practices for Preventing Deadlocks</h4>
+                <ul>
+                  <li>
+                    <strong>Enforce a Uniform Ordering of Operations:</strong> Ensure all application modules access and
+                    update tables in the exact same logical order (e.g., always update `Bookings` before `Customers`).
+                    This prevents the circular wait conditions necessary for deadlocks to occur.
+                  </li>
+                  <li>
+                    <strong>Minimize Transaction Scope:</strong> Execute small, focused transactions. Long-running
+                    transactions hold locks longer, increasing the probability of lock timeout and deadlock conflicts.
+                  </li>
+                  <li>
+                    <strong>Avoid User Interaction inside Transaction Boundaries:</strong> Never prompt users for input
+                    while a transaction is active and holding locks.
+                  </li>
+                  <li>
+                    <strong>Index Foreign Key Columns:</strong> Prevents table-level share locks on child tables when
+                    rows in the parent table are deleted.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t31-summary">
+              <h3 class="subsection-title">5. Topic 31 Summary Table</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Diagnostic Tool</th>
+                      <th>Command Syntax</th>
+                      <th>Information Captured</th>
+                      <th>Performance Overhead</th>
+                      <th>Best Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>db2pd -locks</strong></td>
+                      <td><code>db2pd -db HOTELDB -locks</code></td>
+                      <td>Real-time active locks, modes, and memory statuses.</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Very Low (Bypasses SQL engine)</td>
+                      <td>Immediate production lock audits</td>
+                    </tr>
+                    <tr>
+                      <td><strong>db2pd -wlocks</strong></td>
+                      <td><code>db2pd -db HOTELDB -wlocks</code></td>
+                      <td>Identifies blocked agents and the blocking holders.</td>
+                      <td style="color: var(--success-color); font-weight: bold;">Very Low</td>
+                      <td>Troubleshooting active connection blockages</td>
+                    </tr>
+                    <tr>
+                      <td><strong>db2diag</strong></td>
+                      <td><code>db2diag -g "Reason code"</code></td>
+                      <td>Detailed error history, transaction IDs, schemas, and timestamps.</td>
+                      <td style="color: var(--success-color); font-weight: bold;">None (Parses offline files)</td>
+                      <td>Post-mortem failure investigations</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Event Monitors</strong></td>
+                      <td><code>CREATE EVENT MONITOR...</code></td>
+                      <td>Comprehensive transaction details, query statements, and history.</td>
+                      <td style="color: var(--warning-color); font-weight: bold;">Medium (Writes events to tables)</td>
+                      <td>Detailed application debugging and long-term lock auditing</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="footer">
+          <p style="margin-top: 10px">
+            <strong>Created By:</strong> Abdelghany
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Shared JavaScript for layout and theme behaviors -->
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

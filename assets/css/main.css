@@ -3324,10 +3324,15 @@ tr:last-child td {
 }
 
 .no-results {
+  display: none;
   text-align: center;
   padding: var(--spacing-xl);
   color: var(--text-muted);
   font-size: 1.2em;
+}
+
+.no-results.show {
+  display: block;
 }
 
 .empty-state {

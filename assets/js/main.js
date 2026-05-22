@@ -211,6 +211,9 @@ function initializeSidebar() {
     document.body.appendChild(toggleBtn);
   }
 
+  // Remove existing inline onclick to prevent double-toggling
+  toggleBtn.removeAttribute("onclick");
+
   // Find or create overlay backdrop
   let overlay =
     document.querySelector(".sidebar-overlay") ||

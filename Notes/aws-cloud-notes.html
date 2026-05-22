@@ -1,18 +1,23 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AWS Cloud Computing Study Notes</title>
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="../assets/css/main.css" />
 </head>
+
 <body>
   <!-- Sidebar Navigation -->
-  <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+  <button class="sidebar-toggle" aria-expanded="false" aria-label="Toggle navigation"><i
+      class="fas fa-bars"></i></button>
   <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-  
+
   <div class="layout-container">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -29,7 +34,8 @@
             <a href="#day1-intro" onclick="closeSidebar()"><i class="fas fa-cloud"></i> Cloud Computing Intro</a>
           </li>
           <li>
-            <a href="#day1-infrastructure" onclick="closeSidebar()"><i class="fas fa-globe"></i> Global Infrastructure</a>
+            <a href="#day1-infrastructure" onclick="closeSidebar()"><i class="fas fa-globe"></i> Global
+              Infrastructure</a>
           </li>
           <li>
             <a href="#day1-core" onclick="closeSidebar()"><i class="fas fa-wrench"></i> Core Services</a>
@@ -55,7 +61,8 @@
     <!-- Main Content -->
     <main class="main-content">
       <div class="container" id="mainContainer">
-        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Main Page</a><div class="header">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+        <div class="header">
           <h1>AWS Cloud Computing</h1>
           <p>Comprehensive Study Guide & Notes</p>
         </div>
@@ -315,11 +322,14 @@
               <h3 class="section-title">1.6 References</h3>
               <div class="content-box">
                 <ul>
-                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/what-is-cloud-computing/" target="_blank" rel="noopener">What
+                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/what-is-cloud-computing/"
+                      target="_blank" rel="noopener">What
                       is Cloud Computing?</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/types-of-cloud-computing/" target="_blank" rel="noopener">Types
+                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/types-of-cloud-computing/"
+                      target="_blank" rel="noopener">Types
                       of Cloud Computing</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank"
+                  <li><i class="fas fa-book"></i> <a
+                      href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank"
                       rel="noopener">Shared Responsibility Model</a></li>
                 </ul>
               </div>
@@ -398,9 +408,12 @@
                   <strong>Scenario:</strong> You're building an app for European customers with strict GDPR compliance.
                 </p>
                 <ul>
-                  <li><i class="fas fa-check"></i> <strong>Choose:</strong> eu-west-1 (Ireland) or eu-central-1 (Frankfurt)</li>
-                  <li><i class="fas fa-times"></i> <strong>Avoid:</strong> us-east-1 (Virginia) - data residency issues</li>
-                  <li><i class="fas fa-chart-bar"></i> <strong>Benefit:</strong> Lower latency for EU users + GDPR compliance</li>
+                  <li><i class="fas fa-check"></i> <strong>Choose:</strong> eu-west-1 (Ireland) or eu-central-1
+                    (Frankfurt)</li>
+                  <li><i class="fas fa-times"></i> <strong>Avoid:</strong> us-east-1 (Virginia) - data residency issues
+                  </li>
+                  <li><i class="fas fa-chart-bar"></i> <strong>Benefit:</strong> Lower latency for EU users + GDPR
+                    compliance</li>
                 </ul>
               </div>
             </div>
@@ -523,12 +536,13 @@ If one AZ fails, your app continues running in other AZs!
               <h3 class="section-title">2.6 References</h3>
               <div class="content-box">
                 <ul>
-                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/about-aws/global-infrastructure/" target="_blank"
-                      rel="noopener">AWS Global Infrastructure</a></li>
+                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/about-aws/global-infrastructure/"
+                      target="_blank" rel="noopener">AWS Global Infrastructure</a></li>
                   <li><i class="fas fa-book"></i> <a
                       href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html"
                       target="_blank" rel="noopener">Regions & Availability Zones</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html"
+                  <li><i class="fas fa-book"></i> <a
+                      href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html"
                       target="_blank" rel="noopener">CloudFront & Edge Locations</a></li>
                 </ul>
               </div>
@@ -698,11 +712,16 @@ aws lambda invoke \
                 <div class="example-box">
                   <h5>Example: S3 Use Cases</h5>
                   <ul>
-                    <li><i class="fas fa-star"></i> <strong>Media Storage:</strong> Store images, videos for websites/apps</li>
-                    <li><i class="fas fa-star"></i> <strong>Backup & Restore:</strong> Database backups, file archives</li>
-                    <li><i class="fas fa-globe"></i> <strong>Static Website Hosting:</strong> Host HTML/CSS/JS files</li>
-                    <li><i class="fas fa-chart-bar"></i> <strong>Data Lakes:</strong> Store massive amounts of data for analytics</li>
-                    <li><i class="fas fa-mobile-alt"></i> <strong>Mobile/App Storage:</strong> User uploads, app assets</li>
+                    <li><i class="fas fa-star"></i> <strong>Media Storage:</strong> Store images, videos for
+                      websites/apps</li>
+                    <li><i class="fas fa-star"></i> <strong>Backup & Restore:</strong> Database backups, file archives
+                    </li>
+                    <li><i class="fas fa-globe"></i> <strong>Static Website Hosting:</strong> Host HTML/CSS/JS files
+                    </li>
+                    <li><i class="fas fa-chart-bar"></i> <strong>Data Lakes:</strong> Store massive amounts of data for
+                      analytics</li>
+                    <li><i class="fas fa-mobile-alt"></i> <strong>Mobile/App Storage:</strong> User uploads, app assets
+                    </li>
                   </ul>
                 </div>
                 <div class="cli-box">
@@ -912,16 +931,21 @@ aws ec2 authorize-security-group-ingress \
               <h3 class="section-title">3.5 References</h3>
               <div class="content-box">
                 <ul>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/ec2/index.html" target="_blank" rel="noopener">Amazon EC2
+                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/ec2/index.html" target="_blank"
+                      rel="noopener">Amazon EC2
                       Documentation</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/lambda/index.html" target="_blank" rel="noopener">AWS
+                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/lambda/index.html"
+                      target="_blank" rel="noopener">AWS
                       Lambda Documentation</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/s3/index.html" target="_blank" rel="noopener">Amazon S3
+                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/s3/index.html" target="_blank"
+                      rel="noopener">Amazon S3
                       Documentation</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/vpc/index.html" target="_blank" rel="noopener">Amazon VPC
+                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/vpc/index.html" target="_blank"
+                      rel="noopener">Amazon VPC
                       Documentation</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html"
-                      target="_blank" rel="noopener">Security Groups</a></li>
+                  <li><i class="fas fa-book"></i> <a
+                      href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html" target="_blank"
+                      rel="noopener">Security Groups</a></li>
                 </ul>
               </div>
             </div>
@@ -983,7 +1007,8 @@ aws ec2 authorize-security-group-ingress \
                   <li>Select access type:
                     <ul>
                       <li><i class="fas fa-check"></i> Programmatic access (generates access key for CLI/SDK)</li>
-                      <li><i class="fas fa-check"></i> AWS Management Console access (username/password for Console)</li>
+                      <li><i class="fas fa-check"></i> AWS Management Console access (username/password for Console)
+                      </li>
                     </ul>
                   </li>
                   <li>Set permissions (attach policies or add to group)</li>
@@ -1086,8 +1111,10 @@ aws iam list-groups
               <div class="example-box">
                 <h5>Example: EC2 Instance Role</h5>
                 <p><strong>Scenario:</strong> You have an EC2 instance that needs to upload files to S3.</p>
-                <p><strong><i class="fas fa-times"></i> Bad Practice:</strong> Store AWS access keys on the EC2 instance</p>
-                <p><strong><i class="fas fa-check"></i> Best Practice:</strong> Create an IAM role and attach it to the EC2 instance</p>
+                <p><strong><i class="fas fa-times"></i> Bad Practice:</strong> Store AWS access keys on the EC2 instance
+                </p>
+                <p><strong><i class="fas fa-check"></i> Best Practice:</strong> Create an IAM role and attach it to the
+                  EC2 instance</p>
                 <div class="code-box">
                   <pre>
 1. Create IAM Role: "EC2-S3-Upload-Role"
@@ -1393,11 +1420,14 @@ aws ec2 associate-iam-instance-profile \
               <h3 class="section-title">4.9 References</h3>
               <div class="content-box">
                 <ul>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html" target="_blank"
+                  <li><i class="fas fa-book"></i> <a
+                      href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html" target="_blank"
                       rel="noopener">IAM Introduction</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html"
+                  <li><i class="fas fa-book"></i> <a
+                      href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html"
                       target="_blank" rel="noopener">IAM Policy Elements</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html" target="_blank"
+                  <li><i class="fas fa-book"></i> <a
+                      href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html" target="_blank"
                       rel="noopener">IAM Best Practices</a></li>
                 </ul>
               </div>
@@ -1423,10 +1453,14 @@ aws ec2 associate-iam-instance-profile \
               <div class="highlight-box">
                 <p><strong>Benefits of Auto Scaling:</strong></p>
                 <ul>
-                  <li><i class="fas fa-dollar-sign"></i> <strong>Cost Optimization:</strong> Only pay for instances you need</li>
-                  <li><i class="fas fa-star"></i> <strong>Handle Traffic Spikes:</strong> Automatically add capacity during high demand</li>
-                  <li><i class="fas fa-sync"></i> <strong>High Availability:</strong> Replace unhealthy instances automatically</li>
-                  <li><i class="fas fa-star"></i> <strong>Load Distribution:</strong> Distribute traffic across multiple instances</li>
+                  <li><i class="fas fa-dollar-sign"></i> <strong>Cost Optimization:</strong> Only pay for instances you
+                    need</li>
+                  <li><i class="fas fa-star"></i> <strong>Handle Traffic Spikes:</strong> Automatically add capacity
+                    during high demand</li>
+                  <li><i class="fas fa-sync"></i> <strong>High Availability:</strong> Replace unhealthy instances
+                    automatically</li>
+                  <li><i class="fas fa-star"></i> <strong>Load Distribution:</strong> Distribute traffic across multiple
+                    instances</li>
                 </ul>
               </div>
               <div class="example-box">
@@ -1765,7 +1799,8 @@ Benefits:
                   <li><i class="fas fa-book"></i> <a
                       href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html"
                       target="_blank" rel="noopener">Auto Scaling Groups</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html"
+                  <li><i class="fas fa-book"></i> <a
+                      href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html"
                       target="_blank" rel="noopener">Application Load Balancer</a></li>
                 </ul>
               </div>
@@ -1843,7 +1878,8 @@ Benefits:
                   <li><i class="fas fa-star"></i> <strong>MariaDB</strong> - MySQL fork with additional features</li>
                   <li><i class="fas fa-chart-bar"></i> <strong>Oracle</strong> - Enterprise database</li>
                   <li><i class="fas fa-star"></i> <strong>Microsoft SQL Server</strong> - Enterprise database</li>
-                  <li><i class="fas fa-bolt"></i> <strong>Amazon Aurora</strong> - AWS-built MySQL/PostgreSQL compatible (5x faster)</li>
+                  <li><i class="fas fa-bolt"></i> <strong>Amazon Aurora</strong> - AWS-built MySQL/PostgreSQL compatible
+                    (5x faster)</li>
                 </ul>
               </div>
               <div class="subsection">
@@ -1963,12 +1999,18 @@ aws rds describe-db-instances --query 'DBInstances[*].[DBInstanceIdentifier,Engi
               <div class="highlight-box">
                 <p><strong>Key Features:</strong></p>
                 <ul>
-                  <li><i class="fas fa-bolt"></i> <strong>Performance:</strong> Single-digit millisecond response time</li>
-                  <li><i class="fas fa-star"></i> <strong>Scalability:</strong> Automatically scales up/down based on traffic</li>
-                  <li><i class="fas fa-lock"></i> <strong>Fully Managed:</strong> No servers to manage, automatic backups</li>
-                  <li><i class="fas fa-globe"></i> <strong>Global Tables:</strong> Multi-region, fully replicated tables</li>
-                  <li><i class="fas fa-dollar-sign"></i> <strong>Pay-per-Request:</strong> Or provision capacity for predictable workloads</li>
-                  <li><i class="fas fa-chart-bar"></i> <strong>Streams:</strong> Capture table changes for real-time processing</li>
+                  <li><i class="fas fa-bolt"></i> <strong>Performance:</strong> Single-digit millisecond response time
+                  </li>
+                  <li><i class="fas fa-star"></i> <strong>Scalability:</strong> Automatically scales up/down based on
+                    traffic</li>
+                  <li><i class="fas fa-lock"></i> <strong>Fully Managed:</strong> No servers to manage, automatic
+                    backups</li>
+                  <li><i class="fas fa-globe"></i> <strong>Global Tables:</strong> Multi-region, fully replicated tables
+                  </li>
+                  <li><i class="fas fa-dollar-sign"></i> <strong>Pay-per-Request:</strong> Or provision capacity for
+                    predictable workloads</li>
+                  <li><i class="fas fa-chart-bar"></i> <strong>Streams:</strong> Capture table changes for real-time
+                    processing</li>
                 </ul>
               </div>
               <div class="subsection">
@@ -2153,11 +2195,13 @@ aws dynamodb delete-item \
               <h3 class="section-title">2.6 References</h3>
               <div class="content-box">
                 <ul>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/rds/index.html" target="_blank" rel="noopener">Amazon RDS
+                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/rds/index.html" target="_blank"
+                      rel="noopener">Amazon RDS
                       Documentation</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/amazondynamodb/index.html" target="_blank"
-                      rel="noopener">Amazon DynamoDB Documentation</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/nosql/" target="_blank" rel="noopener">Choosing Between RDS &
+                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/amazondynamodb/index.html"
+                      target="_blank" rel="noopener">Amazon DynamoDB Documentation</a></li>
+                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/nosql/" target="_blank"
+                      rel="noopener">Choosing Between RDS &
                       DynamoDB</a></li>
                 </ul>
               </div>
@@ -2181,11 +2225,15 @@ aws dynamodb delete-item \
               <div class="highlight-box">
                 <p><strong>CloudWatch Components:</strong></p>
                 <ul>
-                  <li><i class="fas fa-chart-bar"></i> <strong>Metrics:</strong> Time-series data points (CPU, memory, disk usage)</li>
-                  <li><i class="fas fa-exclamation-circle"></i> <strong>Alarms:</strong> Notifications based on metric thresholds</li>
-                  <li><i class="fas fa-star"></i> <strong>Dashboards:</strong> Customizable views of metrics and alarms</li>
+                  <li><i class="fas fa-chart-bar"></i> <strong>Metrics:</strong> Time-series data points (CPU, memory,
+                    disk usage)</li>
+                  <li><i class="fas fa-exclamation-circle"></i> <strong>Alarms:</strong> Notifications based on metric
+                    thresholds</li>
+                  <li><i class="fas fa-star"></i> <strong>Dashboards:</strong> Customizable views of metrics and alarms
+                  </li>
                   <li><i class="fas fa-edit"></i> <strong>Logs:</strong> Collect, store, and analyze log files</li>
-                  <li><i class="fas fa-star"></i> <strong>Events:</strong> Respond to state changes in AWS resources</li>
+                  <li><i class="fas fa-star"></i> <strong>Events:</strong> Respond to state changes in AWS resources
+                  </li>
                 </ul>
               </div>
               <div class="subsection">
@@ -2489,11 +2537,16 @@ fields url
               <div class="highlight-box">
                 <p><strong>What CloudTrail Captures:</strong></p>
                 <ul>
-                  <li><i class="fas fa-lock"></i> <strong>API Calls:</strong> Who made the call, when, from where (IP address)</li>
-                  <li><i class="fas fa-edit"></i> <strong>Console Actions:</strong> User login, resource creation/deletion</li>
-                  <li><i class="fas fa-star"></i> <strong>Service Actions:</strong> AWS services acting on your behalf</li>
-                  <li><i class="fas fa-search"></i> <strong>Resource Changes:</strong> What changed, before/after values</li>
-                  <li><i class="fas fa-exclamation-triangle"></i> <strong>Errors:</strong> Failed API calls and the reason</li>
+                  <li><i class="fas fa-lock"></i> <strong>API Calls:</strong> Who made the call, when, from where (IP
+                    address)</li>
+                  <li><i class="fas fa-edit"></i> <strong>Console Actions:</strong> User login, resource
+                    creation/deletion</li>
+                  <li><i class="fas fa-star"></i> <strong>Service Actions:</strong> AWS services acting on your behalf
+                  </li>
+                  <li><i class="fas fa-search"></i> <strong>Resource Changes:</strong> What changed, before/after values
+                  </li>
+                  <li><i class="fas fa-exclamation-triangle"></i> <strong>Errors:</strong> Failed API calls and the
+                    reason</li>
                 </ul>
               </div>
               <div class="example-box">
@@ -2650,9 +2703,10 @@ aws cloudtrail lookup-events \
               <h3 class="section-title">3.7 References</h3>
               <div class="content-box">
                 <ul>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/cloudwatch/index.html" target="_blank"
-                      rel="noopener">Amazon CloudWatch Documentation</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html"
+                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/cloudwatch/index.html"
+                      target="_blank" rel="noopener">Amazon CloudWatch Documentation</a></li>
+                  <li><i class="fas fa-book"></i> <a
+                      href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html"
                       target="_blank" rel="noopener">AWS CloudTrail User Guide</a></li>
                 </ul>
               </div>
@@ -2680,10 +2734,12 @@ aws cloudtrail lookup-events \
                   <ul>
                     <li><i class="fas fa-dollar-sign"></i> <strong>Pricing:</strong> Highest per-hour cost</li>
                     <li><i class="fas fa-stopwatch"></i> <strong>Commitment:</strong> None - start/stop anytime</li>
-                    <li><i class="fas fa-chart-bar"></i> <strong>Best For:</strong> Unpredictable workloads, development/testing, short-term projects
+                    <li><i class="fas fa-chart-bar"></i> <strong>Best For:</strong> Unpredictable workloads,
+                      development/testing, short-term projects
                     </li>
                     <li><i class="fas fa-check"></i> <strong>Pros:</strong> Maximum flexibility, no upfront costs</li>
-                    <li><i class="fas fa-times"></i> <strong>Cons:</strong> Most expensive option for steady workloads</li>
+                    <li><i class="fas fa-times"></i> <strong>Cons:</strong> Most expensive option for steady workloads
+                    </li>
                   </ul>
                 </div>
                 <div class="example-box">
@@ -2700,10 +2756,13 @@ aws cloudtrail lookup-events \
                   <ul>
                     <li><i class="fas fa-dollar-sign"></i> <strong>Savings:</strong> 40-75% discount vs On-Demand</li>
                     <li><i class="fas fa-stopwatch"></i> <strong>Commitment:</strong> 1 year or 3 years</li>
-                    <li><i class="fas fa-star"></i> <strong>Payment:</strong> All Upfront, Partial Upfront, or No Upfront</li>
-                    <li><i class="fas fa-chart-bar"></i> <strong>Best For:</strong> Steady-state workloads (databases, always-on web servers)</li>
+                    <li><i class="fas fa-star"></i> <strong>Payment:</strong> All Upfront, Partial Upfront, or No
+                      Upfront</li>
+                    <li><i class="fas fa-chart-bar"></i> <strong>Best For:</strong> Steady-state workloads (databases,
+                      always-on web servers)</li>
                     <li><i class="fas fa-check"></i> <strong>Pros:</strong> Significant cost savings</li>
-                    <li><i class="fas fa-times"></i> <strong>Cons:</strong> Locked into commitment, less flexibility</li>
+                    <li><i class="fas fa-times"></i> <strong>Cons:</strong> Locked into commitment, less flexibility
+                    </li>
                   </ul>
                 </div>
                 <div class="example-box">
@@ -2718,12 +2777,16 @@ aws cloudtrail lookup-events \
                 <div class="highlight-box">
                   <p><strong>Characteristics:</strong></p>
                   <ul>
-                    <li><i class="fas fa-dollar-sign"></i> <strong>Savings:</strong> Up to 90% discount vs On-Demand</li>
-                    <li><i class="fas fa-exclamation-triangle"></i> <strong>Risk:</strong> Can be terminated by AWS anytime</li>
-                    <li><i class="fas fa-chart-bar"></i> <strong>Best For:</strong> Fault-tolerant workloads (batch processing, data analysis,
+                    <li><i class="fas fa-dollar-sign"></i> <strong>Savings:</strong> Up to 90% discount vs On-Demand
+                    </li>
+                    <li><i class="fas fa-exclamation-triangle"></i> <strong>Risk:</strong> Can be terminated by AWS
+                      anytime</li>
+                    <li><i class="fas fa-chart-bar"></i> <strong>Best For:</strong> Fault-tolerant workloads (batch
+                      processing, data analysis,
                       testing)</li>
                     <li><i class="fas fa-check"></i> <strong>Pros:</strong> Massive cost savings</li>
-                    <li><i class="fas fa-times"></i> <strong>Cons:</strong> Can be interrupted, not suitable for critical workloads</li>
+                    <li><i class="fas fa-times"></i> <strong>Cons:</strong> Can be interrupted, not suitable for
+                      critical workloads</li>
                   </ul>
                 </div>
                 <div class="example-box">
@@ -2759,7 +2822,8 @@ aws cloudtrail lookup-events \
                   <tr>
                     <td><strong>On-Demand</strong></td>
                     <td>0% (baseline)</td>
-                    <td><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></td>
+                    <td><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                        class="fas fa-star"></i><i class="fas fa-star"></i></td>
                     <td>Development, testing, unpredictable workloads</td>
                   </tr>
                   <tr>
@@ -2777,7 +2841,8 @@ aws cloudtrail lookup-events \
                   <tr>
                     <td><strong>Savings Plans</strong></td>
                     <td>66-72%</td>
-                    <td><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></td>
+                    <td><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                        class="fas fa-star"></i></td>
                     <td>Consistent compute usage across services</td>
                   </tr>
                 </tbody>
@@ -2827,8 +2892,10 @@ aws cloudtrail lookup-events \
               <div class="warning-box">
                 <strong>Free Tier Warnings:</strong>
                 <ul>
-                  <li><i class="fas fa-exclamation-triangle"></i> Monitor usage carefully - exceeding limits incurs charges</li>
-                  <li><i class="fas fa-exclamation-triangle"></i> Some services (like NAT Gateway, EIP when not attached) are NOT free</li>
+                  <li><i class="fas fa-exclamation-triangle"></i> Monitor usage carefully - exceeding limits incurs
+                    charges</li>
+                  <li><i class="fas fa-exclamation-triangle"></i> Some services (like NAT Gateway, EIP when not
+                    attached) are NOT free</li>
                   <li><i class="fas fa-exclamation-triangle"></i> Data transfer OUT beyond free tier is charged</li>
                   <li><i class="fas fa-exclamation-triangle"></i> Set up billing alerts to avoid surprises!</li>
                 </ul>
@@ -3003,7 +3070,8 @@ aws budgets create-budget \
                     </li>
                   </ol>
                   <p><strong>New Monthly Bill:</strong> $1,000 - $189.32 = <strong>$810.68</strong></p>
-                  <p style="color: #28A745; font-weight: bold;"><i class="fas fa-dollar-sign"></i> Total Savings: $189.32/month = $2,271.84/year (19%
+                  <p style="color: #28A745; font-weight: bold;"><i class="fas fa-dollar-sign"></i> Total Savings:
+                    $189.32/month = $2,271.84/year (19%
                     reduction!)</p>
                 </div>
               </div>
@@ -3134,14 +3202,17 @@ aws budgets create-budget \
               <h3 class="section-title">4.7 References</h3>
               <div class="content-box">
                 <ul>
-                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/pricing/" target="_blank" rel="noopener">AWS Pricing
+                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/pricing/" target="_blank"
+                      rel="noopener">AWS Pricing
                       Overview</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/free/" target="_blank" rel="noopener">AWS Free Tier</a></li>
+                  <li><i class="fas fa-book"></i> <a href="https://aws.amazon.com/free/" target="_blank"
+                      rel="noopener">AWS Free Tier</a></li>
                   <li><i class="fas fa-book"></i> <a
                       href="https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html"
                       target="_blank" rel="noopener">AWS Budgets</a></li>
-                  <li><i class="fas fa-book"></i> <a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html"
-                      target="_blank" rel="noopener">AWS Well-Architected Framework</a></li>
+                  <li><i class="fas fa-book"></i> <a
+                      href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html" target="_blank"
+                      rel="noopener">AWS Well-Architected Framework</a></li>
                 </ul>
               </div>
             </div>
@@ -3153,7 +3224,5 @@ aws budgets create-budget \
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>
+
 </html>
-
-
-

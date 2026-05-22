@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IBM DB2 Database Study Notes - Group C: Backup, Recovery, & Disaster Recovery</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
+<body>
+  <!-- Sidebar Navigation -->
+  <button class="sidebar-toggle" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="sidebar-overlay"></div>
+
+  <div class="layout-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3><i class="fas fa-book"></i> Course Navigation</h3>
+        <p>IBM DB2 Administration</p>
+      </div>
+      <div class="sidebar-content">
+        <ul>
+          <li>
+            <a href="#topic24"><i class="fas fa-sitemap"></i> Topic 24: Backup Architecture</a>
+          </li>
+          <li>
+            <a href="#topic25"><i class="fas fa-hdd"></i> Topic 25: Backup Operations</a>
+          </li>
+          <li>
+            <a href="#topic26"><i class="fas fa-undo"></i> Topic 26: Restore & Reconstruction</a>
+          </li>
+          <li>
+            <a href="#topic27"><i class="fas fa-forward"></i> Topic 27: Rollforward & PIT</a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="container">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+
+        <div class="header">
+          <h1><i class="fas fa-server"></i> IBM DB2 Administration (Group C)</h1>
+          <p>Expert Guide to Database Recovery, Transactional Logging, and Advanced Disaster Recovery Operations</p>
+        </div>
+
+        <div class="content">
+          <!-- TOPIC 24: DB2 Backup & Recovery Architecture -->
+          <section id="topic24" class="section">
+            <h2 class="section-title">Topic 24: DB2 Backup & Recovery Architecture</h2>
+
+            <div class="subsection" id="t24-arch">
+              <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
+              <p>
+                In enterprise database administration, planning for system failures is not optional. A robust recovery
+                strategy centers around two core business SLAs:
+              </p>
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-clock"></i> Recovery Time Objective (RTO)</h5>
+                  <p>
+                    The maximum acceptable duration of database downtime after a disaster before service is restored
+                    (e.g., "The database must be online within 15 minutes of a storage failure").
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-history"></i> Recovery Point Objective (RPO)</h5>
+                  <p>
+                    The maximum acceptable data loss measured in time (e.g., "In the event of a catastrophic site
+                    failure, we must not lose more than 5 minutes of transaction data").
+                  </p>
+                </div>
+              </div>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-info-circle"></i> Transactional Logging Architecture (Write-Ahead Logging)</h4>
+                <p>
+                  IBM DB2 guarantees ACID compliance through a highly optimized <strong>Write-Ahead Logging
+                    (WAL)</strong> protocol. Before any data page is modified in the buffer pool and written to
+                  persistent storage, the transactional changes must be recorded sequentially in the <strong>Transaction
+                    Log Buffer</strong> (`LOGBUFSZ`) and subsequently flushed to physical log files on disk by the log
+                  writer Engine Dispatchable Unit (EDU) known as <code>db2loggw</code>.
+                </p>
+                <p>
+                  This logging structure consists of the following components:
+                </p>
+                <ul>
+                  <li><strong>Active Logs:</strong> Log files containing records of active, uncommitted transactions, or
+                    committed transactions whose dirty database pages have not yet been flushed from the buffer pools to
+                    disk. These are required for crash recovery.</li>
+                  <li><strong>Archive Logs:</strong> Completed active logs that are no longer needed for crash recovery
+                    but are kept intact in an external storage vault. They are required to roll forward restored backup
+                    images.</li>
+                  <li><strong>Primary Logs (`LOGPRIMARY`):</strong> Statically allocated log files pre-created when the
+                    database is activated. This prevents runtime delay overhead during transaction spikes.</li>
+                  <li><strong>Secondary Logs (`LOGSECOND`):</strong> Dynamic, on-demand log files created by the
+                    database manager only if the primary logs become completely full due to massive transactional
+                    volume.</li>
+                </ul>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-redo"></i> Circular Logging (Default)</h5>
+                  <p>
+                    In this mode, DB2 overwrites old, committed log files sequentially in a ring buffer. Once the
+                    transactions in a log file are committed and their associated dirty data pages are flushed to disk,
+                    the log file is marked reusable.
+                  </p>
+                  <p>
+                    <strong>Limitations:</strong> Restricts the database to crash recovery (automatic rollback of
+                    uncommitted work on startup) and **offline-only backups**. You cannot roll forward transactions.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-archive"></i> Archive Logging (Log Retention)</h5>
+                  <p>
+                    Activated by setting the database configuration parameter <code>LOGARCHMETH1</code> to a safe
+                    archival destination (e.g., local disk folder, tape drive, or Tivoli Storage Manager). Once a
+                    primary log file becomes full, DB2 marks it for archiving and spawns background writer threads to
+                    copy it to the secure archive location while continuing to write to other active logs.
+                  </p>
+                  <p>
+                    <strong>Benefits:</strong> Enables **live online hot backups**, online tablespace-level backups, and
+                    Point-In-Time (PIT) rollforward recovery.
+                  </p>
+                </div>
+              </div>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-check-circle"></i> Backup Classification and Mechanics</h4>
+                <ul>
+                  <li>
+                    <strong>Offline Backup:</strong> Requires exclusive database access. No applications can connect,
+                    and all active connections must be forced off. The database is frozen, and its exact storage files
+                    are copied.
+                  </li>
+                  <li>
+                    <strong>Online Backup:</strong> Executed live while client transactions read and write to the
+                    tables. It captures a snapshot of the data pages while writing concurrent changes into the backup
+                    image's log stream to guarantee consistency upon restore. Requires archive logging to be active.
+                  </li>
+                  <li>
+                    <strong>Full Backup:</strong> A complete baseline copy of all used data pages within the database.
+                  </li>
+                  <li>
+                    <strong>Incremental Backup (Cumulative):</strong> A smaller backup containing only the data pages
+                    that have been modified since the <em>last successful full backup</em>.
+                  </li>
+                  <li>
+                    <strong>Incremental Delta Backup (Non-Cumulative):</strong> An even smaller backup containing only
+                    the data pages that have been modified since the <em>last successful backup of any type</em> (full,
+                    incremental, or delta).
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t24-syntax">
+              <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
+              <p>
+                To control database recoverability, DBAs update parameters inside the Database Configuration (`DB CFG`)
+                file using the Command Line Processor (CLP).
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Sizing Recovery Logs</div>
+                <pre><code><span class="comment"># 1. Update the number of statically pre-allocated primary logs</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING LOGPRIMARY 20"
+
+<span class="comment"># 2. Update the number of dynamic secondary logs</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING LOGSECOND 10"
+
+<span class="comment"># 3. Update the size of each log file (specified in 4KB pages; 8192 * 4KB = 32MB per log file)</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING LOGFILSIZ 8192"
+
+<span class="comment"># 4. Check the updated log configuration parameters</span>
+db2 "GET DATABASE CONFIGURATION FOR ITIDB" | grep -E "LOGPRIMARY|LOGSECOND|LOGFILSIZ"</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Enabling & Disabling Archive Logging</div>
+                <pre><code><span class="comment"># 1. Activate Archive Logging by pointing LOGARCHMETH1 to a secure disk folder</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING LOGARCHMETH1 DISK:/db2/archive_logs"
+
+<span class="comment"># Note: When enabling archive logging, the database enters a "backup pending" state.</span>
+<span class="comment"># You MUST execute a full offline backup to establish a recovery baseline.</span>
+db2 "BACKUP DATABASE ITIDB TO /db2/backups"
+
+<span class="comment"># 2. Deactivate Archive Logging (Revert to Circular Logging)</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING LOGARCHMETH1 OFF"
+
+<span class="comment"># 3. Check logging status and paths</span>
+db2 "GET DATABASE CONFIGURATION FOR ITIDB" | grep -i logarch</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t24-lab">
+              <h3 class="subsection-title">3. Industry-Standard Lab: High-Transaction Retail Banking System</h3>
+              <p>
+                <strong>Scenario:</strong> Apex Banking Corp runs a core retail banking database (`APEXBANK`) that
+                processes a peak of 8,000 transactions per second (TPS). The security policy mandates an **RPO of 0 (no
+                committed data loss)** and an **RTO of less than 30 minutes**.
+              </p>
+              <p>
+                As the Lead DBA, you must size the active log files to handle dynamic workloads without causing
+                application wait-states, configure archive logging, and verify the physical directories.
+              </p>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-calculator"></i> Active Log Sizing Math & Calculation</h4>
+                <ul>
+                  <li>Average transaction size in logs = **4 KB** (1 page).</li>
+                  <li>Peak Workload = **8,000 transactions/sec** = **32 MB of log data per second**.</li>
+                  <li>We want active logs to hold at least **15 minutes** of concurrent uncommitted transaction history
+                    to prevent system stalls during massive batch processing:
+                    <br /><code>32 MB/sec &times; 900 seconds = 28,800 MB (approx 28.8 GB) of active log space required</code>.
+                  </li>
+                  <li>We select:
+                    <br /><code>LOGFILSIZ = 65536</code> (65536 &times; 4KB = 256MB per log file).
+                    <br /><code>LOGPRIMARY = 100</code> (100 &times; 256MB = 25.6GB primary active space).
+                    <br /><code>LOGSECOND = 20</code> (20 &times; 256MB = 5.12GB dynamic buffer space).
+                    <br />Total Active Log Space capacity = **30.72 GB**.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Sizing and Activation Commands</div>
+                <pre><code><span class="comment"># Ensure directories exist with proper system permissions</span>
+mkdir -p /db2/active_logs /db2/archive_logs /db2/backups
+chown -R db2inst1:db2iadm1 /db2/active_logs /db2/archive_logs /db2/backups
+
+<span class="comment"># Connect to the database</span>
+db2 "CONNECT TO APEXBANK"
+
+<span class="comment"># Configure the optimized log sizing parameters</span>
+db2 "UPDATE DB CFG FOR APEXBANK USING LOGPRIMARY 100"
+db2 "UPDATE DB CFG FOR APEXBANK USING LOGSECOND 20"
+db2 "UPDATE DB CFG FOR APEXBANK USING LOGFILSIZ 65536"
+
+<span class="comment"># Relocate active logs to a dedicated high-speed SSD volume to prevent IO bottleneck</span>
+db2 "UPDATE DB CFG FOR APEXBANK USING NEWLOGPATH /db2/active_logs"
+
+<span class="comment"># Enable Archive Logging</span>
+db2 "UPDATE DB CFG FOR APEXBANK USING LOGARCHMETH1 DISK:/db2/archive_logs"
+
+<span class="comment"># Terminate connections to apply configuration changes</span>
+db2 "TERMINATE"
+db2 "DEACTIVATE DATABASE APEXBANK"
+
+<span class="comment"># Database is now in Backup Pending. We must execute a baseline offline backup.</span>
+db2 "BACKUP DATABASE APEXBANK TO /db2/backups"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Expected Console Output Table</h4>
+                <pre>
+$ db2 "BACKUP DATABASE APEXBANK TO /db2/backups"
+
+Backup successful. The timestamp for this backup image is : 20260522123512
+
+$ db2 "CONNECT TO APEXBANK"
+$ db2 "GET DB CFG FOR APEXBANK" | grep -E "LOGPRIMARY|LOGSECOND|LOGFILSIZ|Path to log files|LOGARCHMETH1"
+
+ Number of primary log files (LOGPRIMARY)      = 100
+ Number of secondary log files (LOGSECOND)    = 20
+ Log file size (4KB) (LOGFILSIZ)              = 65536
+ Path to log files                            = /db2/active_logs/NODE0000/LOGSTREAM0000/
+ First log archive method (LOGARCHMETH1)      = DISK:/db2/archive_logs/</pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t24-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-bolt"></i> Log Buffer Tuning (`LOGBUFSZ`)</h5>
+                  <p>
+                    The <code>LOGBUFSZ</code> parameter specifies the size of the database shared memory buffer
+                    allocated to hold transaction log records before flushing them to disk.
+                  </p>
+                  <p>
+                    <strong>Best Practice:</strong> Set <code>LOGBUFSZ</code> to at least **4096 pages (16MB)** for
+                    high-transaction environments. This prevents the log buffer from filling up completely and forcing
+                    the application agents to block, waiting for synchronous disk I/O.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-shield-alt"></i> Dedicated Storage Isolation</h5>
+                  <p>
+                    Never place **Active Logs**, **Archive Logs**, and **Data Tablespaces** on the same physical disk
+                    array. A single drive failure could wipe out both the data and the logs, violating RPO/RTO mandates.
+                    Use RAID 10 SSD arrays for active logs to maximize sequential write throughput.
+                  </p>
+                </div>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Troubleshooting Common Error: Active Log Space Full
+                  (SQL0964C)</h4>
+                <p>
+                  <strong>Root Cause:</strong> All primary and secondary active log files are full. This occurs when:
+                </p>
+                <ul>
+                  <li>An application executes massive data changes (e.g., deleting 10 million rows) in a single
+                    transaction without running <code>COMMIT</code>.</li>
+                  <li>A connection hangs while holding an active transaction open, preventing DB2 from reusing completed
+                    log files.</li>
+                </ul>
+                <p>
+                  <strong>DB2 Diagnostic Log Entry (`db2diag.log`):</strong>
+                </p>
+                <pre>
+2026-05-22-12.45.10.123456+180 I1024345A678        LEVEL: Severe
+PID     : 14520                TID : 1399876543    PROC : db2sysc 0
+INSTANCE: db2inst1             NODE : 000          DB   : APEXBANK
+APPHDL  : 0-4217               APPID: 192.168.10.5.54321.2605220945
+EDUUSER : db2agent (APEXBANK)  pgid : 14520
+FUNCTION: DB2 UDB, data protection services, sqlpWriteToLog, probe:420
+MESSAGE : ADM1822C  The active log is full. The primary log space size is 
+          25600 megabytes and the secondary log space size is 5120 megabytes. 
+          All matching active transactions will be rolled back.</pre>
+                <p>
+                  <strong>DBA Remedy Protocol:</strong>
+                </p>
+                <ol>
+                  <li>
+                    Locate the rogue application holding the oldest uncommitted transaction:
+                    <pre>db2 "SELECT APPLICATION_HANDLE, UOW_START_TIME, UOW_LOG_SPACE_USED, AUTHID FROM SYSIBMADM.LOG_UTILIZATION ORDER BY UOW_LOG_SPACE_USED DESC"</pre>
+                  </li>
+                  <li>
+                    Force off the offending application handle:
+                    <pre>db2 "FORCE APPLICATION (4217)"</pre>
+                  </li>
+                  <li>
+                    Dynamically increase the secondary log buffer capacity to buy time for the rollback to complete
+                    without shutting down the database manager:
+                    <pre>db2 "UPDATE DB CFG FOR APEXBANK USING LOGSECOND 40"</pre>
+                  </li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="subsection" id="t24-summary">
+              <h3 class="subsection-title">5. Topic Summary Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Configuration Parameter</th>
+                      <th>Default Value</th>
+                      <th>Recommended Enterprise Sizing</th>
+                      <th>Operational Scope</th>
+                      <th>Recovery Role</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>`LOGPRIMARY`</strong></td>
+                      <td>3 (small environment)</td>
+                      <td>30 to 100 files</td>
+                      <td>Static allocation at DB activation.</td>
+                      <td>Ensures immediate log space availability without dynamic OS creation lag.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>`LOGSECOND`</strong></td>
+                      <td>2 files</td>
+                      <td>10 to 40 files</td>
+                      <td>Dynamic allocation during workload spikes.</td>
+                      <td>Safety valve. Provides overflow capacity before transaction aborts.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>`LOGFILSIZ`</strong></td>
+                      <td>1000 pages (4MB)</td>
+                      <td>8192 to 65536 pages (32MB - 256MB)</td>
+                      <td>Physical file capacity threshold.</td>
+                      <td>Defines the boundaries of active log files before archiving occurs.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>`LOGARCHMETH1`</strong></td>
+                      <td>OFF (Circular)</td>
+                      <td>DISK:/path/to/archive_vault/</td>
+                      <td>Database logging mode toggle.</td>
+                      <td>Enables log retention, online hot backups, and Point-In-Time recovery.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>`LOGBUFSZ`</strong></td>
+                      <td>256 pages (1MB)</td>
+                      <td>4096 to 16384 pages (16MB - 64MB)</td>
+                      <td>In-Memory log buffer size.</td>
+                      <td>Speeds up transaction commits by caching log records in memory before disk writes.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOPIC 25: DB2 Database Backup Operations -->
+          <section id="topic25" class="section">
+            <h2 class="section-title">Topic 25: DB2 Database Backup Operations</h2>
+
+            <div class="subsection" id="t25-concept">
+              <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
+              <p>
+                Executing backup operations in a high-concurrency production database requires deep knowledge of how DB2
+                reads data and writes backup streams without impacting operational response times.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-lock-open"></i> The Internals of DB2 Online Backup</h4>
+                <p>
+                  When an <code>ONLINE</code> backup is initiated, DB2 does not lock the tables. Instead, it reads the
+                  data pages sequentially. If an application updates a record on a page that has already been backed up,
+                  or is currently being read, DB2 allows it.
+                </p>
+                <p>
+                  To handle this data drift, the backup utility tracks the starting **Log Sequence Number (LSN)** and
+                  ending **LSN** of the backup process. When the backup finishes, the utility extracts all active
+                  transaction log files that were generated during the backup execution and bundles them directly inside
+                  the backup image using the <code>INCLUDE LOGS</code> clause. This ensures that when the backup is
+                  restored, it can be immediately rolled forward to a transactionally consistent state.
+                </p>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-columns"></i> Tablespace-Level Backups</h5>
+                  <p>
+                    Rather than backing up an entire multi-terabyte database, DB2 allows you to target individual
+                    tablespaces (e.g., <code>USERSPACE1</code>).
+                  </p>
+                  <p>
+                    <strong>Use Case:</strong> Back up active transaction tablespaces daily while backing up static
+                    history or read-only reporting tablespaces weekly. This dramatically reduces the backup window and
+                    disk space.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-history"></i> The `TRACKMOD` Change Tracking Engine</h5>
+                  <p>
+                    Incremental and delta backups rely on the **Track Modified Pages (`TRACKMOD`)** database
+                    configuration parameter.
+                  </p>
+                  <p>
+                    When <code>TRACKMOD</code> is set to <code>ON</code>, DB2 reserves a special bit flag in the header
+                    of each page. Any transaction that modifies a page sets this flag. The backup utility then simply
+                    scans the page headers and copies only the flagged pages, avoiding full-table scans.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="subsection" id="t25-syntax">
+              <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
+              <p>
+                Here is the syntax used by DBAs to configure change tracking, compress backups, and run online, offline,
+                incremental, and tablespace backups.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Sizing and Change Tracking</div>
+                <pre><code><span class="comment"># 1. Enable track modification parameter for incremental backups</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR ITIDB USING TRACKMOD ON"
+
+<span class="comment"># 2. Restart the database to activate TRACKMOD</span>
+db2 "FORCE APPLICATION ALL"
+db2 "DEACTIVATE DATABASE ITIDB"
+db2 "ACTIVATE DATABASE ITIDB"
+
+<span class="comment"># 3. Take mandatory full baseline backup</span>
+db2 "BACKUP DATABASE ITIDB TO /db2/backups"</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Standard Production Backup Suite</div>
+                <pre><code><span class="comment"># A. Full Offline Backup</span>
+db2 "BACKUP DATABASE ITIDB TO /db2/backups"
+
+<span class="comment"># B. Full Online Backup (Including active logs)</span>
+db2 "BACKUP DATABASE ITIDB ONLINE TO /db2/backups INCLUDE LOGS"
+
+<span class="comment"># C. Compressed Online Backup (Saves up to 70% storage space)</span>
+db2 "BACKUP DATABASE ITIDB ONLINE TO /db2/backups COMPRESS INCLUDE LOGS"
+
+<span class="comment"># D. Cumulative Incremental Backup (Captures changes since last full backup)</span>
+db2 "BACKUP DATABASE ITIDB ONLINE INCREMENTAL TO /db2/backups INCLUDE LOGS"
+
+<span class="comment"># E. Delta Incremental Backup (Captures changes since last backup of any type)</span>
+db2 "BACKUP DATABASE ITIDB ONLINE INCREMENTAL DELTA TO /db2/backups INCLUDE LOGS"
+
+<span class="comment"># F. Tablespace-Level Online Backup</span>
+db2 "BACKUP DATABASE ITIDB TABLESPACE (USERSPACE1, SYSCATSPACE) ONLINE TO /db2/backups INCLUDE LOGS"</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t25-lab">
+              <h3 class="subsection-title">3. Industry-Standard Lab: Hot Backups & Incremental Strategy</h3>
+              <p>
+                <strong>Scenario:</strong> "StoreFront Global" runs a highly active 24/7 E-commerce database
+                (`STOREDB`). The database contains a massive transactional tablespace `SALESTSPACE` and a system
+                tablespace `SYSCATSPACE`. To minimize storage costs, you must implement a weekly full online backup,
+                daily cumulative incremental backups, and hourly delta backups.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Strategy Execution Lab</div>
+                <pre><code><span class="comment"># 1. Connect to the database</span>
+db2 "CONNECT TO STOREDB"
+
+<span class="comment"># 2. Ensure Track Modification is active for incremental backups</span>
+db2 "UPDATE DATABASE CONFIGURATION FOR STOREDB USING TRACKMOD ON"
+db2 "TERMINATE"
+db2 "DEACTIVATE DATABASE STOREDB"
+db2 "BACKUP DATABASE STOREDB TO /db2/backups" <span class="comment"># Baseline</span>
+
+<span class="comment"># 3. Simulate Day 1 Transactions</span>
+db2 "CONNECT TO STOREDB"
+db2 "CREATE TABLE Customers (CustID INT, CustName VARCHAR(50))"
+db2 "INSERT INTO Customers VALUES (1, 'Jane Doe'), (2, 'John Smith')"
+db2 "COMMIT"
+
+<span class="comment"># 4. Take the Day 1 Full Online Backup</span>
+db2 "BACKUP DATABASE STOREDB ONLINE TO /db2/backups INCLUDE LOGS"
+
+<span class="comment"># 5. Simulate Day 2 Transactions (Additional customers inserted)</span>
+db2 "INSERT INTO Customers VALUES (3, 'Alice Cooper')"
+db2 "COMMIT"
+
+<span class="comment"># 6. Take Day 2 Daily Cumulative Incremental Backup</span>
+db2 "BACKUP DATABASE STOREDB ONLINE INCREMENTAL TO /db2/backups INCLUDE LOGS"
+
+<span class="comment"># 7. Simulate Day 2 Hourly Transaction (Adding one more customer)</span>
+db2 "INSERT INTO Customers VALUES (4, 'Bob Marley')"
+db2 "COMMIT"
+
+<span class="comment"># 8. Take Day 2 Hourly Delta Backup</span>
+db2 "BACKUP DATABASE STOREDB ONLINE INCREMENTAL DELTA TO /db2/backups INCLUDE LOGS"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Database History Directory & Backup Files Output</h4>
+                <p>
+                  To verify the backups, we inspect the database history using the <code>LIST HISTORY</code> command:
+                </p>
+                <pre>
+$ db2 "LIST HISTORY BACKUP ALL FOR STOREDB"
+
+Op Obj Timestamp      Type Dev Earliest Log Seq  Backup Image File Path
+-- --- -------------- ---- --- ----------------- ------------------------------------------
+B  D   20260522130000  F    D  S0000000.LOG      /db2/backups/STOREDB.0.db2inst1.DBPART000.20260522130000.001
+B  D   20260522131000  F    D  S0000001.LOG      /db2/backups/STOREDB.0.db2inst1.DBPART000.20260522131000.001
+B  D   20260522132000  I    D  S0000002.LOG      /db2/backups/STOREDB.0.db2inst1.DBPART000.20260522132000.001
+B  D   20260522133000  D    D  S0000003.LOG      /db2/backups/STOREDB.0.db2inst1.DBPART000.20260522133000.001
+
+* Type Legend: F = Full Backup, I = Cumulative Incremental, D = Non-Cumulative Delta</pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t25-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-cogs"></i> Backup Performance Tuning Parameters</h4>
+                <p>
+                  To prevent the backup utility from hogging all system CPU and I/O resources, or to speed up huge
+                  backups, use tuning parameters:
+                </p>
+                <ul>
+                  <li><strong>`PARALLELISM n`:</strong> Spawns <code>n</code> thread readers to read tablespaces in
+                    parallel. Set <code>n</code> equal to the number of physical CPU cores allocated.</li>
+                  <li><strong>`WITH num-buffers BUFFERS`:</strong> Allocates memory buffers. Ideal for preventing I/O
+                    stalls.</li>
+                  <li><strong>`BUFFER size`:</strong> Sets the size of the backup buffers (specified in 4KB pages). Set
+                    this parameter to be a multiple of the tablespace extent size.</li>
+                </ul>
+                <div class="code-example">
+                  <div class="code-language">Tuned Online Backup</div>
+                  <pre><code>db2 "BACKUP DATABASE STOREDB ONLINE TO /db2/backups WITH 4 BUFFERS BUFFER 2048 PARALLELISM 4 INCLUDE LOGS"</code></pre>
+                </div>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Troubleshooting Common Backup Errors</h4>
+                <ul>
+                  <li>
+                    <strong>SQL2426N ("The incremental backup failed because tracking is not enabled")</strong>
+                    <br /><em>Root Cause:</em> An incremental or delta backup was requested, but <code>TRACKMOD</code>
+                    is set to <code>OFF</code>.
+                    <br /><em>Remedy:</em> Run:
+                    <pre>db2 "UPDATE DB CFG FOR STOREDB USING TRACKMOD ON"
+db2 "DEACTIVATE DATABASE STOREDB"
+db2 "BACKUP DATABASE STOREDB TO /db2/backups" <span class="comment"># establish baseline</span></pre>
+                  </li>
+                  <li>
+                    <strong>SQL1035N ("The database is currently in use")</strong>
+                    <br /><em>Root Cause:</em> An offline backup was executed, but active users or application
+                    connections are currently connected to the database.
+                    <br /><em>Remedy:</em> Force off connections and deactivate:
+                    <pre>db2 "FORCE APPLICATION ALL"
+db2 "DEACTIVATE DATABASE STOREDB"
+db2 "BACKUP DATABASE STOREDB TO /db2/backups"</pre>
+                  </li>
+                  <li>
+                    <strong>Backup Storage Cleanup & Pruning:</strong>
+                    <br />Disk space will exhaust if backup files are never deleted. Use the <code>PRUNE HISTORY</code>
+                    command to clean up:
+                    <pre>db2 "PRUNE HISTORY 20260522 AND DELETE" <span class="comment"># Deletes history records and physical backup files older than May 22, 2026</span></pre>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t25-summary">
+              <h3 class="subsection-title">5. Topic Summary Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Backup Strategy</th>
+                      <th>Logging Requirement</th>
+                      <th>Relative Size</th>
+                      <th>Restore Sequence Complexity</th>
+                      <th>Primary DBA Advantage</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Full Offline</strong></td>
+                      <td>Circular or Archive</td>
+                      <td>100% (Baseline)</td>
+                      <td>Low. Direct single-image restoration.</td>
+                      <td>Simple recovery. Does not require logs.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Full Online</strong></td>
+                      <td>Archive Logging</td>
+                      <td>100% + logs size</td>
+                      <td>Medium. Requires rolling forward the logs.</td>
+                      <td>No downtime. System remains 100% active.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Cumulative Incremental</strong></td>
+                      <td>Archive + `TRACKMOD ON`</td>
+                      <td>Small (Changes since full backup)</td>
+                      <td>Medium. Restore full backup, then restore last incremental.</td>
+                      <td>Saves significant disk storage and network overhead.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Delta Incremental</strong></td>
+                      <td>Archive + `TRACKMOD ON`</td>
+                      <td>Very Small (Changes since any backup)</td>
+                      <td>High. Restore full backup, then restore all sequential deltas.</td>
+                      <td>Fastest backup completion time; minimal storage footprint.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOPIC 26: DB2 Database Restore & Reconstruction -->
+          <section id="topic26" class="section">
+            <h2 class="section-title">Topic 26: DB2 Database Restore & Reconstruction</h2>
+
+            <div class="subsection" id="t26-concept">
+              <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
+              <p>
+                When hardware fails or corruption occurs, the DBA must perform a restoration. Understanding the database
+                restore engine's internal execution model is critical for minimizing system downtime.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-cogs"></i> Database Restore Engine Internals</h4>
+                <p>
+                  When the <code>RESTORE</code> command is executed, DB2 performs the following background tasks:
+                </p>
+                <ol>
+                  <li>Reads the backup image header, extracting database properties, collating codeset rules, and
+                    tablespace metadata structure definitions.</li>
+                  <li>Checks if the target database exists. If it does not, DB2 auto-creates the physical shell database
+                    with matching configuration parameters.</li>
+                  <li>Allocates system memory buffers and reads data page chunks from the backup stream.</li>
+                  <li>Verifies and recreates physical tablespace containers (directories or raw partitions) on the
+                    target disk.</li>
+                  <li>Writes the data pages into their respective container files.</li>
+                  <li>If requested, extracts archived log files embedded inside the backup image and places them in a
+                    target folder.</li>
+                </ol>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-route"></i> Redirected Restore Architecture</h5>
+                  <p>
+                    If the physical disk array containing the tablespace containers fails, or if you are migrating the
+                    database to a new server, the restore will fail because the target directories do not exist or are
+                    corrupted.
+                  </p>
+                  <p>
+                    <strong>Solution:</strong> A **Redirected Restore**. This process allows you to intercept the
+                    restore stream, change the physical paths of database tablespace containers, and then resume writing
+                    data pages to the new storage paths.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-toolbox"></i> Online Tablespace Restore</h5>
+                  <p>
+                    If a single physical drive hosting transaction tablespace containers fails, DB2 does not require you
+                    to restore the entire database. You can perform an **Online Tablespace Restore** on the affected
+                    tablespace while all other database tablespaces remain online and accessible to applications.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="subsection" id="t26-syntax">
+              <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
+              <p>
+                These are the fundamental commands used to execute standard restores, extract recovery logs, and run
+                multi-step redirected container restores.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Standard Restore Commands</div>
+                <pre><code><span class="comment"># 1. Simple restore from backup directory</span>
+db2 "RESTORE DATABASE ITIDB FROM /db2/backups TAKEN AT 20260522131000"
+
+<span class="comment"># 2. Restore database and extract embedded active logs into a specific recovery directory</span>
+db2 "RESTORE DATABASE ITIDB FROM /db2/backups TAKEN AT 20260522131000 LOGTARGET /db2/extracted_logs"
+
+<span class="comment"># 3. Restore a single specific tablespace (e.g. USERSPACE1) while database is online</span>
+db2 "RESTORE DATABASE ITIDB TABLESPACE (USERSPACE1) ONLINE FROM /db2/backups TAKEN AT 20260522131000"</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Redirected Restore Flow</div>
+                <pre><code><span class="comment"># Step 1: Initiate Redirected Restore (Database goes into RESTORE_PENDING state)</span>
+db2 "RESTORE DATABASE ITIDB FROM /db2/backups TAKEN AT 20260522131000 REDIRECT"
+
+<span class="comment"># Step 2: Redefine storage paths for affected tablespaces</span>
+<span class="comment"># Format: SET TABLESPACE CONTAINERS FOR &lt;tablespace_id&gt; USING (PATH '&lt;new_path&gt;')</span>
+db2 "SET TABLESPACE CONTAINERS FOR 3 USING (PATH '/safe_disk/userspace1')"
+
+<span class="comment"># Step 3: Command DB2 to compile changes and complete the restoration</span>
+db2 "RESTORE DATABASE ITIDB CONTINUE"</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t26-lab">
+              <h3 class="subsection-title">3. Industry-Standard Lab: Disaster Recovery Redirected Restore</h3>
+              <p>
+                <strong>Scenario:</strong> "Capital Trust" database server (`TRUSTDB`) suffered a catastrophic disk
+                array crash on volume <code>/dbdata/old_storage</code>, destroying the containers of the system catalog
+                space (`SYSCATSPACE` ID 0) and the primary user tablespace (`USERSPACE1` ID 3).
+              </p>
+              <p>
+                As the DBA on duty, you have swapped the broken array with new storage mounted at
+                <code>/safe_storage</code>. You must perform a **Redirected Restore** to rebuild the database container
+                structures and verify the restoration.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Redirected Restore Lab Execution</div>
+                <pre><code><span class="comment"># Ensure the new target physical directories exist</span>
+mkdir -p /safe_storage/syscat /safe_storage/user1
+
+<span class="comment"># Step 1: Start the redirected restore sequence</span>
+db2 "RESTORE DATABASE TRUSTDB FROM /db2/backups TAKEN AT 20260522131000 REDIRECT"
+
+<span class="comment"># Step 2: Query the tablespace IDs and physical containers defined in the backup image</span>
+db2 "LIST TABLESPACE CONTAINERS FOR TRUSTDB"
+
+<span class="comment"># Step 3: Re-map containers for SYSCATSPACE (Tablespace ID 0)</span>
+db2 "SET TABLESPACE CONTAINERS FOR 0 USING (PATH '/safe_storage/syscat')"
+
+<span class="comment"># Step 4: Re-map containers for USERSPACE1 (Tablespace ID 3)</span>
+db2 "SET TABLESPACE CONTAINERS FOR 3 USING (PATH '/safe_storage/user1')"
+
+<span class="comment"># Step 5: Execute the continue restore command to commit the container mapping changes</span>
+db2 "RESTORE DATABASE TRUSTDB CONTINUE"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Expected Redirected Restore Console Output</h4>
+                <pre>
+$ db2 "RESTORE DATABASE TRUSTDB FROM /db2/backups TAKEN AT 20260522131000 REDIRECT"
+SQL2539W  The database was restored but the container paths must be redirected.
+Command completed successfully.
+
+$ db2 "SET TABLESPACE CONTAINERS FOR 0 USING (PATH '/safe_storage/syscat')"
+DB20000I  The SET TABLESPACE CONTAINERS command completed successfully.
+
+$ db2 "SET TABLESPACE CONTAINERS FOR 3 USING (PATH '/safe_storage/user1')"
+DB20000I  The SET TABLESPACE CONTAINERS command completed successfully.
+
+$ db2 "RESTORE DATABASE TRUSTDB CONTINUE"
+DB20000I  The RESTORE DATABASE command completed successfully.
+The database is now in ROLL-FORWARD PENDING state.</pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t26-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
+
+              <div class="advantages-box">
+                <h4><i class="fas fa-file-code"></i> Redirected Restore Automation Scripting</h4>
+                <p>
+                  For complex production databases containing dozens of tablespaces and containers, writing container
+                  redirection commands manually during a high-pressure disaster recovery incident is error-prone.
+                </p>
+                <p>
+                  <strong>Best Practice:</strong> Always generate a pre-configured redirected restore script from the
+                  backup image itself using the <code>REDIRECT GENERATE SCRIPT</code> clause:
+                </p>
+                <div class="code-example">
+                  <div class="code-language">Generate Recovery Script</div>
+                  <pre><code>db2 "RESTORE DATABASE TRUSTDB FROM /db2/backups TAKEN AT 20260522131000 REDIRECT GENERATE SCRIPT recover_trustdb.clp"</code></pre>
+                </div>
+                <p>
+                  This generates a fully formatted shell script `recover_trustdb.clp` containing all required
+                  <code>SET TABLESPACE CONTAINERS</code> command templates, which you can simply edit and execute.
+                </p>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Troubleshooting Common Restore Errors</h4>
+                <ul>
+                  <li>
+                    <strong>SQL2539W ("The database already exists. Overwrite? (y/n)")</strong>
+                    <br /><em>Root Cause:</em> A safety warning indicating you are attempting to restore a database over
+                    an existing active database instance of the same name.
+                    <br /><em>Remedy:</em> Add the <code>REPLACE</code> keyword to the command or enter <code>y</code>
+                    in interactive terminals:
+                    <pre>db2 "RESTORE DATABASE TRUSTDB FROM /db2/backups TAKEN AT 20260522131000 REPLACE"</pre>
+                  </li>
+                  <li>
+                    <strong>SQL2519N ("Restore failed because database configuration is incompatible")</strong>
+                    <br /><em>Root Cause:</em> An attempt was made to restore a backup taken on a different DB2 version
+                    or platform (e.g., restoring database from DB2 V11.5 onto a server running DB2 V10.5).
+                    <br /><em>Remedy:</em> DB2 does not support restoring backups to older database engine versions.
+                    Upgrade the target engine to be equal to or higher than the backup source's version.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t26-summary">
+              <h3 class="subsection-title">5. Topic Summary Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Restore Operation</th>
+                      <th>Command Modifiers</th>
+                      <th>Target File Destination</th>
+                      <th>Post-Restore DB State</th>
+                      <th>Best Use Case</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Standard Database Restore</strong></td>
+                      <td>None required</td>
+                      <td>Original storage folders</td>
+                      <td>ROLL-FORWARD PENDING or RESTORE_PENDING</td>
+                      <td>Simple recovery from backup where original drive structures are fully intact.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Online Tablespace Restore</strong></td>
+                      <td>`TABLESPACE (name)`</td>
+                      <td>Specific tablespace files</td>
+                      <td>ROLL-FORWARD PENDING (for selected tablespace only)</td>
+                      <td>Minimizing impact. Resolves physical drive failure of one tablespace while DB remains online.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Redirected Restore</strong></td>
+                      <td>`REDIRECT` & `CONTINUE`</td>
+                      <td>New defined paths</td>
+                      <td>ROLL-FORWARD PENDING</td>
+                      <td>Disaster recovery, hardware migrations, or re-allocating filesystems to new volumes.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Restore with Log Extraction</strong></td>
+                      <td>`LOGTARGET /path/`</td>
+                      <td>Specified log folder</td>
+                      <td>ROLL-FORWARD PENDING</td>
+                      <td>Point-in-Time recovery where active transaction logs are required but not present on disk.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOPIC 27: DB2 Rollforward Recovery & Point-In-Time Recovery -->
+          <section id="topic27" class="section">
+            <h2 class="section-title">Topic 27: DB2 Rollforward Recovery & Point-In-Time Recovery</h2>
+
+            <div class="subsection" id="t27-concept">
+              <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
+              <p>
+                Restoring a database backup is only the first step in disaster recovery. A restored backup image only
+                represents the state of the database at the precise moment the backup was taken. Any transactions
+                executed after the backup timestamp are missing.
+              </p>
+
+              <div class="definition-box">
+                <h4><i class="fas fa-forward"></i> The Rollforward Recovery Engine</h4>
+                <p>
+                  To restore data up to the point of failure, DB2 utilizes the **Rollforward Recovery Engine**. This
+                  engine reads sequential archived transaction logs and reapplies all committed changes to the restored
+                  data pages.
+                </p>
+                <p>
+                  This execution process runs in two distinct phases:
+                </p>
+                <ol>
+                  <li><strong>REDO Phase:</strong> The engine scans the transaction log sequence starting from the
+                    backup checkpoint LSN. It reapplies all transaction records (inserts, updates, deletes, DDL changes)
+                    to the database pages, bringing the database up to the point of failure.</li>
+                  <li><strong>UNDO Phase:</strong> Once the target recovery boundary is reached, the engine scans
+                    backward to identify any transactions that were active (in-flight) but uncommitted at that boundary.
+                    It rolls back these uncommitted transactions to guarantee transactional integrity.</li>
+                </ol>
+              </div>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-lock"></i> The ROLL-FORWARD PENDING State</h5>
+                  <p>
+                    After a database is restored, DB2 places it in the <strong>ROLL-FORWARD PENDING</strong> state.
+                  </p>
+                  <p>
+                    This is an essential database protection mechanism. While in this state, the database is locked. No
+                    users, scripts, or application connections can read or write to it. This prevents access to
+                    transactionally inconsistent tables before the log records are fully applied.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-stopwatch"></i> Point-In-Time (PIT) Recovery</h5>
+                  <p>
+                    While a standard rollforward applies all logs to the **end of logs** (complete recovery), a
+                    **Point-In-Time (PIT) Recovery** stops the rollforward process at a specific date and timestamp.
+                  </p>
+                  <p>
+                    <strong>Use Case:</strong> If a developer accidentally executes a rogue DDL statement (e.g.,
+                    truncating an active customer ledger table) at 14:05:12, the DBA can restore the database and roll
+                    forward to 14:05:10, stopping right before the corruption occurred.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="subsection" id="t27-syntax">
+              <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
+              <p>
+                These commands are used to check recovery status, roll forward to the end of logs, execute PIT recovery,
+                and use overflow log paths.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Checking & Completing Rollforward</div>
+                <pre><code><span class="comment"># 1. Query the database's current rollforward state and required log sequence</span>
+db2 "ROLLFORWARD DATABASE ITIDB QUERY STATUS"
+
+<span class="comment"># 2. Roll forward all transactions to the end of logs and put the database back online</span>
+db2 "ROLLFORWARD DATABASE ITIDB TO END OF LOGS AND STOP"
+
+<span class="comment"># 3. Roll forward database utilizing a separate overflow log path</span>
+<span class="comment"># (Used when log files are stored in a safe backup folder rather than active log path)</span>
+db2 "ROLLFORWARD DATABASE ITIDB TO END OF LOGS AND STOP OVERFLOW LOG PATH (/db2/extracted_logs)"
+
+<span class="comment"># 4. Roll forward a specific tablespace only</span>
+db2 "ROLLFORWARD DATABASE ITIDB TO END OF LOGS AND STOP TABLESPACE (USERSPACE1)"</code></pre>
+              </div>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Point-In-Time Recovery Syntax</div>
+                <pre><code><span class="comment"># Roll forward to specific timestamp using ISO format</span>
+<span class="comment"># Format: YYYY-MM-DD-HH.MM.SS.UUUUUU (Year-Month-Day-Hour.Minute.Second.Microseconds)</span>
+db2 "ROLLFORWARD DATABASE ITIDB TO 2026-05-22-14.05.10.000000 USING LOCAL TIME AND STOP"
+
+<span class="comment"># Note: If you start a rollforward and realize you typed the timestamp wrong, </span>
+<span class="comment"># you can cancel the current run and start over:</span>
+db2 "ROLLFORWARD DATABASE ITIDB CANCEL"</code></pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t27-lab">
+              <h3 class="subsection-title">3. Industry-Standard Lab: Point-In-Time Ledger Recovery</h3>
+              <p>
+                <strong>Scenario:</strong> "Apex HFT" runs a high-frequency trading database (`TRADE_DB`). At
+                **14:05:12**, a junior administrator accidentally executes a rogue truncation command on the main
+                transaction ledger table <code>ACTIVE_TRADES</code>.
+              </p>
+              <p>
+                A backup was taken earlier at **13:00:00**. The DBA must restore this backup and perform a
+                **Point-In-Time Recovery** to **14:05:10** (2 seconds before the rogue command), saving millions of
+                dollars in transaction records.
+              </p>
+
+              <div class="code-example">
+                <div class="code-language">DB2 CLP - Disaster Recovery Steps</div>
+                <pre><code><span class="comment"># Step 1: Force all users off the database and deactivate it</span>
+db2 "FORCE APPLICATION ALL"
+db2 "DEACTIVATE DATABASE TRADE_DB"
+
+<span class="comment"># Step 2: Restore the database shell from the 13:00:00 backup image</span>
+db2 "RESTORE DATABASE TRADE_DB FROM /db2/backups TAKEN AT 20260522130000 REPLACE"
+
+<span class="comment"># Step 3: Query status to ensure it is in ROLL-FORWARD PENDING</span>
+db2 "ROLLFORWARD DATABASE TRADE_DB QUERY STATUS"
+
+<span class="comment"># Step 4: Execute Point-In-Time Rollforward to 14:05:10 (Local Time)</span>
+db2 "ROLLFORWARD DATABASE TRADE_DB TO 2026-05-22-14.05.10.000000 USING LOCAL TIME AND STOP"
+
+<span class="comment"># Step 5: Connect to the database and verify the recovery of table data</span>
+db2 "CONNECT TO TRADE_DB"
+db2 "SELECT COUNT(*) FROM ACTIVE_TRADES"</code></pre>
+              </div>
+
+              <div class="advantages-box font-code">
+                <h4><i class="fas fa-terminal"></i> Expected PIT Rollforward Console Execution Output</h4>
+                <pre>
+$ db2 "ROLLFORWARD DATABASE TRADE_DB QUERY STATUS"
+
+                      Rollforward Status
+
+ Input database alias                   = TRADE_DB
+ Number of nodes have returned status   = 1
+ Node number                            = 0
+ Rollforward status                     = DB pending
+ Next log file to be read               = S0000104.LOG
+ Log files processed                    = -
+ Last committed transaction             = 2026-05-22-13.00.00.000000 UTC
+
+$ db2 "ROLLFORWARD DATABASE TRADE_DB TO 2026-05-22-14.05.10.000000 USING LOCAL TIME AND STOP"
+
+Rollforward Status
+
+ Input database alias                   = TRADE_DB
+ Number of nodes have returned status   = 1
+ Node number                            = 0
+ Rollforward status                     = DB not pending
+ Next log file to be read               = -
+ Log files processed                    = S0000104.LOG, S0000105.LOG, S0000106.LOG
+ Last committed transaction             = 2026-05-22-14.05.10.000000 Local Time
+
+DB20000I  The ROLLFORWARD command completed successfully. The database is now ready for use.</pre>
+              </div>
+            </div>
+
+            <div class="subsection" id="t27-trouble">
+              <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
+
+              <div class="concept-grid">
+                <div class="concept-card">
+                  <h5><i class="fas fa-shield-alt"></i> Complete recovery vs. PIT</h5>
+                  <p>
+                    Always use <code>TO END OF LOGS</code> for hardware failure recovery. Only use Point-In-Time (PIT)
+                    recovery for logical failures (accidental deletes, truncations, or application bugs).
+                  </p>
+                  <p>
+                    <strong>Warning:</strong> Performing a PIT recovery creates a new database log sequence fork. Any
+                    transaction logs created after the PIT timestamp on the original timeline are orphaned and cannot be
+                    applied in future recovery runs.
+                  </p>
+                </div>
+                <div class="concept-card">
+                  <h5><i class="fas fa-folder-open"></i> Overflow Log Path Configuration</h5>
+                  <p>
+                    When rolling forward, DB2 looks for logs in the default active log directory. If you are recovering
+                    onto a backup server where those active logs do not exist, use the <code>OVERFLOW LOG PATH</code>
+                    parameter to point directly to the folder containing your extracted archived log files.
+                  </p>
+                </div>
+              </div>
+
+              <div class="disadvantages-box font-code">
+                <h4><i class="fas fa-exclamation-circle"></i> Troubleshooting Common Recovery Errors</h4>
+                <ul>
+                  <li>
+                    <strong>Database Stuck in ROLL-FORWARD PENDING State</strong>
+                    <br /><em>Root Cause:</em> A restore command completed, or a rollforward was run without the
+                    <code>STOP</code> or <code>AND STOP</code> keyword. The engine remains open, expecting additional
+                    logs to be supplied.
+                    <br /><em>Remedy:</em> Execute the stop command directly to take the database out of pending state:
+                    <pre>db2 "ROLLFORWARD DATABASE TRADE_DB STOP"</pre>
+                  </li>
+                  <li>
+                    <strong>SQL1273N ("Logical end of database logs was reached, missing log sequence")</strong>
+                    <br /><em>Root Cause:</em> A required log file is missing from the active log path or archive
+                    directory during the rollforward process. The recovery engine cannot proceed because there is a gap
+                    in the log sequence.
+                    <br /><em>Remedy:</em> Check the <code>db2diag.log</code> to identify the missing log file name
+                    (e.g., `S0000105.LOG`). Locate it inside your backup vault or archive drive, copy it to the database
+                    log path, and re-run the rollforward.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="subsection" id="t27-summary">
+              <h3 class="subsection-title">5. Topic Summary Cheat-Sheet</h3>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Rollforward Command Variant</th>
+                      <th>Required Inputs</th>
+                      <th>Transaction Boundary Behavior</th>
+                      <th>Effect on DB State</th>
+                      <th>Primary DBA Risk</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>`TO END OF LOGS AND STOP`</strong></td>
+                      <td>All active & archive logs</td>
+                      <td>Applies all transactions up to the last committed write on disk.</td>
+                      <td>Brings database online (ready for connections)</td>
+                      <td>None. Standard recovery path.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>`TO &lt;timestamp&gt; AND STOP`</strong></td>
+                      <td>Logs up to target time</td>
+                      <td>Applies changes up to the specified second, then rolls back in-flight transactions.</td>
+                      <td>Brings database online (ready for connections)</td>
+                      <td>High. Orphans subsequent logs; cannot undo this action after stopping.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>`QUERY STATUS`</strong></td>
+                      <td>None</td>
+                      <td>Does not apply logs; only reads database header status.</td>
+                      <td>Leaves state unchanged</td>
+                      <td>None. Information gathering tool.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>`CANCEL`</strong></td>
+                      <td>None</td>
+                      <td>Aborts the current rollforward execution state.</td>
+                      <td>Reverts database to ROLL-FORWARD PENDING</td>
+                      <td>Aborts current run; does not corrupt data, but delay occurs.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="footer">
+          <p style="margin-top: 10px">
+            <strong>Created By:</strong> Abdelghany
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Shared JavaScript for dark mode and features -->
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

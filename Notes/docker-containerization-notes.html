@@ -1,18 +1,23 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Docker & Containerization Study Notes</title>
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="../assets/css/main.css" />
 </head>
+
 <body>
   <!-- Sidebar Navigation -->
-  <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+  <button class="sidebar-toggle" aria-expanded="false" aria-label="Toggle navigation"><i
+      class="fas fa-bars"></i></button>
   <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-  
+
   <div class="layout-container">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -55,7 +60,8 @@
     <!-- Main Content -->
     <main class="main-content">
       <div class="container" id="mainContainer">
-        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Main Page</a><div class="header">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+        <div class="header">
           <h1><i class="fas fa-star"></i> Docker & Containerization</h1>
           <p>Comprehensive Study Guide & Notes</p>
         </div>
@@ -106,10 +112,13 @@
                 <p><strong>Key Benefits of Containers:</strong></p>
                 <ul>
                   <li><i class="fas fa-bolt"></i> <strong>Fast Startup:</strong> Launch in seconds, not minutes</li>
-                  <li><i class="fas fa-briefcase"></i> <strong>Lightweight:</strong> Share OS kernel, minimal overhead</li>
+                  <li><i class="fas fa-briefcase"></i> <strong>Lightweight:</strong> Share OS kernel, minimal overhead
+                  </li>
                   <li><i class="fas fa-box"></i> <strong>Portable:</strong> "Build once, run anywhere"</li>
-                  <li><i class="fas fa-sync"></i> <strong>Consistent:</strong> Same behavior in dev, test, and production</li>
-                  <li><i class="fas fa-dollar-sign"></i> <strong>Cost-Effective:</strong> Higher density on same hardware</li>
+                  <li><i class="fas fa-sync"></i> <strong>Consistent:</strong> Same behavior in dev, test, and
+                    production</li>
+                  <li><i class="fas fa-dollar-sign"></i> <strong>Cost-Effective:</strong> Higher density on same
+                    hardware</li>
                 </ul>
               </div>
             </div>
@@ -1059,10 +1068,12 @@ local     redis-cache
               <div class="highlight-box">
                 <p><strong>Use Cases for Bind Mounts:</strong></p>
                 <ul>
-                  <li><i class="fas fa-wrench"></i> <strong>Development:</strong> Share source code between host and container (live reload)</li>
+                  <li><i class="fas fa-wrench"></i> <strong>Development:</strong> Share source code between host and
+                    container (live reload)</li>
                   <li><i class="fas fa-file"></i> <strong>Configuration:</strong> Share config files from host</li>
                   <li><i class="fas fa-search"></i> <strong>Debugging:</strong> Access container logs from host</li>
-                  <li><i class="fas fa-building"></i> <strong>Build Artifacts:</strong> Share build output between containers</li>
+                  <li><i class="fas fa-building"></i> <strong>Build Artifacts:</strong> Share build output between
+                    containers</li>
                 </ul>
               </div>
               <div class="warning-box">
@@ -1126,9 +1137,12 @@ local     redis-cache
               <div class="highlight-box">
                 <p><strong>Use Cases for tmpfs:</strong></p>
                 <ul>
-                  <li><i class="fas fa-lock"></i> <strong>Sensitive Data:</strong> Store secrets/passwords temporarily</li>
-                  <li><i class="fas fa-bolt"></i> <strong>High-Speed Cache:</strong> Temporary cache that needs maximum speed</li>
-                  <li><i class="fas fa-star"></i> <strong>Temporary Files:</strong> Data that doesn't need to persist</li>
+                  <li><i class="fas fa-lock"></i> <strong>Sensitive Data:</strong> Store secrets/passwords temporarily
+                  </li>
+                  <li><i class="fas fa-bolt"></i> <strong>High-Speed Cache:</strong> Temporary cache that needs maximum
+                    speed</li>
+                  <li><i class="fas fa-star"></i> <strong>Temporary Files:</strong> Data that doesn't need to persist
+                  </li>
                   <li><i class="fas fa-lock"></i> <strong>Security:</strong> Data that should never touch disk</li>
                 </ul>
               </div>
@@ -1260,9 +1274,11 @@ local     redis-cache
                 <p><strong>Key Characteristics:</strong></p>
                 <ul>
                   <li><i class="fas fa-check"></i> Default network driver (used when no network is specified)</li>
-                  <li><i class="fas fa-check"></i> Containers can communicate by IP address or container name (user-defined bridges only)</li>
+                  <li><i class="fas fa-check"></i> Containers can communicate by IP address or container name
+                    (user-defined bridges only)</li>
                   <li><i class="fas fa-check"></i> Isolated from host network and other bridge networks</li>
-                  <li><i class="fas fa-exclamation-triangle"></i> <strong>Requires port mapping</strong> for external communication</li>
+                  <li><i class="fas fa-exclamation-triangle"></i> <strong>Requires port mapping</strong> for external
+                    communication</li>
                 </ul>
               </div>
               <div class="subsection">
@@ -1592,12 +1608,17 @@ ping: bad address '8.8.8.8'
               <div class="highlight-box">
                 <p><strong>Why Use Docker Compose?</strong></p>
                 <ul>
-                  <li><i class="fas fa-edit"></i> <strong>Declarative Configuration:</strong> Define everything in a single YAML file</li>
+                  <li><i class="fas fa-edit"></i> <strong>Declarative Configuration:</strong> Define everything in a
+                    single YAML file</li>
                   <li><i class="fas fa-rocket"></i> <strong>Single Command:</strong> Start entire application stack with
-                    <code>docker compose up</code></li>
-                  <li><i class="fas fa-sync"></i> <strong>Reproducible:</strong> Same environment on dev, test, and production</li>
-                  <li><i class="fas fa-bullseye"></i> <strong>Service Management:</strong> Easily scale, rebuild, and manage services</li>
-                  <li><i class="fas fa-globe"></i> <strong>Networking:</strong> Automatic network creation and DNS resolution</li>
+                    <code>docker compose up</code>
+                  </li>
+                  <li><i class="fas fa-sync"></i> <strong>Reproducible:</strong> Same environment on dev, test, and
+                    production</li>
+                  <li><i class="fas fa-bullseye"></i> <strong>Service Management:</strong> Easily scale, rebuild, and
+                    manage services</li>
+                  <li><i class="fas fa-globe"></i> <strong>Networking:</strong> Automatic network creation and DNS
+                    resolution</li>
                 </ul>
               </div>
               <div class="example-box">
@@ -2261,10 +2282,14 @@ EXPOSE 80
               <div class="highlight-box">
                 <p><strong>Benefits:</strong></p>
                 <ul>
-                  <li><i class="fas fa-bullseye"></i> <strong>Smaller Images:</strong> Only include runtime dependencies, not build tools</li>
-                  <li><i class="fas fa-lock"></i> <strong>More Secure:</strong> Fewer packages = smaller attack surface</li>
-                  <li><i class="fas fa-bolt"></i> <strong>Faster Deployment:</strong> Smaller images download faster</li>
-                  <li><i class="fas fa-dollar-sign"></i> <strong>Cost Savings:</strong> Less storage and bandwidth used</li>
+                  <li><i class="fas fa-bullseye"></i> <strong>Smaller Images:</strong> Only include runtime
+                    dependencies, not build tools</li>
+                  <li><i class="fas fa-lock"></i> <strong>More Secure:</strong> Fewer packages = smaller attack surface
+                  </li>
+                  <li><i class="fas fa-bolt"></i> <strong>Faster Deployment:</strong> Smaller images download faster
+                  </li>
+                  <li><i class="fas fa-dollar-sign"></i> <strong>Cost Savings:</strong> Less storage and bandwidth used
+                  </li>
                 </ul>
               </div>
               <div class="example-box">
@@ -3090,7 +3115,5 @@ CMD ["node", "server.js"]
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>
+
 </html>
-
-
-

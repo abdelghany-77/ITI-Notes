@@ -1,18 +1,23 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MongoDB & NoSQL Study Notes</title>
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="../assets/css/main.css" />
 </head>
+
 <body>
   <!-- Sidebar Navigation -->
-  <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+  <button class="sidebar-toggle" aria-expanded="false" aria-label="Toggle navigation"><i
+      class="fas fa-bars"></i></button>
   <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-  
+
   <div class="layout-container">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
@@ -61,7 +66,8 @@
     <!-- Main Content -->
     <main class="main-content">
       <div class="container" id="mainContainer">
-        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Main Page</a><div class="header">
+        <a href="../index.html" class="back-button"><i class="fas fa-arrow-left"></i></a>
+        <div class="header">
           <h1><i class="fas fa-star"></i> MongoDB & NoSQL</h1>
           <p>Comprehensive Study Guide & Notes</p>
         </div>
@@ -116,12 +122,15 @@
               <div class="highlight-box">
                 <p><strong>Key Features:</strong></p>
                 <ul>
-                  <li><i class="fas fa-file"></i> <strong>Document-Oriented:</strong> Stores data as documents, not rows and tables</li>
+                  <li><i class="fas fa-file"></i> <strong>Document-Oriented:</strong> Stores data as documents, not rows
+                    and tables</li>
                   <li><i class="fas fa-star"></i> <strong>Scalable:</strong> Horizontal scaling through sharding</li>
                   <li><i class="fas fa-search"></i> <strong>Flexible Schema:</strong> No predefined schema required</li>
                   <li><i class="fas fa-bolt"></i> <strong>High Performance:</strong> Fast reads and writes</li>
-                  <li><i class="fas fa-sync"></i> <strong>Replication:</strong> Built-in redundancy and high availability</li>
-                  <li><i class="fas fa-globe"></i> <strong>Distributed:</strong> Designed for distributed data stores</li>
+                  <li><i class="fas fa-sync"></i> <strong>Replication:</strong> Built-in redundancy and high
+                    availability</li>
+                  <li><i class="fas fa-globe"></i> <strong>Distributed:</strong> Designed for distributed data stores
+                  </li>
                 </ul>
               </div>
             </div>
@@ -335,7 +344,8 @@ true
                 <tbody>
                   <tr>
                     <td><strong>Schema</strong></td>
-                    <td><i class="fas fa-times"></i> Not required - Dynamic/Flexible Schema<br>Documents can have different fields</td>
+                    <td><i class="fas fa-times"></i> Not required - Dynamic/Flexible Schema<br>Documents can have
+                      different fields</td>
                     <td><i class="fas fa-check"></i> Fixed Schema<br>Must define tables and columns upfront</td>
                   </tr>
                   <tr>
@@ -346,7 +356,8 @@ true
                   <tr>
                     <td><strong>Scaling</strong></td>
                     <td><i class="fas fa-check"></i> Horizontal Scaling (Easy)<br>Add more servers (sharding)</td>
-                    <td><i class="fas fa-exclamation-triangle"></i> Vertical Scaling (Harder)<br>Add more power to existing server</td>
+                    <td><i class="fas fa-exclamation-triangle"></i> Vertical Scaling (Harder)<br>Add more power to
+                      existing server</td>
                   </tr>
                   <tr>
                     <td><strong>Relations</strong></td>
@@ -365,8 +376,10 @@ true
                   </tr>
                   <tr>
                     <td><strong>Data Volume</strong></td>
-                    <td><i class="fas fa-check"></i> Stores high data volume (Humongous)<br>Semi-structured & unstructured data</td>
-                    <td><i class="fas fa-exclamation-triangle"></i> Stores medium data volume<br>Structured data only</td>
+                    <td><i class="fas fa-check"></i> Stores high data volume (Humongous)<br>Semi-structured &
+                      unstructured data</td>
+                    <td><i class="fas fa-exclamation-triangle"></i> Stores medium data volume<br>Structured data only
+                    </td>
                   </tr>
                   <tr>
                     <td><strong>Consistency Model</strong></td>
@@ -404,7 +417,8 @@ true
                       <li>Deduct $100 from A</li>
                       <li>Add $100 to B</li>
                     </ol>
-                    <p><i class="fas fa-check"></i> ACID ensures both steps complete or neither does (no lost money!)</p>
+                    <p><i class="fas fa-check"></i> ACID ensures both steps complete or neither does (no lost money!)
+                    </p>
                   </div>
                 </div>
               </div>
@@ -424,7 +438,8 @@ true
                       <li>Gradually becomes visible to your followers (different servers sync)</li>
                       <li>Eventually, all followers see the post</li>
                     </ol>
-                    <p><i class="fas fa-check"></i> BASE prioritizes availability and performance over immediate consistency</p>
+                    <p><i class="fas fa-check"></i> BASE prioritizes availability and performance over immediate
+                      consistency</p>
                   </div>
                 </div>
               </div>
@@ -1073,9 +1088,12 @@ ISODate("2024-01-15T10:30:00.000Z")
               <div class="highlight-box">
                 <p><strong>Performance Tips:</strong></p>
                 <ul>
-                  <li><i class="fas fa-check"></i> Use <code>insertMany()</code> instead of multiple <code>insertOne()</code> calls</li>
-                  <li><i class="fas fa-check"></i> Batch inserts in groups of 100-1000 documents for optimal performance</li>
-                  <li><i class="fas fa-check"></i> Use <code>ordered: false</code> for parallel inserts when order doesn't matter</li>
+                  <li><i class="fas fa-check"></i> Use <code>insertMany()</code> instead of multiple
+                    <code>insertOne()</code> calls</li>
+                  <li><i class="fas fa-check"></i> Batch inserts in groups of 100-1000 documents for optimal performance
+                  </li>
+                  <li><i class="fas fa-check"></i> Use <code>ordered: false</code> for parallel inserts when order
+                    doesn't matter</li>
                   <li><i class="fas fa-check"></i> Consider using bulk write operations for very large datasets</li>
                   <li><i class="fas fa-exclamation-triangle"></i> Be aware of the 16MB document size limit</li>
                   <li><i class="fas fa-exclamation-triangle"></i> Monitor memory usage during large bulk operations</li>
@@ -2451,13 +2469,18 @@ true
                   <ul>
                     <li><i class="fas fa-check"></i> Always backup before large delete operations</li>
                     <li><i class="fas fa-check"></i> Test delete operations on staging environment first</li>
-                    <li><i class="fas fa-check"></i> Use <code>deleteOne()</code> instead of <code>deleteMany()</code> when targeting specific
+                    <li><i class="fas fa-check"></i> Use <code>deleteOne()</code> instead of <code>deleteMany()</code>
+                      when targeting specific
                       records</li>
-                    <li><i class="fas fa-check"></i> Consider soft deletes for critical data (mark as deleted instead of removing)</li>
-                    <li><i class="fas fa-check"></i> Add <code>deletedAt</code> and <code>deletedBy</code> fields for audit trail</li>
+                    <li><i class="fas fa-check"></i> Consider soft deletes for critical data (mark as deleted instead of
+                      removing)</li>
+                    <li><i class="fas fa-check"></i> Add <code>deletedAt</code> and <code>deletedBy</code> fields for
+                      audit trail</li>
                     <li><i class="fas fa-check"></i> Use TTL indexes for automatic expiration of temporary data</li>
-                    <li><i class="fas fa-exclamation-triangle"></i> Avoid <code>deleteMany({})</code> - be specific with filter conditions</li>
-                    <li><i class="fas fa-exclamation-triangle"></i> Monitor delete operations in production with logging</li>
+                    <li><i class="fas fa-exclamation-triangle"></i> Avoid <code>deleteMany({})</code> - be specific with
+                      filter conditions</li>
+                    <li><i class="fas fa-exclamation-triangle"></i> Monitor delete operations in production with logging
+                    </li>
                   </ul>
                 </div>
                 <div class="example-box">
@@ -3332,14 +3355,20 @@ true
                 <div class="highlight-box">
                   <p><strong>General Guidelines:</strong></p>
                   <ul>
-                    <li><i class="fas fa-check"></i> <strong>Embed</strong> when you have "contains" relationships (blog post contains comments)
+                    <li><i class="fas fa-check"></i> <strong>Embed</strong> when you have "contains" relationships (blog
+                      post contains comments)
                     </li>
-                    <li><i class="fas fa-check"></i> <strong>Embed</strong> when child data is always viewed with parent</li>
-                    <li><i class="fas fa-check"></i> <strong>Reference</strong> when you have "references" relationships (order references
+                    <li><i class="fas fa-check"></i> <strong>Embed</strong> when child data is always viewed with parent
+                    </li>
+                    <li><i class="fas fa-check"></i> <strong>Reference</strong> when you have "references" relationships
+                      (order references
                       customer)</li>
-                    <li><i class="fas fa-check"></i> <strong>Reference</strong> when data is shared across multiple documents</li>
-                    <li><i class="fas fa-check"></i> <strong>Reference</strong> when embedded array would grow unbounded</li>
-                    <li><i class="fas fa-exclamation-triangle"></i> MongoDB has 16MB document size limit - keep this in mind!</li>
+                    <li><i class="fas fa-check"></i> <strong>Reference</strong> when data is shared across multiple
+                      documents</li>
+                    <li><i class="fas fa-check"></i> <strong>Reference</strong> when embedded array would grow unbounded
+                    </li>
+                    <li><i class="fas fa-exclamation-triangle"></i> MongoDB has 16MB document size limit - keep this in
+                      mind!</li>
                   </ul>
                 </div>
               </div>
@@ -3743,7 +3772,8 @@ true
                     <li><i class="fas fa-check"></i> Index fields used in sorting</li>
                     <li><i class="fas fa-check"></i> Monitor index usage with explain()</li>
                     <li><i class="fas fa-exclamation-triangle"></i> Don't over-index - each index slows writes</li>
-                    <li><i class="fas fa-exclamation-triangle"></i> Order matters in compound indexes (query must use leftmost fields)</li>
+                    <li><i class="fas fa-exclamation-triangle"></i> Order matters in compound indexes (query must use
+                      leftmost fields)</li>
                     <li><i class="fas fa-exclamation-triangle"></i> Remove unused indexes</li>
                   </ul>
                 </div>
@@ -4140,7 +4170,5 @@ $ mongoimport --db myDatabase --collection users --file users.json
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>
+
 </html>
-
-
-
