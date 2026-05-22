@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -617,57 +617,11 @@
       </div>
     </main>
   </div>
-  <script>
-    // Sidebar functionality
-    function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      const mainContent = document.getElementById("mainContent");
-      sidebar.classList.toggle("collapsed");
-      if (window.innerWidth <= 768) {
-        sidebar.classList.toggle("active");
-      } else {
-        mainContent.classList.toggle("full-width");
-      }
-    }
-    function closeSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      const mainContent = document.getElementById("mainContent");
-      if (window.innerWidth <= 768) {
-        sidebar.classList.remove("active");
-      }
-    }
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener("click", function (e) {
-      const sidebar = document.getElementById("sidebar");
-      const toggle = document.querySelector(".sidebar-toggle");
-      if (
-        window.innerWidth <= 768 &&
-        !sidebar.contains(e.target) &&
-        !toggle.contains(e.target) &&
-        sidebar.classList.contains("active")
-      ) {
-        closeSidebar();
-      }
-    });
-    // Handle window resize
-    function handleResize() {
-      const sidebar = document.getElementById("sidebar");
-      const mainContent = document.getElementById("mainContent");
-      if (window.innerWidth <= 768) {
-        sidebar.classList.remove("active");
-        mainContent.classList.remove("full-width");
-      } else {
-        sidebar.classList.remove("collapsed");
-        sidebar.classList.remove("active");
-      }
-    }
-    window.addEventListener("resize", handleResize);
-    handleResize(); // Initial check
-  </script>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>
 </html>
+
 
 
 

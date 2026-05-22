@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -164,33 +164,33 @@
                 <pre>
 <strong>Node.js Architecture Diagram:</strong>
 +-----------------------------------------------------+
-�              JavaScript Application Code            �
-�         (Your Node.js Application Code)             �
+?              JavaScript Application Code            ?
+?         (Your Node.js Application Code)             ?
 +-----------------------------------------------------+
-                     �
+                     ?
 +-----------------------------------------------------+
-�           Node.js Standard Library (JS)             �
-�   (fs, http, crypto, path, os, events, etc.)        �
+?           Node.js Standard Library (JS)             ?
+?   (fs, http, crypto, path, os, events, etc.)        ?
 +-----------------------------------------------------+
-                     �
+                     ?
 +-----------------------------------------------------+
-�             Node.js Bindings (C/C++)                �
-�    (Interface between JS and C++ libraries)         �
+?             Node.js Bindings (C/C++)                ?
+?    (Interface between JS and C++ libraries)         ?
 +-----------------------------------------------------+
-                     �
+                     ?
         +---------------------------+
-        �                           �
+        ?                           ?
 +----------------+          +----------------+
-�   V8 Engine    �          �     libuv      �
-�   (Google)     �          �  (Event Loop,  �
-�  - Compiles &  �          �   Async I/O,   �
-�    Executes JS �          �  Thread Pool)  �
+?   V8 Engine    ?          ?     libuv      ?
+?   (Google)     ?          ?  (Event Loop,  ?
+?  - Compiles &  ?          ?   Async I/O,   ?
+?    Executes JS ?          ?  Thread Pool)  ?
 +----------------+          +----------------+
-        �                           �
+        ?                           ?
         +---------------------------+
-                     �
+                     ?
 +-----------------------------------------------------+
-�            Operating System (Windows/Linux/Mac)     �
+?            Operating System (Windows/Linux/Mac)     ?
 +-----------------------------------------------------+
 </pre>
               </div>
@@ -323,23 +323,23 @@ Server running at http://localhost:3000/
                 <pre>
 <strong>Event Loop Phases:</strong>
    +---------------------------+
-+->�           timers          �  Execute setTimeout & setInterval callbacks
-�  +---------------------------+
-�  +---------------------------+
-�  �     pending callbacks     �  Execute I/O callbacks deferred to next loop
-�  +---------------------------+
-�  +---------------------------+
-�  �       idle, prepare       �  Internal use only
-�  +---------------------------+      +---------------+
-�  +---------------------------+      �   incoming:   �
-�  �           poll            �<-----�  connections, �
-�  �                           �      �   data, etc.  �
-�  +---------------------------+      +---------------+
-�  +---------------------------+
-�  �           check           �  Execute setImmediate() callbacks
-�  +---------------------------+
-�  +---------------------------+
-+--�      close callbacks      �  Execute close event callbacks (e.g., socket.on('close'))
++->?           timers          ?  Execute setTimeout & setInterval callbacks
+?  +---------------------------+
+?  +---------------------------+
+?  ?     pending callbacks     ?  Execute I/O callbacks deferred to next loop
+?  +---------------------------+
+?  +---------------------------+
+?  ?       idle, prepare       ?  Internal use only
+?  +---------------------------+      +---------------+
+?  +---------------------------+      ?   incoming:   ?
+?  ?           poll            ?<-----?  connections, ?
+?  ?                           ?      ?   data, etc.  ?
+?  +---------------------------+      +---------------+
+?  +---------------------------+
+?  ?           check           ?  Execute setImmediate() callbacks
+?  +---------------------------+
+?  +---------------------------+
++--?      close callbacks      ?  Execute close event callbacks (e.g., socket.on('close'))
    +---------------------------+
 </pre>
               </div>
@@ -1235,25 +1235,25 @@ logger.log('Application started');
                 <pre>
 <strong>Client-Server Communication Flow:</strong>
 +-------------+                                 +-------------+
-�   CLIENT    �                                 �   SERVER    �
-�  (Browser,  �                                 �  (Node.js)  �
-�  Mobile App)�                                 �             �
+?   CLIENT    ?                                 ?   SERVER    ?
+?  (Browser,  ?                                 ?  (Node.js)  ?
+?  Mobile App)?                                 ?             ?
 +-------------+                                 +-------------+
-       �                                                �
-       � 1. HTTP Request                                �
-       �    GET /api/users                              �
-       �----------------------------------------------->�
-       �                                                �
-       �                                      2. Process Request
-       �                                      3. Query Database
-       �                                      4. Prepare Response
-       �                                                �
-       � 5. HTTP Response                               �
-       �    200 OK + JSON Data                          �
-       �<-----------------------------------------------�
-       �                                                �
-       � 6. Render/Display Data                         �
-       �                                                �
+       ?                                                ?
+       ? 1. HTTP Request                                ?
+       ?    GET /api/users                              ?
+       ?----------------------------------------------->?
+       ?                                                ?
+       ?                                      2. Process Request
+       ?                                      3. Query Database
+       ?                                      4. Prepare Response
+       ?                                                ?
+       ? 5. HTTP Response                               ?
+       ?    200 OK + JSON Data                          ?
+       ?<-----------------------------------------------?
+       ?                                                ?
+       ? 6. Render/Display Data                         ?
+       ?                                                ?
 </pre>
               </div>
               <div class="highlight-box">
@@ -1640,16 +1640,16 @@ GET /api/products?category=electronics&minPrice=100&maxPrice=500
                 <pre>
 <strong>URL Components:</strong>
 https://api.example.com:443/api/v1/users/123?sort=name&limit=10#section
-�      �   �               � �  �  �       � �                 � �
-�      �   �               � �  �  �       � �                 � +- Fragment
-�      �   �               � �  �  �       � +--------------------- Query String
-�      �   �               � �  �  �       +--------------------- Resource ID
-�      �   �               � �  �  +----------------------------- Resource
-�      �   �               � �  +-------------------------------- API Version
-�      �   �               � +----------------------------------- Base Path
-�      �   �               +------------------------------------- Port
-�      �   +----------------------------------------------------- Domain/Host
-�      +--------------------------------------------------------- Protocol/Scheme
+?      ?   ?               ? ?  ?  ?       ? ?                 ? ?
+?      ?   ?               ? ?  ?  ?       ? ?                 ? +- Fragment
+?      ?   ?               ? ?  ?  ?       ? +--------------------- Query String
+?      ?   ?               ? ?  ?  ?       +--------------------- Resource ID
+?      ?   ?               ? ?  ?  +----------------------------- Resource
+?      ?   ?               ? ?  +-------------------------------- API Version
+?      ?   ?               ? +----------------------------------- Base Path
+?      ?   ?               +------------------------------------- Port
+?      ?   +----------------------------------------------------- Domain/Host
+?      +--------------------------------------------------------- Protocol/Scheme
 +---------------------------------------------------------------- Full URL
 <strong>Parts Explained:</strong>
 - Protocol: https (secure) or http
@@ -1849,43 +1849,43 @@ async function verifyPassword(password, hashedPassword) {
                 <pre>
 <strong>Authentication & Authorization Flow:</strong>
 +-------------+
-�   Client    �
+?   Client    ?
 +-------------+
-       �
-       � 1. Login Request (email + password)
-       �
+       ?
+       ? 1. Login Request (email + password)
+       ?
        ?
 +-----------------------------------------+
-�           Authentication                �
-�  - Verify credentials                   �
-�  - Check if user exists                 �
-�  - Compare password hash                �
+?           Authentication                ?
+?  - Verify credentials                   ?
+?  - Check if user exists                 ?
+?  - Compare password hash                ?
 +-----------------------------------------+
-       �
-       � 2. Generate Token (JWT)
-       �
+       ?
+       ? 2. Generate Token (JWT)
+       ?
        ?
 +-------------+
-�   Client    � Stores token
+?   Client    ? Stores token
 +-------------+
-       �
-       � 3. Request with Token
-       �    Authorization: Bearer <token>
-       �
+       ?
+       ? 3. Request with Token
+       ?    Authorization: Bearer <token>
+       ?
        ?
 +-----------------------------------------+
-�           Authorization                 �
-�  - Verify token signature               �
-�  - Extract user ID and roles            �
-�  - Check if user has permission         �
-�  - Allow or deny access                 �
+?           Authorization                 ?
+?  - Verify token signature               ?
+?  - Extract user ID and roles            ?
+?  - Check if user has permission         ?
+?  - Allow or deny access                 ?
 +-----------------------------------------+
-       �
-       � 4. Response (200 OK or 403 Forbidden)
-       �
+       ?
+       ? 4. Response (200 OK or 403 Forbidden)
+       ?
        ?
 +-------------+
-�   Client    �
+?   Client    ?
 +-------------+
 </pre>
               </div>
@@ -1902,9 +1902,9 @@ async function verifyPassword(password, hashedPassword) {
                 <pre>
 <strong>JWT Structure:</strong>
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-�                                     �                                                                                                �
-�         HEADER                      �                          PAYLOAD                                                               �         SIGNATURE
-�                                     �                                                                                                �
+?                                     ?                                                                                                ?
+?         HEADER                      ?                          PAYLOAD                                                               ?         SIGNATURE
+?                                     ?                                                                                                ?
 <strong>Header (Base64 encoded):</strong>
 {
   "alg": "HS256",        // Algorithm
@@ -2385,13 +2385,13 @@ app.use('/api/users', userRoutes);
 // project/
 //   +-- app.js
 //   +-- routes/
-//   �   +-- users.js
-//   �   +-- posts.js
-//   �   +-- auth.js
+//   ?   +-- users.js
+//   ?   +-- posts.js
+//   ?   +-- auth.js
 //   +-- controllers/
-//   �   +-- userController.js
-//   �   +-- postController.js
-//   �   +-- authController.js
+//   ?   +-- userController.js
+//   ?   +-- postController.js
+//   ?   +-- authController.js
 //   +-- middleware/
 //       +-- auth.js
 //       +-- errorHandler.js</span>
@@ -2499,26 +2499,26 @@ app.use('/api/v1/auth', authRoutes);
                 <pre>
 <strong>Middleware Execution Flow:</strong>
 Request
-   �
+   ?
    ?
 +-----------------+
-�  Middleware 1   �  app.use(middleware1)
-�  - Logging      �
+?  Middleware 1   ?  app.use(middleware1)
+?  - Logging      ?
 +-----------------+
-         � next()
+         ? next()
          ?
 +-----------------+
-�  Middleware 2   �  app.use(middleware2)
-�  - Auth Check   �
+?  Middleware 2   ?  app.use(middleware2)
+?  - Auth Check   ?
 +-----------------+
-         � next()
+         ? next()
          ?
 +-----------------+
-�  Route Handler  �  app.get('/users', handler)
-�  - Business     �
-�    Logic        �
+?  Route Handler  ?  app.get('/users', handler)
+?  - Business     ?
+?    Logic        ?
 +-----------------+
-         �
+         ?
          ?
       Response
 </pre>
@@ -5763,26 +5763,6 @@ setInterval(() => {
       </div>
     </main>
   </div>
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.querySelector('.sidebar-overlay');
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-    }
-    function closeSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.querySelector('.sidebar-overlay');
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-    }
-    // Close sidebar when clicking a link
-    document.querySelectorAll('.sidebar a').forEach(link => {
-      link.addEventListener('click', () => {
-        closeSidebar();
-      });
-    });
-  </script>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>

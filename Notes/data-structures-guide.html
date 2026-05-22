@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -3649,68 +3649,6 @@ Deletion      | O(<span class="number">1</span>)        | O(n)       | O(<span c
             contents.forEach(content => {
                 content.style.display = 'block';
             });
-        });
-        // Enhanced Table of Contents functionality
-        function toggleTOC() {
-            const tocContainer = document.getElementById('tocContainer');
-            const tocBackdrop = document.getElementById('tocBackdrop');
-            const isActive = tocContainer.classList.contains('active');
-            if (isActive) {
-                tocContainer.classList.remove('active');
-                tocBackdrop.classList.remove('active');
-            } else {
-                tocContainer.classList.add('active');
-                tocBackdrop.classList.add('active');
-            }
-        }
-        // Close TOC when clicking on backdrop
-        document.addEventListener('DOMContentLoaded', function () {
-            const tocBackdrop = document.getElementById('tocBackdrop');
-            const tocContainer = document.getElementById('tocContainer');
-            tocBackdrop.addEventListener('click', function () {
-                tocContainer.classList.remove('active');
-                tocBackdrop.classList.remove('active');
-            });
-        });
-        // Back to top functionality
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
-        // Show/hide back to top button based on scroll position
-        window.addEventListener('scroll', function () {
-            const backToTop = document.getElementById('backToTop');
-            if (window.pageYOffset > 300) {
-                backToTop.classList.add('visible');
-            } else {
-                backToTop.classList.remove('visible');
-            }
-        });
-        // Close TOC when clicking on a link
-        document.addEventListener('DOMContentLoaded', function () {
-            const tocLinks = document.querySelectorAll('.toc-list a');
-            tocLinks.forEach(link => {
-                link.addEventListener('click', function () {
-                    const tocContainer = document.getElementById('tocContainer');
-                    const tocBackdrop = document.getElementById('tocBackdrop');
-                    tocContainer.classList.remove('active');
-                    tocBackdrop.classList.remove('active');
-                });
-            });
-        });
-        // Close TOC when clicking outside
-        document.addEventListener('click', function (event) {
-            const tocContainer = document.getElementById('tocContainer');
-            const tocBackdrop = document.getElementById('tocBackdrop');
-            const tocToggle = document.querySelector('.toc-toggle');
-            if (!tocContainer.contains(event.target) &&
-                !tocToggle.contains(event.target) &&
-                !tocBackdrop.contains(event.target)) {
-                tocContainer.classList.remove('active');
-                tocBackdrop.classList.remove('active');
-            }
         });
         // Video error handling
         document.addEventListener('DOMContentLoaded', function () {

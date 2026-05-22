@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -151,13 +151,13 @@ npm start
 # my-app/
 # +-- node_modules/
 # +-- public/
-# �   +-- index.html
-# �   +-- favicon.ico
+# ?   +-- index.html
+# ?   +-- favicon.ico
 # +-- src/
-# �   +-- App.js
-# �   +-- App.css
-# �   +-- index.js
-# �   +-- index.css
+# ?   +-- App.js
+# ?   +-- App.css
+# ?   +-- index.js
+# ?   +-- index.css
 # +-- package.json
 # +-- README.md</pre>
               </div>
@@ -1859,12 +1859,6 @@ export default async function Page() {
   </main>
   </div>
   <button class="scroll-top" onclick="scrollTopSmooth()">?</button>
-  <script>
-    function toggleSidebar() { const s = document.getElementById('sidebar'); const o = document.querySelector('.overlay'); s.classList.toggle('active'); o.classList.toggle('active'); }
-    function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.querySelector('.overlay').classList.remove('active'); }
-    function scrollTopSmooth() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-    window.addEventListener('scroll', () => { const b = document.querySelector('.scroll-top'); if (window.pageYOffset > 300) { b.classList.add('show') } else { b.classList.remove('show') } });
-  </script>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>

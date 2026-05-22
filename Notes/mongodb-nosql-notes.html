@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -139,13 +139,13 @@
                   <pre>
 <strong>Database</strong>
   +-- <strong>Collection</strong> (similar to SQL table)
-  �     +-- <strong>Document</strong> (similar to SQL row)
-  �     �     +-- Field: Value (similar to SQL column)
-  �     �     +-- Field: Value
-  �     �     +-- Field: Value
-  �     +-- Document
-  �     +-- Document
-  �
+  ?     +-- <strong>Document</strong> (similar to SQL row)
+  ?     ?     +-- Field: Value (similar to SQL column)
+  ?     ?     +-- Field: Value
+  ?     ?     +-- Field: Value
+  ?     +-- Document
+  ?     +-- Document
+  ?
   +-- Collection
         +-- Document
         +-- Document
@@ -437,23 +437,23 @@ true
                   <pre><strong>SQL Approach:</strong>
 Products Table:
 +-------------------------------------+
-� ID � Name     � Price � Category_ID �
-+----+----------+-------+-------------�
-� 1  � Laptop   � 999   � 1           �
-� 2  � Mouse    � 25    � 1           �
+? ID ? Name     ? Price ? Category_ID ?
++----+----------+-------+-------------?
+? 1  ? Laptop   ? 999   ? 1           ?
+? 2  ? Mouse    ? 25    ? 1           ?
 +-------------------------------------+
 Categories Table:
 +------------------+
-� ID � Name        �
-+----+-------------�
-� 1  � Electronics �
+? ID ? Name        ?
++----+-------------?
+? 1  ? Electronics ?
 +------------------+
 Attributes Table:
 +----------------------------------+
-� ID � Product_ID � Name   � Value �
-+----+------------+--------+-------�
-� 1  � 1          � RAM    � 16GB  �
-� 2  � 1          � CPU    � i7    �
+? ID ? Product_ID ? Name   ? Value ?
++----+------------+--------+-------?
+? 1  ? 1          ? RAM    ? 16GB  ?
+? 2  ? 1          ? CPU    ? i7    ?
 +----------------------------------+
 <span class="comment">// Query requires JOIN</span>
 SELECT p.*, c.Name as Category, GROUP_CONCAT(a.Name, ':', a.Value)
@@ -604,11 +604,11 @@ db.products.findOne({ _id: 1 })
                 <pre><strong>ObjectId Structure (12 bytes total):</strong>
 507f1f77bcf86cd799439011
 +---------------------+
-�      �  �    �      �
-�      �  �    �      +- 3 bytes: Random value (counter)
-�      �  �    +-------- 2 bytes: Process ID
-�      �  +------------- 3 bytes: Machine ID
-�      +---------------- 4 bytes: Timestamp (seconds since Unix epoch)
+?      ?  ?    ?      ?
+?      ?  ?    ?      +- 3 bytes: Random value (counter)
+?      ?  ?    +-------- 2 bytes: Process ID
+?      ?  +------------- 3 bytes: Machine ID
+?      +---------------- 4 bytes: Timestamp (seconds since Unix epoch)
 <strong>Benefits:</strong>
 <i class="fas fa-check"></i> Unique across distributed systems (no coordination needed)
 <i class="fas fa-check"></i> Sortable by creation time (timestamp component)
@@ -4137,26 +4137,6 @@ $ mongoimport --db myDatabase --collection users --file users.json
         </div>
     </main>
   </div>
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.querySelector('.sidebar-overlay');
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-    }
-    function closeSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.querySelector('.sidebar-overlay');
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-    }
-    // Close sidebar when clicking a link
-    document.querySelectorAll('.sidebar a').forEach(link => {
-      link.addEventListener('click', () => {
-        closeSidebar();
-      });
-    });
-  </script>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>

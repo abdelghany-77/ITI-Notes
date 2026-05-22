@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -172,23 +172,23 @@
                   <pre>
 <strong>CONTAINERS</strong>                          <strong>VIRTUAL MACHINES</strong>
 +-------------------------+          +-------------------------+
-�   App A   �   App B     �          �         App A           �
-�  --------------------   �          �  ------------------     �
-�   Bins/Libs � Bins/Libs �          �      Bins/Libs          �
-+-------------------------�          +-------------------------�
-�   Container Runtime     �          �       Guest OS          �
-�      (Docker)           �          +-------------------------�
-+-------------------------�          �         App B           �
-�       Host OS           �          �  ------------------     �
-+-------------------------�          �      Bins/Libs          �
-�  Infrastructure (HW)    �          +-------------------------�
-+-------------------------+          �       Guest OS          �
-                                     +-------------------------�
-   Lightweight & Fast                �      Hypervisor         �
-   Shares Host OS Kernel             +-------------------------�
-                                     �       Host OS           �
-                                     +-------------------------�
-                                     �  Infrastructure (HW)    �
+?   App A   ?   App B     ?          ?         App A           ?
+?  --------------------   ?          ?  ------------------     ?
+?   Bins/Libs ? Bins/Libs ?          ?      Bins/Libs          ?
++-------------------------?          +-------------------------?
+?   Container Runtime     ?          ?       Guest OS          ?
+?      (Docker)           ?          +-------------------------?
++-------------------------?          ?         App B           ?
+?       Host OS           ?          ?  ------------------     ?
++-------------------------?          ?      Bins/Libs          ?
+?  Infrastructure (HW)    ?          +-------------------------?
++-------------------------+          ?       Guest OS          ?
+                                     +-------------------------?
+   Lightweight & Fast                ?      Hypervisor         ?
+   Shares Host OS Kernel             +-------------------------?
+                                     ?       Host OS           ?
+                                     +-------------------------?
+                                     ?  Infrastructure (HW)    ?
                                      +-------------------------+
                                         Heavyweight & Slower
                                         Full OS per VM
@@ -336,54 +336,54 @@
                 <div class="code-box">
                   <pre>
 +--------------------------------------------------------------+
-�                        DOCKER HOST                            �
-�                                                               �
-�  +-------------+                                             �
-�  �   Docker    �  Issues commands via CLI                    �
-�  �   Client    �  (docker run, docker build, etc.)           �
-�  �   (CLI)     �                                             �
-�  +-------------+                                             �
-�         �                                                     �
-�         � REST API calls                                     �
-�         ?                                                     �
-�  +--------------------------------------------------+       �
-�  �           Docker Daemon (dockerd)                 �       �
-�  �  � Listens for Docker API requests                �       �
-�  �  � Manages Docker objects (images, containers)    �       �
-�  �  � Communicates with containerd                   �       �
-�  +--------------------------------------------------+       �
-�                      �                                        �
-�                      ?                                        �
-�  +--------------------------------------------------+       �
-�  �            containerd                             �       �
-�  �  � Container supervisor/lifecycle manager         �       �
-�  �  � Starts, stops, pauses containers               �       �
-�  �  � Manages container images                       �       �
-�  �  � Instructs runc to create containers            �       �
-�  +--------------------------------------------------+       �
-�                      �                                        �
-�                      ?                                        �
-�  +--------------------------------------------------+       �
-�  �              runc                                 �       �
-�  �  � Lightweight CLI tool                           �       �
-�  �  � Creates containers using kernel primitives     �       �
-�  �  � Exits after container starts                   �       �
-�  +--------------------------------------------------+       �
-�                      �                                        �
-�                      ?                                        �
-�  +--------------------------------------------------+       �
-�  �              shim                                 �       �
-�  �  � Enables daemonless containers                  �       �
-�  �  � Becomes container's parent after runc exits    �       �
-�  �  � Reports container status back to containerd    �       �
-�  +--------------------------------------------------+       �
-�                                                               �
+?                        DOCKER HOST                            ?
+?                                                               ?
+?  +-------------+                                             ?
+?  ?   Docker    ?  Issues commands via CLI                    ?
+?  ?   Client    ?  (docker run, docker build, etc.)           ?
+?  ?   (CLI)     ?                                             ?
+?  +-------------+                                             ?
+?         ?                                                     ?
+?         ? REST API calls                                     ?
+?         ?                                                     ?
+?  +--------------------------------------------------+       ?
+?  ?           Docker Daemon (dockerd)                 ?       ?
+?  ?  ? Listens for Docker API requests                ?       ?
+?  ?  ? Manages Docker objects (images, containers)    ?       ?
+?  ?  ? Communicates with containerd                   ?       ?
+?  +--------------------------------------------------+       ?
+?                      ?                                        ?
+?                      ?                                        ?
+?  +--------------------------------------------------+       ?
+?  ?            containerd                             ?       ?
+?  ?  ? Container supervisor/lifecycle manager         ?       ?
+?  ?  ? Starts, stops, pauses containers               ?       ?
+?  ?  ? Manages container images                       ?       ?
+?  ?  ? Instructs runc to create containers            ?       ?
+?  +--------------------------------------------------+       ?
+?                      ?                                        ?
+?                      ?                                        ?
+?  +--------------------------------------------------+       ?
+?  ?              runc                                 ?       ?
+?  ?  ? Lightweight CLI tool                           ?       ?
+?  ?  ? Creates containers using kernel primitives     ?       ?
+?  ?  ? Exits after container starts                   ?       ?
+?  +--------------------------------------------------+       ?
+?                      ?                                        ?
+?                      ?                                        ?
+?  +--------------------------------------------------+       ?
+?  ?              shim                                 ?       ?
+?  ?  ? Enables daemonless containers                  ?       ?
+?  ?  ? Becomes container's parent after runc exits    ?       ?
+?  ?  ? Reports container status back to containerd    ?       ?
+?  +--------------------------------------------------+       ?
+?                                                               ?
 +--------------------------------------------------------------+
          ?
 +----------------------+
-�   Docker Registry    �
-�   (Docker Hub, etc.) �
-�  � Store/Share Images�
+?   Docker Registry    ?
+?   (Docker Hub, etc.) ?
+?  ? Store/Share Images?
 +----------------------+
 </pre>
                 </div>
@@ -513,7 +513,7 @@ b3f5d2a1c8e9...
 <span class="comment"># Docker Client -&gt; Docker Daemon -&gt; containerd -&gt; runc -&gt; Container!</span>
 <span class="prompt">$</span> docker ps
 CONTAINER ID   IMAGE   COMMAND                  STATUS         PORTS      NAMES
-b3f5d2a1c8e9   nginx   "/docker-entrypoint.�"   Up 10 seconds  80/tcp     webserver
+b3f5d2a1c8e9   nginx   "/docker-entrypoint.?"   Up 10 seconds  80/tcp     webserver
 </pre>
               </div>
             </div>
@@ -594,15 +594,15 @@ b3f5d2a1c8e9   nginx   "/docker-entrypoint.�"   Up 10 seconds  80/tcp     webs
                     <pre>
 Docker Image: myapp:latest
 +----------------------------------+
-�  Layer 5: COPY app.py /app/      �  ? Your application code
-+----------------------------------�
-�  Layer 4: RUN pip install flask  �  ? Application dependencies
-+----------------------------------�
-�  Layer 3: COPY requirements.txt  �  ? Requirements file
-+----------------------------------�
-�  Layer 2: RUN apt-get update     �  ? System updates
-+----------------------------------�
-�  Layer 1: FROM python:3.9        �  ? Base image (Python runtime)
+?  Layer 5: COPY app.py /app/      ?  ? Your application code
++----------------------------------?
+?  Layer 4: RUN pip install flask  ?  ? Application dependencies
++----------------------------------?
+?  Layer 3: COPY requirements.txt  ?  ? Requirements file
++----------------------------------?
+?  Layer 2: RUN apt-get update     ?  ? System updates
++----------------------------------?
+?  Layer 1: FROM python:3.9        ?  ? Base image (Python runtime)
 +----------------------------------+
 All layers are READ-ONLY (immutable)
 Each layer contains only the differences from the layer below
@@ -614,9 +614,9 @@ Each layer contains only the differences from the layer below
                 <pre><span class="comment"># View image layers and history</span>
 <span class="prompt">$</span> docker history nginx:latest
 IMAGE          CREATED BY                                      SIZE
-f5a6c7b97f4d   /bin/sh -c #(nop)  CMD ["nginx" "-g" "daemon�  0B
+f5a6c7b97f4d   /bin/sh -c #(nop)  CMD ["nginx" "-g" "daemon?  0B
 b1c2d3e4f5g6   /bin/sh -c #(nop)  EXPOSE 80                    0B
-a1b2c3d4e5f6   /bin/sh -c apt-get update && apt-get install�  54.3MB
+a1b2c3d4e5f6   /bin/sh -c apt-get update && apt-get install?  54.3MB
 z9y8x7w6v5u4   /bin/sh -c #(nop)  FROM debian:11-slim          27.2MB
 <span class="comment"># List all images</span>
 <span class="prompt">$</span> docker images
@@ -656,21 +656,21 @@ mysql        8.0       z9y8x7w6v5u4   1 month ago    516MB
                     <pre>
 Running Container
 +----------------------------------------------+
-�  Container Layer (Read-Write) - EPHEMERAL   �  ? Container-specific changes
-�  � New files created at runtime              �
-�  � Modified files                            �
-�  � Deleted files (marked as deleted)         �
-�  � Application logs                          �
-+----------------------------------------------�
-�  Layer 5: COPY app.py /app/      (Read-Only)�
-+----------------------------------------------�
-�  Layer 4: RUN pip install flask  (Read-Only)�
-+----------------------------------------------�
-�  Layer 3: COPY requirements.txt  (Read-Only)�
-+----------------------------------------------�
-�  Layer 2: RUN apt-get update     (Read-Only)�
-+----------------------------------------------�
-�  Layer 1: FROM python:3.9        (Read-Only)�
+?  Container Layer (Read-Write) - EPHEMERAL   ?  ? Container-specific changes
+?  ? New files created at runtime              ?
+?  ? Modified files                            ?
+?  ? Deleted files (marked as deleted)         ?
+?  ? Application logs                          ?
++----------------------------------------------?
+?  Layer 5: COPY app.py /app/      (Read-Only)?
++----------------------------------------------?
+?  Layer 4: RUN pip install flask  (Read-Only)?
++----------------------------------------------?
+?  Layer 3: COPY requirements.txt  (Read-Only)?
++----------------------------------------------?
+?  Layer 2: RUN apt-get update     (Read-Only)?
++----------------------------------------------?
+?  Layer 1: FROM python:3.9        (Read-Only)?
 +----------------------------------------------+
 When you run: docker rm container_name
 -&gt; Only the Container Layer is deleted!
@@ -730,27 +730,27 @@ a1b2c3d4e5f6   nginx:latest   Up 2 minutes   80/tcp    myapp
                   <tr>
                     <td><strong>always</strong></td>
                     <td>
-                      � Restarts if killed from inside container<br>
-                      � Restarts if Docker daemon restarts<br>
-                      � Does NOT restart if manually stopped
+                      ? Restarts if killed from inside container<br>
+                      ? Restarts if Docker daemon restarts<br>
+                      ? Does NOT restart if manually stopped
                     </td>
                     <td>Production services that should always run</td>
                   </tr>
                   <tr>
                     <td><strong>unless-stopped</strong></td>
                     <td>
-                      � Restarts if killed from inside<br>
-                      � Does NOT restart if Docker daemon restarts<br>
-                      � Does NOT restart if manually stopped
+                      ? Restarts if killed from inside<br>
+                      ? Does NOT restart if Docker daemon restarts<br>
+                      ? Does NOT restart if manually stopped
                     </td>
                     <td>Services that should persist through reboots but respect manual stops</td>
                   </tr>
                   <tr>
                     <td><strong>on-failure[:max-retries]</strong></td>
                     <td>
-                      � Only restarts if process exits with non-zero code<br>
-                      � Restarts if Docker daemon restarts<br>
-                      � Optionally limit retry attempts
+                      ? Only restarts if process exits with non-zero code<br>
+                      ? Restarts if Docker daemon restarts<br>
+                      ? Optionally limit retry attempts
                     </td>
                     <td>Applications that may fail and need automatic recovery</td>
                   </tr>
@@ -910,27 +910,27 @@ a1b2c3d4e5f6   webserver   0.05%   2.5MiB / 7.77GiB    0.03%   1.2kB / 0B  0B / 
                 <div class="code-box">
                   <pre>
 +-------------------------------------------------------------+
-�                        HOST SYSTEM                           �
-�                                                              �
-�  +------------------+  +------------------+  +----------+  �
-�  � VOLUMES          �  � BIND MOUNTS      �  � tmpfs    �  �
-�  � (Docker managed) �  � (Any location)   �  � (Memory) �  �
-�  +------------------�  +------------------�  +----------+  �
-�  � /var/lib/docker/ �  � /home/user/app/  �       �        �
-�  �   volumes/       �  � /etc/nginx/      �       ?        �
-�  �   mydata/        �  � /var/www/html/   �     RAM       �
-�  +------------------+  +------------------+                �
-�           �                     �                           �
-�           +---------------------+                           �
-�                  ?                                           �
-�  +-------------------------------------------------------+  �
-�  �              DOCKER CONTAINER                         �  �
-�  �  +-------------------------------------------------+  �  �
-�  �  �  /var/lib/mysql  ? Volume mount                 �  �  �
-�  �  �  /app/src        ? Bind mount                   �  �  �
-�  �  �  /tmp/cache      ? tmpfs mount                  �  �  �
-�  �  +-------------------------------------------------+  �  �
-�  +-------------------------------------------------------+  �
+?                        HOST SYSTEM                           ?
+?                                                              ?
+?  +------------------+  +------------------+  +----------+  ?
+?  ? VOLUMES          ?  ? BIND MOUNTS      ?  ? tmpfs    ?  ?
+?  ? (Docker managed) ?  ? (Any location)   ?  ? (Memory) ?  ?
+?  +------------------?  +------------------?  +----------+  ?
+?  ? /var/lib/docker/ ?  ? /home/user/app/  ?       ?        ?
+?  ?   volumes/       ?  ? /etc/nginx/      ?       ?        ?
+?  ?   mydata/        ?  ? /var/www/html/   ?     RAM       ?
+?  +------------------+  +------------------+                ?
+?           ?                     ?                           ?
+?           +---------------------+                           ?
+?                  ?                                           ?
+?  +-------------------------------------------------------+  ?
+?  ?              DOCKER CONTAINER                         ?  ?
+?  ?  +-------------------------------------------------+  ?  ?
+?  ?  ?  /var/lib/mysql  ? Volume mount                 ?  ?  ?
+?  ?  ?  /app/src        ? Bind mount                   ?  ?  ?
+?  ?  ?  /tmp/cache      ? tmpfs mount                  ?  ?  ?
+?  ?  +-------------------------------------------------+  ?  ?
+?  +-------------------------------------------------------+  ?
 +-------------------------------------------------------------+
 </pre>
                 </div>
@@ -1352,24 +1352,24 @@ PING api (172.18.0.3): 56 data bytes
                     <pre>
 <span class="prompt">$</span> docker run -d -p 10.0.0.15:5000:80 --name web nginx
 +-----------------------------------------+
-�          HOST MACHINE                    �
-�                                          �
-�  External Access:                        �
-�  http://10.0.0.15:5000 -----+           �
-�                              �           �
-�                              ?           �
-�  +-----------------------------------+  �
-�  � Port Mapping: 5000 -&gt; 80           �  �
-�  +-----------------------------------+  �
-�                  �                       �
-�                  ?                       �
-�  +---------------------------------+    �
-�  �   Container: web                �    �
-�  �   +-------------------------+   �    �
-�  �   �  nginx listening on     �   �    �
-�  �   �  port 80                �   �    �
-�  �   +-------------------------+   �    �
-�  +---------------------------------+    �
+?          HOST MACHINE                    ?
+?                                          ?
+?  External Access:                        ?
+?  http://10.0.0.15:5000 -----+           ?
+?                              ?           ?
+?                              ?           ?
+?  +-----------------------------------+  ?
+?  ? Port Mapping: 5000 -&gt; 80           ?  ?
+?  +-----------------------------------+  ?
+?                  ?                       ?
+?                  ?                       ?
+?  +---------------------------------+    ?
+?  ?   Container: web                ?    ?
+?  ?   +-------------------------+   ?    ?
+?  ?   ?  nginx listening on     ?   ?    ?
+?  ?   ?  port 80                ?   ?    ?
+?  ?   +-------------------------+   ?    ?
+?  +---------------------------------+    ?
 +-----------------------------------------+
 Traffic flow: 
 External -&gt; Host IP:5000 -&gt; Container Port 80
@@ -2086,8 +2086,8 @@ services:
                 <div class="code-box">
                   <pre>
 +--------------+         +--------------+         +--------------+
-�  Dockerfile  � build   � Docker Image �  run    �  Container   �
-�  (recipe)    �-------->�  (template)  �-------->�  (running)   �
+?  Dockerfile  ? build   ? Docker Image ?  run    ?  Container   ?
+?  (recipe)    ?-------->?  (template)  ?-------->?  (running)   ?
 +--------------+         +--------------+         +--------------+
 </pre>
                 </div>
@@ -3087,26 +3087,6 @@ CMD ["node", "server.js"]
       </div>
     </main>
   </div>
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.querySelector('.sidebar-overlay');
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-    }
-    function closeSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.querySelector('.sidebar-overlay');
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-    }
-    // Close sidebar when clicking a link
-    document.querySelectorAll('.sidebar a').forEach(link => {
-      link.addEventListener('click', () => {
-        closeSidebar();
-      });
-    });
-  </script>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -108,7 +108,7 @@
                 <p>
                   Think of cloud computing like electricity in your home. You don't own a power plant;
                   you just plug in and pay for what you use. Similarly, with cloud computing, you don't
-                  need to own servers�you just use AWS resources and pay for what you consume.
+                  need to own servers?you just use AWS resources and pay for what you consume.
                 </p>
               </div>
               <div class="component-grid">
@@ -377,7 +377,7 @@
                   <li><code>us-east-1</code> -&gt; US East (N. Virginia)</li>
                   <li><code>eu-west-1</code> -&gt; Europe (Ireland)</li>
                   <li><code>ap-southeast-1</code> -&gt; Asia Pacific (Singapore)</li>
-                  <li><code>sa-east-1</code> -&gt; South America (S�o Paulo)</li>
+                  <li><code>sa-east-1</code> -&gt; South America (S?o Paulo)</li>
                 </ul>
               </div>
               <div class="subsection">
@@ -428,13 +428,13 @@
                   <pre>
 Region: us-east-1 (N. Virginia)
 +-- AZ: us-east-1a
-�   +-- EC2 Instance 1 (Web Server)
-�   +-- RDS Database (Primary)
-�
+?   +-- EC2 Instance 1 (Web Server)
+?   +-- RDS Database (Primary)
+?
 +-- AZ: us-east-1b
-�   +-- EC2 Instance 2 (Web Server)
-�   +-- RDS Database (Standby Replica)
-�
+?   +-- EC2 Instance 2 (Web Server)
+?   +-- RDS Database (Standby Replica)
+?
 +-- AZ: us-east-1c
     +-- EC2 Instance 3 (Web Server)
 If one AZ fails, your app continues running in other AZs!
@@ -763,7 +763,7 @@ aws s3api put-object-acl \
                       <tr>
                         <td><strong>S3 Glacier Deep Archive</strong></td>
                         <td>Compliance, 7-10 year retention</td>
-                        <td>�</td>
+                        <td>?</td>
                         <td>12-48 hours</td>
                       </tr>
                     </tbody>
@@ -795,12 +795,12 @@ aws s3api put-object-acl \
                   <div class="code-box">
                     <pre>
 VPC (10.0.0.0/16)
-�
+?
 +-- Public Subnet (10.0.1.0/24)
-�   +-- Web Server EC2 (10.0.1.10)
-�   +-- Load Balancer
-�   +-- Internet Gateway -&gt; Access from internet
-�
+?   +-- Web Server EC2 (10.0.1.10)
+?   +-- Load Balancer
+?   +-- Internet Gateway -&gt; Access from internet
+?
 +-- Private Subnet (10.0.2.0/24)
     +-- Application Server EC2 (10.0.2.10)
     +-- Database (RDS)
@@ -1638,18 +1638,18 @@ aws autoscaling put-scheduled-action \
                 <div class="code-box">
                   <pre>
 Application Load Balancer: www.myapp.com
-�
+?
 +-- Rule 1: /api/*
-�   +-- Target Group: API Servers
-�       +-- EC2 Instance: api-server-1
-�       +-- EC2 Instance: api-server-2
-�       +-- EC2 Instance: api-server-3
-�
+?   +-- Target Group: API Servers
+?       +-- EC2 Instance: api-server-1
+?       +-- EC2 Instance: api-server-2
+?       +-- EC2 Instance: api-server-3
+?
 +-- Rule 2: /admin/*
-�   +-- Target Group: Admin Servers
-�       +-- EC2 Instance: admin-server-1
-�       +-- EC2 Instance: admin-server-2
-�
+?   +-- Target Group: Admin Servers
+?       +-- EC2 Instance: admin-server-1
+?       +-- EC2 Instance: admin-server-2
+?
 +-- Default Rule: /*
     +-- Target Group: Web Servers
         +-- EC2 Instance: web-server-1
@@ -1700,29 +1700,29 @@ aws elbv2 create-listener \
                 <div class="code-box">
                   <pre>
                         +-----------------+
-                        �   Route 53 DNS  �
+                        ?   Route 53 DNS  ?
                         +-----------------+
-                                 �
+                                 ?
                     +-------------------------+
-                    � Application Load Balancer�
-                    �  (Multi-AZ, public)     �
+                    ? Application Load Balancer?
+                    ?  (Multi-AZ, public)     ?
                     +-------------------------+
-                                 �
+                                 ?
         +------------------------+------------------------+
-        �                        �                        �
+        ?                        ?                        ?
 +-------?--------+      +-------?--------+      +-------?--------+
-�   us-east-1a   �      �   us-east-1b   �      �   us-east-1c   �
-�                �      �                �      �                �
-� Auto Scaling   �      � Auto Scaling   �      � Auto Scaling   �
-� +-----------+  �      � +-----------+  �      � +-----------+  �
-� �EC2 Instance�  �      � �EC2 Instance�  �      � �EC2 Instance�  �
-� � Web Server �  �      � � Web Server �  �      � � Web Server �  �
-� +-----------+  �      � +-----------+  �      � +-----------+  �
-�                �      �                �      �                �
-� +-----------+  �      � +-----------+  �      �                �
-� �    RDS     �--+------+-� RDS Standby�  �      �                �
-� �  Primary   �  �      � �  Replica   �  �      �                �
-� +-----------+  �      � +-----------+  �      �                �
+?   us-east-1a   ?      ?   us-east-1b   ?      ?   us-east-1c   ?
+?                ?      ?                ?      ?                ?
+? Auto Scaling   ?      ? Auto Scaling   ?      ? Auto Scaling   ?
+? +-----------+  ?      ? +-----------+  ?      ? +-----------+  ?
+? ?EC2 Instance?  ?      ? ?EC2 Instance?  ?      ? ?EC2 Instance?  ?
+? ? Web Server ?  ?      ? ? Web Server ?  ?      ? ? Web Server ?  ?
+? +-----------+  ?      ? +-----------+  ?      ? +-----------+  ?
+?                ?      ?                ?      ?                ?
+? +-----------+  ?      ? +-----------+  ?      ?                ?
+? ?    RDS     ?--+------+-? RDS Standby?  ?      ?                ?
+? ?  Primary   ?  ?      ? ?  Replica   ?  ?      ?                ?
+? +-----------+  ?      ? +-----------+  ?      ?                ?
 +----------------+      +----------------+      +----------------+
 Benefits:
 <i class="fas fa-check"></i> High Availability: If one AZ fails, app continues in other AZs
@@ -2688,7 +2688,7 @@ aws cloudtrail lookup-events \
                 </div>
                 <div class="example-box">
                   <h5>Example: t3.medium On-Demand</h5>
-                  <p>$0.0416/hour � 730 hours/month = <strong>$30.37/month</strong></p>
+                  <p>$0.0416/hour ? 730 hours/month = <strong>$30.37/month</strong></p>
                 </div>
               </div>
               <div class="aws-service-card">
@@ -2728,7 +2728,7 @@ aws cloudtrail lookup-events \
                 </div>
                 <div class="example-box">
                   <h5>Example: t3.medium Spot</h5>
-                  <p>~$0.0125/hour � 730 hours = <strong>$9.13/month</strong> (70% savings vs On-Demand)</p>
+                  <p>~$0.0125/hour ? 730 hours = <strong>$9.13/month</strong> (70% savings vs On-Demand)</p>
                   <p><em>Note: Spot prices fluctuate based on supply and demand</em></p>
                 </div>
               </div>
@@ -2976,7 +2976,7 @@ aws budgets create-budget \
                 <div class="content-box">
                   <p><strong>Current Situation:</strong> Monthly AWS bill = $1,000</p>
                   <ul>
-                    <li>EC2: 5� t3.medium On-Demand (24/7) = $152 each = $760/month</li>
+                    <li>EC2: 5? t3.medium On-Demand (24/7) = $152 each = $760/month</li>
                     <li>RDS: db.t3.small On-Demand (24/7) = $30/month</li>
                     <li>S3: 200 GB standard storage = $5/month</li>
                     <li>Data Transfer: $205/month</li>
@@ -2984,19 +2984,19 @@ aws budgets create-budget \
                   <p><strong>Optimizations Applied:</strong></p>
                   <ol>
                     <li><strong>Right-size EC2:</strong> Analysis shows low CPU -&gt; downsize to t3.small = $15.18 each
-                      <br>Savings: ($30.37 - $15.18) � 5 = <strong>$75.95/month</strong>
+                      <br>Savings: ($30.37 - $15.18) ? 5 = <strong>$75.95/month</strong>
                     </li>
                     <li><strong>Reserved Instances:</strong> Buy 1-year RI for 3 instances (always on)
                       <br>Savings: 50% on 3 instances = <strong>$22.79/month</strong>
                     </li>
                     <li><strong>Schedule Dev/Test:</strong> Stop 2 instances at night (12 hours/day)
-                      <br>Savings: $15.18 � 2 � 0.5 = <strong>$15.18/month</strong>
+                      <br>Savings: $15.18 ? 2 ? 0.5 = <strong>$15.18/month</strong>
                     </li>
                     <li><strong>RDS Reserved:</strong> 1-year RI for database
                       <br>Savings: 40% = <strong>$12/month</strong>
                     </li>
                     <li><strong>S3 Lifecycle:</strong> Move old data to Glacier (100 GB)
-                      <br>Savings: (100 GB � $0.023) - (100 GB � $0.004) = <strong>$1.90/month</strong>
+                      <br>Savings: (100 GB ? $0.023) - (100 GB ? $0.004) = <strong>$1.90/month</strong>
                     </li>
                     <li><strong>CloudFront:</strong> Enable caching to reduce data transfer
                       <br>Savings: 30% of transfer costs = <strong>$61.50/month</strong>
@@ -3150,26 +3150,6 @@ aws budgets create-budget \
       </div>
     </main>
   </div>
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.querySelector('.sidebar-overlay');
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-    }
-    function closeSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.querySelector('.sidebar-overlay');
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-    }
-    // Close sidebar when clicking a link
-    document.querySelectorAll('.sidebar a').forEach(link => {
-      link.addEventListener('click', () => {
-        closeSidebar();
-      });
-    });
-  </script>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -140,28 +140,28 @@
                 <pre style="text-align:center;">
 <strong>MySQL Architecture Layers:</strong>
 +---------------------------------------------------------+
-�              Client Layer (Applications)                �
-�  MySQL Workbench, PHP, Python, Java, Node.js, etc.      �
+?              Client Layer (Applications)                ?
+?  MySQL Workbench, PHP, Python, Java, Node.js, etc.      ?
 +---------------------------------------------------------+
 +---------------------------------------------------------+
-�                Connection Pool                          �
-�  (Manages client connections, authentication)           �
+?                Connection Pool                          ?
+?  (Manages client connections, authentication)           ?
 +---------------------------------------------------------+
 +---------------------------------------------------------+
-�               SQL Interface Layer                       �
-�  - Query Parser (syntax check)                          �
-�  - Query Optimizer (find best execution plan)           �
-�  - Query Executor                                       �
+?               SQL Interface Layer                       ?
+?  - Query Parser (syntax check)                          ?
+?  - Query Optimizer (find best execution plan)           ?
+?  - Query Executor                                       ?
 +---------------------------------------------------------+
 +---------------------------------------------------------+
-�                 Storage Engine Layer                    �
-�  InnoDB (default), MyISAM, Memory, Archive, etc.        �
-�  - Handles data storage and retrieval                   �
-�  - Manages transactions, locking, indexing              �
+?                 Storage Engine Layer                    ?
+?  InnoDB (default), MyISAM, Memory, Archive, etc.        ?
+?  - Handles data storage and retrieval                   ?
+?  - Manages transactions, locking, indexing              ?
 +---------------------------------------------------------+
 +---------------------------------------------------------+
-�            Physical Storage (File System)               �
-�  Data files, Index files, Log files                     �
+?            Physical Storage (File System)               ?
+?  Data files, Index files, Log files                     ?
 +---------------------------------------------------------+
 </pre>
               </div>
@@ -563,38 +563,38 @@ Bye
                 <pre style="text-align:center;">
 <strong>ER Diagram Components:</strong>
 +---------------------------------------------------------+
-�                    ENTITY (Table)                       �
-�  Represents a real-world object (Customer, Product)     �
-�                                                         �
-�  +-------------+                                        �
-�  �  CUSTOMER   �                                        �
-�  +-------------�                                        �
-�  � customer_id � ? Primary Key (PK)                     �
-�  � name        �                                        �
-�  � email       �                                        �
-�  +-------------+                                        �
+?                    ENTITY (Table)                       ?
+?  Represents a real-world object (Customer, Product)     ?
+?                                                         ?
+?  +-------------+                                        ?
+?  ?  CUSTOMER   ?                                        ?
+?  +-------------?                                        ?
+?  ? customer_id ? ? Primary Key (PK)                     ?
+?  ? name        ?                                        ?
+?  ? email       ?                                        ?
+?  +-------------+                                        ?
 +---------------------------------------------------------+
 +---------------------------------------------------------+
-�                   RELATIONSHIP                          �
-�  Connects entities (Customer PLACES Order)              �
-�                                                         �
-�  Customer ----< Places >---- Order                      �
-�   (One)                      (Many)                     �
-�                                                         �
-�  Cardinality Types:                                     �
-�  � One-to-One (1:1)                                     �
-�  � One-to-Many (1:N) - Most common                      �
-�  � Many-to-Many (M:N) - Requires junction table         �
+?                   RELATIONSHIP                          ?
+?  Connects entities (Customer PLACES Order)              ?
+?                                                         ?
+?  Customer ----< Places >---- Order                      ?
+?   (One)                      (Many)                     ?
+?                                                         ?
+?  Cardinality Types:                                     ?
+?  ? One-to-One (1:1)                                     ?
+?  ? One-to-Many (1:N) - Most common                      ?
+?  ? Many-to-Many (M:N) - Requires junction table         ?
 +---------------------------------------------------------+
 +---------------------------------------------------------+
-�                    ATTRIBUTE (Column)                   �
-�  Properties of an entity                                �
-�                                                         �
-�  Types:                                                 �
-�  � Simple: Cannot be divided (age, name)                �
-�  � Composite: Can be divided (address -&gt; street, city)   �
-�  � Derived: Calculated from other attributes (age)      �
-�  � Multi-valued: Multiple values (phone numbers)        �
+?                    ATTRIBUTE (Column)                   ?
+?  Properties of an entity                                ?
+?                                                         ?
+?  Types:                                                 ?
+?  ? Simple: Cannot be divided (age, name)                ?
+?  ? Composite: Can be divided (address -&gt; street, city)   ?
+?  ? Derived: Calculated from other attributes (age)      ?
+?  ? Multi-valued: Multiple values (phone numbers)        ?
 +---------------------------------------------------------+
 </pre>
               </div>
@@ -604,20 +604,20 @@ Bye
                   <pre style="text-align:center;">
 CUSTOMERS                    ORDERS                      PRODUCTS
 +-------------+             +-------------+            +-------------+
-� customer_id �?-----+      � order_id    �      +----?� product_id  �
-� first_name  �      �      � customer_id �------+     � name        �
-� last_name   �      +------� order_date  �            � price       �
-� email       �             � total       �            � stock       �
-� phone       �             � status      �            � category_id �
-� created_at  �             +-------------+            +-------------+
-+-------------+                    �                          ?
-                                   �                          �
-                            ORDER_ITEMS                       �
-                           +-------------+                    �
-                           � order_id    �                    �
-                           � product_id  �--------------------+
-                           � quantity    �
-                           � price       �
+? customer_id ??-----+      ? order_id    ?      +----?? product_id  ?
+? first_name  ?      ?      ? customer_id ?------+     ? name        ?
+? last_name   ?      +------? order_date  ?            ? price       ?
+? email       ?             ? total       ?            ? stock       ?
+? phone       ?             ? status      ?            ? category_id ?
+? created_at  ?             +-------------+            +-------------+
++-------------+                    ?                          ?
+                                   ?                          ?
+                            ORDER_ITEMS                       ?
+                           +-------------+                    ?
+                           ? order_id    ?                    ?
+                           ? product_id  ?--------------------+
+                           ? quantity    ?
+                           ? price       ?
                            +-------------+
                           (Junction Table)
 </pre>
@@ -646,9 +646,9 @@ CUSTOMERS                    ORDERS                      PRODUCTS
                     <tr>
                       <td><strong>1NF</strong><br>(First Normal Form)</td>
                       <td>
-                        � Each cell contains atomic (single) values<br>
-                        � No repeating groups<br>
-                        � Each row is unique (has PK)
+                        ? Each cell contains atomic (single) values<br>
+                        ? No repeating groups<br>
+                        ? Each row is unique (has PK)
                       </td>
                       <td>
                         <i class="fas fa-times"></i> Phone: "123-4567, 890-1234"<br>
@@ -658,9 +658,9 @@ CUSTOMERS                    ORDERS                      PRODUCTS
                     <tr>
                       <td><strong>2NF</strong><br>(Second Normal Form)</td>
                       <td>
-                        � Must be in 1NF<br>
-                        � No partial dependencies<br>
-                        � Non-key columns fully depend on entire PK
+                        ? Must be in 1NF<br>
+                        ? No partial dependencies<br>
+                        ? Non-key columns fully depend on entire PK
                       </td>
                       <td>
                         <i class="fas fa-times"></i> Order table with product_name (depends only on product_id)<br>
@@ -670,9 +670,9 @@ CUSTOMERS                    ORDERS                      PRODUCTS
                     <tr>
                       <td><strong>3NF</strong><br>(Third Normal Form)</td>
                       <td>
-                        � Must be in 2NF<br>
-                        � No transitive dependencies<br>
-                        � Non-key columns depend only on PK
+                        ? Must be in 2NF<br>
+                        ? No transitive dependencies<br>
+                        ? Non-key columns depend only on PK
                       </td>
                       <td>
                         <i class="fas fa-times"></i> Employee table with department_name (depends on department_id)<br>
@@ -682,9 +682,9 @@ CUSTOMERS                    ORDERS                      PRODUCTS
                     <tr>
                       <td><strong>BCNF</strong><br>(Boyce-Codd NF)</td>
                       <td>
-                        � Must be in 3NF<br>
-                        � Every determinant is a candidate key<br>
-                        � Stricter version of 3NF
+                        ? Must be in 3NF<br>
+                        ? Every determinant is a candidate key<br>
+                        ? Stricter version of 3NF
                       </td>
                       <td>
                         Resolves anomalies in 3NF with overlapping candidate keys
@@ -699,10 +699,10 @@ CUSTOMERS                    ORDERS                      PRODUCTS
                   <pre style="text-align:center;"><span class="comment">-- Unnormalized (0NF)</span>
 Orders Table:
 +-------------------------------------------------------------------+
-� order_id � customer  � products                         � total   �
-+----------+-----------+----------------------------------+---------�
-� 1        � Alice     � Laptop $999, Mouse $25           � $1024   �
-� 2        � Bob       � Phone $799                       � $799    �
+? order_id ? customer  ? products                         ? total   ?
++----------+-----------+----------------------------------+---------?
+? 1        ? Alice     ? Laptop $999, Mouse $25           ? $1024   ?
+? 2        ? Bob       ? Phone $799                       ? $799    ?
 +-------------------------------------------------------------------+
 <span class="comment">/* Problems: 
    - products column contains multiple values
@@ -711,11 +711,11 @@ Orders Table:
 <span class="comment">-- 1NF: Atomic values</span>
 Orders Table:
 +--------------------------------------------------------+
-� order_id � customer   � product     � price    � qty   �
-+----------+------------+-------------+----------+-------�
-� 1        � Alice      � Laptop      � 999      � 1     �
-� 1        � Alice      � Mouse       � 25       � 1     �
-� 2        � Bob        � Phone       � 799      � 1     �
+? order_id ? customer   ? product     ? price    ? qty   ?
++----------+------------+-------------+----------+-------?
+? 1        ? Alice      ? Laptop      ? 999      ? 1     ?
+? 1        ? Alice      ? Mouse       ? 25       ? 1     ?
+? 2        ? Bob        ? Phone       ? 799      ? 1     ?
 +--------------------------------------------------------+
 <span class="comment">/* Problems:
    - customer repeated for each product
@@ -723,34 +723,34 @@ Orders Table:
 <span class="comment">-- 2NF: Remove partial dependencies</span>
 Orders Table:
 +-----------------------------------------------+
-� order_id � customer_id � order_date � total   �
-+----------+-------------+------------+---------�
-� 1        � 1           � 2025-01-15 � 1024    �
-� 2        � 2           � 2025-01-16 � 799     �
+? order_id ? customer_id ? order_date ? total   ?
++----------+-------------+------------+---------?
+? 1        ? 1           ? 2025-01-15 ? 1024    ?
+? 2        ? 2           ? 2025-01-16 ? 799     ?
 +-----------------------------------------------+
 Order_Items Table:
 +------------------------------------------+
-� order_id � product_id � price    � qty   �
-+----------+------------+----------+-------�
-� 1        � 1          � 999      � 1     �
-� 1        � 2          � 25       � 1     �
-� 2        � 3          � 799      � 1     �
+? order_id ? product_id ? price    ? qty   ?
++----------+------------+----------+-------?
+? 1        ? 1          ? 999      ? 1     ?
+? 1        ? 2          ? 25       ? 1     ?
+? 2        ? 3          ? 799      ? 1     ?
 +------------------------------------------+
 Products Table:
 +------------------------------+
-� product_id � name    � price �
-+------------+---------+-------�
-� 1          � Laptop  � 999   �
-� 2          � Mouse   � 25    �
-� 3          � Phone   � 799   �
+? product_id ? name    ? price ?
++------------+---------+-------?
+? 1          ? Laptop  ? 999   ?
+? 2          ? Mouse   ? 25    ?
+? 3          ? Phone   ? 799   ?
 +------------------------------+
 <span class="comment">-- 3NF: Remove transitive dependencies</span>
 Customers Table:
 +----------------------------------------------+
-� customer_id � name     � email               �
-+-------------+----------+---------------------�
-� 1           � Alice    � alice@example.com   �
-� 2           � Bob      � bob@example.com     �
+? customer_id ? name     ? email               ?
++-------------+----------+---------------------?
+? 1           ? Alice    ? alice@example.com   ?
+? 2           ? Bob      ? bob@example.com     ?
 +----------------------------------------------+
 <span class="comment">/* Now in 3NF:
    <i class="fas fa-check"></i> No redundant data
@@ -781,55 +781,55 @@ Customers Table:
                     <td><strong>Primary Key (PK)</strong></td>
                     <td>Uniquely identifies each row in a table</td>
                     <td>
-                      � Must be UNIQUE<br>
-                      � Cannot be NULL<br>
-                      � Only one per table<br>
-                      � Usually an ID column
+                      ? Must be UNIQUE<br>
+                      ? Cannot be NULL<br>
+                      ? Only one per table<br>
+                      ? Usually an ID column
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Foreign Key (FK)</strong></td>
                     <td>Links two tables together</td>
                     <td>
-                      � References PK of another table<br>
-                      � Enforces referential integrity<br>
-                      � Can be NULL<br>
-                      � Can be duplicated
+                      ? References PK of another table<br>
+                      ? Enforces referential integrity<br>
+                      ? Can be NULL<br>
+                      ? Can be duplicated
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Candidate Key</strong></td>
                     <td>Columns that could be primary key</td>
                     <td>
-                      � Unique and NOT NULL<br>
-                      � One becomes PK<br>
-                      � Others become Alternate Keys
+                      ? Unique and NOT NULL<br>
+                      ? One becomes PK<br>
+                      ? Others become Alternate Keys
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Composite Key</strong></td>
                     <td>Primary key with multiple columns</td>
                     <td>
-                      � Combination is unique<br>
-                      � Common in junction tables<br>
-                      � Each column may not be unique alone
+                      ? Combination is unique<br>
+                      ? Common in junction tables<br>
+                      ? Each column may not be unique alone
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Unique Key</strong></td>
                     <td>Ensures column values are unique</td>
                     <td>
-                      � Allows one NULL value<br>
-                      � Multiple per table<br>
-                      � Example: email, username
+                      ? Allows one NULL value<br>
+                      ? Multiple per table<br>
+                      ? Example: email, username
                     </td>
                   </tr>
                   <tr>
                     <td><strong>Super Key</strong></td>
                     <td>Any set of columns that uniquely identifies a row</td>
                     <td>
-                      � Includes PK + other columns<br>
-                      � May contain redundant columns
+                      ? Includes PK + other columns<br>
+                      ? May contain redundant columns
                     </td>
                   </tr>
                 </tbody>
@@ -2661,15 +2661,15 @@ FROM products;
 <strong>Join Visualization:</strong>
 Table A (Employees)          Table B (Departments)
 +--------------------+        +-------------------+
-� ID � Name � Dept_ID�        � ID � Department   �
-+----+------+--------�        +----+--------------�
-� 1  � John �   101  �---+    � 101� Sales        �
-� 2  � Jane �   102  �   �    � 102� Marketing    �
-� 3  � Bob  �   101  �---+--->� 103� Engineering  �
-� 4  � Sue  �   104  �   �    +-------------------+
-+--------------------+   �
-         ?               �
-    (No match for        �
+? ID ? Name ? Dept_ID?        ? ID ? Department   ?
++----+------+--------?        +----+--------------?
+? 1  ? John ?   101  ?---+    ? 101? Sales        ?
+? 2  ? Jane ?   102  ?   ?    ? 102? Marketing    ?
+? 3  ? Bob  ?   101  ?---+--->? 103? Engineering  ?
+? 4  ? Sue  ?   104  ?   ?    +-------------------+
++--------------------+   ?
+         ?               ?
+    (No match for        ?
      Dept 104)           +-- (Common Column: Dept_ID = ID)
 </pre>
                   </div>
@@ -3170,12 +3170,12 @@ ORDER BY total_revenue DESC;
 <strong>B-Tree Index Structure (Most Common):</strong>
                     Root Node
                    +----------+
-                   � 50 | 100 �
+                   ? 50 | 100 ?
                    +----------+
            +---------+     +---------+
            ?                          ?
     +----------+              +----------+
-    � 25 | 40  �              � 75 | 90  �
+    ? 25 | 40  ?              ? 75 | 90  ?
     +----------+              +----------+
   +---+    +---+          +---+    +---+
   ?            ?          ?            ?
@@ -3375,49 +3375,49 @@ SHOW PROFILES;
                   <div class="component-card">
                     <h4>1<i class="fas fa-star"></i> Index Strategy</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Index columns used in WHERE, JOIN, ORDER BY<br>
-                      � Don't over-index (5-10 per table max)<br>
-                      � Use composite indexes wisely
+                      ? Index columns used in WHERE, JOIN, ORDER BY<br>
+                      ? Don't over-index (5-10 per table max)<br>
+                      ? Use composite indexes wisely
                     </p>
                   </div>
                   <div class="component-card">
                     <h4>2<i class="fas fa-star"></i> Query Optimization</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Avoid SELECT * (specify columns)<br>
-                      � Use LIMIT for pagination<br>
-                      � Avoid functions on indexed columns
+                      ? Avoid SELECT * (specify columns)<br>
+                      ? Use LIMIT for pagination<br>
+                      ? Avoid functions on indexed columns
                     </p>
                   </div>
                   <div class="component-card">
                     <h4>3<i class="fas fa-star"></i> Database Design</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Normalize to reduce redundancy<br>
-                      � Use appropriate data types<br>
-                      � Denormalize for read-heavy workloads
+                      ? Normalize to reduce redundancy<br>
+                      ? Use appropriate data types<br>
+                      ? Denormalize for read-heavy workloads
                     </p>
                   </div>
                   <div class="component-card">
                     <h4>4<i class="fas fa-star"></i> Join Optimization</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Index foreign key columns<br>
-                      � Join on indexed columns<br>
-                      � Use INNER JOIN when possible
+                      ? Index foreign key columns<br>
+                      ? Join on indexed columns<br>
+                      ? Use INNER JOIN when possible
                     </p>
                   </div>
                   <div class="component-card">
                     <h4>5<i class="fas fa-star"></i> Subquery Optimization</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Use JOINs instead of subqueries<br>
-                      � Use EXISTS instead of IN for large datasets<br>
-                      � Consider CTEs for readability
+                      ? Use JOINs instead of subqueries<br>
+                      ? Use EXISTS instead of IN for large datasets<br>
+                      ? Consider CTEs for readability
                     </p>
                   </div>
                   <div class="component-card">
                     <h4>6<i class="fas fa-star"></i> Data Types</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Use smallest type that fits data<br>
-                      � INT is faster than VARCHAR for IDs<br>
-                      � ENUM for fixed values
+                      ? Use smallest type that fits data<br>
+                      ? INT is faster than VARCHAR for IDs<br>
+                      ? ENUM for fixed values
                     </p>
                   </div>
                 </div>
@@ -3661,49 +3661,49 @@ DROP ROLE 'app_developer';
                   <div class="component-card">
                     <h4><i class="fas fa-lock"></i> Password Security</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Use strong passwords (12+ chars)<br>
-                      � Enable password expiration<br>
-                      � Enforce password complexity
+                      ? Use strong passwords (12+ chars)<br>
+                      ? Enable password expiration<br>
+                      ? Enforce password complexity
                     </p>
                   </div>
                   <div class="component-card">
                     <h4><i class="fas fa-users"></i> User Management</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Principle of least privilege<br>
-                      � Create separate users per app<br>
-                      � Remove unused accounts
+                      ? Principle of least privilege<br>
+                      ? Create separate users per app<br>
+                      ? Remove unused accounts
                     </p>
                   </div>
                   <div class="component-card">
                     <h4><i class="fas fa-globe"></i> Network Security</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Use SSL/TLS for connections<br>
-                      � Restrict by IP/hostname<br>
-                      � Don't expose to public internet
+                      ? Use SSL/TLS for connections<br>
+                      ? Restrict by IP/hostname<br>
+                      ? Don't expose to public internet
                     </p>
                   </div>
                   <div class="component-card">
                     <h4><i class="fas fa-chart-bar"></i> Monitoring</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Enable audit logging<br>
-                      � Monitor failed login attempts<br>
-                      � Review user activity logs
+                      ? Enable audit logging<br>
+                      ? Monitor failed login attempts<br>
+                      ? Review user activity logs
                     </p>
                   </div>
                   <div class="component-card">
                     <h4><i class="fas fa-star"></i> Backup</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Regular automated backups<br>
-                      � Test restore procedures<br>
-                      � Encrypt backup files
+                      ? Regular automated backups<br>
+                      ? Test restore procedures<br>
+                      ? Encrypt backup files
                     </p>
                   </div>
                   <div class="component-card">
                     <h4><i class="fas fa-sync"></i> Updates</h4>
                     <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                      � Keep MySQL up to date<br>
-                      � Apply security patches<br>
-                      � Monitor CVE database
+                      ? Keep MySQL up to date<br>
+                      ? Apply security patches<br>
+                      ? Monitor CVE database
                     </p>
                   </div>
                 </div>
@@ -4867,37 +4867,37 @@ mysql -u user -p db < backup.sql
                         <div class="component-card">
                           <h4><i class="fas fa-check"></i> Query Level</h4>
                           <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                            � Select only needed columns<br>
-                            � Use LIMIT for large results<br>
-                            � Use EXPLAIN to analyze<br>
-                            � Avoid SELECT *
+                            ? Select only needed columns<br>
+                            ? Use LIMIT for large results<br>
+                            ? Use EXPLAIN to analyze<br>
+                            ? Avoid SELECT *
                           </p>
                         </div>
                         <div class="component-card">
                           <h4><i class="fas fa-check"></i> Index Level</h4>
                           <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                            � Index WHERE columns<br>
-                            � Index JOIN columns<br>
-                            � Index ORDER BY columns<br>
-                            � Use composite indexes
+                            ? Index WHERE columns<br>
+                            ? Index JOIN columns<br>
+                            ? Index ORDER BY columns<br>
+                            ? Use composite indexes
                           </p>
                         </div>
                         <div class="component-card">
                           <h4><i class="fas fa-check"></i> Schema Level</h4>
                           <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                            � Normalize database<br>
-                            � Use appropriate data types<br>
-                            � Add foreign keys<br>
-                            � Consider partitioning
+                            ? Normalize database<br>
+                            ? Use appropriate data types<br>
+                            ? Add foreign keys<br>
+                            ? Consider partitioning
                           </p>
                         </div>
                         <div class="component-card">
                           <h4><i class="fas fa-check"></i> Server Level</h4>
                           <p style="text-align: left; font-size: 0.9em; margin-top: 10px;">
-                            � Optimize buffer pool<br>
-                            � Enable query cache<br>
-                            � Monitor slow queries<br>
-                            � Regular maintenance
+                            ? Optimize buffer pool<br>
+                            ? Enable query cache<br>
+                            ? Monitor slow queries<br>
+                            ? Regular maintenance
                           </p>
                         </div>
                       </div>
@@ -4993,25 +4993,25 @@ mysql -u user -p db < backup.sql
                     <div class="code-box">
                       <pre><strong>Day 2 Learning Path:</strong>
 1<i class="fas fa-star"></i> Subqueries
-   � Single-row subqueries (return one value)
-   � Multi-row subqueries (return multiple values)
-   � Correlated subqueries (reference outer query)
-   � Subqueries with IN, EXISTS, ANY, ALL
+   ? Single-row subqueries (return one value)
+   ? Multi-row subqueries (return multiple values)
+   ? Correlated subqueries (reference outer query)
+   ? Subqueries with IN, EXISTS, ANY, ALL
 2<i class="fas fa-star"></i> UNION Operations
-   � UNION (removes duplicates)
-   � UNION ALL (keeps duplicates)
-   � Combining results from different tables
-   � Requirements: same column count and compatible types
+   ? UNION (removes duplicates)
+   ? UNION ALL (keeps duplicates)
+   ? Combining results from different tables
+   ? Requirements: same column count and compatible types
 3<i class="fas fa-star"></i> Common Table Expressions (CTE)
-   � WITH clause for named temporary results
-   � Recursive CTEs for hierarchical data
-   � Multiple CTEs in single query
-   � Better readability than nested subqueries
+   ? WITH clause for named temporary results
+   ? Recursive CTEs for hierarchical data
+   ? Multiple CTEs in single query
+   ? Better readability than nested subqueries
 4<i class="fas fa-star"></i> Stored Procedures
-   � CREATE PROCEDURE with parameters (IN, OUT, INOUT)
-   � Variables and control flow (IF, WHILE, CASE)
-   � Error handling with handlers
-   � Calling procedures and managing them
+   ? CREATE PROCEDURE with parameters (IN, OUT, INOUT)
+   ? Variables and control flow (IF, WHILE, CASE)
+   ? Error handling with handlers
+   ? Calling procedures and managing them
 </pre>
                     </div>
                     <div class="definition-box">
@@ -5844,22 +5844,22 @@ echo "Backup completed: ${DB_NAME}_${DATE}.sql.gz"
                     </div>
                     <div class="code-box">
                       <pre><strong>MySQL Workbench Features:</strong>
-� Visual database design and modeling
-� SQL editor with syntax highlighting
-� Query execution and result visualization
-� Server administration and monitoring
-� Import/export data with wizards
-� User management and privileges
-� Backup and restore operations
-� Performance monitoring and optimization
+? Visual database design and modeling
+? SQL editor with syntax highlighting
+? Query execution and result visualization
+? Server administration and monitoring
+? Import/export data with wizards
+? User management and privileges
+? Backup and restore operations
+? Performance monitoring and optimization
 <strong>phpMyAdmin Features:</strong>
-� Web-based (no installation required)
-� Database and table management
-� SQL query execution
-� Import/export (SQL, CSV, XML)
-� User and privilege management
-� Visual table designer
-� Database search functionality
+? Web-based (no installation required)
+? Database and table management
+? SQL query execution
+? Import/export (SQL, CSV, XML)
+? User and privilege management
+? Visual table designer
+? Database search functionality
 </pre>
                     </div>
                   </div>
@@ -5890,42 +5890,6 @@ echo "Backup completed: ${DB_NAME}_${DATE}.sql.gz"
   </div>
   <!-- Scroll to Top Button -->
   <button class="scroll-to-top" onclick="scrollToTop()">?</button>
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.querySelector('.sidebar-overlay');
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-    }
-    function closeSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.querySelector('.sidebar-overlay');
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-    }
-    // Scroll to top function
-    function scrollToTop() {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
-    // Show/hide scroll to top button
-    window.addEventListener('scroll', function () {
-      const scrollButton = document.querySelector('.scroll-to-top');
-      if (window.pageYOffset > 300) {
-        scrollButton.classList.add('show');
-      } else {
-        scrollButton.classList.remove('show');
-      }
-    });
-    // Close sidebar when clicking a link
-    document.querySelectorAll('.sidebar a').forEach(link => {
-      link.addEventListener('click', () => {
-        closeSidebar();
-      });
-    });
-  </script>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>

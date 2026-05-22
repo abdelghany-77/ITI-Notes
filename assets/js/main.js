@@ -1,13 +1,10 @@
 // ========================================
-// ITI Notes Hub - Complete JavaScript
-// All functionality in one file
+// ITI Notes Hub - Main JavaScript
+// Unified functionality for all pages
 // ========================================
-
-console.log("Main.js loaded successfully");
 
 // Initialize everything when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM Content Loaded");
   initializeDarkMode();
   initializeReadingProgress();
   initializeBackToTop();
@@ -16,28 +13,46 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeKeyboardShortcuts();
   initializeSearch();
   observeAnimations();
-  console.log("All features initialized");
+  initializeScrollHandler();
 });
+
+// ========================================
+// Throttled Scroll Handler
+// ========================================
+let scrollTicking = false;
+const scrollCallbacks = [];
+
+function registerScrollCallback(fn) {
+  scrollCallbacks.push(fn);
+}
+
+function initializeScrollHandler() {
+  window.addEventListener("scroll", () => {
+    if (!scrollTicking) {
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        scrollCallbacks.forEach((fn) => fn(scrollY, scrollHeight, clientHeight));
+        scrollTicking = false;
+      });
+      scrollTicking = true;
+    }
+  });
+}
 
 // ========================================
 // Dark Mode Manager
 // ========================================
 function initializeDarkMode() {
-  console.log("Initializing dark mode...");
-
-  // Get saved theme or default to light
   const savedTheme = localStorage.getItem("theme") || "light";
-  console.log("Saved theme:", savedTheme);
 
-  // Apply theme immediately
   if (savedTheme === "dark") {
     document.body.classList.add("dark-mode");
   }
 
-  // Create dark mode toggle button if it doesn't exist
   let toggleBtn = document.querySelector(".dark-mode-toggle");
   if (!toggleBtn) {
-    console.log("Creating dark mode toggle button");
     toggleBtn = document.createElement("button");
     toggleBtn.className = "dark-mode-toggle";
     toggleBtn.setAttribute("aria-label", "Toggle Dark Mode");
@@ -45,37 +60,28 @@ function initializeDarkMode() {
     document.body.appendChild(toggleBtn);
   }
 
-  // Update icon based on current theme
   const updateIcon = () => {
     const isDark = document.body.classList.contains("dark-mode");
     const icon = toggleBtn.querySelector("i");
     if (icon) {
       icon.className = isDark ? "fas fa-sun" : "fas fa-moon";
     }
-    console.log("Icon updated to:", isDark ? "sun" : "moon");
   };
 
   updateIcon();
 
-  // Toggle dark mode on click
   toggleBtn.addEventListener("click", () => {
-    console.log("Dark mode toggle clicked");
     document.body.classList.toggle("dark-mode");
     const isDark = document.body.classList.contains("dark-mode");
-    const theme = isDark ? "dark" : "light";
-    localStorage.setItem("theme", theme);
-    console.log("Theme saved:", theme);
+    localStorage.setItem("theme", isDark ? "dark" : "light");
     updateIcon();
   });
-
-  console.log("Dark mode initialized successfully");
 }
 
 // ========================================
 // Reading Progress Bar
 // ========================================
 function initializeReadingProgress() {
-  // Create progress bar if it doesn't exist
   let progressBar = document.querySelector(".reading-progress");
   if (!progressBar) {
     progressBar = document.createElement("div");
@@ -83,15 +89,12 @@ function initializeReadingProgress() {
     document.body.appendChild(progressBar);
   }
 
-  // Update progress on scroll
-  window.addEventListener("scroll", () => {
-    const winScroll =
-      document.body.scrollTop || document.documentElement.scrollTop;
-    const height =
-      document.documentElement.scrollHeight -
-      document.documentElement.clientHeight;
-    const scrolled = (winScroll / height) * 100;
-    progressBar.style.width = scrolled + "%";
+  registerScrollCallback((scrollY, scrollHeight, clientHeight) => {
+    const height = scrollHeight - clientHeight;
+    if (height > 0) {
+      const scrolled = (scrollY / height) * 100;
+      progressBar.style.width = scrolled + "%";
+    }
   });
 }
 
@@ -99,7 +102,6 @@ function initializeReadingProgress() {
 // Back to Top Button
 // ========================================
 function initializeBackToTop() {
-  // Create back to top button if it doesn't exist
   let backToTopBtn = document.querySelector(".back-to-top");
   if (!backToTopBtn) {
     backToTopBtn = document.createElement("button");
@@ -109,21 +111,16 @@ function initializeBackToTop() {
     document.body.appendChild(backToTopBtn);
   }
 
-  // Show/hide button based on scroll position
-  window.addEventListener("scroll", () => {
-    if (window.pageYOffset > 300) {
+  registerScrollCallback((scrollY) => {
+    if (scrollY > 300) {
       backToTopBtn.classList.add("visible");
     } else {
       backToTopBtn.classList.remove("visible");
     }
   });
 
-  // Scroll to top on click
   backToTopBtn.addEventListener("click", () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
 
@@ -131,102 +128,187 @@ function initializeBackToTop() {
 // Code Copy Functionality
 // ========================================
 function initializeCodeCopy() {
-  const codeBlocks = document.querySelectorAll("pre code");
+  const preBlocks = document.querySelectorAll("pre");
 
-  codeBlocks.forEach((codeBlock) => {
-    const pre = codeBlock.parentElement;
+  preBlocks.forEach((pre) => {
+    // Skip if already has a copy button or is inside .node-command
+    if (pre.querySelector(".code-copy-btn") || pre.closest(".node-command")) {
+      return;
+    }
 
-    // Create copy button if it doesn't exist
-    if (!pre.querySelector(".code-copy-btn")) {
-      const copyBtn = document.createElement("button");
-      copyBtn.className = "code-copy-btn";
-      copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "code-copy-btn";
+    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
 
-      copyBtn.addEventListener("click", async () => {
+    copyBtn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const codeEl = pre.querySelector("code");
+      const textToCopy = codeEl ? codeEl.textContent : pre.textContent;
+
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        copyBtn.classList.add("copied");
+
+        setTimeout(() => {
+          copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+          copyBtn.classList.remove("copied");
+        }, 2000);
+      } catch (err) {
+        // Fallback for non-HTTPS contexts
         try {
-          await navigator.clipboard.writeText(codeBlock.textContent);
+          const textarea = document.createElement("textarea");
+          textarea.value = textToCopy;
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textarea);
+
           copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
           copyBtn.classList.add("copied");
-
           setTimeout(() => {
             copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
             copyBtn.classList.remove("copied");
           }, 2000);
-        } catch (err) {
-          console.error("Failed to copy code:", err);
+        } catch (fallbackErr) {
+          copyBtn.innerHTML = '<i class="fas fa-times"></i> Failed';
+          setTimeout(() => {
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+          }, 2000);
         }
-      });
+      }
+    });
 
-      pre.appendChild(copyBtn);
-    }
+    pre.style.position = "relative";
+    pre.appendChild(copyBtn);
   });
 }
 
 // ========================================
-// Sidebar Navigation
+// Sidebar / TOC Navigation
 // ========================================
 function initializeSidebar() {
-  const sidebar = document.querySelector(".sidebar");
+  // Support both sidebar types
+  const sidebar =
+    document.querySelector(".sidebar") ||
+    document.querySelector(".toc-container");
 
-  if (sidebar) {
-    // Create toggle button if it doesn't exist
-    let toggleBtn = document.querySelector(".sidebar-toggle");
-    if (!toggleBtn) {
-      toggleBtn = document.createElement("button");
-      toggleBtn.className = "sidebar-toggle";
-      toggleBtn.setAttribute("aria-label", "Toggle Sidebar");
-      toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
-      document.body.appendChild(toggleBtn);
+  if (!sidebar) return;
+
+  // Find or create toggle button
+  let toggleBtn =
+    document.querySelector(".sidebar-toggle") ||
+    document.querySelector(".toggle-btn") ||
+    document.querySelector(".toc-toggle");
+
+  if (!toggleBtn) {
+    toggleBtn = document.createElement("button");
+    toggleBtn.className = "sidebar-toggle";
+    toggleBtn.setAttribute("aria-label", "Toggle Navigation");
+    toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    document.body.appendChild(toggleBtn);
+  }
+
+  // Find or create overlay backdrop
+  let overlay =
+    document.querySelector(".sidebar-overlay") ||
+    document.querySelector(".overlay") ||
+    document.querySelector(".toc-backdrop");
+
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.className = "sidebar-overlay";
+    document.body.appendChild(overlay);
+  }
+
+  const openSidebar = () => {
+    sidebar.classList.add("active");
+    overlay.classList.add("active");
+    const icon = toggleBtn.querySelector("i");
+    if (icon) icon.className = "fas fa-times";
+    toggleBtn.setAttribute("aria-expanded", "true");
+  };
+
+  const closeSidebar = () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+    const icon = toggleBtn.querySelector("i");
+    if (icon) icon.className = "fas fa-bars";
+    toggleBtn.setAttribute("aria-expanded", "false");
+  };
+
+  // Attach click handler — remove existing inline onclick first
+  const newToggle = toggleBtn.cloneNode(true);
+  toggleBtn.parentNode.replaceChild(newToggle, toggleBtn);
+  toggleBtn = newToggle;
+
+  toggleBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (sidebar.classList.contains("active")) {
+      closeSidebar();
+    } else {
+      openSidebar();
     }
+  });
 
-    // Toggle sidebar on click
-    toggleBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("active");
-      const icon = toggleBtn.querySelector("i");
-      if (icon) {
-        icon.className = sidebar.classList.contains("active")
-          ? "fas fa-times"
-          : "fas fa-bars";
+  // Close on overlay click
+  overlay.addEventListener("click", closeSidebar);
+
+  // Close on sidebar link click (mobile)
+  sidebar.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      if (window.innerWidth <= 768) {
+        closeSidebar();
       }
     });
+  });
 
-    // Close sidebar when clicking outside
-    document.addEventListener("click", (e) => {
-      if (
-        !sidebar.contains(e.target) &&
-        !toggleBtn.contains(e.target) &&
-        sidebar.classList.contains("active")
-      ) {
-        sidebar.classList.remove("active");
-        const icon = toggleBtn.querySelector("i");
-        if (icon) {
-          icon.className = "fas fa-bars";
-        }
-      }
-    });
+  // Expose globally for inline onclick handlers that may still exist
+  window.toggleSidebar = () => {
+    if (sidebar.classList.contains("active")) {
+      closeSidebar();
+    } else {
+      openSidebar();
+    }
+  };
+  window.closeSidebar = closeSidebar;
+  window.toggleTOC = window.toggleSidebar;
+  window.closeTOC = closeSidebar;
 
-    // Highlight active section in sidebar
-    const sections = document.querySelectorAll("[id]");
-    const navLinks = sidebar.querySelectorAll('a[href^="#"]');
+  // Scroll-spy for sidebar active link highlighting
+  const navLinks = sidebar.querySelectorAll('a[href^="#"]');
+  if (navLinks.length > 0) {
+    const sectionSelectors = [
+      "section[id]",
+      ".session[id]",
+      ".lesson[id]",
+      ".content-section[id]",
+      "[id].section",
+      ".subsection[id]",
+    ];
+    const sections = document.querySelectorAll(sectionSelectors.join(", "));
 
-    window.addEventListener("scroll", () => {
-      let current = "";
+    if (sections.length > 0) {
+      registerScrollCallback((scrollY) => {
+        let current = "";
 
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (window.pageYOffset >= sectionTop - 100) {
-          current = section.getAttribute("id");
-        }
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop;
+          if (scrollY >= sectionTop - 120) {
+            current = section.getAttribute("id");
+          }
+        });
+
+        navLinks.forEach((link) => {
+          link.classList.remove("active");
+          if (link.getAttribute("href") === `#${current}`) {
+            link.classList.add("active");
+          }
+        });
       });
-
-      navLinks.forEach((link) => {
-        link.classList.remove("active");
-        if (link.getAttribute("href") === `#${current}`) {
-          link.classList.add("active");
-        }
-      });
-    });
+    }
   }
 }
 
@@ -242,7 +324,7 @@ function initializeKeyboardShortcuts() {
       if (toggleBtn) toggleBtn.click();
     }
 
-    // Ctrl/Cmd + K: Focus search (if exists)
+    // Ctrl/Cmd + K: Focus search
     if ((e.ctrlKey || e.metaKey) && e.key === "k") {
       e.preventDefault();
       const searchInput = document.querySelector(".search-input");
@@ -251,9 +333,25 @@ function initializeKeyboardShortcuts() {
 
     // Escape: Close sidebar
     if (e.key === "Escape") {
-      const sidebar = document.querySelector(".sidebar");
-      if (sidebar && sidebar.classList.contains("active")) {
+      const sidebar =
+        document.querySelector(".sidebar.active") ||
+        document.querySelector(".toc-container.active");
+      if (sidebar) {
         sidebar.classList.remove("active");
+        const overlay =
+          document.querySelector(".sidebar-overlay.active") ||
+          document.querySelector(".overlay.active") ||
+          document.querySelector(".toc-backdrop.active");
+        if (overlay) overlay.classList.remove("active");
+
+        const toggleBtn =
+          document.querySelector(".sidebar-toggle") ||
+          document.querySelector(".toggle-btn") ||
+          document.querySelector(".toc-toggle");
+        if (toggleBtn) {
+          const icon = toggleBtn.querySelector("i");
+          if (icon) icon.className = "fas fa-bars";
+        }
       }
     }
 
@@ -266,7 +364,7 @@ function initializeKeyboardShortcuts() {
 }
 
 // ========================================
-// Search Functionality (if search box exists)
+// Search Functionality
 // ========================================
 function initializeSearch() {
   const searchInput = document.querySelector(".search-input");
@@ -274,50 +372,76 @@ function initializeSearch() {
     ".course-card, .searchable-item"
   );
 
-  if (searchInput && searchableItems.length > 0) {
-    searchInput.addEventListener("input", (e) => {
-      const searchTerm = e.target.value.toLowerCase();
+  if (!searchInput || searchableItems.length === 0) return;
+
+  let debounceTimer;
+
+  searchInput.addEventListener("input", (e) => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      const searchTerm = e.target.value.toLowerCase().trim();
 
       searchableItems.forEach((item) => {
         const text = item.textContent.toLowerCase();
-        if (text.includes(searchTerm)) {
-          item.style.display = "";
-        } else {
-          item.style.display = "none";
-        }
+        item.style.display = text.includes(searchTerm) ? "" : "none";
       });
-    });
-  }
+    }, 200);
+  });
 }
 
 // ========================================
-// Animation Observers
+// Scroll Animations (Course Cards)
 // ========================================
-const observeAnimations = () => {
+function observeAnimations() {
   const animatedElements = document.querySelectorAll(".course-card");
-
   if (animatedElements.length === 0) return;
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry, index) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            entry.target.style.opacity = "1";
-            entry.target.style.transform = "translateY(0)";
-          }, index * 100);
-        }
-      });
-    },
-    {
-      threshold: 0.1,
-    }
-  );
-
-  animatedElements.forEach((el) => {
+  // Track DOM order for stagger
+  const elementOrder = new Map();
+  animatedElements.forEach((el, i) => {
+    elementOrder.set(el, i);
     el.style.opacity = "0";
     el.style.transform = "translateY(20px)";
     el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
-    observer.observe(el);
   });
-};
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = elementOrder.get(entry.target) || 0;
+          const delay = Math.min(index * 80, 800);
+
+          setTimeout(() => {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }, delay);
+
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  animatedElements.forEach((el) => observer.observe(el));
+}
+
+// ========================================
+// Handle legacy scroll-to-top buttons
+// ========================================
+document.addEventListener("DOMContentLoaded", () => {
+  // Support legacy .scroll-to-top and .scroll-top buttons
+  const legacyBtns = document.querySelectorAll(".scroll-to-top, .scroll-top");
+  legacyBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+
+  // Expose scrollTopSmooth globally for inline onclick handlers
+  window.scrollTopSmooth = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  window.scrollToTop = window.scrollTopSmooth;
+});

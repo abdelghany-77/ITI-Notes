@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -2454,63 +2454,6 @@ require_once('utilities.php');
   </div>
   <!-- Scroll to Top Button -->
   <button class="scroll-to-top" onclick="scrollToTop()">?</button>
-  <script>
-    // Sidebar toggle functionality
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const mainContent = document.getElementById('mainContent');
-      sidebar.classList.toggle('open');
-      mainContent.classList.toggle('sidebar-open');
-    }
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('.sidebar a').forEach(link => {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href').substring(1);
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          targetElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      });
-    });
-    // Scroll to top functionality
-    function scrollToTop() {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
-    // Show/hide scroll to top button
-    window.addEventListener('scroll', function () {
-      const scrollButton = document.querySelector('.scroll-to-top');
-      if (window.pageYOffset > 300) {
-        scrollButton.classList.add('show');
-      } else {
-        scrollButton.classList.remove('show');
-      }
-    });
-    // Highlight active section in sidebar
-    window.addEventListener('scroll', function () {
-      const sections = document.querySelectorAll('.lesson');
-      const navLinks = document.querySelectorAll('.sidebar a');
-      let current = '';
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        if (pageYOffset >= sectionTop - 60) {
-          current = section.getAttribute('id');
-        }
-      });
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href').substring(1) === current) {
-          link.classList.add('active');
-        }
-      });
-    });
-  </script>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>

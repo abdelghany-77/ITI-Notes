@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -747,41 +747,6 @@
       </div>
     </main>
   </div>
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.querySelector(".sidebar-overlay");
-      sidebar.classList.toggle("open");
-      overlay.classList.toggle("active");
-      if (window.innerWidth <= 768) {
-        sidebar.classList.toggle("active");
-      }
-    }
-    function closeSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.querySelector(".sidebar-overlay");
-      sidebar.classList.remove("open");
-      overlay.classList.remove("active");
-      sidebar.classList.remove("active");
-    }
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener("click", function (e) {
-      const sidebar = document.getElementById("sidebar");
-      const toggle = document.querySelector(".sidebar-toggle");
-      if (
-        window.innerWidth <= 768 &&
-        !sidebar.contains(e.target) &&
-        !toggle.contains(e.target) &&
-        sidebar.classList.contains("active")
-      ) {
-        closeSidebar();
-      }
-    });
-    // Initialize
-    document.addEventListener("DOMContentLoaded", function () {
-      // Initialize state
-    });
-  </script>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>

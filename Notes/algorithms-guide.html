@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -68,7 +68,7 @@
               }
               <span class="keyword">return</span> max;
               }
-              // O(n�) - Quadratic Time
+              // O(n?) - Quadratic Time
               <span class="keyword">void</span> <span class="function">bubbleSort</span>(<span class="type">int</span>[]
               arr) {
               <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i <
@@ -100,9 +100,9 @@
           <div class="complexity-box">
             <h5><i class="fas fa-stopwatch"></i> Time Complexity Analysis</h5>
             <ul>
-              <li><strong>Worst-case:</strong> When the input is reverse-sorted -&gt; <span class="math">T(n�)</span>
+              <li><strong>Worst-case:</strong> When the input is reverse-sorted -&gt; <span class="math">T(n?)</span>
               </li>
-              <li><strong>Average-case:</strong> <span class="math">T(n�)</span></li>
+              <li><strong>Average-case:</strong> <span class="math">T(n?)</span></li>
               <li><strong>Best-case:</strong> When input is already sorted -&gt; <span class="math">T(n)</span></li>
             </ul>
           </div>
@@ -145,15 +145,15 @@
           <div class="code-example">
             <span class="comment">// Big-O Examples</span>
             <span class="comment">// Drop low-order terms and ignore leading constants</span>
-            <span class="number">3</span>n� + <span class="number">90</span>n� - <span class="number">5</span>n + <span
-              class="number">6046</span> = <span class="function">T</span>(n�)
+            <span class="number">3</span>n? + <span class="number">90</span>n? - <span class="number">5</span>n + <span
+              class="number">6046</span> = <span class="function">T</span>(n?)
             <span class="comment">// Time Complexity Comparison</span>
             <span class="function">O</span>(<span class="number">1</span>) <span class="comment">// Constant - Array
               access</span>
             <span class="function">O</span>(log n) <span class="comment">// Logarithmic - Binary search</span>
             <span class="function">O</span>(n) <span class="comment">// Linear - Linear search</span>
             <span class="function">O</span>(n log n) <span class="comment">// N-Log-N - Merge sort</span>
-            <span class="function">O</span>(n�) <span class="comment">// Quadratic - Insertion sort</span>
+            <span class="function">O</span>(n?) <span class="comment">// Quadratic - Insertion sort</span>
             <span class="function">O</span>(<span class="number">2</span>n) <span class="comment">// Exponential - Naive
               Fibonacci</span>
           </div>
@@ -167,7 +167,7 @@
             <span class="comment">// Examples:</span>
             <span class="comment">// Binary Search: T(n) = 1T(n/2) + T(1) -&gt; T(lg n)</span>
             <span class="comment">// Merge Sort: T(n) = 2T(n/2) + T(n) -&gt; T(n lg n)</span>
-            <span class="comment">// Strassen's: T(n) = 7T(n/2) + T(n�) -&gt; T(n^lg7)</span>
+            <span class="comment">// Strassen's: T(n) = 7T(n/2) + T(n?) -&gt; T(n^lg7)</span>
           </div>
         </div>
       </div>
@@ -220,7 +220,7 @@
               <span class="function">exchange</span> A[i] ? A[j]
               <span class="function">exchange</span> A[i+<span class="number">1</span>] ? A[r]
               <span class="keyword">return</span> i+<span class="number">1</span>
-              <span class="comment">// Best-case: T(n lg n), Worst-case: T(n�)</span>
+              <span class="comment">// Best-case: T(n lg n), Worst-case: T(n?)</span>
               <span class="comment">// Expected (randomized): T(n lg n)</span>
           </div>
         </div>
@@ -320,10 +320,10 @@
             <div class="formula">h(k,i) = (h'(k) + i) mod m</div>
             <p><strong>Problem:</strong> Primary clustering</p>
             <h4>Quadratic Probing</h4>
-            <div class="formula">h(k,i) = (h'(k) + i�) mod m</div>
+            <div class="formula">h(k,i) = (h'(k) + i?) mod m</div>
             <p><strong>Problem:</strong> Secondary clustering</p>
             <h4>Double Hashing</h4>
-            <div class="formula">h(k,i) = (h1(k) + i�h2(k)) mod m</div>
+            <div class="formula">h(k,i) = (h1(k) + i?h2(k)) mod m</div>
             <p><strong>Advantage:</strong> No clustering</p>
           </div>
         </div>
@@ -381,7 +381,7 @@
             <ul>
               <li>When array fills up, create new table (double size)</li>
               <li>Copy contents to new table</li>
-              <li><strong>Naive analysis:</strong> O(n�) for n insertions</li>
+              <li><strong>Naive analysis:</strong> O(n?) for n insertions</li>
               <li><strong>Amortized analysis:</strong> O(n) total -&gt; O(1) per insertion</li>
             </ul>
           </div>
@@ -465,12 +465,12 @@
           <span class="keyword">for</span> i = <span class="number">1</span> <span class="keyword">to</span> d
           <span class="comment">// Use stable sort (counting sort) on digit i</span>
           <span class="function">COUNTING-SORT</span>(A, i)
-          <span class="comment">// Time Complexity: T(n,b) = T(b/r � (n + 2^r))</span>
+          <span class="comment">// Time Complexity: T(n,b) = T(b/r ? (n + 2^r))</span>
           <span class="comment">// Where: n = elements, b = bits per word, r = bits per digit</span>
           <span class="comment">// Optimal r = lg n minimizes time to T(bn/lg n)</span>
           <span class="comment">// Example: Sort 32-bit integers</span>
-          <span class="comment">// If n = 10^6, then r = lg(10^6) � 20</span>
-          <span class="comment">// Time = T(32 � 10^6 / 20) = T(1.6 � 10^6)</span>
+          <span class="comment">// If n = 10^6, then r = lg(10^6) ? 20</span>
+          <span class="comment">// Time = T(32 ? 10^6 / 20) = T(1.6 ? 10^6)</span>
         </div>
       </div>
       <div class="subtopic">
@@ -552,7 +552,7 @@
             class="operator">-</span>i))
           <span class="keyword">return</span> q
           <span class="comment">// Problem: T(n) = 2^n due to redundant calculations!</span>
-          <span class="comment">// <i class="fas fa-check"></i> Top-Down with Memoization - T(n�) time</span>
+          <span class="comment">// <i class="fas fa-check"></i> Top-Down with Memoization - T(n?) time</span>
           <span class="function">MEMOIZED-CUT-ROD</span>(p, n)
           <span class="keyword">let</span> r[<span class="number">0</span>..n] <span class="keyword">be new array</span>
           <span class="keyword">for</span> i = <span class="number">0</span> <span class="keyword">to</span> n
@@ -570,7 +570,7 @@
             class="operator">-</span>i, r))
           r[n] = q <span class="comment">// Store result</span>
           <span class="keyword">return</span> q
-          <span class="comment">// <i class="fas fa-building"></i> Bottom-Up Method - T(n�) time</span>
+          <span class="comment">// <i class="fas fa-building"></i> Bottom-Up Method - T(n?) time</span>
           <span class="function">BOTTOM-UP-CUT-ROD</span>(p, n)
           <span class="keyword">let</span> r[<span class="number">0</span>..n] <span class="keyword">be new array</span>
           r[<span class="number">0</span>] = <span class="number">0</span>
@@ -580,7 +580,7 @@
           q = <span class="function">max</span>(q, p[i] + r[j<span class="operator">-</span>i])
           r[j] = q
           <span class="keyword">return</span> r[n]
-          <span class="comment">// Time Complexity: T(n�) - much better than exponential!</span>
+          <span class="comment">// Time Complexity: T(n?) - much better than exponential!</span>
           <span class="comment">// Space Complexity: T(n)</span>
         </div>
       </div>
@@ -588,15 +588,15 @@
         <h3><i class="fas fa-star"></i> Matrix Chain Multiplication</h3>
         <div class="subtopic">
           <h3><i class="fas fa-star"></i> Matrix Chain Multiplication</h3>
-          <p>Given a sequence of n matrices A1, A2, ..., A<sub>n</sub> with dimensions p0�p1, p1�p2, ...,
-            p<sub>n-1</sub>�p<sub>n</sub>. Find the optimal parenthesization that minimizes the total number of
+          <p>Given a sequence of n matrices A1, A2, ..., A<sub>n</sub> with dimensions p0?p1, p1?p2, ...,
+            p<sub>n-1</sub>?p<sub>n</sub>. Find the optimal parenthesization that minimizes the total number of
             scalar multiplications to compute A1A2...A<sub>n</sub>.</p>
           <div class="code-example">
             <span class="comment">// Key Insight: Matrix multiplication is associative!</span>
             <span class="comment">// Different parenthesizations can have dramatically different costs</span>
-            <span class="comment">// Example: A1: 1�100, A2: 100�1, A3: 1�100</span>
-            <span class="comment">// ((A1A2)A3): 1�100�1 + 1�1�100 = 200 multiplications</span>
-            <span class="comment">// (A1(A2A3)): 100�1�100 + 1�100�100 = 20,000 multiplications</span>
+            <span class="comment">// Example: A1: 1?100, A2: 100?1, A3: 1?100</span>
+            <span class="comment">// ((A1A2)A3): 1?100?1 + 1?1?100 = 200 multiplications</span>
+            <span class="comment">// (A1(A2A3)): 100?1?100 + 1?100?100 = 20,000 multiplications</span>
             <span class="comment">// Recursive Structure:</span>
             <span class="comment">// To multiply matrices from A_i to A_j, split at point k (i = k < j)</span>
                 <span class="comment">// m[i,j] = min(m[i,k] + m[k+1,j] + p_{i-1}*p_k*p_j) for i = k < j</span>
@@ -634,8 +634,8 @@
                 <span class="function">PRINT-OPTIMAL-PARENS</span>(s, i, s[i, j])
                 <span class="function">PRINT-OPTIMAL-PARENS</span>(s, s[i, j] + <span class="number">1</span>, j)
                 <span class="function">print</span> <span class="string">")"</span>
-                <span class="comment">// Time Complexity: T(n�)</span>
-                <span class="comment">// Space Complexity: T(n�)</span>
+                <span class="comment">// Time Complexity: T(n?)</span>
+                <span class="comment">// Space Complexity: T(n?)</span>
           </div>
         </div>
         <div class="subtopic">
@@ -726,7 +726,7 @@
             <span class="comment">// DP: Solve all subproblems -&gt; make informed choice</span>
             <span class="comment">// Greedy Algorithm Template:</span>
             <span class="function">GREEDY-ALGORITHM</span>(input)
-            solution = �
+            solution = ?
             <span class="keyword">while</span> <span class="keyword">not</span> <span
               class="function">done</span>(solution)
             choice = <span class="function">select</span>(input) <span class="comment">// Make greedy choice</span>
@@ -846,8 +846,8 @@
             <div class="complexity-box">
               <h5><i class="fas fa-star"></i> Space Savings</h5>
               <ul>
-                <li><strong>Fixed-length:</strong> 3 bits/char � 100 chars = 300 bits</li>
-                <li><strong>Huffman:</strong> (45�1 + 13�3 + 12�3 + 16�3 + 9�4 + 5�4) = 224 bits</li>
+                <li><strong>Fixed-length:</strong> 3 bits/char ? 100 chars = 300 bits</li>
+                <li><strong>Huffman:</strong> (45?1 + 13?3 + 12?3 + 16?3 + 9?4 + 5?4) = 224 bits</li>
                 <li><strong>Savings:</strong> 25% compression!</li>
               </ul>
             </div>
@@ -918,7 +918,7 @@
                     <h5><i class="fas fa-chart-bar"></i> Properties</h5>
                     <ul>
                       <li><strong>Space:</strong> T(V + E)</li>
-                      <li><strong>Good for:</strong> Sparse graphs (|E| << |V|�)</li>
+                      <li><strong>Good for:</strong> Sparse graphs (|E| << |V|?)</li>
                       <li><strong>Edge query:</strong> O(degree(u))</li>
                     </ul>
                   </div>
@@ -928,12 +928,12 @@
                 <h5><i class="fas fa-star"></i> Adjacency-Matrix Representation</h5>
                 <div class="algorithm-box">
                   <h4>Structure</h4>
-                  <p>|V| � |V| matrix A where A[i,j] = 1 if edge (i,j) ? E, else 0.</p>
+                  <p>|V| ? |V| matrix A where A[i,j] = 1 if edge (i,j) ? E, else 0.</p>
                   <div class="complexity-box">
                     <h5><i class="fas fa-chart-bar"></i> Properties</h5>
                     <ul>
-                      <li><strong>Space:</strong> T(V�)</li>
-                      <li><strong>Good for:</strong> Dense graphs (|E| � |V|�)</li>
+                      <li><strong>Space:</strong> T(V?)</li>
+                      <li><strong>Good for:</strong> Dense graphs (|E| ? |V|?)</li>
                       <li><strong>Edge query:</strong> O(1)</li>
                     </ul>
                   </div>
@@ -953,7 +953,7 @@
                     <tr>
                       <td>Space</td>
                       <td>T(V + E)</td>
-                      <td>T(V�)</td>
+                      <td>T(V?)</td>
                     </tr>
                     <tr>
                       <td>Edge (u,v)?</td>
@@ -988,9 +988,9 @@
                     s.color = GRAY
                     s.d = 0
                     s.p = NIL
-                    Q = �
+                    Q = ?
                     ENQUEUE(Q, s)
-                    while Q != �
+                    while Q != ?
                     u = DEQUEUE(Q)
                     for each v ? G.Adj[u]
                     if v.color == WHITE
@@ -1134,7 +1134,7 @@
                 </div>
                 <div class="code-block">
                   MST-KRUSKAL(G, w)
-                  A = �
+                  A = ?
                   for each vertex v ? G.V
                   MAKE-SET(v)
                   sort the edges of G.E into nondecreasing order by weight w
@@ -1163,7 +1163,7 @@
                   u.p = NIL
                   r.key = 0
                   Q = G.V
-                  while Q != �
+                  while Q != ?
                   u = EXTRACT-MIN(Q)
                   for each v ? G.Adj[u]
                   if v ? Q and w(u, v) < v.key v.p=u v.key=w(u, v) </div>
@@ -1254,9 +1254,9 @@
                     <div class="code-block">
                       DIJKSTRA(G, w, s)
                       INITIALIZE-SINGLE-SOURCE(G, s)
-                      S = �
+                      S = ?
                       Q = G.V
-                      while Q != �
+                      while Q != ?
                       u = EXTRACT-MIN(Q)
                       S = S ? {u}
                       for each vertex v ? G.Adj[u]
@@ -1265,7 +1265,7 @@
                     <div class="complexity-box">
                       <h5><i class="fas fa-stopwatch"></i> Time Complexity</h5>
                       <ul>
-                        <li><strong>Array:</strong> T(V�)</li>
+                        <li><strong>Array:</strong> T(V?)</li>
                         <li><strong>Binary heap:</strong> O(E lg V)</li>
                         <li><strong>Fibonacci heap:</strong> O(E + V lg V)</li>
                       </ul>
@@ -1359,7 +1359,7 @@
               }
               <span class="keyword">return</span> dp[n];
               }
-              <span class="comment">// Time Complexity: O(n�)</span>
+              <span class="comment">// Time Complexity: O(n?)</span>
               <span class="comment">// Space Complexity: O(n)</span>
         </div>
       </div>
@@ -1405,58 +1405,6 @@
     </div>
   </div>
   </div>
-  <script>
-    function toggleTOC() {
-      const tocContainer = document.getElementById('tocContainer');
-      tocContainer.classList.toggle('active');
-    }
-    function scrollToTop() {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
-    // Show/hide back to top button based on scroll position
-    window.addEventListener('scroll', function () {
-      const backToTop = document.getElementById('backToTop');
-      if (window.pageYOffset > 300) {
-        backToTop.classList.add('visible');
-      } else {
-        backToTop.classList.remove('visible');
-      }
-    });
-    // Close TOC when clicking on a link
-    document.addEventListener('DOMContentLoaded', function () {
-      const tocLinks = document.querySelectorAll('.toc-list a');
-      tocLinks.forEach(link => {
-        link.addEventListener('click', function () {
-          const tocContainer = document.getElementById('tocContainer');
-          tocContainer.classList.remove('active');
-        });
-      });
-    });
-    // Close TOC when clicking outside
-    document.addEventListener('click', function (event) {
-      const tocContainer = document.getElementById('tocContainer');
-      const tocToggle = document.querySelector('.toc-toggle');
-      if (!tocContainer.contains(event.target) && !tocToggle.contains(event.target)) {
-        tocContainer.classList.remove('active');
-      }
-    });
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      });
-    });
-  </script>
   <!-- Shared JavaScript for dark mode and features -->
   <script src="../assets/js/main.js"></script>
 </body>
