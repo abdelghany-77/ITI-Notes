@@ -2267,22 +2267,30 @@ db2 "UPDATE DB CFG FOR HRDB USING LOCKTIMEOUT 30"</code></pre>
                   use DB2 Event Monitors to trace deadlock history and identify poorly written stored procedures.</p>
               </div>
             </div>
-          
+
           </section>
 
           <section id="topic32" class="section">
-            <h2 class="section-title"><i class="fas fa-truck-loading"></i> Topic 32: Data Movement Utilities (EXPORT, IMPORT, LOAD)</h2>
+            <h2 class="section-title"><i class="fas fa-truck-loading"></i> Topic 32: Data Movement Utilities (EXPORT,
+              IMPORT, LOAD)</h2>
             <div class="subsection" id="t32-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                As a DBA, moving massive amounts of data is a daily task. DB2 provides three distinct utilities. <strong>EXPORT</strong> extracts data from a table into a flat file (DEL, IXF). To push data back in, you choose between <strong>IMPORT</strong> or <strong>LOAD</strong>. 
+                As a DBA, moving massive amounts of data is a daily task. DB2 provides three distinct utilities.
+                <strong>EXPORT</strong> extracts data from a table into a flat file (DEL, IXF). To push data back in,
+                you choose between <strong>IMPORT</strong> or <strong>LOAD</strong>.
                 <br><br>
-                <em>IMPORT</em> is a standard SQL application. It performs standard <code>INSERT</code> statements, writes to the transaction logs, fires triggers, and respects constraint validations. It is safe but extremely slow for massive volumes. 
+                <em>IMPORT</em> is a standard SQL application. It performs standard <code>INSERT</code> statements,
+                writes to the transaction logs, fires triggers, and respects constraint validations. It is safe but
+                extremely slow for massive volumes.
                 <br>
-                <em>LOAD</em> is a physical database engine utility. It bypasses the SQL engine entirely, formatting data blocks in memory and writing them directly to the tablespace pages physically on disk. It is incredibly fast, but skips triggers and often leaves the table in a "Backup Pending" state because it bypasses the transaction log.
+                <em>LOAD</em> is a physical database engine utility. It bypasses the SQL engine entirely, formatting
+                data blocks in memory and writing them directly to the tablespace pages physically on disk. It is
+                incredibly fast, but skips triggers and often leaves the table in a "Backup Pending" state because it
+                bypasses the transaction log.
               </p>
             </div>
-            
+
             <div class="subsection" id="t32-syntax">
               <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
               <div class="code-example">
@@ -2300,7 +2308,8 @@ db2 "LOAD FROM employees.del OF DEL REPLACE INTO HR.EMPLOYEES NONRECOVERABLE"</c
 
             <div class="subsection" id="t32-lab">
               <h3 class="subsection-title">3. Industry-Standard Practical Lab: The "Log Full" Migration</h3>
-              <p><strong>Scenario:</strong> You are tasked with migrating 50 million records from an old archive table. Using <code>IMPORT</code> crashes the system mid-way with SQL0964C (Transaction Log Full).</p>
+              <p><strong>Scenario:</strong> You are tasked with migrating 50 million records from an old archive table.
+                Using <code>IMPORT</code> crashes the system mid-way with SQL0964C (Transaction Log Full).</p>
               <div class="code-example">
                 <div class="code-language">LOAD Utility Migration</div>
                 <pre><code><span class="comment"># 1. Use LOAD to totally bypass the SQL engine and transaction logs.</span>
@@ -2320,43 +2329,86 @@ db2 "RUNSTATS ON TABLE FIN.ARCHIVE AND INDEXES ALL"</code></pre>
               <div class="disadvantages-box font-code">
                 <h4><i class="fas fa-bug"></i> Error SQL0668N Reason Code 3</h4>
                 <p><strong>Error Message:</strong> Operation not allowed for reason code "3" on table.</p>
-                <p><strong>Cause:</strong> The table is stuck in <code>LOAD PENDING</code> state. This happens if a LOAD crashes halfway through due to a power outage or bad data file.</p>
+                <p><strong>Cause:</strong> The table is stuck in <code>LOAD PENDING</code> state. This happens if a LOAD
+                  crashes halfway through due to a power outage or bad data file.</p>
                 <p><strong>Fix:</strong> You must explicitly tell the engine to kill the corrupted load attempt: <br>
-                <code>db2 "LOAD FROM /dev/null OF DEL TERMINATE INTO FIN.ARCHIVE"</code></p>
+                  <code>db2 "LOAD FROM /dev/null OF DEL TERMINATE INTO FIN.ARCHIVE"</code>
+                </p>
               </div>
             </div>
 
             <div class="subsection" id="t32-summary">
               <h3 class="subsection-title">5. Summary Table</h3>
               <table class="table">
-                <thead><tr><th>Feature</th><th>IMPORT</th><th>LOAD</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Feature</th>
+                    <th>IMPORT</th>
+                    <th>LOAD</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr><td><strong>Engine Path</strong></td><td>SQL Statements (Inserts)</td><td>Direct Physical Page Formatting</td></tr>
-                  <tr><td><strong>Logging</strong></td><td>Fully logged in Transaction Logs</td><td>Minimal (or NONE if NONRECOVERABLE)</td></tr>
-                  <tr><td><strong>Triggers Fired?</strong></td><td>Yes</td><td>No (Bypassed)</td></tr>
-                  <tr><td><strong>Speed</strong></td><td>Slow (Bottlenecks on Logs)</td><td>Extremely Fast (I/O Maxed)</td></tr>
+                  <tr>
+                    <td><strong>Engine Path</strong></td>
+                    <td>SQL Statements (Inserts)</td>
+                    <td>Direct Physical Page Formatting</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Logging</strong></td>
+                    <td>Fully logged in Transaction Logs</td>
+                    <td>Minimal (or NONE if NONRECOVERABLE)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Triggers Fired?</strong></td>
+                    <td>Yes</td>
+                    <td>No (Bypassed)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Speed</strong></td>
+                    <td>Slow (Bottlenecks on Logs)</td>
+                    <td>Extremely Fast (I/O Maxed)</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </section>
 
           <section id="topic33" class="section">
-            <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Topic 33: DB2 Family Fundamentals - Preparing for Certification</h2>
+            <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Topic 33: DB2 Family Fundamentals -
+              Preparing for Certification</h2>
             <div class="subsection" id="t33-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                The IBM DB2 Fundamentals Certification validates universal knowledge across the DB2 Family (LUW, z/OS, iSeries). The exam doesn't just ask about SQL syntax; it demands deep comprehension of DB2's isolated architecture. You must intrinsically understand how the Query Compiler processes data, the difference between DDL and DML, DB2's hierarchical security model, and how Isolation Levels dynamically affect locking mechanisms.
+                The IBM DB2 Fundamentals Certification validates universal knowledge across the DB2 Family (LUW, z/OS,
+                iSeries). The exam doesn't just ask about SQL syntax; it demands deep comprehension of DB2's isolated
+                architecture. You must intrinsically understand how the Query Compiler processes data, the difference
+                between DDL and DML, DB2's hierarchical security model, and how Isolation Levels dynamically affect
+                locking mechanisms.
               </p>
             </div>
-            
+
             <div class="subsection" id="t33-summary">
               <h3 class="subsection-title">5. Summary Table: Exam Focus Areas</h3>
               <table class="table">
-                <thead><tr><th>Exam Domain</th><th>Core Concepts to Memorize</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Exam Domain</th>
+                    <th>Core Concepts to Memorize</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr><td><strong>Planning & Architecture</strong></td><td>Instances vs Databases, Catalog definitions (SYSIBM), Client-server connection mechanisms.</td></tr>
-                  <tr><td><strong>Data Concurrency</strong></td><td>Memorize the 4 Isolation Levels (UR, CS, RS, RR) and the 3 phenomena they block.</td></tr>
-                  <tr><td><strong>Security</strong></td><td>Know exactly who grants DBADM, exactly what SECADM does, and OS-dependent Authentication.</td></tr>
+                  <tr>
+                    <td><strong>Planning & Architecture</strong></td>
+                    <td>Instances vs Databases, Catalog definitions (SYSIBM), Client-server connection mechanisms.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Data Concurrency</strong></td>
+                    <td>Memorize the 4 Isolation Levels (UR, CS, RS, RR) and the 3 phenomena they block.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Security</strong></td>
+                    <td>Know exactly who grants DBADM, exactly what SECADM does, and OS-dependent Authentication.</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -2367,13 +2419,16 @@ db2 "RUNSTATS ON TABLE FIN.ARCHIVE AND INDEXES ALL"</code></pre>
             <div class="subsection" id="t34-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                Theory must translate to architectural decisions. In a high-stakes DB2 enterprise environment, multiple subsystems (Locking, Logging, Disk I/O, OS Security) interact simultaneously. A failure in one subsystem often cascades. True DBA mastery involves recognizing the ripple effects across the architecture.
+                Theory must translate to architectural decisions. In a high-stakes DB2 enterprise environment, multiple
+                subsystems (Locking, Logging, Disk I/O, OS Security) interact simultaneously. A failure in one subsystem
+                often cascades. True DBA mastery involves recognizing the ripple effects across the architecture.
               </p>
             </div>
 
             <div class="subsection" id="t34-lab">
               <h3 class="subsection-title">3. Industry-Standard Practical Lab: The E-Commerce Black Friday Crash</h3>
-              <p><strong>Scenario:</strong> It is Black Friday. Traffic spikes 500%. Suddenly, the entire web platform stalls. Transactions are timing out. The active logs fill up. Disk I/O is at 100%.</p>
+              <p><strong>Scenario:</strong> It is Black Friday. Traffic spikes 500%. Suddenly, the entire web platform
+                stalls. Transactions are timing out. The active logs fill up. Disk I/O is at 100%.</p>
               <div class="code-example">
                 <div class="code-language">The Cascade Analysis</div>
                 <pre><code><span class="comment"># Step 1: Check Lock Manager - Finding massive table locks</span>
@@ -2398,27 +2453,36 @@ db2 "SELECT STMT_TEXT ... FROM SYSIBMADM.SNAPSTMT"
             <h2 class="section-title"><i class="fas fa-book-open"></i> Topic 35: Learning Resources for DB2</h2>
             <div class="subsection" id="t35-concept">
               <p>
-                Mastering IBM DB2 requires utilizing IBM's immense library of technical resources. 
-                <ul>
-                  <li><strong>IBM Knowledge Center:</strong> The gold standard for explicit CLP syntax, system catalog definitions, and exact error code explanations.</li>
-                  <li><strong>IBM Redbooks:</strong> Deep, architectural whitepapers that explain "Why" and "How" large-scale implementations operate (e.g., HADR setups, DPF clustering).</li>
-                  <li><strong>developerWorks:</strong> Practical forums and step-by-step DBA guides.</li>
-                </ul>
+                Mastering IBM DB2 requires utilizing IBM's immense library of technical resources.
+              <ul>
+                <li><strong>IBM Knowledge Center:</strong> The gold standard for explicit CLP syntax, system catalog
+                  definitions, and exact error code explanations.</li>
+                <li><strong>IBM Redbooks:</strong> Deep, architectural whitepapers that explain "Why" and "How"
+                  large-scale implementations operate (e.g., HADR setups, DPF clustering).</li>
+                <li><strong>developerWorks:</strong> Practical forums and step-by-step DBA guides.</li>
+              </ul>
               </p>
             </div>
           </section>
 
           <section id="topic36" class="section">
-            <h2 class="section-title"><i class="fas fa-network-wired"></i> Topic 36: Bonus - High Availability and Disaster Recovery (HADR)</h2>
+            <h2 class="section-title"><i class="fas fa-network-wired"></i> Topic 36: Bonus - High Availability and
+              Disaster Recovery (HADR)</h2>
             <div class="subsection" id="t36-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                <strong>DB2 HADR</strong> is a database replication feature providing a high-availability solution. DB2 essentially utilizes "Log Shipping" at the engine level. 
+                <strong>DB2 HADR</strong> is a database replication feature providing a high-availability solution. DB2
+                essentially utilizes "Log Shipping" at the engine level.
                 <br><br>
-                You configure a <em>Primary</em> database and a <em>Standby</em> database on separate Linux servers. Whenever a user executes a transaction on the Primary, DB2 writes to the local transaction log as usual, but simultaneously transmits that log buffer over a TCP/IP connection to the Standby server. The Standby server receives the log buffer and independently runs a continuous <code>ROLLFORWARD</code>, replaying the data natively. If the Primary data center burns down, you issue a <code>TAKEOVER</code> command on the Standby, making it the new Primary within seconds.
+                You configure a <em>Primary</em> database and a <em>Standby</em> database on separate Linux servers.
+                Whenever a user executes a transaction on the Primary, DB2 writes to the local transaction log as usual,
+                but simultaneously transmits that log buffer over a TCP/IP connection to the Standby server. The Standby
+                server receives the log buffer and independently runs a continuous <code>ROLLFORWARD</code>, replaying
+                the data natively. If the Primary data center burns down, you issue a <code>TAKEOVER</code> command on
+                the Standby, making it the new Primary within seconds.
               </p>
             </div>
-            
+
             <div class="subsection" id="t36-syntax">
               <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
               <div class="code-example">
@@ -2439,10 +2503,15 @@ db2 "TAKEOVER HADR ON DATABASE PRODDB"</code></pre>
 
             <div class="subsection" id="t36-lab">
               <h3 class="subsection-title">3. Industry-Standard Practical Lab: The Automatic Failover</h3>
-              <p><strong>Scenario:</strong> You want the failover to be fully automatic if the primary node loses power. You don't want to wake up at 3 AM to type the TAKEOVER command.</p>
+              <p><strong>Scenario:</strong> You want the failover to be fully automatic if the primary node loses power.
+                You don't want to wake up at 3 AM to type the TAKEOVER command.</p>
               <div class="definition-box">
                 <h4><i class="fas fa-eye"></i> IBM Tivoli System Automation (TSA)</h4>
-                <p>DBAs integrate DB2 HADR with <strong>TSAMP (Tivoli SA MP)</strong>. TSA is a robotic cluster manager installed at the OS level. It sends physical "heartbeat" pings between the two Linux servers over the network. If the Primary server drops dead, TSA automatically detects the dropped heartbeat, executes the DB2 <code>TAKEOVER</code> command on the standby node, and remaps the network Virtual IP (VIP) to the new server before any users even realize there was an outage.</p>
+                <p>DBAs integrate DB2 HADR with <strong>TSAMP (Tivoli SA MP)</strong>. TSA is a robotic cluster manager
+                  installed at the OS level. It sends physical "heartbeat" pings between the two Linux servers over the
+                  network. If the Primary server drops dead, TSA automatically detects the dropped heartbeat, executes
+                  the DB2 <code>TAKEOVER</code> command on the standby node, and remaps the network Virtual IP (VIP) to
+                  the new server before any users even realize there was an outage.</p>
               </div>
             </div>
 
@@ -2450,22 +2519,31 @@ db2 "TAKEOVER HADR ON DATABASE PRODDB"</code></pre>
               <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
               <div class="disadvantages-box font-code">
                 <h4><i class="fas fa-bug"></i> The Split-Brain Scenario</h4>
-                <p><strong>Issue:</strong> The network cable connecting the Primary and Standby fails, but both servers remain online. TSA thinks the Primary died and promotes the Standby. Now you have TWO Primary databases accepting web transactions simultaneously. Data is permanently disjointed.</p>
-                <p><strong>Fix:</strong> Network Tiebreakers. Always integrate a completely independent third server (or pingable router disk) into the TSA quorum. In a network partition, the DB2 server that can successfully ping the Tiebreaker is crowned the true Primary. The other isolated server forcefully shuts itself down.</p>
+                <p><strong>Issue:</strong> The network cable connecting the Primary and Standby fails, but both servers
+                  remain online. TSA thinks the Primary died and promotes the Standby. Now you have TWO Primary
+                  databases accepting web transactions simultaneously. Data is permanently disjointed.</p>
+                <p><strong>Fix:</strong> Network Tiebreakers. Always integrate a completely independent third server (or
+                  pingable router disk) into the TSA quorum. In a network partition, the DB2 server that can
+                  successfully ping the Tiebreaker is crowned the true Primary. The other isolated server forcefully
+                  shuts itself down.</p>
               </div>
             </div>
 
           </section>
 
           <section id="topic37" class="section">
-            <h2 class="section-title"><i class="fas fa-level-up-alt"></i> Topic 37: DB2 Upgrade Roadmap (v10 to v11)</h2>
+            <h2 class="section-title"><i class="fas fa-level-up-alt"></i> Topic 37: DB2 Upgrade Roadmap (v10 to v11)
+            </h2>
             <div class="subsection" id="t37-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                Upgrading IBM DB2 from version 10.x to 11.x is a major architectural shift. It introduces native BLU Acceleration (Columnar structures) and deeper advanced compression natively. An upgrade isn't simply replacing binaries; it requires migrating system catalogs, managing deprecated features, and often recompiling bound packages.
+                Upgrading IBM DB2 from version 10.x to 11.x is a major architectural shift. It introduces native BLU
+                Acceleration (Columnar structures) and deeper advanced compression natively. An upgrade isn't simply
+                replacing binaries; it requires migrating system catalogs, managing deprecated features, and often
+                recompiling bound packages.
               </p>
             </div>
-            
+
             <div class="subsection" id="t37-syntax">
               <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
               <div class="code-example">
@@ -2483,7 +2561,9 @@ db2 UPGRADE DATABASE PRODDB</code></pre>
 
             <div class="subsection" id="t37-lab">
               <h3 class="subsection-title">3. Industry-Standard Practical Lab: Rebinding Packages</h3>
-              <p><strong>Scenario:</strong> After successfully running <code>UPGRADE DATABASE</code>, your applications are receiving SQL0805N (Package not found or invalid). The SQL optimizer in V11 has changed, invalidating the V10 bound access plans.</p>
+              <p><strong>Scenario:</strong> After successfully running <code>UPGRADE DATABASE</code>, your applications
+                are receiving SQL0805N (Package not found or invalid). The SQL optimizer in V11 has changed,
+                invalidating the V10 bound access plans.</p>
               <div class="code-example">
                 <div class="code-language">Post-Upgrade Rebind</div>
                 <pre><code><span class="comment"># Rebind all packages in the database to optimize for the new V11 Engine</span>
@@ -2494,12 +2574,29 @@ db2rbind PRODDB -l rebind_V11.log all</code></pre>
             <div class="subsection" id="t37-summary">
               <h3 class="subsection-title">5. Summary Table: Upgrade Considerations</h3>
               <table class="table">
-                <thead><tr><th>Phase</th><th>Key Action</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Phase</th>
+                    <th>Key Action</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr><td><strong>Pre-Upgrade</strong></td><td>Backup databases, run db2ckupgrade, check OS kernel compatibility.</td></tr>
-                  <tr><td><strong>Installation</strong></td><td>Install new DB2 V11 binaries in a new directory (Side-by-side).</td></tr>
-                  <tr><td><strong>Instance Upgrade</strong></td><td>db2iupgrade migrates the instance metadata to the V11 path.</td></tr>
-                  <tr><td><strong>Post-Upgrade</strong></td><td>db2rbind for packages, test applications, backup immediately.</td></tr>
+                  <tr>
+                    <td><strong>Pre-Upgrade</strong></td>
+                    <td>Backup databases, run db2ckupgrade, check OS kernel compatibility.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Installation</strong></td>
+                    <td>Install new DB2 V11 binaries in a new directory (Side-by-side).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Instance Upgrade</strong></td>
+                    <td>db2iupgrade migrates the instance metadata to the V11 path.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Post-Upgrade</strong></td>
+                    <td>db2rbind for packages, test applications, backup immediately.</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -2510,7 +2607,10 @@ db2rbind PRODDB -l rebind_V11.log all</code></pre>
             <div class="subsection" id="t38-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                DB2 is deeply intertwined with the underlying Linux/UNIX operating system. The DB2 engine requires strict Memory (RAM) kernel parameters (IPC, SHMMNI, SHMALL) and file descriptor limits to be configured in the OS BEFORE installation. If DB2 cannot allocate its initial Shared Memory segments during <code>db2start</code>, the instance will crash on launch.
+                DB2 is deeply intertwined with the underlying Linux/UNIX operating system. The DB2 engine requires
+                strict Memory (RAM) kernel parameters (IPC, SHMMNI, SHMALL) and file descriptor limits to be configured
+                in the OS BEFORE installation. If DB2 cannot allocate its initial Shared Memory segments during
+                <code>db2start</code>, the instance will crash on launch.
               </p>
             </div>
           </section>
@@ -2520,10 +2620,12 @@ db2rbind PRODDB -l rebind_V11.log all</code></pre>
             <div class="subsection" id="t39-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                A DB2 DBA is inherently a Junior Linux Admin. Managing disk mounts, checking memory utilization, understanding the <code>root</code> versus <code>db2inst1</code> user isolation, and managing DB2 daemon background processes requires constant use of standard Linux bash utilities.
+                A DB2 DBA is inherently a Junior Linux Admin. Managing disk mounts, checking memory utilization,
+                understanding the <code>root</code> versus <code>db2inst1</code> user isolation, and managing DB2 daemon
+                background processes requires constant use of standard Linux bash utilities.
               </p>
             </div>
-            
+
             <div class="subsection" id="t39-syntax">
               <h3 class="subsection-title">2. Full Syntax: The DBA's Linux Toolkit</h3>
               <div class="code-example">
@@ -2548,13 +2650,17 @@ tail -f ~/sqllib/db2dump/db2diag.log</code></pre>
             <div class="subsection" id="t40-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                Installing DB2 involves essentially unpacking binaries as <code>root</code> into <code>/opt/ibm/db2/V10.1</code>, checking license compliance, and generating the DB2 Instance and Fenced users. IBM provides the <code>db2setup</code> GUI (Java-based) or the silent configuration method via a response file for automated enterprise rollouts.
+                Installing DB2 involves essentially unpacking binaries as <code>root</code> into
+                <code>/opt/ibm/db2/V10.1</code>, checking license compliance, and generating the DB2 Instance and Fenced
+                users. IBM provides the <code>db2setup</code> GUI (Java-based) or the silent configuration method via a
+                response file for automated enterprise rollouts.
               </p>
             </div>
 
-             <div class="subsection" id="t40-lab">
+            <div class="subsection" id="t40-lab">
               <h3 class="subsection-title">3. Industry-Standard Practical Lab: Silent Installation</h3>
-              <p><strong>Scenario:</strong> You need to install DB2 identically across 50 Linux VMs for a DPF (Partitioned) cluster. A GUI installer is impractical.</p>
+              <p><strong>Scenario:</strong> You need to install DB2 identically across 50 Linux VMs for a DPF
+                (Partitioned) cluster. A GUI installer is impractical.</p>
               <div class="code-example">
                 <div class="code-language">Silent Install</div>
                 <pre><code><span class="comment"># Step 1: Create a Response File (db2server.rsp) defining the install path and users</span>
@@ -2573,33 +2679,45 @@ tail -f ~/sqllib/db2dump/db2diag.log</code></pre>
             <div class="subsection" id="t41-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                Once the <code>db2sysc</code> daemon is running, administrators switch to client tools. <strong>IBM Data Studio</strong> is an Eclipse-based IDE that replaces the older DB2 Control Center. It connects via JDBC (Port 50000). While the CLP is required for low-level OS configuration and scripting, IBM Data Studio is superior for reading Visual Explain plans, managing SQL stored procedures, and generating DDL for massive schemas.
+                Once the <code>db2sysc</code> daemon is running, administrators switch to client tools. <strong>IBM Data
+                  Studio</strong> is an Eclipse-based IDE that replaces the older DB2 Control Center. It connects via
+                JDBC (Port 50000). While the CLP is required for low-level OS configuration and scripting, IBM Data
+                Studio is superior for reading Visual Explain plans, managing SQL stored procedures, and generating DDL
+                for massive schemas.
               </p>
             </div>
-            
+
             <div class="subsection" id="t41-troubleshoot">
               <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
               <div class="definition-box">
                 <h4><i class="fas fa-eye"></i> JDBC Firewall Troubleshooting</h4>
-                <p><strong>Issue:</strong> You installed DB2, but Data Studio cannot connect. Error: <code>java.net.ConnectException</code>.</p>
-                <p><strong>Cause:</strong> 1) The DB2 instance is not listening on TCP/IP. 2) The Linux Firewall is blocking port 50000.</p>
+                <p><strong>Issue:</strong> You installed DB2, but Data Studio cannot connect. Error:
+                  <code>java.net.ConnectException</code>.</p>
+                <p><strong>Cause:</strong> 1) The DB2 instance is not listening on TCP/IP. 2) The Linux Firewall is
+                  blocking port 50000.</p>
                 <p><strong>Fix:</strong> <br>
-                1. Set the registry: <code>db2set DB2COMM=tcpip</code><br>
-                2. Check the port config: <code>db2 get dbm cfg | grep SVCENAME</code></p>
+                  1. Set the registry: <code>db2set DB2COMM=tcpip</code><br>
+                  2. Check the port config: <code>db2 get dbm cfg | grep SVCENAME</code></p>
               </div>
             </div>
 
           </section>
 
           <section id="topic42" class="section">
-            <h2 class="section-title"><i class="fas fa-microchip"></i> Topic 42: BLU Acceleration (Columnar Database)</h2>
+            <h2 class="section-title"><i class="fas fa-microchip"></i> Topic 42: BLU Acceleration (Columnar Database)
+            </h2>
             <div class="subsection" id="t42-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                Introduced in DB2 10.5, <strong>BLU Acceleration</strong> fundamentally changes how DB2 stores data. Traditional tables are "Row-Oriented" (great for OLTP/inserts). BLU tables are "Column-Oriented". By storing data continuously by column, analytical workloads (OLAP) that only need a subset of columns don't have to load irrelevant data into memory. BLU includes "Actionable Compression" and SIMD processing (Single Instruction Multiple Data), allowing the CPU to evaluate predicates directly against compressed data in the CPU cache without decompressing it first.
+                Introduced in DB2 10.5, <strong>BLU Acceleration</strong> fundamentally changes how DB2 stores data.
+                Traditional tables are "Row-Oriented" (great for OLTP/inserts). BLU tables are "Column-Oriented". By
+                storing data continuously by column, analytical workloads (OLAP) that only need a subset of columns
+                don't have to load irrelevant data into memory. BLU includes "Actionable Compression" and SIMD
+                processing (Single Instruction Multiple Data), allowing the CPU to evaluate predicates directly against
+                compressed data in the CPU cache without decompressing it first.
               </p>
             </div>
-            
+
             <div class="subsection" id="t42-syntax">
               <h3 class="subsection-title">2. Full Syntax & CLP Commands</h3>
               <div class="code-example">
@@ -2617,10 +2735,15 @@ db2 "CREATE TABLE SALES_ANALYTICS (
 
             <div class="subsection" id="t42-lab">
               <h3 class="subsection-title">3. Industry-Standard Practical Lab: The OLAP Query Speedup</h3>
-              <p><strong>Scenario:</strong> Generating an end-of-year Revenue Report across 5 billion rows takes 45 minutes on a standard Row table because it performs a massive Table Scan pulling all 50 columns into memory.</p>
+              <p><strong>Scenario:</strong> Generating an end-of-year Revenue Report across 5 billion rows takes 45
+                minutes on a standard Row table because it performs a massive Table Scan pulling all 50 columns into
+                memory.</p>
               <div class="definition-box">
                 <h4><i class="fas fa-tachometer-alt"></i> The BLU Approach</h4>
-                <p>By migrating the table to <code>ORGANIZE BY COLUMN</code>, DB2 only reads the `REGION` and `REVENUE` data pages from disk. Because the data is highly compressed (column data is highly repetitive), it fits entirely in the CPU L3 Cache. The report drops from 45 minutes down to 3 seconds with zero manual indexes created.</p>
+                <p>By migrating the table to <code>ORGANIZE BY COLUMN</code>, DB2 only reads the `REGION` and `REVENUE`
+                  data pages from disk. Because the data is highly compressed (column data is highly repetitive), it
+                  fits entirely in the CPU L3 Cache. The report drops from 45 minutes down to 3 seconds with zero manual
+                  indexes created.</p>
               </div>
             </div>
 
@@ -2628,8 +2751,11 @@ db2 "CREATE TABLE SALES_ANALYTICS (
               <h3 class="subsection-title">4. DBA Best Practices & Troubleshooting</h3>
               <div class="disadvantages-box font-code">
                 <h4><i class="fas fa-exclamation-triangle"></i> BLU Limitations (The "Not For Everything" Rule)</h4>
-                <p><strong>Issue:</strong> Developers try to convert highly active OLTP websites (e-commerce carts) to BLU.</p>
-                <p><strong>Fix:</strong> Columnar tables are terrible at high-concurrency single-row `INSERT`, `UPDATE`, and `DELETE` operations. Row-level locks in a columnar structure cause massive locking contention. Only use BLU for Data Warehouses and Data Marts.</p>
+                <p><strong>Issue:</strong> Developers try to convert highly active OLTP websites (e-commerce carts) to
+                  BLU.</p>
+                <p><strong>Fix:</strong> Columnar tables are terrible at high-concurrency single-row `INSERT`, `UPDATE`,
+                  and `DELETE` operations. Row-level locks in a columnar structure cause massive locking contention.
+                  Only use BLU for Data Warehouses and Data Marts.</p>
               </div>
             </div>
           </section>
@@ -2639,7 +2765,11 @@ db2 "CREATE TABLE SALES_ANALYTICS (
             <div class="subsection" id="t43-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                DB2 offers advanced storage optimization mechanisms. Classic row compression uses a static dictionary built at table level. <strong>Adaptive Compression</strong> combines classic table-level dictionary compression with page-level compression. As data changes dynamically over time, DB2 builds temporary dictionaries strictly for individual data pages, ensuring optimal compression without requiring DBAs to constantly reorganize or rebuild the table dictionaries.
+                DB2 offers advanced storage optimization mechanisms. Classic row compression uses a static dictionary
+                built at table level. <strong>Adaptive Compression</strong> combines classic table-level dictionary
+                compression with page-level compression. As data changes dynamically over time, DB2 builds temporary
+                dictionaries strictly for individual data pages, ensuring optimal compression without requiring DBAs to
+                constantly reorganize or rebuild the table dictionaries.
               </p>
             </div>
           </section>
@@ -2649,10 +2779,13 @@ db2 "CREATE TABLE SALES_ANALYTICS (
             <div class="subsection" id="t44-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                In an enterprise, competing applications connect to the same DB2 engine. A massive BI report might consume 95% of the CPU, starving the sub-second OLTP web application. <strong>DB2 Workload Manager (WLM)</strong> acts as a strict traffic cop. It allows the DBA to categorize inbound connections into "Service Classes" and assign rigid CPU, Memory, and locking thresholds to them.
+                In an enterprise, competing applications connect to the same DB2 engine. A massive BI report might
+                consume 95% of the CPU, starving the sub-second OLTP web application. <strong>DB2 Workload Manager
+                  (WLM)</strong> acts as a strict traffic cop. It allows the DBA to categorize inbound connections into
+                "Service Classes" and assign rigid CPU, Memory, and locking thresholds to them.
               </p>
             </div>
-            
+
             <div class="subsection" id="t44-syntax">
               <h3 class="subsection-title">2. Full Syntax: WLM Constraints</h3>
               <div class="code-example">
@@ -2676,21 +2809,30 @@ db2 "CREATE THRESHOLD MaxReportTime FOR SERVICE CLASS BatchReporting ACTIVITIES
               <p>
                 For extreme scalability, DB2 offers two clustering architectures:
                 <br><br>
-                <strong>DPF (Database Partitioning Feature):</strong> A "Shared-Nothing" architecture. Data is physically hashed and split across multiple DB2 servers (nodes). Queries are processed in parallel across all nodes. Incredible for Data Warehousing.
+                <strong>DPF (Database Partitioning Feature):</strong> A "Shared-Nothing" architecture. Data is
+                physically hashed and split across multiple DB2 servers (nodes). Queries are processed in parallel
+                across all nodes. Incredible for Data Warehousing.
                 <br>
-                <strong>pureScale:</strong> A "Shared-Disk" architecture. Multiple DB2 servers (members) connect to a centralized SAN via high-speed RDMA networks. A centralized "Cluster Caching Facility (CF)" ensures all servers see consistent data. Incredible for high-availability OLTP (Mainframe-style clustering on Linux).
+                <strong>pureScale:</strong> A "Shared-Disk" architecture. Multiple DB2 servers (members) connect to a
+                centralized SAN via high-speed RDMA networks. A centralized "Cluster Caching Facility (CF)" ensures all
+                servers see consistent data. Incredible for high-availability OLTP (Mainframe-style clustering on
+                Linux).
               </p>
             </div>
           </section>
-          
+
           <section id="topic46" class="section">
             <h2 class="section-title"><i class="fas fa-user-shield"></i> Topic 46: Advanced Security (Roles & RCAC)</h2>
             <div class="subsection" id="t46-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                Beyond standard GRANT/REVOKE, enterprise security demands granular control. 
-                <br><strong>Roles:</strong> DBAs can package multiple table privileges into a "Role" and assign that role to a group, severely minimizing catalog bloat.
-                <br><strong>Row and Column Access Control (RCAC):</strong> Sometimes DBADM users (or even developers) shouldn't be able to see personal data (e.g., SSN, Salaries) inside a table they are meant to query. RCAC dynamically masks columns or restrict rows natively in the database engine based on the user's login, completely bypassing application logic.
+                Beyond standard GRANT/REVOKE, enterprise security demands granular control.
+                <br><strong>Roles:</strong> DBAs can package multiple table privileges into a "Role" and assign that
+                role to a group, severely minimizing catalog bloat.
+                <br><strong>Row and Column Access Control (RCAC):</strong> Sometimes DBADM users (or even developers)
+                shouldn't be able to see personal data (e.g., SSN, Salaries) inside a table they are meant to query.
+                RCAC dynamically masks columns or restrict rows natively in the database engine based on the user's
+                login, completely bypassing application logic.
               </p>
             </div>
           </section>
@@ -2700,22 +2842,47 @@ db2 "CREATE THRESHOLD MaxReportTime FOR SERVICE CLASS BatchReporting ACTIVITIES
             <div class="subsection" id="t47-concept">
               <h3 class="subsection-title">1. High-Level Concept & Architecture</h3>
               <p>
-                To comply with PCI-DSS or HIPAA, DBAs must prove exactly who executed what code. The <strong>DB2 Audit Facility (db2audit)</strong> acts strictly at the engine level. It acts separately from standard transaction logs, dumping binary audit records of all authentication events, DDL executions, and SECADM changes that cannot be bypassed.
+                To comply with PCI-DSS or HIPAA, DBAs must prove exactly who executed what code. The <strong>DB2 Audit
+                  Facility (db2audit)</strong> acts strictly at the engine level. It acts separately from standard
+                transaction logs, dumping binary audit records of all authentication events, DDL executions, and SECADM
+                changes that cannot be bypassed.
               </p>
             </div>
           </section>
 
           <section id="topic48" class="section">
-            <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Topic 48: Conclusion - The Daily DBA Checklist</h2>
+            <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Topic 48: Conclusion - The Daily DBA
+              Checklist</h2>
             <div class="subsection" id="t48-summary">
               <h3 class="subsection-title">5. Summary Table: Real-World DBA Lifecycle</h3>
               <table class="table">
-                <thead><tr><th>Timeframe</th><th>Duties and Responsibilities</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Timeframe</th>
+                    <th>Duties and Responsibilities</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  <tr><td><strong>Daily</strong></td><td>Check `db2diag.log` for FATAL/SEVERE warnings. Verify Backup Success (`db2 list history`). Ensure Transaction log disks have &gt;30% free space.</td></tr>
-                  <tr><td><strong>Weekly</strong></td><td>Run `REORGCHK` and schedule `REORG` on fragmented tables. Regenerate `RUNSTATS` on heavy-mutation tables.</td></tr>
-                  <tr><td><strong>Monthly</strong></td><td>Review WLM and Lock Timeout occurrences. Verify OS kernel/CPU metrics metrics baseline. Capacity Plan Disk limits.</td></tr>
-                  <tr><td><strong>Quarterly</strong></td><td>Disaster Recovery testing. Shut down Primary HADR and perform full TAKEOVER to verify RTO/RPO SLA compliance. Apply DB2 FixPacks.</td></tr>
+                  <tr>
+                    <td><strong>Daily</strong></td>
+                    <td>Check `db2diag.log` for FATAL/SEVERE warnings. Verify Backup Success (`db2 list history`).
+                      Ensure Transaction log disks have &gt;30% free space.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Weekly</strong></td>
+                    <td>Run `REORGCHK` and schedule `REORG` on fragmented tables. Regenerate `RUNSTATS` on
+                      heavy-mutation tables.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Monthly</strong></td>
+                    <td>Review WLM and Lock Timeout occurrences. Verify OS kernel/CPU metrics metrics baseline. Capacity
+                      Plan Disk limits.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Quarterly</strong></td>
+                    <td>Disaster Recovery testing. Shut down Primary HADR and perform full TAKEOVER to verify RTO/RPO
+                      SLA compliance. Apply DB2 FixPacks.</td>
+                  </tr>
                 </tbody>
               </table>
               <p>
@@ -2724,7 +2891,7 @@ db2 "CREATE THRESHOLD MaxReportTime FOR SERVICE CLASS BatchReporting ACTIVITIES
               </p>
             </div>
           </section>
-</section>
+          </section>
 
           <!-- Section 6: Best Practices & Performance Tips -->
           <section id="best-practices" class="section">
